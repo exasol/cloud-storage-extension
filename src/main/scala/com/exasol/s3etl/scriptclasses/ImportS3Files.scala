@@ -1,0 +1,58 @@
+package com.exasol.s3etl.scriptclasses
+
+import java.net.URI
+
+import scala.collection.mutable.ListBuffer
+
+import com.exasol.ExaIterator
+import com.exasol.ExaMetadata
+import com.exasol.s3etl.source.ParquetSource
+
+import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.fs.FileSystem
+import org.apache.hadoop.fs.Path
+
+object ImportS3Files {
+
+  def run(meta: ExaMetadata, iter: ExaIterator): Unit = {
+    val s3Bucket = iter.getString(0)
+    val s3AccessKey = iter.getString(1)
+    val s3SecretKey = iter.getString(2)
+    val files = groupFiles(iter, 3)
+
+    val conf: Configuration = new Configuration()
+
+    conf.set("fs.s3a.impl", classOf[org.apache.hadoop.fs.s3a.S3AFileSystem].getName)
+    conf.set("fs.s3a.endpoint", "s3.eu-central-1.amazonaws.com")
+    conf.set("fs.s3a.access.key", s3AccessKey)
+    conf.set("fs.s3a.secret.key", s3SecretKey)
+
+    val fs: FileSystem = FileSystem.get(new URI(s3Bucket), conf)
+
+    val paths = files.map(f => new Path(f))
+
+    val source = ParquetSource(paths, fs, conf)
+
+    readAndEmit(source, iter)
+  }
+
+  def readAndEmit(src: ParquetSource, ctx: ExaIterator): Unit =
+    src.stream.foreach { iter =>
+      iter.foreach { row =>
+        val columns: Seq[Object] = row.values.map(_.asInstanceOf[AnyRef])
+        ctx.emit(columns: _*)
+      }
+    }
+
+  @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
+  private[this] def groupFiles(iter: ExaIterator, iterIndex: Int): Seq[String] = {
+    val files = ListBuffer[String]()
+
+    do {
+      files.append(iter.getString(iterIndex))
+    } while (iter.next())
+
+    files.toSeq
+  }
+
+}
