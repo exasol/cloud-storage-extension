@@ -34,7 +34,7 @@ final case class ParquetSource(paths: Seq[Path], fs: FileSystem, conf: Configura
         }
       } catch {
         case ex: Throwable =>
-          throw new RuntimeException(s"Could not create parquet reader for path $path")
+          throw new RuntimeException(s"Could not create parquet reader for path $path", ex)
       }
     }
 

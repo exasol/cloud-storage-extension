@@ -1,60 +1,69 @@
-# Exasol S3 ETL User Defined Functions
+# Exasol Public Cloud Storage ETL UDFs
 
-S3 ETL user defined functions are main way to transfer data between AWS S3 and
-Exasol.
+###### Please note that this is an open source project which is *not officially supported* by Exasol. We will try to help you as much as possible, but can't guarantee anything since this is not an official Exasol product.
 
-**Supported Formats**:
+## Table of Contents
 
-- Parquet (only primitive types)
+* [Overview](#overview)
+* [Usage](#usage)
+* [Building from Source](#building-from-source)
+
+## Overview
+
+This repository contains helper code to create [Exasol][exasol] ETL UDFs in
+order to transfer data to/from public cloud storage services such as [AWS
+S3][s3], [Google Cloud Storage][gcs] and [Azure Blob Storage][azure].
+
+**Currently only importing parquet (primitive types) files from AWS S3 into
+Exasol is supported.**
 
 ## Usage
 
-- Create assembly jar
+Please follow the steps described below in order to setup the UDFs.
 
-```bash
-./sbtx assembly
-```
+### Download the JAR file
 
-The package jar is located at `target/scala-2.11/s3etl-{VERSION}.jar`.
+Download the latest jar file from [here]().
 
-- Upload the jar to a bucket in Exasol BucketFS
+Additionally, you can also build it from the source by following the [build from
+source](#building-from-source) step.
+
+### Upload the JAR file to Exasol BucketFS
 
 ```bash
 curl \
   -X PUT \
-  -T target/scala-2.11/s3etl-{VERSION}.jar \
-  http://w:MY-PASSWORD@DATA-NODE-ID:2580/bucket1/s3et-{VERSION}.jar
+  -T path/to/jar/cloud-storage-etl-{VERSION}.jar \
+  http://w:MY-PASSWORD@EXA-NODE-ID:2580/bucket1/cloud-storage-etl-{VERSION}.jar
 ```
 
 Please change required parameters.
 
-- Create ETL Scripts
+### Create UDFs scripts
 
 ```sql
 CREATE SCHEMA ETL;
 OPEN SCHEMA ETL;
 
---- S3 ETL SCRIPTS
-
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_S3_PATH(...) EMITS (...) AS
 %scriptclass com.exasol.s3etl.scriptclasses.ImportS3Path;
-%jar /buckets/bfsdefault/bucket1/s3etl-{VERSION}.jar;
+%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-{VERSION}.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_S3_FILES(...) EMITS (...) AS
 %env LD_LIBRARY_PATH=/tmp/;
 %scriptclass com.exasol.s3etl.scriptclasses.ImportS3Files;
-%jar /buckets/bfsdefault/bucket1/s3etl-{VERSION}.jar;
+%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-{VERSION}.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_S3_METADATA(...)
 EMITS (s3_filename VARCHAR(200), partition_index VARCHAR(100)) AS
 %scriptclass com.exasol.s3etl.scriptclasses.ImportS3Metadata;
-%jar /buckets/bfsdefault/bucket1/s3etl-{VERSION}.jar;
+%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-{VERSION}.jar;
 /
 ```
 
-- Import data
+### Import data from cloud storage
 
 ```bash
 CREATE SCHEMA TEST;
@@ -63,12 +72,12 @@ OPEN SCHEMA TEST;
 DROP TABLE IF EXISTS SALES_POSITIONS;
 
 CREATE TABLE SALES_POSITIONS (
-  SALES_ID    DECIMAL(18,0),
-  POSITION_ID DECIMAL(9,0),
-  ARTICLE_ID  DECIMAL(9,0),
-  AMOUNT      DECIMAL(9,0),
+  SALES_ID    INTEGER,
+  POSITION_ID SMALLINT,
+  ARTICLE_ID  SMALLINT,
+  AMOUNT      SMALLINT,
   PRICE       DECIMAL(9,2),
-  VOUCHER_ID  DECIMAL(9,0),
+  VOUCHER_ID  SMALLINT,
   CANCELED    BOOLEAN
 );
 
@@ -84,3 +93,26 @@ FROM SCRIPT ETL.IMPORT_S3_PATH WITH
 
 SELECT * FROM SALES_POSITIONS LIMIT 10;
 ```
+
+## Building from Source
+
+Clone the repository,
+
+```bash
+git clone https://github.com/EXASOL/cloud-storage-etl
+
+cd cloud-storage-etl/
+```
+
+Create assembly jar,
+
+```bash
+./sbtx assembly
+```
+
+The packaged jar should be located at
+`target/scala-2.11/cloud-storage-etl-{VERSION}.jar`.
+
+[s3]: https://aws.amazon.com/s3/
+[gcs]: https://cloud.google.com/storage/
+[azure]: https://azure.microsoft.com/en-us/services/storage/blobs/
