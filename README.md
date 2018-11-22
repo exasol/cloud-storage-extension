@@ -65,7 +65,7 @@ EMITS (s3_filename VARCHAR(200), partition_index VARCHAR(100)) AS
 
 ### Import data from cloud storage
 
-```bash
+```sql
 CREATE SCHEMA TEST;
 OPEN SCHEMA TEST;
 
@@ -113,6 +113,7 @@ Create assembly jar,
 The packaged jar should be located at
 `target/scala-2.11/cloud-storage-etl-{VERSION}.jar`.
 
+[exasol]: https://www.exasol.com/en/
 [s3]: https://aws.amazon.com/s3/
 [gcs]: https://cloud.google.com/storage/
 [azure]: https://azure.microsoft.com/en-us/services/storage/blobs/
