@@ -33,8 +33,8 @@ source](#building-from-source) step.
 ```bash
 curl \
   -X PUT \
-  -T path/to/jar/cloud-storage-etl-{VERSION}.jar \
-  http://w:MY-PASSWORD@EXA-NODE-ID:2580/bucket1/cloud-storage-etl-{VERSION}.jar
+  -T path/to/jar/cloud-storage-etl-udfs-{VERSION}.jar \
+  http://w:MY-PASSWORD@EXA-NODE-ID:2580/bucket1/cloud-storage-etl-udfs-{VERSION}.jar
 ```
 
 Please change required parameters.
@@ -47,19 +47,19 @@ OPEN SCHEMA ETL;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_S3_PATH(...) EMITS (...) AS
 %scriptclass com.exasol.s3etl.scriptclasses.ImportS3Path;
-%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-{VERSION}.jar;
+%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_S3_FILES(...) EMITS (...) AS
 %env LD_LIBRARY_PATH=/tmp/;
 %scriptclass com.exasol.s3etl.scriptclasses.ImportS3Files;
-%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-{VERSION}.jar;
+%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_S3_METADATA(...)
 EMITS (s3_filename VARCHAR(200), partition_index VARCHAR(100)) AS
 %scriptclass com.exasol.s3etl.scriptclasses.ImportS3Metadata;
-%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-{VERSION}.jar;
+%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
 ```
 
@@ -99,9 +99,9 @@ SELECT * FROM SALES_POSITIONS LIMIT 10;
 Clone the repository,
 
 ```bash
-git clone https://github.com/EXASOL/cloud-storage-etl
+git clone https://github.com/EXASOL/cloud-storage-etl-udfs
 
-cd cloud-storage-etl/
+cd cloud-storage-etl-udfs/
 ```
 
 Create assembly jar,
@@ -111,7 +111,7 @@ Create assembly jar,
 ```
 
 The packaged jar should be located at
-`target/scala-2.11/cloud-storage-etl-{VERSION}.jar`.
+`target/scala-2.11/cloud-storage-etl-udfs-{VERSION}.jar`.
 
 [exasol]: https://www.exasol.com/en/
 [s3]: https://aws.amazon.com/s3/

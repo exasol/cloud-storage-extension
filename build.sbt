@@ -2,7 +2,7 @@ import com.exasol.s3etl.sbt.Settings
 import com.exasol.s3etl.sbt.IntegrationTestPlugin
 
 lazy val orgSettings = Seq(
-  name := "s3etl",
+  name := "cloud-storage-etl-udfs",
   description := "Exasol S3 ETL User Defined Functions",
   organization := "com.exasol",
   organizationHomepage := Some(url("http://www.exasol.com"))
@@ -16,7 +16,7 @@ lazy val buildSettings = Seq(
 lazy val root =
   project
     .in(file("."))
-    .settings(moduleName := "s3etl")
+    .settings(moduleName := "cloud-storage-etl-udfs")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.projectSettings(scalaVersion))
