@@ -23,7 +23,7 @@ Please follow the steps described below in order to setup the UDFs.
 
 ### Download the JAR file
 
-Download the latest jar file from [here]().
+Download the latest jar file from [here][jar].
 
 Additionally, you can also build it from the source by following the [build from
 source](#building-from-source) step.
@@ -117,3 +117,4 @@ The packaged jar should be located at
 [s3]: https://aws.amazon.com/s3/
 [gcs]: https://cloud.google.com/storage/
 [azure]: https://azure.microsoft.com/en-us/services/storage/blobs/
+[jar]: https://github.com/exasol/cloud-storage-etl-udfs/releases/download/v0.0.1/cloud-storage-etl-udfs-0.0.1.jar
