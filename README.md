@@ -1,5 +1,8 @@
 # Exasol Public Cloud Storage ETL UDFs
 
+[![Build Status][travis-badge]][travis-link]
+[![Codecov][codecov-badge]][codecov-link]
+
 ###### Please note that this is an open source project which is *not officially supported* by Exasol. We will try to help you as much as possible, but can't guarantee anything since this is not an official Exasol product.
 
 ## Table of Contents
@@ -99,7 +102,7 @@ SELECT * FROM SALES_POSITIONS LIMIT 10;
 Clone the repository,
 
 ```bash
-git clone https://github.com/EXASOL/cloud-storage-etl-udfs
+git clone https://github.com/exasol/cloud-storage-etl-udfs
 
 cd cloud-storage-etl-udfs/
 ```
@@ -113,6 +116,10 @@ Create assembly jar,
 The packaged jar should be located at
 `target/scala-2.11/cloud-storage-etl-udfs-{VERSION}.jar`.
 
+[travis-badge]: https://travis-ci.org/exasol/cloud-storage-etl-udfs.svg?branch=master
+[travis-link]: https://travis-ci.org/exasol/cloud-storage-etl-udfs
+[codecov-badge]: https://codecov.io/gh/exasol/cloud-storage-etl-udfs/branch/master/graph/badge.svg
+[codecov-link]: https://codecov.io/gh/exasol/cloud-storage-etl-udfs
 [exasol]: https://www.exasol.com/en/
 [s3]: https://aws.amazon.com/s3/
 [gcs]: https://cloud.google.com/storage/

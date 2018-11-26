@@ -7,6 +7,7 @@ import sbtassembly.MergeStrategy
 import sbtassembly.PathList
 import sbtassembly.AssemblyPlugin.autoImport._
 
+import com.typesafe.sbt.SbtGit.git
 import scoverage.ScoverageSbtPlugin.autoImport._
 import org.scalastyle.sbt.ScalastylePlugin.autoImport._
 import wartremover.WartRemover.autoImport.wartremoverErrors
@@ -45,7 +46,9 @@ object Settings {
     coverageOutputHTML := true,
     coverageOutputXML := true,
     coverageFailOnMinimum := false,
-    coverageOutputCobertura := false
+    coverageOutputCobertura := false,
+    // Git versioning, use git describe
+    git.useGitDescribe := true
   )
 
   def assemblySettings(): Seq[Setting[_]] = Seq(
