@@ -13,7 +13,7 @@
 
 -->
 <scalastyle>
-  <name>Exasol S3 ETL Scalastyle Configurations (adapted from Spark Scala Style Guide)</name>
+  <name>Exasol Cloud ETL Scalastyle Configurations (adapted from Spark Scala Style Guide)</name>
 
   <!-- Check there are no tabs in a file -->
   <check level="error"

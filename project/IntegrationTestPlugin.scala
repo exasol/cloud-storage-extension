@@ -1,4 +1,4 @@
-package com.exasol.s3etl.sbt
+package com.exasol.cloudetl.sbt
 
 import sbt._
 import org.scalastyle.sbt.ScalastylePlugin

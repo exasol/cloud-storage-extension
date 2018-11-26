@@ -1,4 +1,4 @@
-package com.exasol.s3etl.scriptclasses
+package com.exasol.cloudetl.scriptclasses
 
 import java.net.URI
 
@@ -6,7 +6,7 @@ import scala.collection.mutable.ListBuffer
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
-import com.exasol.s3etl.source.ParquetSource
+import com.exasol.cloudetl.source.ParquetSource
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem

@@ -1,11 +1,11 @@
-package com.exasol.s3etl.source
+package com.exasol.cloudetl.source
 
 import scala.collection.JavaConverters._
 import scala.language.reflectiveCalls
 
-import com.exasol.s3etl.row.Row
-import com.exasol.s3etl.row.RowReadSupport
-import com.exasol.s3etl.util.FsUtil
+import com.exasol.cloudetl.row.Row
+import com.exasol.cloudetl.row.RowReadSupport
+import com.exasol.cloudetl.util.FsUtil
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
