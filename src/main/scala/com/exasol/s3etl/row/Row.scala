@@ -48,7 +48,7 @@ class RowRootConverter(schema: GroupType) extends GroupConverter {
   private val size = schema.getFieldCount
   private var values: Array[Any] = Array.ofDim[Any](size)
   private final val converters: Array[Converter] = {
-    var arr = Array.ofDim[Converter](size)
+    val arr = Array.ofDim[Converter](size)
     for { i <- 0 until size } {
       arr(i) = createNewConverter(schema.getType(i), i)
     }
