@@ -17,6 +17,10 @@ S3][s3], [Google Cloud Storage][gcs] and [Azure Blob Storage][azure].
 **Currently only importing parquet (primitive types) files from AWS S3 into
 Exasol is supported.**
 
+**WARNING:** This project is under heavy development. Even though it is useful
+currently, please expect many changes (api, additional storages and formats) in
+the future.
+
 ## Usage
 
 Please follow the steps described below in order to setup the UDFs.
