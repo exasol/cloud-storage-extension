@@ -23,7 +23,7 @@ object Dependencies {
   /** Test dependencies only required in `test` */
   private val TestDependencies: Seq[ModuleID] = Seq(
     "org.scalatest" %% "scalatest" % "3.0.5",
-    "org.mockito" % "mockito-core" % "2.23.0"
+    "org.mockito" % "mockito-core" % "2.23.4"
   ).map(_ % Test)
 
   /** The list of all dependencies for the connector */

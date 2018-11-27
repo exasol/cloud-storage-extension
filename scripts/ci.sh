@@ -70,6 +70,15 @@ run_api_doc () {
   ./sbtx ++$TRAVIS_SCALA_VERSION doc
 }
 
+run_explicit_dependencies () {
+  echo "############################################"
+  echo "#                                          #"
+  echo "#        Unused Dependencies               #"
+  echo "#                                          #"
+  echo "############################################"
+  ./sbtx ++$TRAVIS_SCALA_VERSION undeclaredCompileDependencies unusedCompileDependencies
+}
+
 run_dependency_info () {
   echo "############################################"
   echo "#                                          #"
@@ -121,6 +130,7 @@ run_unit_tests
 run_integration_tests
 run_coverage_report
 run_api_doc
+run_explicit_dependencies
 run_dependency_info
 run_shell_check
 run_assembly
