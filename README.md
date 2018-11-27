@@ -30,7 +30,7 @@ Please follow the steps described below in order to setup the UDFs.
 
 ### Download the JAR file
 
-Download the latest jar file from [here][jar].
+Download the latest jar file from [releases][jars].
 
 Additionally, you can also build it from the source by following the [build from
 source](#building-from-source) step.
@@ -53,19 +53,19 @@ CREATE SCHEMA ETL;
 OPEN SCHEMA ETL;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_S3_PATH(...) EMITS (...) AS
-%scriptclass com.exasol.s3etl.scriptclasses.ImportS3Path;
+%scriptclass com.exasol.cloudetl.scriptclasses.ImportS3Path;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_S3_FILES(...) EMITS (...) AS
 %env LD_LIBRARY_PATH=/tmp/;
-%scriptclass com.exasol.s3etl.scriptclasses.ImportS3Files;
+%scriptclass com.exasol.cloudetl.scriptclasses.ImportS3Files;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_S3_METADATA(...)
 EMITS (s3_filename VARCHAR(200), partition_index VARCHAR(100)) AS
-%scriptclass com.exasol.s3etl.scriptclasses.ImportS3Metadata;
+%scriptclass com.exasol.cloudetl.scriptclasses.ImportS3Metadata;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
 ```
@@ -118,7 +118,7 @@ Create assembly jar,
 ```
 
 The packaged jar should be located at
-`target/scala-2.11/cloud-storage-etl-udfs-{VERSION}.jar`.
+`target/scala-2.12/cloud-storage-etl-udfs-{VERSION}.jar`.
 
 [travis-badge]: https://travis-ci.org/exasol/cloud-storage-etl-udfs.svg?branch=master
 [travis-link]: https://travis-ci.org/exasol/cloud-storage-etl-udfs
@@ -128,4 +128,4 @@ The packaged jar should be located at
 [s3]: https://aws.amazon.com/s3/
 [gcs]: https://cloud.google.com/storage/
 [azure]: https://azure.microsoft.com/en-us/services/storage/blobs/
-[jar]: https://github.com/exasol/cloud-storage-etl-udfs/releases/download/v0.0.1/cloud-storage-etl-udfs-0.0.1.jar
+[jars]: https://github.com/exasol/cloud-storage-etl-udfs/releases

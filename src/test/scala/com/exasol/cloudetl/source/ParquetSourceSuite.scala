@@ -1,8 +1,8 @@
-package com.exasol.s3etl.source
+package com.exasol.cloudetl.source
 
 import java.nio.file.Paths
 
-import com.exasol.s3etl.util.FsUtil
+import com.exasol.cloudetl.util.FsUtil
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem

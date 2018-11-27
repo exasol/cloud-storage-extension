@@ -1,4 +1,4 @@
-package com.exasol.s3etl.row
+package com.exasol.cloudetl.row
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.parquet.hadoop.api.ReadSupport

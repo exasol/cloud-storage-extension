@@ -1,9 +1,9 @@
-import com.exasol.s3etl.sbt.Settings
-import com.exasol.s3etl.sbt.IntegrationTestPlugin
+import com.exasol.cloudetl.sbt.Settings
+import com.exasol.cloudetl.sbt.IntegrationTestPlugin
 
 lazy val orgSettings = Seq(
   name := "cloud-storage-etl-udfs",
-  description := "Exasol S3 ETL User Defined Functions",
+  description := "Exasol Public Cloud Storage ETL User Defined Functions",
   organization := "com.exasol",
   organizationHomepage := Some(url("http://www.exasol.com"))
 )

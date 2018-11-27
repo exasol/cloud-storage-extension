@@ -1,4 +1,4 @@
-package com.exasol.s3etl.util
+package com.exasol.cloudetl.util
 
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path

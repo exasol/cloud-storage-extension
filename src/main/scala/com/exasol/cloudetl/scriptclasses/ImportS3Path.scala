@@ -1,4 +1,4 @@
-package com.exasol.s3etl.scriptclasses
+package com.exasol.cloudetl.scriptclasses
 
 import java.util.{Map => JMap}
 
