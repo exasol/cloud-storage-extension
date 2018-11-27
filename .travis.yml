@@ -30,13 +30,36 @@ matrix:
 
     - jdk: oraclejdk8
       scala: 2.12.7
-      env: RELEASE=false
+      env: RELEASE=true
 
 script:
   - travis_wait 30 ./scripts/ci.sh
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
+before_deploy:
+  - echo "Ensure assembly jar file is created for a $TRAVIS_TAG"
+  - ./sbtx assembly
+  - ls -lh ./target/scala-2.12/
+
+deploy:
+  provider: releases
+  api_key:
+    secure: |-
+      X9iQoNs8TDlwwxCnmmltZ4mUfah1AmINAWtmbums8Gr+N/RPmhwAG/iUMs1e2KecVaCN4j/0Bdju7f1cULWzdcCAepF
+      8NUqzUxa3NoBq5QYlt48AuuB5DSl2ajL/R7m1tG4f1SYWHclOW+XWi2uQAJHte31isUnmTbO9PMezzefnwSXC8By6yN
+      IvgzMH/dqXoR4wHIAf5XCFjAfF7VZGH6GNXBdGCuyayxR7djiFIQxt92+yx1bWB7GZt776Z2LZHpTR475rzoE34OoUt
+      cecb1cB/8ZphzySp+PBhPjrciEUbHZJLuEpHZO42e0AlLhoymLqGCibZl92CO4Es8zbSrgiso2Jgdx/bpP4Z2GOC7lL
+      DtXxWtijRFehPtGK6pp0jPnvH8Hzrrdk4JulVxeG7MgoLHVtzDeyEojIfwM1EFltBjEs9Bd6yANRYxSEbUeadzC252S
+      m2eRuYlai/+zMnzFPFRojmkUpoUg7/Tq01znXeLu4w/2DfvtS6yu+mE3PUjJtoCfgYGGk6f0VaaGpNQJeYu1oaGI4XM
+      ZUHJEFI9jYp2qY56xjRN2iS1/H6oJryQSbVYZbYYxfY5GM4fx1nGyAdvJiSyU6LWEuaZuJojegwS+Q4Ct9P1a4FeAWO
+      W680uDRc0E/domUzeTLiM1jaSWi55O2eG03IxzaifW0Q7o=
+  file: target/scala-2.12/cloud-storage-etl-udfs-${TRAVIS_TAG}.jar
+  on:
+    repo: exasol/cloud-storage-etl-udfs
+    tags: true
+    condition: $RELEASE = true && $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$
 
 cache:
   directories:
