@@ -95,8 +95,10 @@ FROM SCRIPT ETL.IMPORT_S3_PATH WITH
  S3_BUCKET_PATH = 's3a://exa-mo-frankfurt/test/retail/sales_positions/*'
  S3_ACCESS_KEY  = 'MY_AWS_ACCESS_KEY'
  S3_SECRET_KEY  = 'MY_AWS_SECRET_KEY'
+ S3_ENDPOINT    = 's3.MY_REGION.amazonaws.com'
  PARALLELISM    = 'nproc()*10';
 
+-- MY_REGION is one of AWS regions, for example, eu-central-1
 
 SELECT * FROM SALES_POSITIONS LIMIT 10;
 ```
