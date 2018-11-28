@@ -10,6 +10,7 @@ object ImportS3Path {
   def generateSqlForImportSpec(exaMeta: ExaMetadata, exaSpec: ExaImportSpecification): String = {
     val params = exaSpec.getParameters
     val s3Bucket = requiredParam(params, "S3_BUCKET_PATH")
+    val s3Endpoint = requiredParam(params, "S3_ENDPOINT")
     val s3AccessKey = requiredParam(params, "S3_ACCESS_KEY")
     val s3SecretKey = requiredParam(params, "S3_SECRET_KEY")
     val parallelism = optionalParam(params, "PARALLELISM", "nproc()")
@@ -18,10 +19,12 @@ object ImportS3Path {
 
     s"""
        |SELECT
-       |  $scriptSchema.IMPORT_S3_FILES('$s3Bucket', '$s3AccessKey', '$s3SecretKey', s3_filename)
+       |  $scriptSchema.IMPORT_S3_FILES(
+       |    '$s3Bucket', '$s3Endpoint', '$s3AccessKey', '$s3SecretKey', s3_filename
+       |)
        |FROM (
        |  SELECT $scriptSchema.IMPORT_S3_METADATA(
-       |    '$s3Bucket', '$s3AccessKey', '$s3SecretKey', $parallelism
+       |    '$s3Bucket', '$s3Endpoint', '$s3AccessKey', '$s3SecretKey', $parallelism
        |  )
        |)
        |GROUP BY
