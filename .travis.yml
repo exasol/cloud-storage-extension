@@ -47,14 +47,14 @@ deploy:
   provider: releases
   api_key:
     secure: |-
-      X9iQoNs8TDlwwxCnmmltZ4mUfah1AmINAWtmbums8Gr+N/RPmhwAG/iUMs1e2KecVaCN4j/0Bdju7f1cULWzdcCAepF
-      8NUqzUxa3NoBq5QYlt48AuuB5DSl2ajL/R7m1tG4f1SYWHclOW+XWi2uQAJHte31isUnmTbO9PMezzefnwSXC8By6yN
-      IvgzMH/dqXoR4wHIAf5XCFjAfF7VZGH6GNXBdGCuyayxR7djiFIQxt92+yx1bWB7GZt776Z2LZHpTR475rzoE34OoUt
-      cecb1cB/8ZphzySp+PBhPjrciEUbHZJLuEpHZO42e0AlLhoymLqGCibZl92CO4Es8zbSrgiso2Jgdx/bpP4Z2GOC7lL
-      DtXxWtijRFehPtGK6pp0jPnvH8Hzrrdk4JulVxeG7MgoLHVtzDeyEojIfwM1EFltBjEs9Bd6yANRYxSEbUeadzC252S
-      m2eRuYlai/+zMnzFPFRojmkUpoUg7/Tq01znXeLu4w/2DfvtS6yu+mE3PUjJtoCfgYGGk6f0VaaGpNQJeYu1oaGI4XM
-      ZUHJEFI9jYp2qY56xjRN2iS1/H6oJryQSbVYZbYYxfY5GM4fx1nGyAdvJiSyU6LWEuaZuJojegwS+Q4Ct9P1a4FeAWO
-      W680uDRc0E/domUzeTLiM1jaSWi55O2eG03IxzaifW0Q7o=
+      Iehp4fsI91qQ5ly7obt/PU19J+2SE4cYdFWgUYUFehpppI69MmOMWup40NvXpMPMpkurIZcLTlRdodGITTIiceRFx10
+      Da4zkHEqBd+pKEv7NcwMgFL0LoRrEHHuXwO0y12UNK8PcKnLxMng+SavSNBCjr25q11OA2N8IPnPLN40z5GLfWAzeAy
+      C43HECTquW8neaybTVQwQyagBG90/+Pdek0CfsLs71NHUHqr5/JD/TBGIy/vCWCJxzSts9seV27POfkEF0NBtI0Glux
+      o0F5vsEJLpF/i9wRFKf8yAkW/7zG4m5sPA7V+O9XtFIUlvOO6FeaiW5wYcyUSrc7+TQdnfylnY+Y14b7tL2ugUzTvEi
+      tzBXPjzZApyAHtirchtDEi2FasAB+dTXZP6jjPV7JiVw1F2HXb/LEZfabwp0esGuDbhEz7GspzizVI5Ro7u1xY3MInv
+      hF48soVocY1xus5AkKiMxrW6d93Th2XTGoyRzJbwm4iXPY1UIKndlkEjFq3RsZRIPND9iURmp/qcwvlIdB29SsczYbH
+      p3QOQn/NTC6SZbmgAW4xZpCRUUZwfOXP4RacIcDKHlsUjqBZwmSmxK/vJ6KRNR4yxBn7cVlm060cD5l3TmpuUC6X9JI
+      EPAkYJyNJ1CtRUkYDbgBn+Eof5X3jOZqo8pI51YBKdnz0E=
   file: target/scala-2.12/cloud-storage-etl-udfs-${TRAVIS_TAG}.jar
   on:
     repo: exasol/cloud-storage-etl-udfs
