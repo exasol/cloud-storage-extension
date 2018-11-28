@@ -16,7 +16,7 @@ addSbtPlugin("org.danielnixon" % "sbt-extrawarts" % "1.0.3")
 
 // Adds a `assembly` task to create a fat JAR with all of its dependencies
 // https://github.com/sbt/sbt-assembly
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.8")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.9")
 
 // Adds a `BuildInfo` tasks
 // https://github.com/sbt/sbt-buildinfo
@@ -57,6 +57,10 @@ addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.2")
 // Adds a `git` plugin
 // https://github.com/sbt/sbt-git
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
+
+// Adds a `sbt-explicit-dependencies` plugin
+// https://github.com/cb372/sbt-explicit-dependencies
+addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.6")
 
 // Setup this and project/project/plugins.sbt for formatting project/*.scala files with scalafmt
 inThisBuild(
