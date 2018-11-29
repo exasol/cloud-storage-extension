@@ -33,7 +33,7 @@ Please follow the steps described below in order to setup the UDFs.
 Download the latest jar file from [releases][jars].
 
 Additionally, you can also build it from the source by following the [build from
-source](#building-from-source) step.
+source](#building-from-source) steps.
 
 ### Upload the JAR file to Exasol BucketFS
 
