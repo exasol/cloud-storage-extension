@@ -29,20 +29,10 @@ object ImportS3Files {
 
     val fs: FileSystem = FileSystem.get(new URI(s3Bucket), conf)
 
-    val paths = files.map(f => new Path(f))
-
-    val source = ParquetSource(paths, fs, conf)
+    val source = createNewSource(files, fs, conf)
 
     readAndEmit(source, iter)
   }
-
-  def readAndEmit(src: ParquetSource, ctx: ExaIterator): Unit =
-    src.stream.foreach { iter =>
-      iter.foreach { row =>
-        val columns: Seq[Object] = row.values.map(_.asInstanceOf[AnyRef])
-        ctx.emit(columns: _*)
-      }
-    }
 
   @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
   private[this] def groupFiles(iter: ExaIterator, iterIndex: Int): Seq[String] = {
@@ -54,5 +44,22 @@ object ImportS3Files {
 
     files.toSeq
   }
+
+  private[this] def createNewSource(
+    files: Seq[String],
+    fs: FileSystem,
+    conf: Configuration
+  ): ParquetSource = {
+    val paths = files.map(f => new Path(f))
+    ParquetSource(paths, fs, conf)
+  }
+
+  private[this] def readAndEmit(src: ParquetSource, ctx: ExaIterator): Unit =
+    src.stream.foreach { iter =>
+      iter.foreach { row =>
+        val columns: Seq[Object] = row.values.map(_.asInstanceOf[AnyRef])
+        ctx.emit(columns: _*)
+      }
+    }
 
 }

@@ -29,7 +29,7 @@ class ParquetSourceSuite extends FunSuite with Matchers {
     val pattern = s"${resourcesDir.toUri.toString}/*.parquet"
     val data = ParquetSource(pattern, fs, conf)
     val iters = data.stream
-    assert(iters.map(_.size).sum === 1000)
+    assert(iters.map(_.size).sum === 1005)
   }
 
 }

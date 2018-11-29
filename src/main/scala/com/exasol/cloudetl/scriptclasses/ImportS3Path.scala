@@ -34,7 +34,7 @@ object ImportS3Path {
 
   private[this] def requiredParam(params: JMap[String, String], key: String): String =
     if (!params.containsKey(key)) {
-      throw new RuntimeException(s"The required parameter $key is not defined!")
+      throw new IllegalArgumentException(s"The required parameter $key is not defined!")
     } else {
       params.get(key)
     }
