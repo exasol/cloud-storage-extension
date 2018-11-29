@@ -26,8 +26,8 @@ trait BaseImportSuite extends FunSuite with Matchers with MockitoSugar {
     "S3_SECRET_KEY" -> s3SecretKey
   )
 
-  val resourcePath = norm(Paths.get(getClass.getResource("/parquet").toURI))
-  val resourceBucket = s"$resourcePath/*.parquet"
+  val resourcePath: String = norm(Paths.get(getClass.getResource("/parquet").toURI))
+  val resourceBucket: String = s"$resourcePath/*.parquet"
 
   def norm(path: Path): String =
     path.toUri.toString.replaceAll("/$", "").replaceAll("///", "/")
