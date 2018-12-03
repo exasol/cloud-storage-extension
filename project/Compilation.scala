@@ -103,7 +103,7 @@ object Compilation {
     contribWart("SealedCaseClass"),
     contribWart("SomeApply"),
     contribWart("SymbolicName"),
-    // contribWart("UnsafeInheritance"),
+    contribWart("UnsafeInheritance"),
     ExtraWart.EnumerationPartial,
     ExtraWart.FutureObject,
     ExtraWart.GenMapLikePartial,
