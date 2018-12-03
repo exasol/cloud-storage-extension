@@ -52,20 +52,20 @@ Please change required parameters.
 CREATE SCHEMA ETL;
 OPEN SCHEMA ETL;
 
-CREATE OR REPLACE JAVA SET SCRIPT IMPORT_S3_PATH(...) EMITS (...) AS
-%scriptclass com.exasol.cloudetl.scriptclasses.ImportS3Path;
+CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
+%scriptclass com.exasol.cloudetl.scriptclasses.ImportPath;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
 
-CREATE OR REPLACE JAVA SET SCRIPT IMPORT_S3_FILES(...) EMITS (...) AS
+CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
 %env LD_LIBRARY_PATH=/tmp/;
-%scriptclass com.exasol.cloudetl.scriptclasses.ImportS3Files;
+%scriptclass com.exasol.cloudetl.scriptclasses.ImportFiles;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
 
-CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_S3_METADATA(...)
-EMITS (s3_filename VARCHAR(200), partition_index VARCHAR(100)) AS
-%scriptclass com.exasol.cloudetl.scriptclasses.ImportS3Metadata;
+CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...)
+EMITS (filename VARCHAR(200), partition_index VARCHAR(100)) AS
+%scriptclass com.exasol.cloudetl.scriptclasses.ImportMetadata;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
 ```
@@ -91,8 +91,8 @@ CREATE TABLE SALES_POSITIONS (
 -- ALTER SESSION SET SCRIPT_OUTPUT_ADDRESS='10.0.2.162:3000';
 
 IMPORT INTO SALES_POSITIONS
-FROM SCRIPT ETL.IMPORT_S3_PATH WITH
- S3_BUCKET_PATH = 's3a://exa-mo-frankfurt/test/retail/sales_positions/*'
+FROM SCRIPT ETL.IMPORT_PATH WITH
+ BUCKET_PATH    = 's3a://exa-mo-frankfurt/test/retail/sales_positions/*'
  S3_ACCESS_KEY  = 'MY_AWS_ACCESS_KEY'
  S3_SECRET_KEY  = 'MY_AWS_SECRET_KEY'
  S3_ENDPOINT    = 's3.MY_REGION.amazonaws.com'

@@ -1,35 +1,32 @@
 package com.exasol.cloudetl.scriptclasses
 
-import java.net.URI
-
 import scala.collection.mutable.ListBuffer
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
+import com.exasol.cloudetl.bucket._
 import com.exasol.cloudetl.source.ParquetSource
 
+import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
 
-object ImportS3Files {
+object ImportFiles extends LazyLogging {
 
   def run(meta: ExaMetadata, iter: ExaIterator): Unit = {
-    val s3Bucket = iter.getString(0)
-    val s3Endpoint = iter.getString(1)
-    val s3AccessKey = iter.getString(2)
-    val s3SecretKey = iter.getString(3)
-    val files = groupFiles(iter, 4)
+    val bucketPath = iter.getString(0)
 
-    val conf: Configuration = new Configuration()
-    conf.set("fs.s3a.impl", classOf[org.apache.hadoop.fs.s3a.S3AFileSystem].getName)
-    conf.set("fs.s3a.endpoint", s3Endpoint)
-    conf.set("fs.s3a.access.key", s3AccessKey)
-    conf.set("fs.s3a.secret.key", s3SecretKey)
+    val rest = iter.getString(1)
+    val params = Bucket.strToMap(rest)
 
-    val fs: FileSystem = FileSystem.get(new URI(s3Bucket), conf)
+    val bucket = Bucket(params)
 
-    val source = createNewSource(files, fs, conf)
+    val files = groupFiles(iter, 2)
+
+    logger.info(s"Reading file = ${files.take(5).mkString(",")} from bucket = $bucketPath")
+
+    val source = createNewSource(files, bucket.fs, bucket.createConfiguration())
 
     readAndEmit(source, iter)
   }

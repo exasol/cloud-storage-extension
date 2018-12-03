@@ -4,6 +4,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 import com.exasol.ExaIterator
+import com.exasol.cloudetl.bucket.Bucket
 
 import org.mockito.Mockito.when
 import org.scalatest.FunSuite
@@ -20,7 +21,7 @@ trait BaseImportSuite extends FunSuite with Matchers with MockitoSugar {
   val s3SecretKey = "s3_secret_key"
 
   val params: Map[String, String] = Map(
-    "S3_BUCKET_PATH" -> s3BucketPath,
+    "BUCKET_PATH" -> s3BucketPath,
     "S3_ENDPOINT" -> s3Endpoint,
     "S3_ACCESS_KEY" -> s3AccessKey,
     "S3_SECRET_KEY" -> s3SecretKey
@@ -29,15 +30,15 @@ trait BaseImportSuite extends FunSuite with Matchers with MockitoSugar {
   val resourcePath: String = norm(Paths.get(getClass.getResource("/parquet").toURI))
   val resourceBucket: String = s"$resourcePath/*.parquet"
 
-  def norm(path: Path): String =
+  final def norm(path: Path): String =
     path.toUri.toString.replaceAll("/$", "").replaceAll("///", "/")
 
-  def commonExaIterator(bucket: String): ExaIterator = {
+  final def commonExaIterator(bucket: String): ExaIterator = {
     val mockIter = mock[ExaIterator]
+    val newParams = params + (Bucket.BUCKET_PATH -> bucket)
+
     when(mockIter.getString(0)).thenReturn(bucket)
-    when(mockIter.getString(1)).thenReturn("a")
-    when(mockIter.getString(2)).thenReturn("b")
-    when(mockIter.getString(3)).thenReturn("c")
+    when(mockIter.getString(1)).thenReturn(Bucket.mapToStr(newParams))
 
     mockIter
   }

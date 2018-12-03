@@ -6,7 +6,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 
 @SuppressWarnings(Array("org.wartremover.warts.Any"))
-class ImportS3FilesSuite extends BaseImportSuite {
+class ImportFilesSuite extends BaseImportSuite {
 
   test("`run` should emit total number of records") {
     val file1 = s"$resourcePath/sales_positions1.snappy.parquet"
@@ -15,9 +15,9 @@ class ImportS3FilesSuite extends BaseImportSuite {
     val exaIter = commonExaIterator(resourceBucket)
 
     when(exaIter.next()).thenReturn(true, false)
-    when(exaIter.getString(4)).thenReturn(file1, file2)
+    when(exaIter.getString(2)).thenReturn(file1, file2)
 
-    ImportS3Files.run(mock[ExaMetadata], exaIter)
+    ImportFiles.run(mock[ExaMetadata], exaIter)
 
     val totalRecords = 1000
 
@@ -43,9 +43,9 @@ class ImportS3FilesSuite extends BaseImportSuite {
     val exaIter = commonExaIterator(resourceBucket)
 
     when(exaIter.next()).thenReturn(false)
-    when(exaIter.getString(4)).thenReturn(file)
+    when(exaIter.getString(2)).thenReturn(file)
 
-    ImportS3Files.run(mock[ExaMetadata], exaIter)
+    ImportFiles.run(mock[ExaMetadata], exaIter)
 
     val totalRecords = 5
 
