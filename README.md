@@ -33,7 +33,7 @@ Please follow the steps described below in order to setup the UDFs.
 Download the latest jar file from [releases][jars].
 
 Additionally, you can also build it from the source by following the [build from
-source](#building-from-source) step.
+source](#building-from-source) steps.
 
 ### Upload the JAR file to Exasol BucketFS
 
@@ -52,25 +52,29 @@ Please change required parameters.
 CREATE SCHEMA ETL;
 OPEN SCHEMA ETL;
 
-CREATE OR REPLACE JAVA SET SCRIPT IMPORT_S3_PATH(...) EMITS (...) AS
-%scriptclass com.exasol.cloudetl.scriptclasses.ImportS3Path;
+CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
+%scriptclass com.exasol.cloudetl.scriptclasses.ImportPath;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
 
-CREATE OR REPLACE JAVA SET SCRIPT IMPORT_S3_FILES(...) EMITS (...) AS
+CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
 %env LD_LIBRARY_PATH=/tmp/;
-%scriptclass com.exasol.cloudetl.scriptclasses.ImportS3Files;
+%scriptclass com.exasol.cloudetl.scriptclasses.ImportFiles;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
 
-CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_S3_METADATA(...)
-EMITS (s3_filename VARCHAR(200), partition_index VARCHAR(100)) AS
-%scriptclass com.exasol.cloudetl.scriptclasses.ImportS3Metadata;
+CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...)
+EMITS (filename VARCHAR(200), partition_index VARCHAR(100)) AS
+%scriptclass com.exasol.cloudetl.scriptclasses.ImportMetadata;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
 ```
 
-### Import data from cloud storage
+### Import data from cloud storages
+
+Please follow steps below in order to import from cloud strorages.
+
+#### Create an Exasol schema and table
 
 ```sql
 CREATE SCHEMA TEST;
@@ -87,18 +91,49 @@ CREATE TABLE SALES_POSITIONS (
   VOUCHER_ID  SMALLINT,
   CANCELED    BOOLEAN
 );
+```
 
+#### Import from AWS S3
+
+```sql
 -- ALTER SESSION SET SCRIPT_OUTPUT_ADDRESS='10.0.2.162:3000';
 
 IMPORT INTO SALES_POSITIONS
-FROM SCRIPT ETL.IMPORT_S3_PATH WITH
- S3_BUCKET_PATH = 's3a://exa-mo-frankfurt/test/retail/sales_positions/*'
+FROM SCRIPT ETL.IMPORT_PATH WITH
+ BUCKET_PATH    = 's3a://exa-mo-frankfurt/test/retail/sales_positions/*'
  S3_ACCESS_KEY  = 'MY_AWS_ACCESS_KEY'
  S3_SECRET_KEY  = 'MY_AWS_SECRET_KEY'
  S3_ENDPOINT    = 's3.MY_REGION.amazonaws.com'
  PARALLELISM    = 'nproc()*10';
 
 -- MY_REGION is one of AWS regions, for example, eu-central-1
+
+SELECT * FROM SALES_POSITIONS LIMIT 10;
+```
+
+#### Import from Google GCS
+
+In order to read data from [Google GCS][gcs], you need to provide a service
+account key file. This should be uploaded to a secure Exasol bucket in advance.
+
+For example,
+
+```bash
+curl \
+  -X PUT \
+  -T path/to/project-id-service-keyfile.json \
+  http://w:MY-PASSWORD@EXA-NODE-ID:2580/bucket1/project-id-service-keyfile.json
+```
+
+And then run import,
+
+```sql
+IMPORT INTO SALES_POSITIONS
+FROM SCRIPT ETL.IMPORT_PATH WITH
+ BUCKET_PATH      = 'gs://exa-test-bucket/data/parquet/sales_positions/*'
+ GCS_PROJECT_ID   = 'MY_GCS_PORJECT_ID'
+ GCS_KEYFILE_PATH = 'MY_BUCKETFS_PATH/project-id-service-keyfile.json'
+ PARALLELISM      = 'nproc()*10';
 
 SELECT * FROM SALES_POSITIONS LIMIT 10;
 ```

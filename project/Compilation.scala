@@ -103,7 +103,7 @@ object Compilation {
     contribWart("SealedCaseClass"),
     contribWart("SomeApply"),
     contribWart("SymbolicName"),
-    // contribWart("UnsafeInheritance"),
+    contribWart("UnsafeInheritance"),
     ExtraWart.EnumerationPartial,
     ExtraWart.FutureObject,
     ExtraWart.GenMapLikePartial,
@@ -124,9 +124,8 @@ object Compilation {
   )
 
   val WartremoverTestFlags: Seq[Wart] = ExtraWartremoverFlags ++ Warts.allBut(
-    Wart.Null,
-    Wart.Throw,
-    Wart.While
+    Wart.NonUnitStatements,
+    Wart.Null
   )
 
 }

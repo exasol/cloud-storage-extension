@@ -14,6 +14,7 @@ import org.apache.parquet.schema.Type
 
 final case class Row(val values: Seq[Any])
 
+@SuppressWarnings(Array("org.wartremover.contrib.warts.UnsafeInheritance"))
 class RowReadSupport extends ReadSupport[Row] {
 
   override def prepareForRead(
@@ -35,6 +36,7 @@ class RowReadSupport extends ReadSupport[Row] {
   }
 }
 
+@SuppressWarnings(Array("org.wartremover.contrib.warts.UnsafeInheritance"))
 class RowRecordMaterializer(messageType: MessageType, readContext: ReadContext)
     extends RecordMaterializer[Row] {
 
@@ -43,7 +45,9 @@ class RowRecordMaterializer(messageType: MessageType, readContext: ReadContext)
   override def getCurrentRecord: Row = Row(getRootConverter.currentResult.toSeq)
 }
 
-@SuppressWarnings(Array("org.wartremover.warts.Var"))
+@SuppressWarnings(
+  Array("org.wartremover.warts.Var", "org.wartremover.contrib.warts.UnsafeInheritance")
+)
 class RowRootConverter(schema: GroupType) extends GroupConverter {
   private val size = schema.getFieldCount
   private var values: Array[Any] = Array.ofDim[Any](size)
