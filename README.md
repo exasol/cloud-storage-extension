@@ -70,7 +70,11 @@ EMITS (filename VARCHAR(200), partition_index VARCHAR(100)) AS
 /
 ```
 
-### Import data from cloud storage
+### Import data from cloud storages
+
+Please follow steps below in order to import from cloud strorages.
+
+#### Create an Exasol schema and table
 
 ```sql
 CREATE SCHEMA TEST;
@@ -87,7 +91,11 @@ CREATE TABLE SALES_POSITIONS (
   VOUCHER_ID  SMALLINT,
   CANCELED    BOOLEAN
 );
+```
 
+#### Import from AWS S3
+
+```sql
 -- ALTER SESSION SET SCRIPT_OUTPUT_ADDRESS='10.0.2.162:3000';
 
 IMPORT INTO SALES_POSITIONS
@@ -99,6 +107,33 @@ FROM SCRIPT ETL.IMPORT_PATH WITH
  PARALLELISM    = 'nproc()*10';
 
 -- MY_REGION is one of AWS regions, for example, eu-central-1
+
+SELECT * FROM SALES_POSITIONS LIMIT 10;
+```
+
+#### Import from Google GCS
+
+In order to read data from [Google GCS][gcs], you need to provide a service
+account key file. This should be uploaded to a secure Exasol bucket in advance.
+
+For example,
+
+```bash
+curl \
+  -X PUT \
+  -T path/to/project-id-service-keyfile.json \
+  http://w:MY-PASSWORD@EXA-NODE-ID:2580/bucket1/project-id-service-keyfile.json
+```
+
+And then run import,
+
+```sql
+IMPORT INTO SALES_POSITIONS
+FROM SCRIPT ETL.IMPORT_PATH WITH
+ BUCKET_PATH      = 'gs://exa-test-bucket/data/parquet/sales_positions/*'
+ GCS_PROJECT_ID   = 'MY_GCS_PORJECT_ID'
+ GCS_KEYFILE_PATH = 'MY_BUCKETFS_PATH/project-id-service-keyfile.json'
+ PARALLELISM      = 'nproc()*10';
 
 SELECT * FROM SALES_POSITIONS LIMIT 10;
 ```

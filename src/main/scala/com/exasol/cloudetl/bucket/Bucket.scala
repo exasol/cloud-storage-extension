@@ -46,6 +46,30 @@ final case class S3Bucket(path: String, params: Map[String, String]) extends Buc
 
 }
 
+final case class GCSBucket(path: String, params: Map[String, String]) extends Bucket {
+
+  override val bucketPath: String = path
+
+  override def validate(): Unit =
+    Bucket.validate(params, Bucket.GCS_PARAMETERS)
+
+  override def createConfiguration(): Configuration = {
+    validate()
+
+    val conf = new Configuration()
+    conf.set("fs.gs.impl", classOf[com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem].getName)
+    conf.setBoolean("fs.gs.auth.service.account.enable", true)
+    conf.set("fs.gs.project.id", Bucket.requiredParam(params, "GCS_PROJECT_ID"))
+    conf.set(
+      "fs.gs.auth.service.account.json.keyfile",
+      Bucket.requiredParam(params, "GCS_KEYFILE_PATH")
+    )
+
+    conf
+  }
+
+}
+
 final case class LocalBucket(path: String, params: Map[String, String]) extends Bucket {
 
   override val bucketPath: String = path
@@ -65,7 +89,7 @@ object Bucket extends LazyLogging {
 
     scheme match {
       case "s3a"  => S3Bucket(path, params)
-      case "gs"   => S3Bucket(path, params)
+      case "gs"   => GCSBucket(path, params)
       case "file" => LocalBucket(path, params)
       case _      => throw new IllegalArgumentException(s"Unknown path scheme $scheme")
     }
@@ -95,7 +119,6 @@ object Bucket extends LazyLogging {
   }
 
   def strToMap(str: String): Map[String, String] =
-    // val KV_PATTERN = """(\w+)=(\w+)""".r
     str
       .split(";")
       .map { word =>
@@ -108,5 +131,8 @@ object Bucket extends LazyLogging {
 
   final val S3_PARAMETERS: Seq[String] =
     Seq("S3_ENDPOINT", "S3_ACCESS_KEY", "S3_SECRET_KEY")
+
+  final val GCS_PARAMETERS: Seq[String] =
+    Seq("GCS_PROJECT_ID", "GCS_KEYFILE_PATH")
 
 }

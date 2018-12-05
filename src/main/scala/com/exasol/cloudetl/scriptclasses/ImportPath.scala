@@ -24,11 +24,11 @@ object ImportPath {
 
     s"""
        |SELECT
-       |  $scriptSchema.IMPORT_S3_FILES(
+       |  $scriptSchema.IMPORT_FILES(
        |    '$bucketPath', '$rest', filename
        |)
        |FROM (
-       |  SELECT $scriptSchema.IMPORT_S3_METADATA(
+       |  SELECT $scriptSchema.IMPORT_METADATA(
        |    '$bucketPath', '$rest', $parallelism
        |  )
        |)

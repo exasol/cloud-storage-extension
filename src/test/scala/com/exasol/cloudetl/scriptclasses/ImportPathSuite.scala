@@ -23,11 +23,11 @@ class ImportPathSuite extends BaseImportSuite {
     val sqlExpected =
       s"""
          |SELECT
-         |  $testSchema.IMPORT_S3_FILES(
+         |  $testSchema.IMPORT_FILES(
          |    '$s3BucketPath', '$rest', filename
          |)
          |FROM (
-         |  SELECT $testSchema.IMPORT_S3_METADATA(
+         |  SELECT $testSchema.IMPORT_METADATA(
          |    '$s3BucketPath', '$rest', nproc()
          |  )
          |)
