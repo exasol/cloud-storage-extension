@@ -104,8 +104,10 @@ final case class LocalBucket(path: String, params: Map[String, String]) extends 
 
   override def validate(): Unit = ()
 
-  override def createConfiguration(): Configuration =
+  override def createConfiguration(): Configuration = {
+    validate()
     new Configuration()
+  }
 
 }
 
@@ -120,7 +122,8 @@ object Bucket extends LazyLogging {
       case "gs"             => GCSBucket(path, params)
       case "wasb" | "wasbs" => AzureBlobBucket(path, params)
       case "file"           => LocalBucket(path, params)
-      case _                => throw new IllegalArgumentException(s"Unknown path scheme $scheme")
+      case _ =>
+        throw new IllegalArgumentException(s"Unsupported path scheme $scheme")
     }
   }
 
