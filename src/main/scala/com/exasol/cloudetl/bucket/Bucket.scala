@@ -144,14 +144,14 @@ object Bucket extends LazyLogging {
 
   def mapToStr(params: Map[String, String]): String = {
     val selectedParams = (params -- Seq("PARALLELISM"))
-    selectedParams.map { case (k, v) => s"$k=$v" }.mkString(";")
+    selectedParams.map { case (k, v) => s"$k:=:$v" }.mkString(";")
   }
 
   def strToMap(str: String): Map[String, String] =
     str
       .split(";")
       .map { word =>
-        val kv = word.split("=")
+        val kv = word.split(":=:")
         kv(0) -> kv(1)
       }
       .toMap
