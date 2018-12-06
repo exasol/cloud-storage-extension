@@ -42,6 +42,8 @@ before_deploy:
   - echo "Ensure assembly jar file is created for a $TRAVIS_TAG"
   - ./sbtx assembly
   - ls -lh ./target/scala-2.12/
+  - export JAR_VERSION=${TRAVIS_TAG#v}
+  - echo "Jar artifact version $JAR_VERSION"
 
 deploy:
   provider: releases
@@ -55,7 +57,7 @@ deploy:
       hF48soVocY1xus5AkKiMxrW6d93Th2XTGoyRzJbwm4iXPY1UIKndlkEjFq3RsZRIPND9iURmp/qcwvlIdB29SsczYbH
       p3QOQn/NTC6SZbmgAW4xZpCRUUZwfOXP4RacIcDKHlsUjqBZwmSmxK/vJ6KRNR4yxBn7cVlm060cD5l3TmpuUC6X9JI
       EPAkYJyNJ1CtRUkYDbgBn+Eof5X3jOZqo8pI51YBKdnz0E=
-  file: ./target/scala-2.12/cloud-storage-etl-udfs-${TRAVIS_TAG}.jar
+  file: ./target/scala-2.12/cloud-storage-etl-udfs-${JAR_VERSION}.jar
   skip_cleanup: true
   on:
     repo: exasol/cloud-storage-etl-udfs

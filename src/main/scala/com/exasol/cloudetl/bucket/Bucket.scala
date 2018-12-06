@@ -70,14 +70,44 @@ final case class GCSBucket(path: String, params: Map[String, String]) extends Bu
 
 }
 
+final case class AzureBlobBucket(path: String, params: Map[String, String]) extends Bucket {
+
+  override val bucketPath: String = path
+
+  override def validate(): Unit =
+    Bucket.validate(params, Bucket.AZURE_PARAMETERS)
+
+  override def createConfiguration(): Configuration = {
+    validate()
+
+    val conf = new Configuration()
+    val accountName = Bucket.requiredParam(params, "AZURE_ACCOUNT_NAME")
+    val accountSecretKey = Bucket.requiredParam(params, "AZURE_SECRET_KEY")
+    conf.set("fs.azure", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
+    conf.set("fs.wasb.impl", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
+    conf.set("fs.wasbs.impl", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
+    conf.set("fs.AbstractFileSystem.wasb.impl", classOf[org.apache.hadoop.fs.azure.Wasb].getName)
+    conf.set(
+      "fs.AbstractFileSystem.wasbs.impl",
+      classOf[org.apache.hadoop.fs.azure.Wasbs].getName
+    )
+    conf.set(s"fs.azure.account.key.$accountName.blob.core.windows.net", accountSecretKey)
+
+    conf
+  }
+
+}
+
 final case class LocalBucket(path: String, params: Map[String, String]) extends Bucket {
 
   override val bucketPath: String = path
 
   override def validate(): Unit = ()
 
-  override def createConfiguration(): Configuration =
+  override def createConfiguration(): Configuration = {
+    validate()
     new Configuration()
+  }
 
 }
 
@@ -88,10 +118,12 @@ object Bucket extends LazyLogging {
     val scheme = getScheme(path)
 
     scheme match {
-      case "s3a"  => S3Bucket(path, params)
-      case "gs"   => GCSBucket(path, params)
-      case "file" => LocalBucket(path, params)
-      case _      => throw new IllegalArgumentException(s"Unknown path scheme $scheme")
+      case "s3a"            => S3Bucket(path, params)
+      case "gs"             => GCSBucket(path, params)
+      case "wasb" | "wasbs" => AzureBlobBucket(path, params)
+      case "file"           => LocalBucket(path, params)
+      case _ =>
+        throw new IllegalArgumentException(s"Unsupported path scheme $scheme")
     }
   }
 
@@ -115,14 +147,14 @@ object Bucket extends LazyLogging {
 
   def mapToStr(params: Map[String, String]): String = {
     val selectedParams = (params -- Seq("PARALLELISM"))
-    selectedParams.map { case (k, v) => s"$k=$v" }.mkString(";")
+    selectedParams.map { case (k, v) => s"$k:=:$v" }.mkString(";")
   }
 
   def strToMap(str: String): Map[String, String] =
     str
       .split(";")
       .map { word =>
-        val kv = word.split("=")
+        val kv = word.split(":=:")
         kv(0) -> kv(1)
       }
       .toMap
@@ -134,5 +166,8 @@ object Bucket extends LazyLogging {
 
   final val GCS_PARAMETERS: Seq[String] =
     Seq("GCS_PROJECT_ID", "GCS_KEYFILE_PATH")
+
+  final val AZURE_PARAMETERS: Seq[String] =
+    Seq("AZURE_ACCOUNT_NAME", "AZURE_SECRET_KEY")
 
 }
