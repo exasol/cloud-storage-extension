@@ -17,8 +17,8 @@ class ImportPathSuite extends BaseImportSuite {
     when(exaSpec.getParameters()).thenReturn(params.asJava)
 
     val rest =
-      s"""BUCKET_PATH=$s3BucketPath;S3_ENDPOINT=$s3Endpoint;""" +
-        s"""S3_ACCESS_KEY=$s3AccessKey;S3_SECRET_KEY=$s3SecretKey"""
+      s"""BUCKET_PATH:=:$s3BucketPath;S3_ENDPOINT:=:$s3Endpoint;""" +
+        s"""S3_ACCESS_KEY:=:$s3AccessKey;S3_SECRET_KEY:=:$s3SecretKey"""
 
     val sqlExpected =
       s"""
