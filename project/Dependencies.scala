@@ -5,22 +5,30 @@ import sbt._
 /** A list of required dependencies */
 object Dependencies {
 
+  // Versions
+  private val ExasolJDBCVersion = "6.0.13"
+  private val HadoopVersion = "2.9.2"
+  private val ParquetVersion = "1.8.1"
+  private val AzureStorageVersion = "2.2.0"
+  private val GoogleStorageVersion = "hadoop2-1.9.10"
+  private val TypesafeLoggingVersion = "3.9.0"
+
   val Resolvers: Seq[Resolver] = Seq(
     "Exasol Releases" at "https://maven.exasol.com/artifactory/exasol-releases"
   )
 
   /** Core dependencies needed for connector */
   private val CoreDependencies: Seq[ModuleID] = Seq(
-    "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
-    "com.exasol" % "exasol-jdbc" % "6.0.8",
-    "com.exasol" % "exasol-script-api" % "6.0.8",
-    "org.apache.hadoop" % "hadoop-aws" % "2.8.4",
-    "org.apache.hadoop" % "hadoop-azure" % "2.8.4",
-    "org.apache.hadoop" % "hadoop-common" % "2.8.4" exclude ("org.slf4j", "slf4j-log4j12"),
-    "org.apache.hadoop" % "hadoop-hdfs" % "2.8.4",
-    "org.apache.parquet" % "parquet-avro" % "1.8.1",
-    "com.microsoft.azure" % "azure-storage" % "2.2.0",
-    "com.google.cloud.bigdataoss" % "gcs-connector" % "hadoop2-1.9.10"
+    "com.exasol" % "exasol-jdbc" % ExasolJDBCVersion,
+    "com.exasol" % "exasol-script-api" % ExasolJDBCVersion,
+    "org.apache.hadoop" % "hadoop-aws" % HadoopVersion,
+    "org.apache.hadoop" % "hadoop-azure" % HadoopVersion,
+    "org.apache.hadoop" % "hadoop-common" % HadoopVersion exclude ("org.slf4j", "slf4j-log4j12"),
+    "org.apache.hadoop" % "hadoop-hdfs" % HadoopVersion,
+    "org.apache.parquet" % "parquet-avro" % ParquetVersion,
+    "com.microsoft.azure" % "azure-storage" % AzureStorageVersion,
+    "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion,
+    "com.typesafe.scala-logging" %% "scala-logging" % TypesafeLoggingVersion
   )
 
   /** Test dependencies only required in `test` */
