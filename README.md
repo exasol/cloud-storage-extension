@@ -2,6 +2,7 @@
 
 [![Build Status][travis-badge]][travis-link]
 [![Codecov][codecov-badge]][codecov-link]
+[![GitHub Latest Release][gh-release-badge]][gh-release-link]
 
 ###### Please note that this is an open source project which is *not officially supported* by Exasol. We will try to help you as much as possible, but can't guarantee anything since this is not an official Exasol product.
 
@@ -174,6 +175,8 @@ The packaged jar should be located at
 [travis-link]: https://travis-ci.org/exasol/cloud-storage-etl-udfs
 [codecov-badge]: https://codecov.io/gh/exasol/cloud-storage-etl-udfs/branch/master/graph/badge.svg
 [codecov-link]: https://codecov.io/gh/exasol/cloud-storage-etl-udfs
+[gh-release-badge]: https://img.shields.io/github/release/exasol/cloud-storage-etl-udfs.svg
+[gh-release-link]: https://github.com/exasol/cloud-storage-etl-udfs/releases/latest
 [exasol]: https://www.exasol.com/en/
 [s3]: https://aws.amazon.com/s3/
 [gcs]: https://cloud.google.com/storage/
