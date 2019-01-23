@@ -53,6 +53,8 @@ Please change required parameters.
 CREATE SCHEMA ETL;
 OPEN SCHEMA ETL;
 
+-- Import related scripts
+
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
 %scriptclass com.exasol.cloudetl.scriptclasses.ImportPath;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
@@ -69,6 +71,18 @@ EMITS (filename VARCHAR(200), partition_index VARCHAR(100)) AS
 %scriptclass com.exasol.cloudetl.scriptclasses.ImportMetadata;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
+
+-- Export related scripts
+
+CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
+%scriptclass com.exasol.cloudetl.scriptclasses.ExportPath;
+%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
+/
+
+CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
+%scriptclass com.exasol.cloudetl.scriptclasses.ExportTable;
+%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
+/
 ```
 
 ### Import data from cloud storages
@@ -78,8 +92,8 @@ Please follow steps below in order to import from cloud strorages.
 #### Create an Exasol schema and table
 
 ```sql
-CREATE SCHEMA TEST;
-OPEN SCHEMA TEST;
+CREATE SCHEMA RETAIL;
+OPEN SCHEMA RETAIL;
 
 DROP TABLE IF EXISTS SALES_POSITIONS;
 
@@ -150,6 +164,20 @@ FROM SCRIPT ETL.IMPORT_PATH WITH
   PARALLELISM        = 'nproc()*10';
 
 SELECT * FROM SALES_POSITIONS LIMIT 10;
+```
+
+#### Export to AWS S3
+
+```sql
+EXPORT SALES_POSITIONS
+INTO SCRIPT ETL.IMPORT_PATH WITH
+  BUCKET_PATH    = 's3a://exa-mo-frankfurt/export/retail/sales_positions/'
+  S3_ACCESS_KEY  = 'MY_AWS_ACCESS_KEY'
+  S3_SECRET_KEY  = 'MY_AWS_SECRET_KEY'
+  S3_ENDPOINT    = 's3.MY_REGION.amazonaws.com'
+  PARALLELISM    = 'nproc()';
+
+-- MY_REGION is one of AWS regions, for example, eu-central-1
 ```
 
 ## Building from Source
