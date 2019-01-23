@@ -6,7 +6,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 
 @SuppressWarnings(Array("org.wartremover.warts.Any"))
-class ImportFilesSuite extends BaseImportSuite {
+class ImportFilesSuite extends BaseSuite {
 
   test("`run` should emit total number of records") {
     val file1 = s"$resourcePath/sales_positions1.snappy.parquet"

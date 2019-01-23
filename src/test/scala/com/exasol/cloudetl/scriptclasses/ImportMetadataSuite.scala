@@ -5,7 +5,7 @@ import com.exasol.ExaMetadata
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito._
 
-class ImportMetadataSuite extends BaseImportSuite {
+class ImportMetadataSuite extends BaseSuite {
 
   test("`run` should create a list of files names") {
     val exaIter = commonExaIterator(resourceBucket)

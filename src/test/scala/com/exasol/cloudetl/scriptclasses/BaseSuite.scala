@@ -11,7 +11,7 @@ import org.scalatest.FunSuite
 import org.scalatest.Matchers
 import org.scalatest.mockito.MockitoSugar
 
-trait BaseImportSuite extends FunSuite with Matchers with MockitoSugar {
+trait BaseSuite extends FunSuite with Matchers with MockitoSugar {
 
   val testSchema = "my_schema"
 
@@ -26,6 +26,10 @@ trait BaseImportSuite extends FunSuite with Matchers with MockitoSugar {
     "S3_ACCESS_KEY" -> s3AccessKey,
     "S3_SECRET_KEY" -> s3SecretKey
   )
+
+  val rest =
+    s"""BUCKET_PATH:=:$s3BucketPath;S3_ENDPOINT:=:$s3Endpoint;""" +
+      s"""S3_ACCESS_KEY:=:$s3AccessKey;S3_SECRET_KEY:=:$s3SecretKey"""
 
   val resourcePath: String = norm(Paths.get(getClass.getResource("/parquet").toURI))
   val resourceBucket: String = s"$resourcePath/*.parquet"

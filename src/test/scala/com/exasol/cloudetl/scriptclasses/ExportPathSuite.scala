@@ -7,7 +7,7 @@ import com.exasol.ExaMetadata
 
 import org.mockito.Mockito._
 
-class ImportPathSuite extends BaseSuite {
+class ExportPathSuite extends BaseSuite {
 
   test("`generateSqlForImportSpec` should create a sql statement") {
     val exaMeta = mock[ExaMetadata]
@@ -19,19 +19,14 @@ class ImportPathSuite extends BaseSuite {
     val sqlExpected =
       s"""
          |SELECT
-         |  $testSchema.IMPORT_FILES(
-         |    '$s3BucketPath', '$rest', filename
-         |)
-         |FROM (
-         |  SELECT $testSchema.IMPORT_METADATA(
-         |    '$s3BucketPath', '$rest', nproc()
-         |  )
-         |)
+         |  $testSchema.EXPORT_TABLE('$s3BucketPath', '$rest')
+         |FROM
+         |  DUAL
          |GROUP BY
-         |  partition_index;
+         |  nproc();
       """.stripMargin
 
-    assert(ImportPath.generateSqlForImportSpec(exaMeta, exaSpec).trim === sqlExpected.trim)
+    assert(ExportPath.generateSqlForImportSpec(exaMeta, exaSpec).trim === sqlExpected.trim)
     verify(exaMeta, atLeastOnce).getScriptSchema
     verify(exaSpec, times(1)).getParameters
   }
@@ -46,7 +41,7 @@ class ImportPathSuite extends BaseSuite {
     when(exaSpec.getParameters()).thenReturn(newParams.asJava)
 
     val thrown = intercept[IllegalArgumentException] {
-      ImportPath.generateSqlForImportSpec(exaMeta, exaSpec)
+      ExportPath.generateSqlForImportSpec(exaMeta, exaSpec)
     }
 
     assert(thrown.getMessage === "The required parameter S3_ACCESS_KEY is not defined!")
