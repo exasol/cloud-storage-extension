@@ -37,7 +37,7 @@ class ImportFilesSuite extends BaseSuite {
    * +---------+-----------+----------+------+-----+----------+--------+
    *
    */
-  test("`run` should emit corrent sequence of records") {
+  test("`run` should emit correct sequence of records") {
     val file = s"$resourcePath/sales_positions_small.snappy.parquet"
 
     val exaIter = commonExaIterator(resourceBucket)

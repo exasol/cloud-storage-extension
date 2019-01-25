@@ -1,4 +1,6 @@
-package com.exasol.cloudetl.row
+package com.exasol.cloudetl.parquet
+
+import com.exasol.cloudetl.data.Row
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.parquet.hadoop.api.ReadSupport
@@ -11,8 +13,6 @@ import org.apache.parquet.io.api.RecordMaterializer
 import org.apache.parquet.schema.GroupType
 import org.apache.parquet.schema.MessageType
 import org.apache.parquet.schema.Type
-
-final case class Row(val values: Seq[Any])
 
 @SuppressWarnings(Array("org.wartremover.contrib.warts.UnsafeInheritance"))
 class RowReadSupport extends ReadSupport[Row] {
