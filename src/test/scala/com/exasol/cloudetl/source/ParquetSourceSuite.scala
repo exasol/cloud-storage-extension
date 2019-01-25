@@ -6,6 +6,7 @@ import com.exasol.cloudetl.util.FsUtil
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
+import org.apache.parquet.schema.MessageTypeParser
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 
@@ -24,12 +25,30 @@ class ParquetSourceSuite extends FunSuite with Matchers {
     assert(iters.map(_.size).sum === 500)
   }
 
+  private val resourcesDir = salesPosParquetFile.getParent
+  private val pattern = s"${resourcesDir.toUri.toString}/*.parquet"
+
   test("reads multiple parquet files") {
-    val resourcesDir = salesPosParquetFile.getParent
-    val pattern = s"${resourcesDir.toUri.toString}/*.parquet"
-    val data = ParquetSource(pattern, fs, conf)
-    val iters = data.stream
+    val iters = ParquetSource(pattern, fs, conf).stream()
     assert(iters.map(_.size).sum === 1005)
+  }
+
+  test("reads parquet files schema") {
+    val schema = ParquetSource(pattern, fs, conf).getSchema()
+    val expectedMsgType = MessageTypeParser
+      .parseMessageType("""message spark_schema {
+                          |  optional int64 sales_id;
+                          |  optional int32 position_id;
+                          |  optional int32 article_id;
+                          |  optional int32 amount;
+                          |  optional double price;
+                          |  optional int32 voucher_id;
+                          |  optional boolean canceled;
+                          |}
+      """.stripMargin)
+
+    assert(schema.isDefined)
+    schema.foreach { case msgType => assert(msgType === expectedMsgType) }
   }
 
 }
