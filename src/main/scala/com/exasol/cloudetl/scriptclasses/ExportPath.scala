@@ -2,13 +2,13 @@ package com.exasol.cloudetl.scriptclasses
 
 import scala.collection.JavaConverters._
 
-import com.exasol.ExaImportSpecification
+import com.exasol.ExaExportSpecification
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.bucket._
 
 object ExportPath {
 
-  def generateSqlForImportSpec(exaMeta: ExaMetadata, exaSpec: ExaImportSpecification): String = {
+  def generateSqlForExportSpec(exaMeta: ExaMetadata, exaSpec: ExaExportSpecification): String = {
     val params = exaSpec.getParameters.asScala.toMap
 
     val bucket = Bucket(params)
