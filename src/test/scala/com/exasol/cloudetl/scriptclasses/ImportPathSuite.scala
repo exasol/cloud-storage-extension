@@ -17,8 +17,7 @@ class ImportPathSuite extends BaseSuite {
     when(exaSpec.getParameters()).thenReturn(params.asJava)
 
     val sqlExpected =
-      s"""
-         |SELECT
+      s"""SELECT
          |  $testSchema.IMPORT_FILES(
          |    '$s3BucketPath', '$rest', filename
          |)
@@ -29,9 +28,9 @@ class ImportPathSuite extends BaseSuite {
          |)
          |GROUP BY
          |  partition_index;
-      """.stripMargin
+         |""".stripMargin
 
-    assert(ImportPath.generateSqlForImportSpec(exaMeta, exaSpec).trim === sqlExpected.trim)
+    assert(ImportPath.generateSqlForImportSpec(exaMeta, exaSpec) === sqlExpected)
     verify(exaMeta, atLeastOnce).getScriptSchema
     verify(exaSpec, times(1)).getParameters
   }

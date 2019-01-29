@@ -22,8 +22,7 @@ object ImportPath {
 
     val scriptSchema = exaMeta.getScriptSchema
 
-    s"""
-       |SELECT
+    s"""SELECT
        |  $scriptSchema.IMPORT_FILES(
        |    '$bucketPath', '$rest', filename
        |)
@@ -34,7 +33,7 @@ object ImportPath {
        |)
        |GROUP BY
        |  partition_index;
-    """.stripMargin
+       |""".stripMargin
   }
 
 }

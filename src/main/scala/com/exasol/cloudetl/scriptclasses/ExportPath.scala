@@ -10,26 +10,44 @@ object ExportPath {
 
   def generateSqlForExportSpec(exaMeta: ExaMetadata, exaSpec: ExaExportSpecification): String = {
     val params = exaSpec.getParameters.asScala.toMap
-
     val bucket = Bucket(params)
 
     bucket.validate()
 
     val bucketPath = bucket.bucketPath
     val parallelism = Bucket.optionalParam(params, "PARALLELISM", "nproc()")
-
     val rest = Bucket.mapToStr(params)
 
     val scriptSchema = exaMeta.getScriptSchema
 
-    s"""
-       |SELECT
-       |  $scriptSchema.EXPORT_TABLE('$bucketPath', '$rest')
+    val srcColumns = getSourceColumns(exaSpec)
+    val srcColumnsParam = srcColumns.mkString(".")
+
+    s"""SELECT
+       |  $scriptSchema.EXPORT_TABLE(
+       |    '$bucketPath', '$rest', '$srcColumnsParam', ${srcColumns.mkString(", ")}
+       |)
        |FROM
        |  DUAL
        |GROUP BY
        |  $parallelism;
-    """.stripMargin
+       |""".stripMargin
+  }
+
+  private[this] def getSourceColumns(spec: ExaExportSpecification): Seq[String] =
+    spec.getSourceColumnNames.asScala
+      .map {
+        case value =>
+          // Remove quotes if present
+          getColumnName(value).replaceAll("\"", "")
+      }
+
+  /** Given a table name dot column name syntax (myTable.colInt), return the column name. */
+  private[this] def getColumnName(str: String): String = str.split("\\.") match {
+    case Array(colName)              => colName
+    case Array(tblName @ _, colName) => colName
+    case _ =>
+      throw new RuntimeException(s"Could not parse the column name from '$str'!")
   }
 
 }

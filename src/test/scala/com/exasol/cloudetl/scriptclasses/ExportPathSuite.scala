@@ -16,19 +16,24 @@ class ExportPathSuite extends BaseSuite {
     when(exaMeta.getScriptSchema()).thenReturn(testSchema)
     when(exaSpec.getParameters()).thenReturn(params.asJava)
 
+    val srcCols = Seq("tbl.col_int", "c_bool", "c_char")
+    when(exaSpec.getSourceColumnNames).thenReturn(srcCols.asJava)
+
     val sqlExpected =
-      s"""
-         |SELECT
-         |  $testSchema.EXPORT_TABLE('$s3BucketPath', '$rest')
+      s"""SELECT
+         |  $testSchema.EXPORT_TABLE(
+         |    '$s3BucketPath', '$rest', 'col_int.c_bool.c_char', col_int, c_bool, c_char
+         |)
          |FROM
          |  DUAL
          |GROUP BY
          |  nproc();
-      """.stripMargin
+         |""".stripMargin
 
-    assert(ExportPath.generateSqlForExportSpec(exaMeta, exaSpec).trim === sqlExpected.trim)
+    assert(ExportPath.generateSqlForExportSpec(exaMeta, exaSpec) === sqlExpected)
     verify(exaMeta, atLeastOnce).getScriptSchema
     verify(exaSpec, times(1)).getParameters
+    verify(exaSpec, times(1)).getSourceColumnNames
   }
 
   test("`generateSqlForExportSpec` should throw an exception if any required param is missing") {
@@ -46,6 +51,27 @@ class ExportPathSuite extends BaseSuite {
 
     assert(thrown.getMessage === "The required parameter S3_ACCESS_KEY is not defined!")
     verify(exaSpec, times(1)).getParameters
+    verify(exaSpec, never).getSourceColumnNames
+  }
+
+  test("`generateSqlForExportSpec` throws if column cannot be parsed (contains extra '.')") {
+    val exaMeta = mock[ExaMetadata]
+    val exaSpec = mock[ExaExportSpecification]
+
+    when(exaMeta.getScriptSchema()).thenReturn(testSchema)
+    when(exaSpec.getParameters()).thenReturn(params.asJava)
+
+    val srcCols = Seq("tbl.c_int.integer")
+    when(exaSpec.getSourceColumnNames).thenReturn(srcCols.asJava)
+
+    val thrown = intercept[RuntimeException] {
+      ExportPath.generateSqlForExportSpec(exaMeta, exaSpec)
+    }
+
+    assert(thrown.getMessage === "Could not parse the column name from 'tbl.c_int.integer'!")
+    verify(exaMeta, atLeastOnce).getScriptSchema
+    verify(exaSpec, times(1)).getParameters
+    verify(exaSpec, times(1)).getSourceColumnNames
   }
 
 }
