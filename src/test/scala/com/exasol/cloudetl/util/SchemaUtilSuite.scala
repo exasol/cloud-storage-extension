@@ -1,17 +1,18 @@
 package com.exasol.cloudetl.util
 
+import com.exasol.ExaIterator
 import com.exasol.cloudetl.data.ExaColumnInfo
 
-import org.apache.parquet.schema.MessageType
-import org.apache.parquet.schema.OriginalType
-import org.apache.parquet.schema.PrimitiveType
+import org.apache.parquet.schema._
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
 import org.apache.parquet.schema.Type.Repetition
-import org.apache.parquet.schema.Types
+import org.mockito.Mockito._
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
+import org.scalatest.mockito.MockitoSugar
 
-class SchemaUtilSuite extends FunSuite with Matchers {
+@SuppressWarnings(Array("org.wartremover.contrib.warts.ExposedTuples"))
+class SchemaUtilSuite extends FunSuite with Matchers with MockitoSugar {
 
   test("`createParquetMessageType` throws an exception for unknown type") {
     val thrown = intercept[RuntimeException] {
@@ -92,5 +93,42 @@ class SchemaUtilSuite extends FunSuite with Matchers {
     )
 
     assert(SchemaUtil.createParquetMessageType(exaColumns, schemaName) === messageType)
+  }
+
+  test("`exaColumnToValue` returns value with column type") {
+    val iter = mock[ExaIterator]
+    val startIdx = 3
+    val bd = new java.math.BigDecimal(1337)
+    val dt = new java.sql.Date(System.currentTimeMillis())
+    val ts = new java.sql.Timestamp(System.currentTimeMillis())
+
+    when(iter.getInteger(3)).thenReturn(1)
+    when(iter.getLong(4)).thenReturn(3L)
+    when(iter.getBigDecimal(5)).thenReturn(bd)
+    when(iter.getDouble(6)).thenReturn(3.14)
+    when(iter.getString(7)).thenReturn("xyz")
+    when(iter.getBoolean(8)).thenReturn(true)
+    when(iter.getDate(9)).thenReturn(dt)
+    when(iter.getTimestamp(10)).thenReturn(ts)
+
+    val data = Seq(
+      1 -> ExaColumnInfo("c_int", classOf[java.lang.Integer]),
+      3L -> ExaColumnInfo("c_long", classOf[java.lang.Long]),
+      bd -> ExaColumnInfo("c_decimal", classOf[java.math.BigDecimal]),
+      3.14 -> ExaColumnInfo("c_double", classOf[java.lang.Double]),
+      "xyz" -> ExaColumnInfo("c_string", classOf[java.lang.String]),
+      true -> ExaColumnInfo("c_boolean", classOf[java.lang.Boolean]),
+      dt -> ExaColumnInfo("c_date", classOf[java.sql.Date]),
+      ts -> ExaColumnInfo("c_timestamp", classOf[java.sql.Timestamp])
+    )
+
+    data.zipWithIndex.map {
+      case ((expectedValue, col), idx) =>
+        val nxtIdx = startIdx + idx
+        val ret = SchemaUtil.exaColumnToValue(iter, nxtIdx, col)
+        assert(ret === expectedValue)
+        assert(ret.getClass === col.`type`)
+    }
+
   }
 }

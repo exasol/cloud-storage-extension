@@ -1,5 +1,6 @@
 package com.exasol.cloudetl.util
 
+import com.exasol.ExaIterator
 import com.exasol.cloudetl.data.ExaColumnInfo
 
 import org.apache.parquet.schema.MessageType
@@ -30,6 +31,20 @@ object SchemaUtil {
     new MessageType(schemaName, types: _*)
   }
 
+  // In below several lines, I try to pattern match on Class[X] of Java types.
+  // Please also read:
+  // https://stackoverflow.com/questions/7519140/pattern-matching-on-class-type
+  object JTypes {
+    val jInteger: Class[java.lang.Integer] = classOf[java.lang.Integer]
+    val jLong: Class[java.lang.Long] = classOf[java.lang.Long]
+    val jBigDecimal: Class[java.math.BigDecimal] = classOf[java.math.BigDecimal]
+    val jDouble: Class[java.lang.Double] = classOf[java.lang.Double]
+    val jBoolean: Class[java.lang.Boolean] = classOf[java.lang.Boolean]
+    val jString: Class[java.lang.String] = classOf[java.lang.String]
+    val jSqlDate: Class[java.sql.Date] = classOf[java.sql.Date]
+    val jSqlTimestamp: Class[java.sql.Timestamp] = classOf[java.sql.Timestamp]
+  }
+
   /**
    * Given Exasol column [[com.exasol.cloudetl.data.ExaColumnInfo]] information convert it into
    * Parquet [[org.apache.parquet.schema.Type$]]
@@ -39,19 +54,6 @@ object SchemaUtil {
     val colType = colInfo.`type`
     val repetition = if (colInfo.isNullable) Repetition.OPTIONAL else Repetition.REQUIRED
 
-    // In below several lines, I try to pattern match on Class[X] of Java types.
-    // Please also read:
-    // https://stackoverflow.com/questions/7519140/pattern-matching-on-class-type
-    object JTypes {
-      val jInteger: Class[java.lang.Integer] = classOf[java.lang.Integer]
-      val jLong: Class[java.lang.Long] = classOf[java.lang.Long]
-      val jBigDecimal: Class[java.math.BigDecimal] = classOf[java.math.BigDecimal]
-      val jDouble: Class[java.lang.Double] = classOf[java.lang.Double]
-      val jBoolean: Class[java.lang.Boolean] = classOf[java.lang.Boolean]
-      val jString: Class[java.lang.String] = classOf[java.lang.String]
-      val jSqlDate: Class[java.sql.Date] = classOf[java.sql.Date]
-      val jSqlTimestamp: Class[java.sql.Timestamp] = classOf[java.sql.Timestamp]
-    }
     import JTypes._
 
     colType match {
@@ -131,6 +133,28 @@ object SchemaUtil {
 
       case _ =>
         throw new RuntimeException(s"Cannot convert Exasol type '$colType' to Parquet type.")
+    }
+  }
+
+  /**
+   * Returns a value from Exasol [[ExaIterator]] iterator on given index which have
+   * [[com.exasol.cloudetl.data.ExaColumnInfo]] column type
+   */
+  def exaColumnToValue(iter: ExaIterator, idx: Int, colInfo: ExaColumnInfo): Any = {
+    val colType = colInfo.`type`
+    import JTypes._
+
+    colType match {
+      case `jInteger`      => iter.getInteger(idx)
+      case `jLong`         => iter.getLong(idx)
+      case `jBigDecimal`   => iter.getBigDecimal(idx)
+      case `jDouble`       => iter.getDouble(idx)
+      case `jString`       => iter.getString(idx)
+      case `jBoolean`      => iter.getBoolean(idx)
+      case `jSqlDate`      => iter.getDate(idx)
+      case `jSqlTimestamp` => iter.getTimestamp(idx)
+      case _ =>
+        throw new RuntimeException(s"Cannot get Exasol value for column type '$colType'.")
     }
   }
 
