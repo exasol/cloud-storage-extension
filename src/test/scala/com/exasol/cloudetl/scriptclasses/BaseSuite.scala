@@ -33,7 +33,6 @@ trait BaseSuite extends FunSuite with Matchers with MockitoSugar {
 
   val resourcePath: String = norm(Paths.get(getClass.getResource("/data").toURI))
   val resourceImportBucket: String = s"$resourcePath/import/parquet/*.parquet"
-  val resourceExportBucket: String = s"$resourcePath/export/parquet/"
 
   final def norm(path: Path): String =
     path.toUri.toString.replaceAll("/$", "").replaceAll("///", "/")
