@@ -17,7 +17,7 @@ class ParquetSourceSuite extends FunSuite with Matchers {
   private val fs = FileSystem.get(conf)
 
   private val salesPosParquetFile =
-    Paths.get(getClass.getResource("/parquet/sales_positions1.snappy.parquet").toURI)
+    Paths.get(getClass.getResource("/data/import/parquet/sales_positions1.snappy.parquet").toURI)
 
   test("reads a single parquet file") {
     val data = ParquetSource(FsUtil.globWithLocal(salesPosParquetFile, fs), fs, conf)

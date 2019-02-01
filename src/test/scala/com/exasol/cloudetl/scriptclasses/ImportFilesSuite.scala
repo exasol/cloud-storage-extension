@@ -9,10 +9,10 @@ import org.mockito.Mockito._
 class ImportFilesSuite extends BaseSuite {
 
   test("`run` should emit total number of records") {
-    val file1 = s"$resourcePath/sales_positions1.snappy.parquet"
-    val file2 = s"$resourcePath/sales_positions2.snappy.parquet"
+    val file1 = s"$resourcePath/import/parquet/sales_positions1.snappy.parquet"
+    val file2 = s"$resourcePath/import/parquet/sales_positions2.snappy.parquet"
 
-    val exaIter = commonExaIterator(resourceBucket)
+    val exaIter = commonExaIterator(resourceImportBucket)
 
     when(exaIter.next()).thenReturn(true, false)
     when(exaIter.getString(2)).thenReturn(file1, file2)
@@ -38,9 +38,9 @@ class ImportFilesSuite extends BaseSuite {
    *
    */
   test("`run` should emit correct sequence of records") {
-    val file = s"$resourcePath/sales_positions_small.snappy.parquet"
+    val file = s"$resourcePath/import/parquet/sales_positions_small.snappy.parquet"
 
-    val exaIter = commonExaIterator(resourceBucket)
+    val exaIter = commonExaIterator(resourceImportBucket)
 
     when(exaIter.next()).thenReturn(false)
     when(exaIter.getString(2)).thenReturn(file)
