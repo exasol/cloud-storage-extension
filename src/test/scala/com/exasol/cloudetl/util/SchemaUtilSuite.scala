@@ -15,7 +15,7 @@ import org.scalatest.mockito.MockitoSugar
 class SchemaUtilSuite extends FunSuite with Matchers with MockitoSugar {
 
   test("`createParquetMessageType` throws an exception for unknown type") {
-    val thrown = intercept[RuntimeException] {
+    val thrown = intercept[IllegalArgumentException] {
       SchemaUtil.createParquetMessageType(
         Seq(ExaColumnInfo("c_short", classOf[java.lang.Short], 0, 0, 0, false)),
         "test_schema"
@@ -129,6 +129,13 @@ class SchemaUtilSuite extends FunSuite with Matchers with MockitoSugar {
         assert(ret === expectedValue)
         assert(ret.getClass === col.`type`)
     }
+
+    val thrown = intercept[IllegalArgumentException] {
+      SchemaUtil.exaColumnToValue(iter, 0, ExaColumnInfo("c_short", classOf[java.lang.Short]))
+    }
+    assert(
+      thrown.getMessage === "Cannot get Exasol value for column type 'class java.lang.Short'."
+    )
 
   }
 }

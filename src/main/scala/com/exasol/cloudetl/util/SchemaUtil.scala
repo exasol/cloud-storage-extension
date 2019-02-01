@@ -132,7 +132,9 @@ object SchemaUtil {
           .named(colName)
 
       case _ =>
-        throw new RuntimeException(s"Cannot convert Exasol type '$colType' to Parquet type.")
+        throw new IllegalArgumentException(
+          s"Cannot convert Exasol type '$colType' to Parquet type."
+        )
     }
   }
 
@@ -154,7 +156,7 @@ object SchemaUtil {
       case `jSqlDate`      => iter.getDate(idx)
       case `jSqlTimestamp` => iter.getTimestamp(idx)
       case _ =>
-        throw new RuntimeException(s"Cannot get Exasol value for column type '$colType'.")
+        throw new IllegalArgumentException(s"Cannot get Exasol value for column type '$colType'.")
     }
   }
 
