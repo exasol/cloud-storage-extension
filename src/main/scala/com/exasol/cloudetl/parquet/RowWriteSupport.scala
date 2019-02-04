@@ -18,6 +18,14 @@ import org.apache.parquet.schema.OriginalType
 import org.apache.parquet.schema.PrimitiveType
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
 
+/**
+ * A Parquet [[org.apache.parquet.hadoop.api.WriteSupport]] implementation that writes
+ * [[com.exasol.cloudetl.data.Row]] as a Parquet data.
+ *
+ * This is mostly adapted from Spark codebase:
+ *  - org.apache.spark.sql.execution.datasources.parquet.ParquetWriteSupport
+ *
+ */
 @SuppressWarnings(
   Array(
     "org.wartremover.warts.AsInstanceOf",
@@ -27,15 +35,17 @@ import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
 )
 class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
 
-  private final val DECIMAL_MAX_PRECISION: Int = 38
-  // private final val DECIMAL_MAX_INT_DIGITS: Int = 9
-  // private final val DECIMAL_MAX_LONG_DIGITS: Int = 18
+  // The number bytes required for timestamp buffer in Parquet
   private final val TIMESTAMP_MAX_BYTE_SIZE: Int = 12
 
+  // This is a type that is responsible for writing a value in Row values index to the
+  // RecordConsumer
   private type RowValueWriter = (Row, Int) => Unit
 
+  // A list of `RowValueWriter`-s for each field type of Parquet `schema`
   private var rootFieldWriters: Array[RowValueWriter] = _
 
+  // A Parquet RecordConsumer that all values of a Row will be written
   private var recordConsumer: RecordConsumer = _
 
   // Reusable byte array used to write timestamps as Parquet INT96 values
@@ -43,7 +53,7 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
 
   // Reusable byte array used to write decimal values as Parquet FIXED_LEN_BYTE_ARRAY values
   private val decimalBuffer =
-    new Array[Byte](SchemaUtil.PRECISION_TO_BYTE_SIZE(DECIMAL_MAX_PRECISION - 1))
+    new Array[Byte](SchemaUtil.PRECISION_TO_BYTE_SIZE(SchemaUtil.DECIMAL_MAX_PRECISION - 1))
 
   final override def init(configuration: Configuration): WriteSupport.WriteContext = {
     this.rootFieldWriters = schema.getFields.asScala
@@ -106,6 +116,9 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
         originalType match {
           case OriginalType.DATE =>
             makeDateWriter()
+          case OriginalType.DECIMAL =>
+            val decimalMetadata = primitiveType.getDecimalMetadata
+            makeDecimalWriter(decimalMetadata.getPrecision, decimalMetadata.getScale)
           case _ =>
             (row: Row, index: Int) =>
               recordConsumer.addInteger(row.values(index).asInstanceOf[Integer])
@@ -179,29 +192,31 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
       s"Decimal precision $precision should not be less than minimum precision 1"
     )
     require(
-      precision <= DECIMAL_MAX_PRECISION,
-      s"Decimal precision $precision should not exceed max precision $DECIMAL_MAX_PRECISION"
+      precision <= SchemaUtil.DECIMAL_MAX_PRECISION,
+      s"""|Decimal precision $precision should not exceed
+          |max precision ${SchemaUtil.DECIMAL_MAX_PRECISION}
+      """.stripMargin
     )
 
     // The number of bytes from given the precision
     val numBytes = SchemaUtil.PRECISION_TO_BYTE_SIZE(precision - 1)
 
-    // val int32Writer = (row: Row, index: Int) => {
-    //   val bigDecimalInt =
-    //     row
-    //       .values(index)
-    //       .asInstanceOf[java.math.BigDecimal]
-    //       .unscaledValue()
-    //       .longValueExact()
-    //       .toInt
-    //   recordConsumer.addInteger(bigDecimalInt)
-    // }
+    val int32Writer = (row: Row, index: Int) => {
+      val bigDecimalInt =
+        row
+          .values(index)
+          .asInstanceOf[java.math.BigDecimal]
+          .unscaledValue()
+          .longValueExact()
+          .toInt
+      recordConsumer.addInteger(bigDecimalInt)
+    }
 
-    // val int64Writer = (row: Row, index: Int) => {
-    //   val bigDecimalLong =
-    //     row.values(index).asInstanceOf[java.math.BigDecimal].unscaledValue().longValueExact()
-    //   recordConsumer.addLong(bigDecimalLong)
-    // }
+    val int64Writer = (row: Row, index: Int) => {
+      val bigDecimalLong =
+        row.values(index).asInstanceOf[java.math.BigDecimal].unscaledValue().longValueExact()
+      recordConsumer.addLong(bigDecimalLong)
+    }
 
     val bytesWriter = (row: Row, index: Int) => {
       val decimal = row.values(index).asInstanceOf[java.math.BigDecimal]
@@ -231,15 +246,16 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
       recordConsumer.addBinary(Binary.fromReusedByteArray(fixedLenBytesArray, 0, numBytes))
     }
 
-    // if (precision <= DECIMAL_MAX_INT_DIGITS) { // 1 <= precision <= 9, writes as INT32
-    //   int32Writer
-    // } else if (precision <= DECIMAL_MAX_LONG_DIGITS) { // 10 <= precision <= 18, writes as INT64
-    //   int64Writer
-    // } else { // 19 <= precision <= 38, writes as FIXED_LEN_BYTE_ARRAY
-    //   bytesWriter
-    // }
-
-    bytesWriter
+    if (precision <= SchemaUtil.DECIMAL_MAX_INT_DIGITS) {
+      // 1 <= precision <= 9, writes as INT32
+      int32Writer
+    } else if (precision <= SchemaUtil.DECIMAL_MAX_LONG_DIGITS) {
+      // 10 <= precision <= 18, writes as INT64
+      int64Writer
+    } else {
+      // 19 <= precision <= 38, writes as FIXED_LEN_BYTE_ARRAY
+      bytesWriter
+    }
   }
 
 }
