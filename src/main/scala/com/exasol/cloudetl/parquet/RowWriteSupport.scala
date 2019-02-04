@@ -59,7 +59,7 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
     this.rootFieldWriters = schema.getFields.asScala
       .map {
         case field =>
-          makeWriter(field.asInstanceOf[PrimitiveType])
+          makeWriter(field.asPrimitiveType())
       }
       .toArray[RowValueWriter]
 
