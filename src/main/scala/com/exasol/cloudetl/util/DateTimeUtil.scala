@@ -1,0 +1,78 @@
+package com.exasol.cloudetl.util
+
+import java.sql.Date
+import java.sql.Timestamp
+import java.time._
+import java.time.temporal.ChronoUnit
+
+/**
+ * Helper functions to convert date time values
+ */
+object DateTimeUtil {
+  // scalastyle:off magic.number
+  val UnixEpochDate: LocalDate = LocalDate.of(1970, 1, 1)
+  val UnixEpochDateTime: LocalDateTime = LocalDateTime.of(1970, 1, 1, 0, 0, 0)
+  // scalastyle:on magic.number
+
+  val JULIAN_DAY_OF_EPOCH: Long = 2440588
+  val SECONDS_PER_DAY: Long = 60 * 60 * 24L
+  val MILLIS_PER_SECOND: Long = 1000L
+  val MICROS_PER_MILLIS: Long = 1000L
+  val MICROS_PER_SECOND: Long = MICROS_PER_MILLIS * MILLIS_PER_SECOND
+  val MICROS_PER_DAY: Long = MICROS_PER_SECOND * SECONDS_PER_DAY
+
+  /** Returns a [[java.sql.Timestamp]] timestamp from number of microseconds since epoch */
+  @SuppressWarnings(Array("org.wartremover.warts.Var"))
+  def getTimestampFromMicros(us: Long): Timestamp = {
+    // setNanos() will overwrite the millisecond part, so the milliseconds should be cut off at
+    // seconds
+    var seconds = us / MICROS_PER_SECOND
+    var micros = us % MICROS_PER_SECOND
+    if (micros < 0) { // setNanos() can not accept negative value
+      micros += MICROS_PER_SECOND
+      seconds -= 1
+    }
+    val ts = new Timestamp(seconds * 1000)
+    ts.setNanos(micros.toInt * 1000)
+
+    ts
+  }
+
+  /** Returns the number of micros since epoch from [[java.sql.Timestamp]] */
+  def getMicrosFromTimestamp(ts: Timestamp): Long =
+    if (ts != null) {
+      ts.getTime() * 1000L + (ts.getNanos().toLong / 1000) % 1000L
+    } else {
+      0L
+    }
+
+  /** Returns Julian day and nanoseconds in a day from microseconds since epoch */
+  @SuppressWarnings(Array("org.wartremover.contrib.warts.ExposedTuples"))
+  def getJulianDayAndNanos(us: Long): (Int, Long) = {
+    val julian_us = us + JULIAN_DAY_OF_EPOCH * MICROS_PER_DAY
+    val day = julian_us / MICROS_PER_DAY
+    val micros = julian_us % MICROS_PER_DAY
+    (day.toInt, micros * 1000L)
+  }
+
+  /** Returns microseconds since epoch from Julian day and nanoseconds in a day */
+  def getMicrosFromJulianDay(day: Int, nanos: Long): Long = {
+    val seconds = (day - JULIAN_DAY_OF_EPOCH).toLong * SECONDS_PER_DAY
+    seconds * MICROS_PER_SECOND + nanos / 1000L
+  }
+
+  /** Returns the number of days since unix epoch */
+  def daysSinceEpoch(date: Date): Long = {
+    val localDate = Instant.ofEpochMilli(date.getTime).atZone(ZoneId.systemDefault).toLocalDate
+    val days = ChronoUnit.DAYS.between(UnixEpochDate, localDate)
+    days
+  }
+
+  /** Returns a [[java.sql.Date]] date given the days since epoch */
+  def daysToDate(days: Long): Date = {
+    val date = UnixEpochDateTime.plusDays(days)
+    val millis = date.atZone(ZoneId.systemDefault).toInstant.toEpochMilli
+    new Date(millis)
+  }
+
+}

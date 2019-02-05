@@ -6,6 +6,7 @@ import java.nio.ByteOrder
 import scala.collection.JavaConverters._
 
 import com.exasol.cloudetl.data.Row
+import com.exasol.cloudetl.util.DateTimeUtil
 import com.exasol.cloudetl.util.SchemaUtil
 
 import org.apache.hadoop.conf.Configuration
@@ -154,31 +155,17 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
   }
 
   private def makeDateWriter(): RowValueWriter = (row: Row, index: Int) => {
-    import java.time._
-    import java.time.temporal.ChronoUnit
-
-    val UnixEpoch = LocalDate.of(1970, 1, 1) // scalastyle:ignore magic.number
-
     // Write the number of days since unix epoch as integer
     val date = row.values(index).asInstanceOf[java.sql.Date]
-    val localDate = Instant.ofEpochMilli(date.getTime).atZone(ZoneId.of("UTC")).toLocalDate
-    val days = ChronoUnit.DAYS.between(UnixEpoch, localDate)
+    val days = DateTimeUtil.daysSinceEpoch(date)
 
     recordConsumer.addInteger(days.toInt)
   }
 
   private def makeTimestampWriter(): RowValueWriter = (row: Row, index: Int) => {
-    import java.time._
-    import java.time.temporal.ChronoUnit
-
-    val JulianEpochInGregorian =
-      LocalDateTime.of(-4713, 11, 24, 0, 0, 0) // scalastyle:ignore magic.number
-
     val timestamp = row.values(index).asInstanceOf[java.sql.Timestamp]
-    val dt = Instant.ofEpochMilli(timestamp.getTime).atZone(ZoneId.of("UTC"))
-    val days = ChronoUnit.DAYS.between(JulianEpochInGregorian, dt).toInt
-    val nanos = timestamp.getNanos + ChronoUnit.NANOS
-      .between(dt.toLocalDate.atStartOfDay(ZoneId.of("UTC")).toLocalTime, dt.toLocalTime)
+    val micros = DateTimeUtil.getMicrosFromTimestamp(timestamp)
+    val (days, nanos) = DateTimeUtil.getJulianDayAndNanos(micros)
 
     val buf = ByteBuffer.wrap(timestampBuffer)
     val _ = buf.order(ByteOrder.LITTLE_ENDIAN).putLong(nanos).putInt(days)

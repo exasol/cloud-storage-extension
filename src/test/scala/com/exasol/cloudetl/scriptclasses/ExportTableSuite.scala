@@ -6,11 +6,8 @@ import java.nio.file.attribute.BasicFileAttributes
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
-import com.exasol.cloudetl.parquet.ParquetSource
-import com.exasol.cloudetl.util.FsUtil
 
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.FileSystem
+import org.mockito.ArgumentMatchers.any
 import org.mockito.ExtraMockito
 import org.mockito.Mockito._
 
@@ -28,17 +25,24 @@ class ExportTableSuite extends BaseSuite {
     "c_timestamp"
   )
 
+  private val bd1 = new java.math.BigDecimal("5555555555555555555555555555555.55555")
+  private val bd2 = new java.math.BigDecimal("5555555555555555555555555555555.55555")
+  private val dt1 = new java.sql.Date(System.currentTimeMillis())
+  private val dt2 = new java.sql.Date(System.currentTimeMillis())
+  private val ts1 = new java.sql.Timestamp(System.currentTimeMillis())
+  private val ts2 = new java.sql.Timestamp(System.currentTimeMillis())
+
+  val records: Seq[Seq[Object]] = Seq(
+    Seq(1, 3L, bd1, 3.14d, "xyz", true, dt1, ts1),
+    Seq(2, 4L, bd2, 0.13d, "abc", false, dt2, ts2)
+  ).map { seq =>
+    seq.map(_.asInstanceOf[AnyRef])
+  }
+
   final def createMockedIter(resourceDir: String): ExaIterator = {
     val mockedIter = commonExaIterator(resourceDir)
     when(mockedIter.getString(2)).thenReturn(srcColumns.mkString("."))
     when(mockedIter.next()).thenReturn(true, false)
-
-    val bd1 = new java.math.BigDecimal(1337)
-    val bd2 = new java.math.BigDecimal(8888)
-    val dt1 = new java.sql.Date(System.currentTimeMillis())
-    val dt2 = new java.sql.Date(System.currentTimeMillis())
-    val ts1 = new java.sql.Timestamp(System.currentTimeMillis())
-    val ts2 = new java.sql.Timestamp(System.currentTimeMillis())
 
     when(mockedIter.getInteger(3)).thenReturn(1, 2)
     when(mockedIter.getLong(4)).thenReturn(3L, 4L)
@@ -58,7 +62,7 @@ class ExportTableSuite extends BaseSuite {
     val returns = Seq(
       (3, classOf[java.lang.Integer], 0L, 0L, 0L),
       (4, classOf[java.lang.Long], 0L, 0L, 0L),
-      (5, classOf[java.math.BigDecimal], 9L, 2L, 0L),
+      (5, classOf[java.math.BigDecimal], 36L, 5L, 0L),
       (6, classOf[java.lang.Double], 0L, 0L, 0L),
       (7, classOf[java.lang.String], 0L, 0L, 3L),
       (8, classOf[java.lang.Boolean], 0L, 0L, 0L),
@@ -104,24 +108,23 @@ class ExportTableSuite extends BaseSuite {
     deleteFiles(tempDir)
   }
 
-  test("read exported rows from a file") {
-    val tempDir = Files.createTempDirectory("exportTableTest")
+  test("import exported rows from a file") {
+    val tempDir = Files.createTempDirectory("importExportTableTest")
     val meta = createMockedMeta()
     val iter = createMockedIter(tempDir.toUri.toString)
 
     ExportTable.run(meta, iter)
 
-    val conf = new Configuration()
-    val fs = FileSystem.get(conf)
+    val importIter = commonExaIterator(resourceImportBucket)
+    when(importIter.next()).thenReturn(false)
+    when(importIter.getString(2)).thenReturn(tempDir.toUri.toString)
 
-    val data = ParquetSource(FsUtil.globWithLocal(tempDir, fs), fs, conf)
-    val iters = data.stream
+    ImportFiles.run(mock[ExaMetadata], importIter)
 
-    iters.foreach { iter =>
-      iter.foreach { row =>
-        println(s"ROW = $row")
-      }
-    }
+    val totalRecords = 2
+    verify(importIter, times(totalRecords)).emit(Seq(any[Object]): _*)
+
+    // TODO: verify each emitted row
 
     deleteFiles(tempDir)
   }
