@@ -3,7 +3,7 @@
 [![Build Status][travis-badge]][travis-link]
 [![Codecov][codecov-badge]][codecov-link]
 
-###### Please note that this is an open source project which is *not officially supported* by Exasol. We will try to help you as much as possible, but can't guarantee anything since this is not an official Exasol product.
+<p style="border: 1px solid black;padding: 10px; background-color: #FFFFCC;"><span style="font-size:200%">&#128712;</span> Please note that this is an open source project which is officially supported by Exasol. For any question, you can contact our support team.</p>
 
 ## Table of Contents
 
