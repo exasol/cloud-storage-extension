@@ -3,20 +3,20 @@ package com.exasol.cloudetl.util
 import java.sql.Date
 import java.sql.Timestamp
 import java.time._
-import java.time.temporal.ChronoUnit
+import java.util.TimeZone
 
 /**
  * Helper functions to convert date time values
  */
 object DateTimeUtil {
   // scalastyle:off magic.number
-  val UnixEpochDate: LocalDate = LocalDate.of(1970, 1, 1)
   val UnixEpochDateTime: LocalDateTime = LocalDateTime.of(1970, 1, 1, 0, 0, 0)
   // scalastyle:on magic.number
 
   val JULIAN_DAY_OF_EPOCH: Long = 2440588
   val SECONDS_PER_DAY: Long = 60 * 60 * 24L
   val MILLIS_PER_SECOND: Long = 1000L
+  val MILLIS_PER_DAY: Long = SECONDS_PER_DAY * MILLIS_PER_SECOND
   val MICROS_PER_MILLIS: Long = 1000L
   val MICROS_PER_SECOND: Long = MICROS_PER_MILLIS * MILLIS_PER_SECOND
   val MICROS_PER_DAY: Long = MICROS_PER_SECOND * SECONDS_PER_DAY
@@ -62,10 +62,11 @@ object DateTimeUtil {
   }
 
   /** Returns the number of days since unix epoch */
+  @SuppressWarnings(Array("org.wartremover.contrib.warts.OldTime"))
   def daysSinceEpoch(date: Date): Long = {
-    val localDate = Instant.ofEpochMilli(date.getTime).atZone(ZoneId.systemDefault).toLocalDate
-    val days = ChronoUnit.DAYS.between(UnixEpochDate, localDate)
-    days
+    val millisUtc = date.getTime
+    val millis = millisUtc + (TimeZone.getTimeZone(ZoneId.systemDefault).getOffset(millisUtc))
+    Math.floor(millis.toDouble / MILLIS_PER_DAY).toLong
   }
 
   /** Returns a [[java.sql.Date]] date given the days since epoch */
