@@ -30,11 +30,9 @@ class SchemaUtilSuite extends FunSuite with Matchers with MockitoSugar {
     val exaColumns = Seq(
       ExaColumnInfo("c_int", classOf[java.lang.Integer], 0, 0, 0, true),
       ExaColumnInfo("c_int", classOf[java.lang.Integer], 1, 0, 0, true),
-      ExaColumnInfo("c_int", classOf[java.lang.Integer], 10, 0, 0, true),
-      ExaColumnInfo("c_int", classOf[java.lang.Integer], 23, 0, 10, true),
+      ExaColumnInfo("c_int", classOf[java.lang.Integer], 9, 0, 0, true),
       ExaColumnInfo("c_long", classOf[java.lang.Long], 0, 0, 0, false),
-      ExaColumnInfo("c_long", classOf[java.lang.Long], 18, 9, 0, true),
-      ExaColumnInfo("c_long", classOf[java.lang.Long], 20, 3, 9, true),
+      ExaColumnInfo("c_long", classOf[java.lang.Long], 18, 0, 0, true),
       ExaColumnInfo("c_decimal_int", classOf[java.math.BigDecimal], 9, 0, 0, false),
       ExaColumnInfo("c_decimal_long", classOf[java.math.BigDecimal], 17, 0, 0, false),
       ExaColumnInfo("c_decimal", classOf[java.math.BigDecimal], 38, 10, 16, false),
@@ -58,42 +56,30 @@ class SchemaUtilSuite extends FunSuite with Matchers with MockitoSugar {
         .as(OriginalType.DECIMAL)
         .named("c_int"),
       Types
-        .primitive(PrimitiveTypeName.INT64, Repetition.OPTIONAL)
-        .precision(10)
+        .primitive(PrimitiveTypeName.INT32, Repetition.OPTIONAL)
+        .precision(9)
         .scale(0)
-        .as(OriginalType.DECIMAL)
-        .named("c_int"),
-      Types
-        .primitive(PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY, Repetition.OPTIONAL)
-        .precision(23)
-        .scale(0)
-        .length(10)
         .as(OriginalType.DECIMAL)
         .named("c_int"),
       new PrimitiveType(Repetition.REQUIRED, PrimitiveType.PrimitiveTypeName.INT64, "c_long"),
       Types
         .primitive(PrimitiveTypeName.INT64, Repetition.OPTIONAL)
         .precision(18)
-        .scale(9)
+        .scale(0)
         .as(OriginalType.DECIMAL)
         .named("c_long"),
       Types
-        .primitive(PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY, Repetition.OPTIONAL)
-        .precision(20)
-        .scale(3)
-        .length(9)
-        .as(OriginalType.DECIMAL)
-        .named("c_long"),
-      Types
-        .primitive(PrimitiveTypeName.INT32, Repetition.REQUIRED)
+        .primitive(PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY, Repetition.REQUIRED)
         .precision(9)
         .scale(0)
+        .length(4)
         .as(OriginalType.DECIMAL)
         .named("c_decimal_int"),
       Types
-        .primitive(PrimitiveTypeName.INT64, Repetition.REQUIRED)
+        .primitive(PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY, Repetition.REQUIRED)
         .precision(17)
         .scale(0)
+        .length(8)
         .as(OriginalType.DECIMAL)
         .named("c_decimal_long"),
       Types

@@ -58,44 +58,6 @@ object SchemaUtil {
     val colType = colInfo.`type`
     val repetition = if (colInfo.isNullable) Repetition.OPTIONAL else Repetition.REQUIRED
 
-    // Given a numeric type (int, long, bigDecimal) with precision more than zero, encodes it as
-    // Parquet INT32, INT64 or FIXED_LEN_BYTE_ARRAY type.
-    //
-    // - for 1 <= precision <= 9, use INT32
-    // - for 1 <= precision <= 18, use INT64
-    // - otherwise, use FIXED_LEN_BYTE_ARRAY
-    def makeDecimalType(precision: Int): Type = {
-      require(
-        precision > 0,
-        s"""|The precision should be larger than zero for type '$colType' in order to encode
-            |it as numeric (int32, int64, fixed_len_array) type.
-        """.stripMargin
-      )
-      if (precision <= DECIMAL_MAX_INT_DIGITS) {
-        Types
-          .primitive(PrimitiveTypeName.INT32, repetition)
-          .precision(precision)
-          .scale(colInfo.scale)
-          .as(OriginalType.DECIMAL)
-          .named(colName)
-      } else if (precision <= DECIMAL_MAX_LONG_DIGITS) {
-        Types
-          .primitive(PrimitiveTypeName.INT64, repetition)
-          .precision(precision)
-          .scale(colInfo.scale)
-          .as(OriginalType.DECIMAL)
-          .named(colName)
-      } else {
-        Types
-          .primitive(PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY, repetition)
-          .precision(precision)
-          .scale(colInfo.scale)
-          .length(PRECISION_TO_BYTE_SIZE(precision - 1))
-          .as(OriginalType.DECIMAL)
-          .named(colName)
-      }
-    }
-
     import JTypes._
 
     colType match {
@@ -104,15 +66,17 @@ object SchemaUtil {
           Types
             .primitive(PrimitiveTypeName.INT32, repetition)
             .named(colName)
-        } else if (colInfo.precision <= DECIMAL_MAX_INT_DIGITS) {
+        } else {
+          require(
+            colInfo.precision <= DECIMAL_MAX_INT_DIGITS,
+            s"Got an 'Integer' type with more than '$DECIMAL_MAX_INT_DIGITS' precision."
+          )
           Types
             .primitive(PrimitiveTypeName.INT32, repetition)
             .precision(colInfo.precision)
             .scale(colInfo.scale)
             .as(OriginalType.DECIMAL)
             .named(colName)
-        } else {
-          makeDecimalType(colInfo.precision)
         }
 
       case `jLong` =>
@@ -120,19 +84,27 @@ object SchemaUtil {
           Types
             .primitive(PrimitiveTypeName.INT64, repetition)
             .named(colName)
-        } else if (colInfo.precision <= DECIMAL_MAX_LONG_DIGITS) {
+        } else {
+          require(
+            colInfo.precision <= DECIMAL_MAX_LONG_DIGITS,
+            s"Got a 'Long' type with more than '$DECIMAL_MAX_LONG_DIGITS' precision."
+          )
           Types
             .primitive(PrimitiveTypeName.INT64, repetition)
             .precision(colInfo.precision)
             .scale(colInfo.scale)
             .as(OriginalType.DECIMAL)
             .named(colName)
-        } else {
-          makeDecimalType(colInfo.precision)
         }
 
       case `jBigDecimal` =>
-        makeDecimalType(colInfo.precision)
+        Types
+          .primitive(PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY, repetition)
+          .precision(colInfo.precision)
+          .scale(colInfo.scale)
+          .length(PRECISION_TO_BYTE_SIZE(colInfo.precision - 1))
+          .as(OriginalType.DECIMAL)
+          .named(colName)
 
       case `jDouble` =>
         Types

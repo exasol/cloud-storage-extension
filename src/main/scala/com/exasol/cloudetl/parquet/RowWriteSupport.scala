@@ -117,9 +117,6 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
         originalType match {
           case OriginalType.DATE =>
             makeDateWriter()
-          case OriginalType.DECIMAL =>
-            val decimalMetadata = primitiveType.getDecimalMetadata
-            makeDecimalWriter(decimalMetadata.getPrecision, decimalMetadata.getScale)
           case _ =>
             (row: Row, index: Int) =>
               recordConsumer.addInteger(row.values(index).asInstanceOf[Integer])
@@ -188,23 +185,6 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
     // The number of bytes from given the precision
     val numBytes = SchemaUtil.PRECISION_TO_BYTE_SIZE(precision - 1)
 
-    val int32Writer = (row: Row, index: Int) => {
-      val bigDecimalInt =
-        row
-          .values(index)
-          .asInstanceOf[java.math.BigDecimal]
-          .unscaledValue()
-          .longValueExact()
-          .toInt
-      recordConsumer.addInteger(bigDecimalInt)
-    }
-
-    val int64Writer = (row: Row, index: Int) => {
-      val bigDecimalLong =
-        row.values(index).asInstanceOf[java.math.BigDecimal].unscaledValue().longValueExact()
-      recordConsumer.addLong(bigDecimalLong)
-    }
-
     val bytesWriter = (row: Row, index: Int) => {
       val decimal = row.values(index).asInstanceOf[java.math.BigDecimal]
       val unscaled = decimal.unscaledValue()
@@ -233,16 +213,7 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
       recordConsumer.addBinary(Binary.fromReusedByteArray(fixedLenBytesArray, 0, numBytes))
     }
 
-    if (precision <= SchemaUtil.DECIMAL_MAX_INT_DIGITS) {
-      // 1 <= precision <= 9, writes as INT32
-      int32Writer
-    } else if (precision <= SchemaUtil.DECIMAL_MAX_LONG_DIGITS) {
-      // 10 <= precision <= 18, writes as INT64
-      int64Writer
-    } else {
-      // 19 <= precision <= 38, writes as FIXED_LEN_BYTE_ARRAY
-      bytesWriter
-    }
+    bytesWriter
   }
 
 }
