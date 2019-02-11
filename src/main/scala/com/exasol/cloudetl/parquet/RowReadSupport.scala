@@ -1,7 +1,5 @@
 package com.exasol.cloudetl.parquet
 
-import java.math.BigInteger
-import java.math.MathContext
 import java.nio.ByteOrder
 
 import com.exasol.cloudetl.data.Row
@@ -190,8 +188,8 @@ class RowRootConverter(schema: GroupType) extends GroupConverter {
       parent.currentResult.update(index, value)
 
     override def addBinary(value: Binary): Unit = {
-      val bi = new BigInteger(value.getBytes)
-      val bd = BigDecimal.apply(bi, scale, new MathContext(precision))
+      val bi = new java.math.BigInteger(value.getBytes)
+      val bd = new java.math.BigDecimal(bi, scale, new java.math.MathContext(precision))
       parent.currentResult.update(index, bd)
     }
   }
