@@ -22,13 +22,6 @@ This repository contains helper code to create [Exasol][exasol] ETL UDFs in
 order to transfer data to/from public cloud storage services such as [AWS
 S3][s3], [Google Cloud Storage][gcs] and [Azure Blob Storage][azure].
 
-**Currently only importing parquet (primitive types) files into Exasol is
-supported.**
-
-**WARNING:** This project is under heavy development. Even though it is useful
-currently, please expect many changes (api, additional storages and formats) in
-the future.
-
 ## Usage
 
 Please follow the steps described below in order to setup the UDFs.
@@ -180,8 +173,6 @@ INTO SCRIPT ETL.EXPORT_PATH WITH
   S3_SECRET_KEY  = 'MY_AWS_SECRET_KEY'
   S3_ENDPOINT    = 's3.MY_REGION.amazonaws.com'
   PARALLELISM    = 'nproc()';
-
--- MY_REGION is one of AWS regions, for example, eu-central-1
 ```
 
 ## Building from Source
