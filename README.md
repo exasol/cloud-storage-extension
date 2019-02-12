@@ -2,8 +2,13 @@
 
 [![Build Status][travis-badge]][travis-link]
 [![Codecov][codecov-badge]][codecov-link]
+[![GitHub Latest Release][gh-release-badge]][gh-release-link]
 
-<p style="border: 1px solid black;padding: 10px; background-color: #FFFFCC;"><span style="font-size:200%">&#128712;</span> Please note that this is an open source project which is officially supported by Exasol. For any question, you can contact our support team.</p>
+<p style="border: 1px solid black;padding: 10px; background-color: #FFFFCC;">
+<span style="font-size:200%">&#128712;</span> Please note that this is an open
+source project which is officially supported by Exasol. For any question, you
+can contact our support team.
+</p>
 
 ## Table of Contents
 
@@ -52,6 +57,8 @@ Please change required parameters.
 CREATE SCHEMA ETL;
 OPEN SCHEMA ETL;
 
+-- Import related scripts
+
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
 %scriptclass com.exasol.cloudetl.scriptclasses.ImportPath;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
@@ -68,6 +75,18 @@ EMITS (filename VARCHAR(200), partition_index VARCHAR(100)) AS
 %scriptclass com.exasol.cloudetl.scriptclasses.ImportMetadata;
 %jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
 /
+
+-- Export related scripts
+
+CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
+%scriptclass com.exasol.cloudetl.scriptclasses.ExportPath;
+%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
+/
+
+CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
+%scriptclass com.exasol.cloudetl.scriptclasses.ExportTable;
+%jar /buckets/bfsdefault/bucket1/cloud-storage-etl-udfs-{VERSION}.jar;
+/
 ```
 
 ### Import data from cloud storages
@@ -77,8 +96,8 @@ Please follow steps below in order to import from cloud strorages.
 #### Create an Exasol schema and table
 
 ```sql
-CREATE SCHEMA TEST;
-OPEN SCHEMA TEST;
+CREATE SCHEMA RETAIL;
+OPEN SCHEMA RETAIL;
 
 DROP TABLE IF EXISTS SALES_POSITIONS;
 
@@ -151,6 +170,20 @@ FROM SCRIPT ETL.IMPORT_PATH WITH
 SELECT * FROM SALES_POSITIONS LIMIT 10;
 ```
 
+#### Export to AWS S3
+
+```sql
+EXPORT SALES_POSITIONS
+INTO SCRIPT ETL.EXPORT_PATH WITH
+  BUCKET_PATH    = 's3a://exa-mo-frankfurt/export/retail/sales_positions/'
+  S3_ACCESS_KEY  = 'MY_AWS_ACCESS_KEY'
+  S3_SECRET_KEY  = 'MY_AWS_SECRET_KEY'
+  S3_ENDPOINT    = 's3.MY_REGION.amazonaws.com'
+  PARALLELISM    = 'nproc()';
+
+-- MY_REGION is one of AWS regions, for example, eu-central-1
+```
+
 ## Building from Source
 
 Clone the repository,
@@ -174,6 +207,8 @@ The packaged jar should be located at
 [travis-link]: https://travis-ci.org/exasol/cloud-storage-etl-udfs
 [codecov-badge]: https://codecov.io/gh/exasol/cloud-storage-etl-udfs/branch/master/graph/badge.svg
 [codecov-link]: https://codecov.io/gh/exasol/cloud-storage-etl-udfs
+[gh-release-badge]: https://img.shields.io/github/release/exasol/cloud-storage-etl-udfs.svg
+[gh-release-link]: https://github.com/exasol/cloud-storage-etl-udfs/releases/latest
 [exasol]: https://www.exasol.com/en/
 [s3]: https://aws.amazon.com/s3/
 [gcs]: https://cloud.google.com/storage/

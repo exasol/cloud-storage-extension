@@ -1,10 +1,9 @@
-package com.exasol.cloudetl.source
+package com.exasol.cloudetl.parquet
 
 import scala.collection.JavaConverters._
 import scala.language.reflectiveCalls
 
-import com.exasol.cloudetl.row.Row
-import com.exasol.cloudetl.row.RowReadSupport
+import com.exasol.cloudetl.data.Row
 import com.exasol.cloudetl.util.FsUtil
 
 import org.apache.hadoop.conf.Configuration

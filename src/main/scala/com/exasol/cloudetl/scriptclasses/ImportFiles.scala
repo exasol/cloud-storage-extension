@@ -5,7 +5,7 @@ import scala.collection.mutable.ListBuffer
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.bucket._
-import com.exasol.cloudetl.source.ParquetSource
+import com.exasol.cloudetl.parquet.ParquetSource
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration

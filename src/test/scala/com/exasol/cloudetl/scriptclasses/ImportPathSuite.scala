@@ -7,7 +7,7 @@ import com.exasol.ExaMetadata
 
 import org.mockito.Mockito._
 
-class ImportPathSuite extends BaseImportSuite {
+class ImportPathSuite extends BaseSuite {
 
   test("`generateSqlForImportSpec` should create a sql statement") {
     val exaMeta = mock[ExaMetadata]
@@ -16,13 +16,8 @@ class ImportPathSuite extends BaseImportSuite {
     when(exaMeta.getScriptSchema()).thenReturn(testSchema)
     when(exaSpec.getParameters()).thenReturn(params.asJava)
 
-    val rest =
-      s"""BUCKET_PATH:=:$s3BucketPath;S3_ENDPOINT:=:$s3Endpoint;""" +
-        s"""S3_ACCESS_KEY:=:$s3AccessKey;S3_SECRET_KEY:=:$s3SecretKey"""
-
     val sqlExpected =
-      s"""
-         |SELECT
+      s"""SELECT
          |  $testSchema.IMPORT_FILES(
          |    '$s3BucketPath', '$rest', filename
          |)
@@ -33,9 +28,9 @@ class ImportPathSuite extends BaseImportSuite {
          |)
          |GROUP BY
          |  partition_index;
-      """.stripMargin
+         |""".stripMargin
 
-    assert(ImportPath.generateSqlForImportSpec(exaMeta, exaSpec).trim === sqlExpected.trim)
+    assert(ImportPath.generateSqlForImportSpec(exaMeta, exaSpec) === sqlExpected)
     verify(exaMeta, atLeastOnce).getScriptSchema
     verify(exaSpec, times(1)).getParameters
   }

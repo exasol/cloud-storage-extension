@@ -124,6 +124,7 @@ object Compilation {
   )
 
   val WartremoverTestFlags: Seq[Wart] = ExtraWartremoverFlags ++ Warts.allBut(
+    Wart.Any,
     Wart.NonUnitStatements,
     Wart.Null
   )

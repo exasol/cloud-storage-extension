@@ -36,6 +36,7 @@ final case class S3Bucket(path: String, params: Map[String, String]) extends Buc
     validate()
 
     val conf = new Configuration()
+    conf.set("fs.file.impl", classOf[org.apache.hadoop.fs.LocalFileSystem].getName)
     conf.set("fs.s3a.impl", classOf[org.apache.hadoop.fs.s3a.S3AFileSystem].getName)
     conf.set("fs.s3a.endpoint", Bucket.requiredParam(params, "S3_ENDPOINT"))
     conf.set("fs.s3a.access.key", Bucket.requiredParam(params, "S3_ACCESS_KEY"))
