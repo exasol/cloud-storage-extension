@@ -22,6 +22,13 @@ This repository contains helper code to create [Exasol][exasol] ETL UDFs in
 order to transfer data to/from public cloud storage services such as [AWS
 S3][s3], [Google Cloud Storage][gcs] and [Azure Blob Storage][azure].
 
+**Currently only [Apache Parquet][parquet] format and export to AWS S3 is
+supported.**
+
+Please be aware that Exasol already supports natively [loading CSV format from
+AWS S3][sol-594] (but not GCS or Azure) and similarly transfering data to/from
+[Apache Hive][hadoop-etl-udfs].
+
 ## Usage
 
 Please follow the steps described below in order to setup the UDFs.
@@ -201,7 +208,10 @@ The packaged jar should be located at
 [gh-release-badge]: https://img.shields.io/github/release/exasol/cloud-storage-etl-udfs.svg
 [gh-release-link]: https://github.com/exasol/cloud-storage-etl-udfs/releases/latest
 [exasol]: https://www.exasol.com/en/
+[sol-594]: https://www.exasol.com/support/browse/SOL-594
+[hadoop-etl-udfs]: https://github.com/exasol/hadoop-etl-udfs
 [s3]: https://aws.amazon.com/s3/
 [gcs]: https://cloud.google.com/storage/
 [azure]: https://azure.microsoft.com/en-us/services/storage/blobs/
+[parquet]: https://parquet.apache.org/
 [jars]: https://github.com/exasol/cloud-storage-etl-udfs/releases
