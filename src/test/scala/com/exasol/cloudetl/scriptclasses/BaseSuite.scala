@@ -42,7 +42,7 @@ trait BaseSuite extends FunSuite with Matchers with MockitoSugar {
     val newParams = params + (Bucket.BUCKET_PATH -> bucket)
 
     when(mockIter.getString(0)).thenReturn(bucket)
-    when(mockIter.getString(1)).thenReturn(Bucket.mapToStr(newParams))
+    when(mockIter.getString(1)).thenReturn(Bucket.keyValueMapToString(newParams))
 
     mockIter
   }

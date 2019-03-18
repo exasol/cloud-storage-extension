@@ -15,8 +15,8 @@ object ExportPath {
     bucket.validate()
 
     val bucketPath = bucket.bucketPath
-    val parallelism = Bucket.optionalParam(params, "PARALLELISM", "nproc()")
-    val rest = Bucket.mapToStr(params)
+    val parallelism = Bucket.optionalParameter(params, "PARALLELISM", "nproc()")
+    val rest = Bucket.keyValueMapToString(params)
 
     val scriptSchema = exaMeta.getScriptSchema
 

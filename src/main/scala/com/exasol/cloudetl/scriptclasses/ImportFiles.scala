@@ -18,7 +18,7 @@ object ImportFiles extends LazyLogging {
     val bucketPath = iter.getString(0)
 
     val rest = iter.getString(1)
-    val params = Bucket.strToMap(rest)
+    val params = Bucket.keyValueStringToMap(rest)
 
     val bucket = Bucket(params)
 
@@ -26,7 +26,7 @@ object ImportFiles extends LazyLogging {
 
     logger.info(s"Reading file = ${files.take(5).mkString(",")} from bucket = $bucketPath")
 
-    val source = createNewSource(files, bucket.fs, bucket.createConfiguration())
+    val source = createNewSource(files, bucket.fileSystem, bucket.createConfiguration())
 
     readAndEmit(source, iter)
   }

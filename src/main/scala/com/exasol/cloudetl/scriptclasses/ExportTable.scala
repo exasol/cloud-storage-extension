@@ -20,7 +20,7 @@ object ExportTable extends LazyLogging {
 
   def run(meta: ExaMetadata, iter: ExaIterator): Unit = {
     val bucketPath = iter.getString(0)
-    val params = Bucket.strToMap(iter.getString(1))
+    val params = Bucket.keyValueStringToMap(iter.getString(1))
     val bucket = Bucket(params)
 
     val srcColumnNames = iter.getString(2).split("\\.")

@@ -16,9 +16,9 @@ object ImportPath {
     bucket.validate()
 
     val bucketPath = bucket.bucketPath
-    val parallelism = Bucket.optionalParam(params, "PARALLELISM", "nproc()")
+    val parallelism = Bucket.optionalParameter(params, "PARALLELISM", "nproc()")
 
-    val rest = Bucket.mapToStr(params)
+    val rest = Bucket.keyValueMapToString(params)
 
     val scriptSchema = exaMeta.getScriptSchema
 
