@@ -25,9 +25,9 @@ class SchemaUtilSuite extends FunSuite with Matchers with MockitoSugar {
     assert(thrown.getMessage === expectedMsg)
   }
 
-  test("`createParquetMessageType` creates parquet message type from list of exa columns") {
+  test("`createParquetMessageType` creates parquet message type from list of Exasol columns") {
 
-    val exaColumns = Seq(
+    val exasolColumns = Seq(
       ExaColumnInfo("c_int", classOf[java.lang.Integer], 0, 0, 0, true),
       ExaColumnInfo("c_int", classOf[java.lang.Integer], 1, 0, 0, true),
       ExaColumnInfo("c_int", classOf[java.lang.Integer], 9, 0, 0, true),
@@ -113,7 +113,29 @@ class SchemaUtilSuite extends FunSuite with Matchers with MockitoSugar {
       new PrimitiveType(Repetition.REQUIRED, PrimitiveType.PrimitiveTypeName.INT96, "c_timestamp")
     )
 
-    assert(SchemaUtil.createParquetMessageType(exaColumns, schemaName) === messageType)
+    assert(SchemaUtil.createParquetMessageType(exasolColumns, schemaName) === messageType)
+  }
+
+  test(
+    "`createParquetMessageType` throws an exception if the integer precision is more than allowed"
+  ) {
+    val exasolColumns = Seq(ExaColumnInfo("c_int", classOf[java.lang.Integer], 10, 0, 0, true))
+    val thrown = intercept[IllegalArgumentException] {
+      SchemaUtil.createParquetMessageType(exasolColumns, "test")
+    }
+    val expectedMsg = "requirement failed: Got an 'Integer' type with more than '9' precision."
+    assert(thrown.getMessage === expectedMsg)
+  }
+
+  test(
+    "`createParquetMessageType` throws an exception if the long precision is more than allowed"
+  ) {
+    val exasolColumns = Seq(ExaColumnInfo("c_long", classOf[java.lang.Long], 20, 0, 0, true))
+    val thrown = intercept[IllegalArgumentException] {
+      SchemaUtil.createParquetMessageType(exasolColumns, "test")
+    }
+    val expectedMsg = "requirement failed: Got a 'Long' type with more than '18' precision."
+    assert(thrown.getMessage === expectedMsg)
   }
 
   test("`exaColumnToValue` returns value with column type") {
