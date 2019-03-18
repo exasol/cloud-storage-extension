@@ -22,14 +22,15 @@ trait BaseSuite extends FunSuite with Matchers with MockitoSugar {
 
   val params: Map[String, String] = Map(
     "BUCKET_PATH" -> s3BucketPath,
+    "FORMAT" -> "PARQUET",
     "S3_ENDPOINT" -> s3Endpoint,
     "S3_ACCESS_KEY" -> s3AccessKey,
     "S3_SECRET_KEY" -> s3SecretKey
   )
 
   val rest =
-    s"""BUCKET_PATH:=:$s3BucketPath;S3_ENDPOINT:=:$s3Endpoint;""" +
-      s"""S3_ACCESS_KEY:=:$s3AccessKey;S3_SECRET_KEY:=:$s3SecretKey"""
+    s"""BUCKET_PATH:=:$s3BucketPath;FORMAT:=:PARQUET;S3_ACCESS_KEY:=:$s3AccessKey;""" +
+      s"""S3_ENDPOINT:=:$s3Endpoint;S3_SECRET_KEY:=:$s3SecretKey"""
 
   val resourcePath: String = norm(Paths.get(getClass.getResource("/data").toURI))
   val resourceImportBucket: String = s"$resourcePath/import/parquet/*.parquet"

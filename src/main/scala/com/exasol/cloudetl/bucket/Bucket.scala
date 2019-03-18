@@ -2,6 +2,8 @@ package com.exasol.cloudetl.bucket
 
 import java.net.URI
 
+import scala.collection.SortedMap
+
 import com.exasol.cloudetl.util.FileSystemUtil
 
 import com.typesafe.scalalogging.LazyLogging
@@ -111,11 +113,14 @@ object Bucket extends LazyLogging {
    * Converts key value pair strings into a single string with
    * separators in between.
    *
+   * In the resulting string, key value pairs will be sorted by the
+   * keys.
+   *
    * @param params The key value parameters map
    * @return A single string with separators
    */
   def keyValueMapToString(params: Map[String, String]): String =
-    params
+    (SortedMap.empty[String, String] ++ params)
       .map { case (k, v) => s"$k$KEY_VALUE_SEPARATOR$v" }
       .mkString(PARAMETER_SEPARATOR)
 
