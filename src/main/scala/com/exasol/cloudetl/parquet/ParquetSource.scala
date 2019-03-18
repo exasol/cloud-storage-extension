@@ -4,7 +4,7 @@ import scala.collection.JavaConverters._
 import scala.language.reflectiveCalls
 
 import com.exasol.cloudetl.data.Row
-import com.exasol.cloudetl.util.FsUtil
+import com.exasol.cloudetl.util.FileSystemUtil
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
@@ -19,7 +19,7 @@ import org.apache.parquet.schema.MessageType
 object ParquetSource {
 
   def apply(pattern: String, fs: FileSystem, conf: Configuration): ParquetSource =
-    apply(FsUtil.globWithPattern(pattern, fs), fs, conf)
+    apply(FileSystemUtil.globWithPattern(pattern, fs), fs, conf)
 
 }
 

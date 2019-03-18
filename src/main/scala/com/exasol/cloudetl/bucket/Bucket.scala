@@ -2,7 +2,7 @@ package com.exasol.cloudetl.bucket
 
 import java.net.URI
 
-import com.exasol.cloudetl.util.FsUtil
+import com.exasol.cloudetl.util.FileSystemUtil
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
@@ -41,7 +41,7 @@ abstract class Bucket {
    * This method also globifies the bucket path if it contains regex.
    */
   final def getPaths(): Seq[Path] =
-    FsUtil.globWithPattern(bucketPath, fileSystem)
+    FileSystemUtil.globWithPattern(bucketPath, fileSystem)
 }
 
 /**

@@ -2,7 +2,7 @@ package com.exasol.cloudetl.parquet
 
 import java.nio.file.Paths
 
-import com.exasol.cloudetl.util.FsUtil
+import com.exasol.cloudetl.util.FileSystemUtil
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
@@ -20,7 +20,7 @@ class ParquetSourceSuite extends FunSuite with Matchers {
     Paths.get(getClass.getResource("/data/import/parquet/sales_positions1.snappy.parquet").toURI)
 
   test("reads a single parquet file") {
-    val data = ParquetSource(FsUtil.globWithLocal(salesPosParquetFile, fs), fs, conf)
+    val data = ParquetSource(FileSystemUtil.globWithLocal(salesPosParquetFile, fs), fs, conf)
     val iters = data.stream
     assert(iters.map(_.size).sum === 500)
   }
