@@ -26,7 +26,7 @@ class BucketSuite extends FunSuite with Matchers {
   test("creates an S3Bucket with given parameters") {
     val s3params = Map(
       Bucket.BUCKET_PATH -> "s3a://my-bucket/",
-      "FORMAT" -> "PARQUET",
+      "DATA_FORMAT" -> "PARQUET",
       "S3_ENDPOINT" -> "eu-central-1",
       "S3_ACCESS_KEY" -> "abc",
       "S3_SECRET_KEY" -> "xyz"
@@ -45,7 +45,7 @@ class BucketSuite extends FunSuite with Matchers {
   test("creates a GCSBucket with given parameters") {
     val gcsParams = Map(
       Bucket.BUCKET_PATH -> "gs://my-bucket/",
-      "FORMAT" -> "AVRO",
+      "DATA_FORMAT" -> "AVRO",
       "GCS_PROJECT_ID" -> "projX",
       "GCS_KEYFILE_PATH" -> "/bucketfs/bucket1/projX.json"
     )

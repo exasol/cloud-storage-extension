@@ -16,7 +16,7 @@ object ImportFiles extends LazyLogging {
     val bucketPath = iter.getString(0)
     val rest = iter.getString(1)
     val params = Bucket.keyValueStringToMap(rest)
-    val format = Bucket.optionalParameter(params, "FORMAT", "PARQUET")
+    val format = Bucket.optionalParameter(params, "DATA_FORMAT", "PARQUET")
     val bucket = Bucket(params)
 
     val files = groupFiles(iter, 2)
