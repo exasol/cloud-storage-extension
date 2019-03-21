@@ -38,9 +38,10 @@ trait BaseSuite extends FunSuite with Matchers with MockitoSugar {
   final def norm(path: Path): String =
     path.toUri.toString.replaceAll("/$", "").replaceAll("///", "/")
 
-  final def commonExaIterator(bucket: String): ExaIterator = {
+  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
+  final def commonExaIterator(bucket: String, format: String = "PARQUET"): ExaIterator = {
     val mockIter = mock[ExaIterator]
-    val newParams = params + (Bucket.BUCKET_PATH -> bucket)
+    val newParams = params + (Bucket.BUCKET_PATH -> bucket, "FORMAT" -> format)
 
     when(mockIter.getString(0)).thenReturn(bucket)
     when(mockIter.getString(1)).thenReturn(Bucket.keyValueMapToString(newParams))

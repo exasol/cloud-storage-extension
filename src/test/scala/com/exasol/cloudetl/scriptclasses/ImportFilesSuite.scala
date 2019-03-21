@@ -1,5 +1,6 @@
 package com.exasol.cloudetl.scriptclasses
 
+import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
 
 import org.mockito.ArgumentMatchers.any
@@ -8,19 +9,29 @@ import org.mockito.Mockito._
 @SuppressWarnings(Array("org.wartremover.warts.Any"))
 class ImportFilesSuite extends BaseSuite {
 
-  test("`run` should emit total number of records") {
+  test("`run` should throw if the source is not supported") {
+    val file = s"$resourcePath/import/parquet/sales_positions1.snappy.parquet"
+    val exaIter = commonExaIterator(resourceImportBucket, "ORC")
+    when(exaIter.next()).thenReturn(false)
+    when(exaIter.getString(2)).thenReturn(file)
+
+    val thrown = intercept[IllegalArgumentException] {
+      ImportFiles.run(mock[ExaMetadata], exaIter)
+    }
+    assert(thrown.getMessage === "Unsupported storage format: 'ORC'")
+  }
+
+  test("`run` should emit total number of records from a source") {
     val file1 = s"$resourcePath/import/parquet/sales_positions1.snappy.parquet"
     val file2 = s"$resourcePath/import/parquet/sales_positions2.snappy.parquet"
 
     val exaIter = commonExaIterator(resourceImportBucket)
-
     when(exaIter.next()).thenReturn(true, false)
     when(exaIter.getString(2)).thenReturn(file1, file2)
 
     ImportFiles.run(mock[ExaMetadata], exaIter)
 
     val totalRecords = 1000
-
     verify(exaIter, times(totalRecords)).emit(Seq(any[Object]): _*)
   }
 
@@ -37,18 +48,32 @@ class ImportFilesSuite extends BaseSuite {
    * +---------+-----------+----------+------+-----+----------+--------+
    *
    */
-  test("`run` should emit correct sequence of records") {
+  test("`run` should emit correct sequence of records from parquet file") {
     val file = s"$resourcePath/import/parquet/sales_positions_small.snappy.parquet"
 
     val exaIter = commonExaIterator(resourceImportBucket)
-
     when(exaIter.next()).thenReturn(false)
     when(exaIter.getString(2)).thenReturn(file)
 
     ImportFiles.run(mock[ExaMetadata], exaIter)
 
-    val totalRecords = 5
+    verifySmallFilesImport(exaIter)
+  }
 
+  test("`run` should emit correct sequence of records from avro file") {
+    val file = s"$resourcePath/import/avro/sales_positions_small.avro"
+
+    val exaIter = commonExaIterator(resourceImportBucket, "AVRO")
+    when(exaIter.next()).thenReturn(false)
+    when(exaIter.getString(2)).thenReturn(file)
+
+    ImportFiles.run(mock[ExaMetadata], exaIter)
+
+    verifySmallFilesImport(exaIter)
+  }
+
+  private def verifySmallFilesImport(iter: ExaIterator): Unit = {
+    val totalRecords = 5
     val records: Seq[Seq[Object]] = Seq(
       Seq(582244536L, 2, 96982, 1, 0.56, null, null),
       Seq(582177839L, 6, 96982, 2, 0.56, null, null),
@@ -59,10 +84,10 @@ class ImportFilesSuite extends BaseSuite {
       seq.map(_.asInstanceOf[AnyRef])
     }
 
-    verify(exaIter, times(totalRecords)).emit(Seq(any[Object]): _*)
+    verify(iter, times(totalRecords)).emit(Seq(any[Object]): _*)
     records.foreach {
       case rows =>
-        verify(exaIter, times(1)).emit(rows: _*)
+        verify(iter, times(1)).emit(rows: _*)
     }
   }
 

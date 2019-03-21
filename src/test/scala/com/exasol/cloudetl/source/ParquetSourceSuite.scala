@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.parquet
+package com.exasol.cloudetl.source
 
 import java.nio.file.Path
 import java.nio.file.Paths
