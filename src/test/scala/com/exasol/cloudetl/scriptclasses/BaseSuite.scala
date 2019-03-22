@@ -22,27 +22,29 @@ trait BaseSuite extends FunSuite with Matchers with MockitoSugar {
 
   val params: Map[String, String] = Map(
     "BUCKET_PATH" -> s3BucketPath,
+    "DATA_FORMAT" -> "PARQUET",
     "S3_ENDPOINT" -> s3Endpoint,
     "S3_ACCESS_KEY" -> s3AccessKey,
     "S3_SECRET_KEY" -> s3SecretKey
   )
 
   val rest =
-    s"""BUCKET_PATH:=:$s3BucketPath;S3_ENDPOINT:=:$s3Endpoint;""" +
-      s"""S3_ACCESS_KEY:=:$s3AccessKey;S3_SECRET_KEY:=:$s3SecretKey"""
+    s"""BUCKET_PATH:=:$s3BucketPath;DATA_FORMAT:=:PARQUET;S3_ACCESS_KEY:=:$s3AccessKey;""" +
+      s"""S3_ENDPOINT:=:$s3Endpoint;S3_SECRET_KEY:=:$s3SecretKey"""
 
   val resourcePath: String = norm(Paths.get(getClass.getResource("/data").toURI))
-  val resourceImportBucket: String = s"$resourcePath/import/parquet/*.parquet"
+  val resourceImportBucket: String = s"$resourcePath/import/parquet/sales_pos*.parquet"
 
   final def norm(path: Path): String =
     path.toUri.toString.replaceAll("/$", "").replaceAll("///", "/")
 
-  final def commonExaIterator(bucket: String): ExaIterator = {
+  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
+  final def commonExaIterator(bucket: String, format: String = "PARQUET"): ExaIterator = {
     val mockIter = mock[ExaIterator]
-    val newParams = params + (Bucket.BUCKET_PATH -> bucket)
+    val newParams = params + (Bucket.BUCKET_PATH -> bucket, "DATA_FORMAT" -> format)
 
     when(mockIter.getString(0)).thenReturn(bucket)
-    when(mockIter.getString(1)).thenReturn(Bucket.mapToStr(newParams))
+    when(mockIter.getString(1)).thenReturn(Bucket.keyValueMapToString(newParams))
 
     mockIter
   }

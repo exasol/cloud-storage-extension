@@ -3,7 +3,7 @@ package com.exasol.cloudetl.util
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
 
-object FsUtil {
+object FileSystemUtil {
 
   def globWithLocal(path: java.nio.file.Path, fs: FileSystem): Seq[Path] =
     globWithPattern(path.toAbsolutePath.toUri.getRawPath, fs)

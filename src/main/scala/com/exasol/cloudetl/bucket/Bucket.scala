@@ -2,118 +2,85 @@ package com.exasol.cloudetl.bucket
 
 import java.net.URI
 
-import com.exasol.cloudetl.util.FsUtil
+import scala.collection.SortedMap
+
+import com.exasol.cloudetl.util.FileSystemUtil
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
 
+/**
+ * Abstract representation of a bucket.
+ *
+ * All specific implementation of a bucket should extend this class.
+ */
 abstract class Bucket {
 
+  /** The path string of the bucket. */
   val bucketPath: String
 
+  /** Validates that all required parameter key values are available. */
   def validate(): Unit
 
+  /**
+   * Creates a Hadoop [[org.apache.hadoop.conf.Configuration]] for this
+   * specific bucket type.
+   */
   def createConfiguration(): Configuration
 
-  lazy val fs: FileSystem =
+  /**
+   * The Hadoop [[org.apache.hadoop.fs.FileSystem$]] for this specific
+   * bucket path.
+   */
+  lazy val fileSystem: FileSystem =
     FileSystem.get(new URI(bucketPath), createConfiguration())
 
+  /**
+   * Get the all the paths in this bucket path.
+   *
+   * This method also globifies the bucket path if it contains regex.
+   */
   final def getPaths(): Seq[Path] =
-    FsUtil.globWithPattern(bucketPath, fs)
-
+    FileSystemUtil.globWithPattern(bucketPath, fileSystem)
 }
 
-final case class S3Bucket(path: String, params: Map[String, String]) extends Bucket {
-
-  override val bucketPath: String = path
-
-  override def validate(): Unit =
-    Bucket.validate(params, Bucket.S3_PARAMETERS)
-
-  override def createConfiguration(): Configuration = {
-    validate()
-
-    val conf = new Configuration()
-    conf.set("fs.file.impl", classOf[org.apache.hadoop.fs.LocalFileSystem].getName)
-    conf.set("fs.s3a.impl", classOf[org.apache.hadoop.fs.s3a.S3AFileSystem].getName)
-    conf.set("fs.s3a.endpoint", Bucket.requiredParam(params, "S3_ENDPOINT"))
-    conf.set("fs.s3a.access.key", Bucket.requiredParam(params, "S3_ACCESS_KEY"))
-    conf.set("fs.s3a.secret.key", Bucket.requiredParam(params, "S3_SECRET_KEY"))
-
-    conf
-  }
-
-}
-
-final case class GCSBucket(path: String, params: Map[String, String]) extends Bucket {
-
-  override val bucketPath: String = path
-
-  override def validate(): Unit =
-    Bucket.validate(params, Bucket.GCS_PARAMETERS)
-
-  override def createConfiguration(): Configuration = {
-    validate()
-
-    val conf = new Configuration()
-    conf.set("fs.gs.impl", classOf[com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem].getName)
-    conf.setBoolean("fs.gs.auth.service.account.enable", true)
-    conf.set("fs.gs.project.id", Bucket.requiredParam(params, "GCS_PROJECT_ID"))
-    conf.set(
-      "fs.gs.auth.service.account.json.keyfile",
-      Bucket.requiredParam(params, "GCS_KEYFILE_PATH")
-    )
-
-    conf
-  }
-
-}
-
-final case class AzureBlobBucket(path: String, params: Map[String, String]) extends Bucket {
-
-  override val bucketPath: String = path
-
-  override def validate(): Unit =
-    Bucket.validate(params, Bucket.AZURE_PARAMETERS)
-
-  override def createConfiguration(): Configuration = {
-    validate()
-
-    val conf = new Configuration()
-    val accountName = Bucket.requiredParam(params, "AZURE_ACCOUNT_NAME")
-    val accountSecretKey = Bucket.requiredParam(params, "AZURE_SECRET_KEY")
-    conf.set("fs.azure", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
-    conf.set("fs.wasb.impl", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
-    conf.set("fs.wasbs.impl", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
-    conf.set("fs.AbstractFileSystem.wasb.impl", classOf[org.apache.hadoop.fs.azure.Wasb].getName)
-    conf.set(
-      "fs.AbstractFileSystem.wasbs.impl",
-      classOf[org.apache.hadoop.fs.azure.Wasbs].getName
-    )
-    conf.set(s"fs.azure.account.key.$accountName.blob.core.windows.net", accountSecretKey)
-
-    conf
-  }
-
-}
-
-final case class LocalBucket(path: String, params: Map[String, String]) extends Bucket {
-
-  override val bucketPath: String = path
-
-  override def validate(): Unit = ()
-
-  override def createConfiguration(): Configuration = {
-    validate()
-    new Configuration()
-  }
-
-}
-
+/**
+ * A companion object to the [[Bucket]] class.
+ *
+ * Provides a factory method to create bucket and several utility
+ * functions.
+ */
 object Bucket extends LazyLogging {
 
+  /** A required key string for a bucket path. */
+  final val BUCKET_PATH: String = "BUCKET_PATH"
+
+  /** The list of required parameter keys for AWS S3 bucket. */
+  final val S3_PARAMETERS: Seq[String] =
+    Seq("S3_ENDPOINT", "S3_ACCESS_KEY", "S3_SECRET_KEY")
+
+  /**
+   * The list of required parameter keys for Google Cloud Storage
+   * bucket.
+   */
+  final val GCS_PARAMETERS: Seq[String] =
+    Seq("GCS_PROJECT_ID", "GCS_KEYFILE_PATH")
+
+  /**
+   * The list of required parameter keys for Azure Blob Storage bucket.
+   */
+  final val AZURE_PARAMETERS: Seq[String] =
+    Seq("AZURE_ACCOUNT_NAME", "AZURE_SECRET_KEY")
+
+  /**
+   * An apply method that creates different [[Bucket]] classes depending
+   * on the path schema.
+   *
+   * @param params The key value parameters
+   * @return A [[Bucket]] class for the given path
+   */
   def apply(params: Map[String, String]): Bucket = {
     val path = requiredParam(params, BUCKET_PATH)
     val scheme = getScheme(path)
@@ -128,47 +95,75 @@ object Bucket extends LazyLogging {
     }
   }
 
-  def getScheme(path: String): String =
-    new URI(path).getScheme
+  /**
+   * Checks whether the optional parameter is available. If it is not
+   * available returns the default value.
+   *
+   * @param params The parameters key value map
+   * @param key The optional parameter key
+   * @param defaultValue The default value to return if key not
+   *        available
+   * @return The the value for the optional key if it exists; otherwise
+   *         return the default value
+   */
+  def optionalParameter(params: Map[String, String], key: String, defaultValue: String): String =
+    params.get(key).fold(defaultValue)(identity)
 
-  def validate(params: Map[String, String], keys: Seq[String]): Unit =
+  /**
+   * Converts key value pair strings into a single string with
+   * separators in between.
+   *
+   * In the resulting string, key value pairs will be sorted by the
+   * keys.
+   *
+   * @param params The key value parameters map
+   * @return A single string with separators
+   */
+  def keyValueMapToString(params: Map[String, String]): String =
+    (SortedMap.empty[String, String] ++ params)
+      .map { case (k, v) => s"$k$KEY_VALUE_SEPARATOR$v" }
+      .mkString(PARAMETER_SEPARATOR)
+
+  /**
+   * This is opposite of [[Bucket#keyValueMapToString]], given a string
+   * with separators returns a key value pairs map.
+   *
+   * @param params The key value parameters map
+   * @return A single string with separators
+   */
+  def keyValueStringToMap(keyValueString: String): Map[String, String] =
+    keyValueString
+      .split(PARAMETER_SEPARATOR)
+      .map { word =>
+        val kv = word.split(KEY_VALUE_SEPARATOR)
+        kv(0) -> kv(1)
+      }
+      .toMap
+
+  /**
+   * Checks if the sequence of keys are available in the key value
+   * parameter map.
+   */
+  private[bucket] def validate(params: Map[String, String], keys: Seq[String]): Unit =
     keys.foreach { key =>
       requiredParam(params, key)
     }
 
-  def requiredParam(params: Map[String, String], key: String): String = {
+  /**
+   * Checks if the provided key is available in the key value parameter
+   * map. If it does not exist, throws an [[IllegalArgumentException]]
+   * exception.
+   */
+  private[bucket] def requiredParam(params: Map[String, String], key: String): String = {
     val opt = params.get(key)
     opt.fold {
       throw new IllegalArgumentException(s"The required parameter $key is not defined!")
     }(identity)
   }
 
-  def optionalParam(params: Map[String, String], key: String, defaultValue: String): String =
-    params.get(key).fold(defaultValue)(identity)
+  private[this] def getScheme(path: String): String =
+    new URI(path).getScheme
 
-  def mapToStr(params: Map[String, String]): String = {
-    val selectedParams = (params -- Seq("PARALLELISM"))
-    selectedParams.map { case (k, v) => s"$k:=:$v" }.mkString(";")
-  }
-
-  def strToMap(str: String): Map[String, String] =
-    str
-      .split(";")
-      .map { word =>
-        val kv = word.split(":=:")
-        kv(0) -> kv(1)
-      }
-      .toMap
-
-  final val BUCKET_PATH: String = "BUCKET_PATH"
-
-  final val S3_PARAMETERS: Seq[String] =
-    Seq("S3_ENDPOINT", "S3_ACCESS_KEY", "S3_SECRET_KEY")
-
-  final val GCS_PARAMETERS: Seq[String] =
-    Seq("GCS_PROJECT_ID", "GCS_KEYFILE_PATH")
-
-  final val AZURE_PARAMETERS: Seq[String] =
-    Seq("AZURE_ACCOUNT_NAME", "AZURE_SECRET_KEY")
-
+  private[this] final val PARAMETER_SEPARATOR: String = ";"
+  private[this] final val KEY_VALUE_SEPARATOR: String = ":=:"
 }

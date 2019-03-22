@@ -4,7 +4,7 @@ addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.3")
 
 // Adds a `wartremover` a flexible Scala code linting tool
 // http://github.com/puffnfresh/wartremover
-addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.3.7")
+addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.4.1")
 
 // Adds Contrib Warts
 // http://github.com/wartremover/wartremover-contrib/
@@ -32,7 +32,7 @@ addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.1")
 
 // Adds a `dependencyUpdates` task to check Maven repositories for dependency updates
 // http://github.com/rtimush/sbt-updates
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.4")
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.4.0")
 
 // Adds a `scalafmt` task for automatic source code formatting
 // https://github.com/lucidsoftware/neo-sbt-scalafmt
@@ -60,7 +60,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 
 // Adds a `sbt-explicit-dependencies` plugin
 // https://github.com/cb372/sbt-explicit-dependencies
-addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.6")
+addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.9")
 
 // Setup this and project/project/plugins.sbt for formatting project/*.scala files with scalafmt
 inThisBuild(

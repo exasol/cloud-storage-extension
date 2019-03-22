@@ -17,7 +17,7 @@ object ImportMetadata extends LazyLogging {
     )
 
     val rest = iter.getString(1)
-    val params = Bucket.strToMap(rest)
+    val params = Bucket.keyValueStringToMap(rest)
 
     val bucket = Bucket(params)
 
