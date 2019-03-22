@@ -14,6 +14,7 @@ can contact our support team.
 
 * [Overview](#overview)
 * [Getting started](#getting-started)
+* [Storage Formats](#data-storage-formats)
 * [Import](#import)
 * [Export](#export)
 * [Building from source](#building-from-source)
@@ -109,6 +110,28 @@ CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
 
 Please do not forget to change the bucket name or latest jar version according
 to your setup.
+
+## Data Storage Formats
+
+When performing import or export, the default data format is set as [Apache
+Parquet][parquet] format. However, you can specify the format using
+`DATA_FORMAT` configuration property.
+
+For example in order to import [Apache Avro][avro] format:
+
+```sql
+IMPORT INTO MY_SALES_POSITIONS_TABLE
+FROM SCRIPT ETL.IMPORT_PATH WITH
+  BUCKET_PATH    = 's3a://exa-bucket/data/avro/retail/sales_positions/*'
+  DATA_FORMAT    = 'AVRO'
+  ...
+  PARALLELISM    = 'nproc()';
+```
+
+### Supported storage formats
+
+* [Apache Parquet][parquet]
+* [Apache Avro][avro]: currently only import is supported
 
 ## IMPORT
 
@@ -268,4 +291,5 @@ The packaged jar should be located at
 [gcs]: https://cloud.google.com/storage/
 [azure]: https://azure.microsoft.com/en-us/services/storage/blobs/
 [parquet]: https://parquet.apache.org/
+[avro]: https://avro.apache.org/
 [jars]: https://github.com/exasol/cloud-storage-etl-udfs/releases
