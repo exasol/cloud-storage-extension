@@ -17,7 +17,7 @@ abstract class Source {
    */
   def paths: Seq[Path]
 
-  /** The Hadoop [[org.apache.hadoop.fs.FileSystem$]] file system. */
+  /** The Hadoop [[org.apache.hadoop.fs.FileSystem]] file system. */
   def fileSystem: FileSystem
 
   /**
