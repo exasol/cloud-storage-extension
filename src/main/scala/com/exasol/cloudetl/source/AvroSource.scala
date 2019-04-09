@@ -31,9 +31,9 @@ final case class AvroSource(
       val avroReader = try {
         createReader(path)
       } catch {
-        case NonFatal(ex) =>
-          logger.error(s"Could not create avro reader for path: $path", ex);
-          throw ex
+        case NonFatal(exception) =>
+          logger.error(s"Could not create avro reader for path: $path", exception);
+          throw exception
       }
       AvroRowIterator(avroReader)
     }
