@@ -25,9 +25,6 @@ object OrcRowIterator {
       readerRows.nextBatch(readerBatch) && !readerBatch.endOfFile && readerBatch.size > 0
 
     override def next(): Seq[Row] = {
-      if (!hasNext) {
-        throw new NoSuchElementException("Orc reader called next on an empty iterator!")
-      }
       val size = readerBatch.size
       val rows = Vector.newBuilder[Row]
       for { rowIdx <- 0 until size } {
@@ -53,6 +50,7 @@ object OrcDeserializer {
       case Category.DECIMAL   => DecimalDeserializer
       case Category.DOUBLE    => DoubleDeserializer
       case Category.FLOAT     => FloatDeserializer
+      case Category.LONG      => LongDeserializer
       case Category.INT       => IntDeserializer
       case Category.SHORT     => IntDeserializer
       case Category.TIMESTAMP => TimestampDeserializer
@@ -64,7 +62,7 @@ object OrcDeserializer {
         throw new IllegalArgumentException("Orc nested struct type is not supported.")
       case _ =>
         throw new IllegalArgumentException(
-          s"Found orc unsupported type, '${orcType.getCategory}."
+          s"Found orc unsupported type, '${orcType.getCategory}'."
         )
     }
 
