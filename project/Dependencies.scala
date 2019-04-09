@@ -8,6 +8,7 @@ object Dependencies {
   // Versions
   private val ExasolJDBCVersion = "6.0.13"
   private val HadoopVersion = "2.9.2"
+  private val OrcVersion = "1.5.5"
   private val ParquetVersion = "1.8.1"
   private val AzureStorageVersion = "2.2.0"
   private val GoogleStorageVersion = "hadoop2-1.9.10"
@@ -25,6 +26,7 @@ object Dependencies {
     "org.apache.hadoop" % "hadoop-azure" % HadoopVersion,
     "org.apache.hadoop" % "hadoop-common" % HadoopVersion exclude ("org.slf4j", "slf4j-log4j12"),
     "org.apache.hadoop" % "hadoop-hdfs" % HadoopVersion,
+    "org.apache.orc" % "orc-core" % OrcVersion,
     "org.apache.parquet" % "parquet-avro" % ParquetVersion,
     "com.microsoft.azure" % "azure-storage" % AzureStorageVersion,
     "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion,
