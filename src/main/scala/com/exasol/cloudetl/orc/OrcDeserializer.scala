@@ -25,7 +25,7 @@ sealed trait OrcDeserializer[T <: ColumnVector] {
 object OrcDeserializer {
 
   /**
-   * Given the Orc [[org.apache.orc.TypeDescription]] types creates a
+   * Given the Orc [[org.apache.orc.TypeDescription$]] types creates a
    * deserializer that reads the type value into Java objects.
    */
   def apply(orcType: TypeDescription): OrcDeserializer[_ <: ColumnVector] =
