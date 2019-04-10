@@ -29,7 +29,7 @@ final case class OrcSource(
         createReader(path)
       } catch {
         case NonFatal(exception) =>
-          logger.error(s"Could not create orc reader for the path: $path", exception);
+          logger.error(s"Could not create orc reader for the path: $path", exception)
           throw exception
       }
       OrcRowIterator(orcReader).flatten

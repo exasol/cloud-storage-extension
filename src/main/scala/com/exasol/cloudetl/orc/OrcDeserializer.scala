@@ -1,5 +1,10 @@
 package com.exasol.cloudetl.orc
 
+import scala.util.control.NonFatal
+
+import com.exasol.cloudetl.util.DateTimeUtil
+
+import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.hive.ql.exec.vector._
 import org.apache.orc.TypeDescription
 import org.apache.orc.TypeDescription.Category
@@ -34,13 +39,13 @@ object OrcDeserializer {
       case Category.CHAR      => StringDeserializer
       case Category.STRING    => StringDeserializer
       case Category.VARCHAR   => StringDeserializer
-      case Category.DATE      => LongDeserializer
-      case Category.DECIMAL   => DecimalDeserializer
-      case Category.DOUBLE    => DoubleDeserializer
-      case Category.FLOAT     => FloatDeserializer
-      case Category.LONG      => LongDeserializer
-      case Category.INT       => IntDeserializer
       case Category.SHORT     => IntDeserializer
+      case Category.INT       => IntDeserializer
+      case Category.LONG      => LongDeserializer
+      case Category.DECIMAL   => DecimalDeserializer
+      case Category.FLOAT     => FloatDeserializer
+      case Category.DOUBLE    => DoubleDeserializer
+      case Category.DATE      => DateDeserializer
       case Category.TIMESTAMP => TimestampDeserializer
       case Category.LIST =>
         throw new IllegalArgumentException("Orc list type is not supported.")
@@ -129,6 +134,17 @@ object FloatDeserializer extends OrcDeserializer[DoubleColumnVector] {
 }
 
 @SuppressWarnings(Array("org.wartremover.warts.Null"))
+object DateDeserializer extends OrcDeserializer[LongColumnVector] {
+  override def readAt(vector: LongColumnVector, index: Int): java.sql.Date =
+    if (vector.isNull(index)) {
+      null // scalastyle:ignore null
+    } else {
+      val daysSinceEpoch = vector.vector(index)
+      DateTimeUtil.daysToDate(daysSinceEpoch)
+    }
+}
+
+@SuppressWarnings(Array("org.wartremover.warts.Null"))
 object TimestampDeserializer extends OrcDeserializer[TimestampColumnVector] {
   override def readAt(vector: TimestampColumnVector, index: Int): java.sql.Timestamp =
     if (vector.isNull(index)) {
@@ -149,7 +165,7 @@ object DecimalDeserializer extends OrcDeserializer[DecimalColumnVector] {
 }
 
 @SuppressWarnings(Array("org.wartremover.warts.Null"))
-object StringDeserializer extends OrcDeserializer[BytesColumnVector] {
+object StringDeserializer extends OrcDeserializer[BytesColumnVector] with LazyLogging {
   override def readAt(vector: BytesColumnVector, index: Int): String =
     if (vector.isNull(index)) {
       null // scalastyle:ignore null
@@ -160,8 +176,9 @@ object StringDeserializer extends OrcDeserializer[BytesColumnVector] {
         )
         new String(bytes, "UTF8")
       } catch {
-        case e: Exception =>
-          throw e
+        case NonFatal(exception) =>
+          logger.error(s"Could not read string bytes from orc vector.", exception)
+          throw exception
       }
     }
 }
