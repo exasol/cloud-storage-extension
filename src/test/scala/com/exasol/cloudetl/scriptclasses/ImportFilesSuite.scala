@@ -11,14 +11,14 @@ class ImportFilesSuite extends BaseSuite {
 
   test("`run` should throw if the source is not supported") {
     val file = s"$resourcePath/import/parquet/sales_positions1.snappy.parquet"
-    val exaIter = commonExaIterator(resourceImportBucket, "ORC")
+    val exaIter = commonExaIterator(resourceImportBucket, "CSV")
     when(exaIter.next()).thenReturn(false)
     when(exaIter.getString(2)).thenReturn(file)
 
     val thrown = intercept[IllegalArgumentException] {
       ImportFiles.run(mock[ExaMetadata], exaIter)
     }
-    assert(thrown.getMessage === "Unsupported storage format: 'ORC'")
+    assert(thrown.getMessage === "Unsupported storage format: 'CSV'")
   }
 
   test("`run` should emit total number of records from a source") {
