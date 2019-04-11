@@ -34,7 +34,7 @@ object AvroRowIterator {
 
       override def next(): Row = {
         if (!hasNext) {
-          throw new NoSuchElementException("Avro reader next on empty iterator")
+          throw new NoSuchElementException("Avro reader called next on an empty iterator!")
         }
         val record = reader.next()
         recordToRow(record)
