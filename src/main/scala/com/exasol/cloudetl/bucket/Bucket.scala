@@ -14,6 +14,11 @@ import org.apache.hadoop.fs.Path
 /**
  * Abstract representation of a bucket.
  *
+ * We adopted the name 'bucket' to mean a cloud storage path. For
+ * example, a specific implementation of this class can be an AWS S3
+ * bucket, Azure Blob store, Azure Data Lake store, or a Google Cloud
+ * storage.
+ *
  * All specific implementation of a bucket should extend this class.
  */
 abstract class Bucket {
@@ -31,7 +36,7 @@ abstract class Bucket {
   def createConfiguration(): Configuration
 
   /**
-   * The Hadoop [[org.apache.hadoop.fs.FileSystem$]] for this specific
+   * The Hadoop [[org.apache.hadoop.fs.FileSystem]] for this specific
    * bucket path.
    */
   lazy val fileSystem: FileSystem =
@@ -71,8 +76,14 @@ object Bucket extends LazyLogging {
   /**
    * The list of required parameter keys for Azure Blob Storage bucket.
    */
-  final val AZURE_PARAMETERS: Seq[String] =
+  final val AZURE_BLOB_PARAMETERS: Seq[String] =
     Seq("AZURE_ACCOUNT_NAME", "AZURE_SECRET_KEY")
+
+  /**
+   * The list of required keys for Azure Data Lake Storage bucket.
+   */
+  final val AZURE_ADLS_PARAMETERS: Seq[String] =
+    Seq("AZURE_CLIENT_ID", "AZURE_CLIENT_SECRET", "AZURE_DIRECTORY_ID")
 
   /**
    * An apply method that creates different [[Bucket]] classes depending
@@ -89,6 +100,7 @@ object Bucket extends LazyLogging {
       case "s3a"            => S3Bucket(path, params)
       case "gs"             => GCSBucket(path, params)
       case "wasb" | "wasbs" => AzureBlobBucket(path, params)
+      case "adl"            => AzureAdlsBucket(path, params)
       case "file"           => LocalBucket(path, params)
       case _ =>
         throw new IllegalArgumentException(s"Unsupported path scheme $scheme")

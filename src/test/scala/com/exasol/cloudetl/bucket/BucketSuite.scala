@@ -84,4 +84,31 @@ class BucketSuite extends FunSuite with Matchers {
     }
   }
 
+  test("creates an AzureAdlsBucket with provided parameters") {
+    val params = Map(
+      Bucket.BUCKET_PATH -> "adl://my_container.azuredatalakestore.net/orc/*",
+      "AZURE_CLIENT_ID" -> "clientX",
+      "AZURE_CLIENT_SECRET" -> "client_secret",
+      "AZURE_DIRECTORY_ID" -> "directory_id_secret"
+    )
+
+    val bucket = Bucket(params)
+    assert(bucket.isInstanceOf[AzureAdlsBucket])
+
+    val conf = bucket.createConfiguration()
+    val expectedSettings = Map(
+      "fs.adl.impl" -> classOf[org.apache.hadoop.fs.adl.AdlFileSystem].getName,
+      "fs.AbstractFileSystem.adl.impl" -> classOf[org.apache.hadoop.fs.adl.Adl].getName,
+      "dfs.adls.oauth2.access.token.provider.type" -> "ClientCredential",
+      "dfs.adls.oauth2.client.id" -> "clientX",
+      "dfs.adls.oauth2.credential" -> "client_secret",
+      "dfs.adls.oauth2.refresh.url" ->
+        "https://login.microsoftonline.com/directory_id_secret/oauth2/token"
+    )
+    expectedSettings.foreach {
+      case (given, expected) =>
+        assert(conf.get(given) === expected)
+    }
+  }
+
 }

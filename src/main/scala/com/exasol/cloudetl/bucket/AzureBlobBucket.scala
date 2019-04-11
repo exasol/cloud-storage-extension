@@ -10,7 +10,7 @@ final case class AzureBlobBucket(path: String, params: Map[String, String]) exte
 
   /** @inheritdoc */
   override def validate(): Unit =
-    Bucket.validate(params, Bucket.AZURE_PARAMETERS)
+    Bucket.validate(params, Bucket.AZURE_BLOB_PARAMETERS)
 
   /**
    * @inheritdoc

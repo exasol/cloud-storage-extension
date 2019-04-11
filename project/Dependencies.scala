@@ -23,6 +23,7 @@ object Dependencies {
     "com.exasol" % "exasol-script-api" % ExasolJDBCVersion,
     "org.apache.hadoop" % "hadoop-aws" % HadoopVersion,
     "org.apache.hadoop" % "hadoop-azure" % HadoopVersion,
+    "org.apache.hadoop" % "hadoop-azure-datalake" % HadoopVersion,
     "org.apache.hadoop" % "hadoop-common" % HadoopVersion exclude ("org.slf4j", "slf4j-log4j12"),
     "org.apache.hadoop" % "hadoop-hdfs" % HadoopVersion,
     "org.apache.parquet" % "parquet-avro" % ParquetVersion,
