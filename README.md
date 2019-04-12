@@ -10,29 +10,157 @@ source project which is officially supported by Exasol. For any question, you
 can contact our support team.
 </p>
 
-## Table of Contents
+## Table of contents
 
 * [Overview](#overview)
-* [Getting started](#getting-started)
-* [Storage Formats](#data-storage-formats)
-* [Import](#import)
-* [Export](#export)
+* [A short example](#a-short-example)
+* [Features](#features)
+* [Configuration](#configuration-parameters)
+* [Setup and deployment](#setup-and-deployment)
 * [Building from source](#building-from-source)
+* [Contributing](#contributing)
 
 ## Overview
 
 This repository contains helper code to create [Exasol][exasol] ETL UDFs in
-order to transfer data to/from public cloud storage services such as [AWS
+order to read from and write to public cloud storage services such as [AWS
 S3][s3], [Google Cloud Storage][gcs] and [Azure Blob Storage][azure].
 
-**Please check out the currently [supported storage formats
-below](#data-storage-formats).**
-
 Please be aware that Exasol already supports natively [loading CSV format from
-AWS S3][sol-594] (but not GCS or Azure) and similarly transfering data to/from
-[Apache Hive][hadoop-etl-udfs].
+AWS S3][sol-594]; however, not from Google Cloud Storage and Azure Storage
+systems. Additionally, transfering data between Exasol and [Apache
+Hive][apache-hive] is supported via [Hadoop ETL UDFs][hadoop-etl-udfs].
 
-## Getting started
+## A short example
+
+Here we show an excerpt from a simple example of importing and exporting Parquet
+formatted data stored in Amazon S3.
+
+Please see [the full list of all cloud storage providers and guidelines to
+configure them](./docs/overview.md).
+
+### Create an Exasol table
+
+We are going to use a `SALES_POSITIONS` Exasol table to import data into or to
+export its contents to Amazon S3.
+
+```sql
+CREATE SCHEMA RETAIL;
+OPEN SCHEMA RETAIL;
+
+DROP TABLE IF EXISTS SALES_POSITIONS;
+
+CREATE TABLE SALES_POSITIONS (
+  SALES_ID    INTEGER,
+  POSITION_ID SMALLINT,
+  ARTICLE_ID  SMALLINT,
+  AMOUNT      SMALLINT,
+  PRICE       DECIMAL(9,2),
+  VOUCHER_ID  SMALLINT,
+  CANCELED    BOOLEAN
+);
+```
+
+### Import from S3
+
+```sql
+IMPORT INTO SALES_POSITIONS
+FROM SCRIPT ETL.IMPORT_PATH WITH
+  BUCKET_PATH    = 's3a://my-bucket/parquet/import/sales_positions/*'
+  DATA_FORMAT    = 'PARQUET'
+  S3_ACCESS_KEY  = 'MY_AWS_ACCESS_KEY'
+  S3_SECRET_KEY  = 'MY_AWS_SECRET_KEY'
+  S3_ENDPOINT    = 's3.MY_REGION.amazonaws.com'
+  PARALLELISM    = 'nproc()';
+```
+
+### Export to S3
+
+```sql
+EXPORT SALES_POSITIONS
+INTO SCRIPT ETL.EXPORT_PATH WITH
+  BUCKET_PATH    = 's3a://my-bucket/parquet/export/sales_positions/'
+  S3_ACCESS_KEY  = 'MY_AWS_ACCESS_KEY'
+  S3_SECRET_KEY  = 'MY_AWS_SECRET_KEY'
+  S3_ENDPOINT    = 's3.MY_REGION.amazonaws.com'
+  PARALLELISM    = 'nproc()';
+```
+
+Please change the paths and parameters accordingly.
+
+## Features
+
+The following table shows currently supported features with the latest realese.
+
+<table>
+  <tr>
+    <th rowspan="2">Storage System / Data Format</th>
+    <th colspan="2">Parquet</th>
+    <th colspan="2">Avro</th>
+    <th colspan="2">Orc</th>
+  </tr>
+  <tr>
+    <th>IMPORT</th>
+    <th>EXPORT</th>
+    <th>IMPORT</th>
+    <th>EXPORT</th>
+    <th>IMPORT</th>
+    <th>EXPORT</th>
+  </tr>
+  <tr>
+    <td>Amazon S3</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_multiplication_x:</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_multiplication_x:</td>
+  </tr>
+  <tr>
+    <td>Google Cloud Storage</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_multiplication_x:</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_multiplication_x:</td>
+  </tr>
+  <tr>
+    <td>Azure Blob Storage</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_multiplication_x:</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_multiplication_x:</td>
+  </tr>
+  <tr>
+    <td>Azure Data Lake (Gen1) Storage</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_multiplication_x:</td>
+    <td align="center">:heavy_check_mark:</td>
+    <td align="center">:heavy_multiplication_x:</td>
+  </tr>
+</table>
+
+## Configuration Parameters
+
+The following configuration parameters should be provided when using the
+cloud-storage-etl-udfs.
+
+| Parameter                      | Default       | Description
+|:-------------------------------|:--------------|:--------------------------------------------------------------------------------------------------------|
+|``BUCKET_PATH``                 |*<none>*       |A path to the data bucket. It should start with cloud storage system specific schema, for example `s3a`. |
+|``DATA_FORMAT``                 |``PARQUET``    |The data storage format in the provided path.                                                            |
+|``PARALLELISM``                 |``nproc()``    |The number of parallel instances to be started for loading data.                                         |
+|``storage specific parameters`` |*<none>*       |These are parameters for specific cloud storage for authentication purpose.                              |
+
+Please see [the parameters specific for each cloud storage and how to configure
+them here](./docs/overview.md).
+
+## Setup and deployment
 
 Please follow the steps described below in order to setup the `IMPORT` and
 `EXPORT` UDF scripts.
@@ -109,156 +237,8 @@ CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
 /
 ```
 
-Please do not forget to change the bucket name or latest jar version according
-to your setup.
-
-## Data Storage Formats
-
-When performing import or export, the default data format is set as [Apache
-Parquet][parquet] format. However, you can specify the format using
-`DATA_FORMAT` configuration property.
-
-For example in order to import [Apache Avro][avro] format:
-
-```sql
-IMPORT INTO MY_SALES_POSITIONS_TABLE
-FROM SCRIPT ETL.IMPORT_PATH WITH
-  BUCKET_PATH    = 's3a://exa-bucket/data/avro/retail/sales_positions/*'
-  DATA_FORMAT    = 'AVRO'
-  ...
-  PARALLELISM    = 'nproc()';
-```
-
-### Supported storage formats
-
-* [Apache Parquet][parquet]
-* [Apache Avro][avro]: currently only import is supported
-
-## IMPORT
-
-Please follow instructions below in order to import from different cloud
-storages.
-
-### Make sure an Exasol table is available
-
-In this walkthrough we use the `SALES_POSITIONS` table to import data into or to
-export its contents to cloud storages.
-
-```sql
-CREATE SCHEMA RETAIL;
-OPEN SCHEMA RETAIL;
-
-DROP TABLE IF EXISTS SALES_POSITIONS;
-
-CREATE TABLE SALES_POSITIONS (
-  SALES_ID    INTEGER,
-  POSITION_ID SMALLINT,
-  ARTICLE_ID  SMALLINT,
-  AMOUNT      SMALLINT,
-  PRICE       DECIMAL(9,2),
-  VOUCHER_ID  SMALLINT,
-  CANCELED    BOOLEAN
-);
-```
-
-Similarly, please do not forget to change the paths accordingly in the import
-commands below.
-
-### Import from AWS S3
-
-```sql
-IMPORT INTO SALES_POSITIONS
-FROM SCRIPT ETL.IMPORT_PATH WITH
-  BUCKET_PATH    = 's3a://exa-bucket/data/parquet/retail/sales_positions/*'
-  S3_ACCESS_KEY  = 'MY_AWS_ACCESS_KEY'
-  S3_SECRET_KEY  = 'MY_AWS_SECRET_KEY'
-  S3_ENDPOINT    = 's3.MY_REGION.amazonaws.com'
-  PARALLELISM    = 'nproc()';
-
--- MY_REGION is one of AWS regions, for example, eu-central-1
-
-SELECT * FROM SALES_POSITIONS LIMIT 10;
-```
-
-### Import from Google GCS
-
-In order to read data from [Google GCS][gcs], you need to provide a service
-account key file. This should be uploaded to a secure Exasol bucket in advance.
-
-For example,
-
-```bash
-curl \
-  -X PUT \
-  -T path/to/project-id-service-keyfile.json \
-  http://w:MY-PASSWORD@EXA-NODE-ID:2580/bucket1/project-id-service-keyfile.json
-```
-
-And then run import,
-
-```sql
-IMPORT INTO SALES_POSITIONS
-FROM SCRIPT ETL.IMPORT_PATH WITH
-  BUCKET_PATH      = 'gs://exa-bucket/data/parquet/retail/sales_positions/*'
-  GCS_PROJECT_ID   = 'MY_GCS_PORJECT_ID'
-  GCS_KEYFILE_PATH = 'MY_BUCKETFS_PATH/project-id-service-keyfile.json'
-  PARALLELISM      = 'nproc()';
-
-SELECT * FROM SALES_POSITIONS LIMIT 10;
-```
-
-### Import from Azure Blob Store
-
-```sql
-IMPORT INTO SALES_POSITIONS
-FROM SCRIPT ETL.IMPORT_PATH WITH
-  BUCKET_PATH        = 'wasbs://<MY-CONTAINER>@<MY-ACCOUNT-NAME>.blob.core.windows.net/data/parquet/sales-positions/*'
-  AZURE_ACCOUNT_NAME = 'MY_AZURE_STORAGE_ACCOUNT_NAME'
-  AZURE_SECRET_KEY   = 'MY_AZURE_STORAGE_SECRET_KEY'
-  PARALLELISM        = 'nproc()';
-
-SELECT * FROM SALES_POSITIONS LIMIT 10;
-```
-
-## EXPORT
-
-Please follow steps below in order to export to various cloud storages.
-
-Like import, we will export the `SALES_POSITIONS` table.
-
-### Export to AWS S3
-
-```sql
-EXPORT SALES_POSITIONS
-INTO SCRIPT ETL.EXPORT_PATH WITH
-  BUCKET_PATH    = 's3a://exa-bucket/data/parquet/retail/sales_positions/'
-  S3_ACCESS_KEY  = 'MY_AWS_ACCESS_KEY'
-  S3_SECRET_KEY  = 'MY_AWS_SECRET_KEY'
-  S3_ENDPOINT    = 's3.MY_REGION.amazonaws.com'
-  PARALLELISM    = 'nproc()';
-```
-
-### Export to GCS
-
-```sql
-EXPORT SALES_POSITIONS
-INTO SCRIPT ETL.EXPORT_PATH WITH
-  BUCKET_PATH      = 'gs://exa-bucket/data/parquet/retail/sales_positions/'
-  GCS_PROJECT_ID   = 'MY_GCS_PORJECT_ID'
-  GCS_KEYFILE_PATH = 'MY_BUCKETFS_PATH/project-id-service-keyfile.json'
-  PARALLELISM      = 'nproc()';
-```
-
-### Export to Azure Blob Store
-
-```sql
-EXPORT SALES_POSITIONS
-INTO SCRIPT ETL.EXPORT_PATH WITH
-  BUCKET_PATH        = 'wasbs://<MY-CONTAINER>@<MY-ACCOUNT-NAME>.blob.core.windows.net/data/parquet/sales-positions/'
-  AZURE_ACCOUNT_NAME = 'MY_AZURE_STORAGE_ACCOUNT_NAME'
-  AZURE_SECRET_KEY   = 'MY_AZURE_STORAGE_SECRET_KEY'
-  PARALLELISM        = 'nproc()';
-```
+Please do not forget to change the bucket name or the latest jar version
+according to your setup.
 
 ## Building from source
 
@@ -287,6 +267,7 @@ The packaged jar should be located at
 [gh-release-link]: https://github.com/exasol/cloud-storage-etl-udfs/releases/latest
 [exasol]: https://www.exasol.com/en/
 [sol-594]: https://www.exasol.com/support/browse/SOL-594
+[apache-hive]: https://hive.apache.org/
 [hadoop-etl-udfs]: https://github.com/exasol/hadoop-etl-udfs
 [s3]: https://aws.amazon.com/s3/
 [gcs]: https://cloud.google.com/storage/
