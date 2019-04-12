@@ -144,8 +144,8 @@ the Azure Data Lake (Gen1) Storage system.
 - `AZURE_DIRECTORY_ID`
 
 You can follow
-[this](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-service-to-service-authenticate-using-active-directory)
-[instruction](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
+[these](https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-service-to-service-authenticate-using-active-directory)
+[instructions](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
 to obtain the above configuration settings.
 
 **Please ensure that the above client id has an access permission to the Gen1

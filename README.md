@@ -259,12 +259,20 @@ Create assembly jar,
 The packaged jar should be located at
 `target/scala-2.12/cloud-storage-etl-udfs-{VERSION}.jar`.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+
+For requesting a feature, providing a feedback or reporting an issue, please
+open a [Github issue][gh-issues].
+
 [travis-badge]: https://travis-ci.org/exasol/cloud-storage-etl-udfs.svg?branch=master
 [travis-link]: https://travis-ci.org/exasol/cloud-storage-etl-udfs
 [codecov-badge]: https://codecov.io/gh/exasol/cloud-storage-etl-udfs/branch/master/graph/badge.svg
 [codecov-link]: https://codecov.io/gh/exasol/cloud-storage-etl-udfs
 [gh-release-badge]: https://img.shields.io/github/release/exasol/cloud-storage-etl-udfs.svg
 [gh-release-link]: https://github.com/exasol/cloud-storage-etl-udfs/releases/latest
+[gh-issues]: https://github.com/exasol/cloud-storage-etl-udfs/issues
 [exasol]: https://www.exasol.com/en/
 [sol-594]: https://www.exasol.com/support/browse/SOL-594
 [apache-hive]: https://hive.apache.org/
