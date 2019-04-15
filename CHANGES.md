@@ -1,3 +1,14 @@
+## v0.4.1
+
+> 2019 APR 15
+
+* Adds support for Azure Data Lake (Gen1) Storage
+  [#22](https://github.com/exasol/cloud-storage-etl-udfs/issues/22)
+  [#25](https://github.com/exasol/cloud-storage-etl-udfs/pull/25)
+* Support ORC formatted data import
+  [#23](https://github.com/exasol/cloud-storage-etl-udfs/issues/23)
+  [#26](https://github.com/exasol/cloud-storage-etl-udfs/pull/26)
+
 ## v0.4.0
 
 > 2019 MAR 21
