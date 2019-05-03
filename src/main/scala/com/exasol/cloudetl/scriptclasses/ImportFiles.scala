@@ -52,7 +52,7 @@ object ImportFiles extends LazyLogging {
   private[this] def readAndEmit(src: Source, ctx: ExaIterator): Unit =
     src.stream.foreach { iter =>
       iter.foreach { row =>
-        val columns: Seq[Object] = row.values.map(_.asInstanceOf[AnyRef])
+        val columns: Seq[Object] = row.getValues().map(_.asInstanceOf[AnyRef])
         ctx.emit(columns: _*)
       }
     }

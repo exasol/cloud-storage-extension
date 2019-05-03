@@ -27,13 +27,7 @@ import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
  *  - org.apache.spark.sql.execution.datasources.parquet.ParquetWriteSupport
  *
  */
-@SuppressWarnings(
-  Array(
-    "org.wartremover.warts.AsInstanceOf",
-    "org.wartremover.warts.Null",
-    "org.wartremover.warts.Var"
-  )
-)
+@SuppressWarnings(Array("org.wartremover.warts.Null", "org.wartremover.warts.Var"))
 class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
 
   // The number bytes required for timestamp buffer in Parquet
@@ -83,7 +77,7 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
     while (idx < schema.getFieldCount) {
       val fieldType = schema.getType(idx)
       val fieldName = fieldType.getName()
-      if (row.values(idx) != null) {
+      if (!row.isNullAt(idx)) {
         consumeField(fieldName, idx) {
           writers(idx).apply(row, idx)
         }
@@ -111,7 +105,7 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
     typeName match {
       case PrimitiveTypeName.BOOLEAN =>
         (row: Row, index: Int) =>
-          recordConsumer.addBoolean(row.values(index).asInstanceOf[Boolean])
+          recordConsumer.addBoolean(row.getAs[Boolean](index))
 
       case PrimitiveTypeName.INT32 =>
         originalType match {
@@ -119,25 +113,25 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
             makeDateWriter()
           case _ =>
             (row: Row, index: Int) =>
-              recordConsumer.addInteger(row.values(index).asInstanceOf[Integer])
+              recordConsumer.addInteger(row.getAs[Integer](index))
         }
 
       case PrimitiveTypeName.INT64 =>
         (row: Row, index: Int) =>
-          recordConsumer.addLong(row.values(index).asInstanceOf[Long])
+          recordConsumer.addLong(row.getAs[Long](index))
 
       case PrimitiveTypeName.FLOAT =>
         (row: Row, index: Int) =>
-          recordConsumer.addFloat(row.values(index).asInstanceOf[Double].floatValue)
+          recordConsumer.addFloat(row.getAs[Double](index).floatValue)
 
       case PrimitiveTypeName.DOUBLE =>
         (row: Row, index: Int) =>
-          recordConsumer.addDouble(row.values(index).asInstanceOf[Double])
+          recordConsumer.addDouble(row.getAs[Double](index))
 
       case PrimitiveTypeName.BINARY =>
         (row: Row, index: Int) =>
           recordConsumer.addBinary(
-            Binary.fromReusedByteArray(row.values(index).asInstanceOf[String].getBytes)
+            Binary.fromReusedByteArray(row.getAs[String](index).getBytes)
           )
 
       case PrimitiveTypeName.INT96 =>
@@ -153,14 +147,14 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
 
   private def makeDateWriter(): RowValueWriter = (row: Row, index: Int) => {
     // Write the number of days since unix epoch as integer
-    val date = row.values(index).asInstanceOf[java.sql.Date]
+    val date = row.getAs[java.sql.Date](index)
     val days = DateTimeUtil.daysSinceEpoch(date)
 
     recordConsumer.addInteger(days.toInt)
   }
 
   private def makeTimestampWriter(): RowValueWriter = (row: Row, index: Int) => {
-    val timestamp = row.values(index).asInstanceOf[java.sql.Timestamp]
+    val timestamp = row.getAs[java.sql.Timestamp](index)
     val micros = DateTimeUtil.getMicrosFromTimestamp(timestamp)
     val (days, nanos) = DateTimeUtil.getJulianDayAndNanos(micros)
 
@@ -186,7 +180,7 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
     val numBytes = SchemaUtil.PRECISION_TO_BYTE_SIZE(precision - 1)
 
     val bytesWriter = (row: Row, index: Int) => {
-      val decimal = row.values(index).asInstanceOf[java.math.BigDecimal]
+      val decimal = row.getAs[java.math.BigDecimal](index)
       val unscaled = decimal.unscaledValue()
       val bytes = unscaled.toByteArray
       val fixedLenBytesArray =
