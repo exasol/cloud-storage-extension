@@ -13,14 +13,15 @@ import org.apache.hadoop.fs.Path
 object ImportFiles extends LazyLogging {
 
   def run(meta: ExaMetadata, iter: ExaIterator): Unit = {
-    val bucketPath = iter.getString(0)
     val rest = iter.getString(1)
     val params = Bucket.keyValueStringToMap(rest)
     val format = Bucket.optionalParameter(params, "DATA_FORMAT", "PARQUET")
     val bucket = Bucket(params)
 
     val files = groupFiles(iter, 2)
-    logger.info(s"Reading file = ${files.take(5).mkString(",")} from bucket = $bucketPath")
+    val nodeId = meta.getNodeId
+    val vmId = meta.getVmId
+    logger.info(s"The total number of files for node: $nodeId, vm: $vmId is '${files.size}'.")
 
     val source = createSource(format, files, bucket)
     readAndEmit(source, iter)

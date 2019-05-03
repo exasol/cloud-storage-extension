@@ -16,6 +16,7 @@ import com.exasol.cloudetl.util.SchemaUtil
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.fs.Path
 
+@SuppressWarnings(Array("org.wartremover.warts.Var"))
 object ExportTable extends LazyLogging {
 
   def run(meta: ExaMetadata, iter: ExaIterator): Unit = {
@@ -33,16 +34,20 @@ object ExportTable extends LazyLogging {
     val options = ParquetWriteOptions(params)
     val writer = ParquetRowWriter(path, bucket.createConfiguration(), messageType, options)
 
-    logger.info(s"Starting export from node = '${meta.getNodeId}' and vm = '${meta.getVmId}'")
+    val nodeId = meta.getNodeId
+    val vmId = meta.getVmId
+    logger.info(s"Starting export from node: $nodeId, vm: $vmId.")
 
+    var count = 0;
     do {
       val row = getRow(iter, firstColumnIdx, columns)
-      logger.debug(s"Writing row '$row'")
       writer.write(row)
+      count = count + 1
     } while (iter.next())
 
     writer.close()
-    logger.info(s"Finished exporting from node = '${meta.getNodeId}' and vm = '${meta.getVmId}'")
+
+    logger.info(s"Exported '$count' records from node: $nodeId, vm: $vmId.")
   }
 
   private[this] def generateParquetFilename(meta: ExaMetadata): String = {
