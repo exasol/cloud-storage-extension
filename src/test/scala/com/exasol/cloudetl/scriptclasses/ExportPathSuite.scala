@@ -27,7 +27,7 @@ class ExportPathSuite extends BaseSuite {
          |FROM
          |  DUAL
          |GROUP BY
-         |  nproc();
+         |  iproc();
          |""".stripMargin
 
     assert(ExportPath.generateSqlForExportSpec(exaMeta, exaSpec) === sqlExpected)
