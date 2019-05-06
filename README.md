@@ -83,7 +83,7 @@ INTO SCRIPT ETL.EXPORT_PATH WITH
   S3_ACCESS_KEY  = 'MY_AWS_ACCESS_KEY'
   S3_SECRET_KEY  = 'MY_AWS_SECRET_KEY'
   S3_ENDPOINT    = 's3.MY_REGION.amazonaws.com'
-  PARALLELISM    = 'nproc()';
+  PARALLELISM    = 'iproc(), floor(random()*4)';
 ```
 
 Please change the paths and parameters accordingly.
@@ -150,12 +150,13 @@ The following table shows currently supported features with the latest realese.
 The following configuration parameters should be provided when using the
 cloud-storage-etl-udfs.
 
-| Parameter                      | Default       | Description
-|:-------------------------------|:--------------|:--------------------------------------------------------------------------------------------------------|
-|``BUCKET_PATH``                 |*<none>*       |A path to the data bucket. It should start with cloud storage system specific schema, for example `s3a`. |
-|``DATA_FORMAT``                 |``PARQUET``    |The data storage format in the provided path.                                                            |
-|``PARALLELISM``                 |``nproc()``    |The number of parallel instances to be started for loading data.                                         |
-|``storage specific parameters`` |*<none>*       |These are parameters for specific cloud storage for authentication purpose.                              |
+| Parameter                      | Default        | Description
+|:-------------------------------|:---------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|
+|``BUCKET_PATH``                 |*<none>*        |A path to the data bucket. It should start with cloud storage system specific schema, for example `s3a`.                                                  |
+|``DATA_FORMAT``                 |``PARQUET``     |The data storage format in the provided path.                                                                                                             |
+|``PARALLELISM IN IMPORT``       |``nproc()``     |The number of parallel instances to be started for importing data. *Please multiply this to increase the parallelism*.                                    |
+|``PARALLELISM IN EXPORT``       |``iproc()``     |The parallel instances for exporting data. *Add another random number to increase the parallelism per node*. For example, ``iproc(), floor(random()*4)``. |
+|``storage specific parameters`` |*<none>*        |These are parameters for specific cloud storage for authentication purpose.                                                                               |
 
 Please see [the parameters specific for each cloud storage and how to configure
 them here](./docs/overview.md).
