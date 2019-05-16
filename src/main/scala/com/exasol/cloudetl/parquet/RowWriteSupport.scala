@@ -20,8 +20,9 @@ import org.apache.parquet.schema.PrimitiveType
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
 
 /**
- * A Parquet [[org.apache.parquet.hadoop.api.WriteSupport]] implementation that writes
- * [[com.exasol.cloudetl.data.Row]] as a Parquet data.
+ * A Parquet [[org.apache.parquet.hadoop.api.WriteSupport]]
+ * implementation that writes [[com.exasol.cloudetl.data.Row]] as a
+ * Parquet data.
  *
  * This is mostly adapted from Spark codebase:
  *  - org.apache.spark.sql.execution.datasources.parquet.ParquetWriteSupport
@@ -33,20 +34,23 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
   // The number bytes required for timestamp buffer in Parquet
   private final val TIMESTAMP_MAX_BYTE_SIZE: Int = 12
 
-  // This is a type that is responsible for writing a value in Row values index to the
-  // RecordConsumer
+  // This is a type that is responsible for writing a value in Row
+  // values index to the RecordConsumer
   private type RowValueWriter = (Row, Int) => Unit
 
-  // A list of `RowValueWriter`-s for each field type of Parquet `schema`
+  // A list of `RowValueWriter`-s for each field type of Parquet
+  // `schema`
   private var rootFieldWriters: Array[RowValueWriter] = _
 
   // A Parquet RecordConsumer that all values of a Row will be written
   private var recordConsumer: RecordConsumer = _
 
-  // Reusable byte array used to write timestamps as Parquet INT96 values
+  // Reusable byte array used to write timestamps as Parquet INT96
+  // values
   private val timestampBuffer = new Array[Byte](TIMESTAMP_MAX_BYTE_SIZE)
 
-  // Reusable byte array used to write decimal values as Parquet FIXED_LEN_BYTE_ARRAY values
+  // Reusable byte array used to write decimal values as Parquet
+  // FIXED_LEN_BYTE_ARRAY values
   private val decimalBuffer =
     new Array[Byte](SchemaUtil.PRECISION_TO_BYTE_SIZE(SchemaUtil.DECIMAL_MAX_PRECISION - 1))
 
@@ -185,12 +189,14 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
       val bytes = unscaled.toByteArray
       val fixedLenBytesArray =
         if (bytes.length == numBytes) {
-          // If the length of the underlying byte array of the unscaled `BigDecimal` happens to be
-          // `numBytes`, just reuse it, so that we don't bother copying it to `decimalBuffer`.
+          // If the length of the underlying byte array of the unscaled
+          // `BigDecimal` happens to be `numBytes`, just reuse it, so
+          // that we don't bother copying it to `decimalBuffer`.
           bytes
         } else if (bytes.length < numBytes) {
-          // Otherwise, the length must be less than `numBytes`.  In this case we copy contents of
-          // the underlying bytes with padding sign bytes to `decimalBuffer` to form the result
+          // Otherwise, the length must be less than `numBytes`.  In
+          // this case we copy contents of the underlying bytes with
+          // padding sign bytes to `decimalBuffer` to form the result
           // fixed-length byte array.
 
           // For negatives all high bits need to be 1 hence -1 used

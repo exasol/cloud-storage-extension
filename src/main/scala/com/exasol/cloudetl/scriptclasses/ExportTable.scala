@@ -66,14 +66,16 @@ object ExportTable extends LazyLogging {
   }
 
   /**
-   * Creates a sequence of [[ExaColumnInfo]] columns using an Exasol [[ExaMetadata]] input column
-   * methods.
+   * Creates a sequence of [[ExaColumnInfo]] columns using an Exasol
+   * [[ExaMetadata]] input column methods.
    *
-   * Set the name of the column using `srcColumnNames` parameter. Additionally, set the precision,
-   * scale and length using corresponding functions on Exasol metadata for input columns.
+   * Set the name of the column using `srcColumnNames` parameter.
+   * Additionally, set the precision, scale and length using
+   * corresponding functions on Exasol metadata for input columns.
    *
    * @param meta An Exasol [[ExaMetadata]] metadata
-   * @param srcColumnNames A sequence of column names per each input column in metadata
+   * @param srcColumnNames A sequence of column names per each input
+   *        column in metadata
    * @param startIdx A starting integer index to reference input column
    * @return A sequence of [[ExaColumnInfo]] columns
    */

@@ -34,15 +34,18 @@ object ExportPath {
        |""".stripMargin
   }
 
+  /** Returns source column names with quotes removed. */
   private[this] def getSourceColumns(spec: ExaExportSpecification): Seq[String] =
     spec.getSourceColumnNames.asScala
       .map {
         case value =>
-          // Remove quotes if present
           getColumnName(value).replaceAll("\"", "")
       }
 
-  /** Given a table name dot column name syntax (myTable.colInt), return the column name. */
+  /**
+   * Given a table name dot column name syntax (myTable.colInt), return
+   * the column name.
+   */
   private[this] def getColumnName(str: String): String = str.split("\\.") match {
     case Array(colName)              => colName
     case Array(tblName @ _, colName) => colName

@@ -50,9 +50,9 @@ final case class ParquetSource(
           Iterator.continually(parquetReader.read).takeWhile(_ != null)
         }
       } catch {
-        case NonFatal(ex) =>
-          logger.error(s"Could not create parquet reader for path: $path", ex);
-          throw ex
+        case NonFatal(exception) =>
+          logger.error(s"Could not create parquet reader for path: $path", exception);
+          throw exception
       }
     }
 
