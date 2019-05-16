@@ -156,6 +156,7 @@ cloud-storage-etl-udfs.
 |``DATA_FORMAT``                 |``PARQUET``     |The data storage format in the provided path.                                                                                                             |
 |``PARALLELISM IN IMPORT``       |``nproc()``     |The number of parallel instances to be started for importing data. *Please multiply this to increase the parallelism*.                                    |
 |``PARALLELISM IN EXPORT``       |``iproc()``     |The parallel instances for exporting data. *Add another random number to increase the parallelism per node*. For example, ``iproc(), floor(random()*4)``. |
+|``PARQUET_COMPRESSION_CODEC``   |``uncompressed``|The compression codec to use when exporting the data into parquet files. Other options are: `snappy`, `gzip` and `lzo`.                                   |
 |``storage specific parameters`` |*<none>*        |These are parameters for specific cloud storage for authentication purpose.                                                                               |
 
 Please see [the parameters specific for each cloud storage and how to configure
