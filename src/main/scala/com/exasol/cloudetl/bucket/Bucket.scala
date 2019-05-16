@@ -39,7 +39,7 @@ abstract class Bucket {
    * The Hadoop [[org.apache.hadoop.fs.FileSystem]] for this specific
    * bucket path.
    */
-  lazy val fileSystem: FileSystem =
+  final lazy val fileSystem: FileSystem =
     FileSystem.get(new URI(bucketPath), getConfiguration())
 
   /**
@@ -87,7 +87,7 @@ object Bucket extends LazyLogging {
 
   /**
    * An apply method that creates different [[Bucket]] classes depending
-   * on the path schema.
+   * on the path scheme.
    *
    * @param params The key value parameters
    * @return A [[Bucket]] class for the given path
