@@ -33,14 +33,14 @@ abstract class Bucket {
    * Creates a Hadoop [[org.apache.hadoop.conf.Configuration]] for this
    * specific bucket type.
    */
-  def createConfiguration(): Configuration
+  def getConfiguration(): Configuration
 
   /**
    * The Hadoop [[org.apache.hadoop.fs.FileSystem]] for this specific
    * bucket path.
    */
   lazy val fileSystem: FileSystem =
-    FileSystem.get(new URI(bucketPath), createConfiguration())
+    FileSystem.get(new URI(bucketPath), getConfiguration())
 
   /**
    * Get the all the paths in this bucket path.

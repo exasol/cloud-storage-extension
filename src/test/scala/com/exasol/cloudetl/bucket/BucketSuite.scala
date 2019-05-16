@@ -33,7 +33,7 @@ class BucketSuite extends FunSuite with Matchers {
     )
 
     val bucket = Bucket(s3params)
-    val conf = bucket.createConfiguration()
+    val conf = bucket.getConfiguration()
 
     assert(bucket.isInstanceOf[S3Bucket])
     assert(conf.get("fs.s3a.impl") === classOf[S3AFileSystem].getName)
@@ -51,7 +51,7 @@ class BucketSuite extends FunSuite with Matchers {
     )
 
     val bucket = Bucket(gcsParams)
-    val conf = bucket.createConfiguration()
+    val conf = bucket.getConfiguration()
 
     assert(bucket.isInstanceOf[GCSBucket])
     assert(conf.get("fs.gs.impl") === classOf[GoogleHadoopFileSystem].getName)
@@ -67,7 +67,7 @@ class BucketSuite extends FunSuite with Matchers {
     )
 
     val bucket = Bucket(azureBlobParams)
-    val conf = bucket.createConfiguration()
+    val conf = bucket.getConfiguration()
 
     assert(bucket.isInstanceOf[AzureBlobBucket])
     assert(conf.get("fs.azure.account.key.account1.blob.core.windows.net") === "secret")
@@ -95,7 +95,7 @@ class BucketSuite extends FunSuite with Matchers {
     val bucket = Bucket(params)
     assert(bucket.isInstanceOf[AzureAdlsBucket])
 
-    val conf = bucket.createConfiguration()
+    val conf = bucket.getConfiguration()
     val expectedSettings = Map(
       "fs.adl.impl" -> classOf[org.apache.hadoop.fs.adl.AdlFileSystem].getName,
       "fs.AbstractFileSystem.adl.impl" -> classOf[org.apache.hadoop.fs.adl.Adl].getName,

@@ -18,7 +18,7 @@ final case class GCSBucket(path: String, params: Map[String, String]) extends Bu
    * Additionally validates that all required parameters are available
    * in order to create a configuration.
    */
-  override def createConfiguration(): Configuration = {
+  override def getConfiguration(): Configuration = {
     validate()
 
     val conf = new Configuration()

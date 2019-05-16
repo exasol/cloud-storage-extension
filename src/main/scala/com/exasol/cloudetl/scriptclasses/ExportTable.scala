@@ -32,7 +32,7 @@ object ExportTable extends LazyLogging {
     val path = new Path(bucketPath, parquetFilename)
     val messageType = SchemaUtil.createParquetMessageType(columns, "exasol_export_schema")
     val options = ParquetWriteOptions(params)
-    val writer = ParquetRowWriter(path, bucket.createConfiguration(), messageType, options)
+    val writer = ParquetRowWriter(path, bucket.getConfiguration(), messageType, options)
 
     val nodeId = meta.getNodeId
     val vmId = meta.getVmId

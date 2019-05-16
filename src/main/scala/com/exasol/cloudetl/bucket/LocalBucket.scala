@@ -14,7 +14,7 @@ final case class LocalBucket(path: String, params: Map[String, String]) extends 
   override def validate(): Unit = ()
 
   /** @inheritdoc */
-  override def createConfiguration(): Configuration = {
+  override def getConfiguration(): Configuration = {
     validate()
     new Configuration()
   }

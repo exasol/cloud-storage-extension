@@ -41,9 +41,9 @@ object ImportFiles extends LazyLogging {
   private[this] def createSource(format: String, files: Seq[String], bucket: Bucket): Source = {
     val paths = files.map(f => new Path(f))
     format.toLowerCase match {
-      case "avro"    => AvroSource(paths, bucket.fileSystem, bucket.createConfiguration())
-      case "orc"     => OrcSource(paths, bucket.fileSystem, bucket.createConfiguration())
-      case "parquet" => ParquetSource(paths, bucket.fileSystem, bucket.createConfiguration())
+      case "avro"    => AvroSource(paths, bucket.fileSystem, bucket.getConfiguration())
+      case "orc"     => OrcSource(paths, bucket.fileSystem, bucket.getConfiguration())
+      case "parquet" => ParquetSource(paths, bucket.fileSystem, bucket.getConfiguration())
       case _ =>
         throw new IllegalArgumentException(s"Unsupported storage format: '$format'")
     }
