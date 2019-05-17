@@ -52,7 +52,7 @@ INTO SCRIPT ETL.EXPORT_PATH WITH
   S3_ACCESS_KEY  = 'MY_AWS_ACCESS_KEY'
   S3_SECRET_KEY  = 'MY_AWS_SECRET_KEY'
   S3_ENDPOINT    = 's3.MY_REGION.amazonaws.com'
-  PARALLELISM    = 'nproc()';
+  PARALLELISM    = 'iproc(), floor(random()*4)';
 ```
 
 ## Google Cloud Storage
@@ -97,7 +97,7 @@ INTO SCRIPT ETL.EXPORT_PATH WITH
   BUCKET_PATH      = 'gs://google-storage-path/parquet/retail/sales_positions/'
   GCS_PROJECT_ID   = 'MY_GCS_PORJECT_ID'
   GCS_KEYFILE_PATH = 'MY_BUCKETFS_PATH/project-id-service-keyfile.json'
-  PARALLELISM      = 'nproc()';
+  PARALLELISM      = 'iproc()';
 ```
 
 ## Azure Blob Storage
@@ -129,7 +129,7 @@ INTO SCRIPT ETL.EXPORT_PATH WITH
   BUCKET_PATH        = 'wasbs://CONTAINER@AZURE_ACCOUNT_NAME.blob.core.windows.net/parquet/sales-positions/'
   AZURE_ACCOUNT_NAME = 'AZURE_ACCOUNT_NAME'
   AZURE_SECRET_KEY   = 'AZURE_SECRET_KEY'
-  PARALLELISM        = 'nproc()';
+  PARALLELISM        = 'iproc()';
 ```
 
 ## Azure Data Lake (Gen1) Storage
@@ -173,5 +173,5 @@ INTO SCRIPT ETL.EXPORT_PATH WITH
   AZURE_CLIENT_ID     = 'AZURE_CLIENT_ID'
   AZURE_CLIENT_SECRET = 'AZURE_CLIENT_SECRET'
   AZURE_DIRECTORY_ID  = 'AZURE_DIRECTORY_ID'
-  PARALLELISM         = 'nproc()';
+  PARALLELISM         = 'iproc()';
 ```

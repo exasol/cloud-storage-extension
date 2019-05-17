@@ -13,15 +13,15 @@ object ImportMetadata extends LazyLogging {
     val parallelism = iter.getInteger(2)
 
     logger.info(
-      s"Reading metadata from bucket path = $bucketPath with parallelism = ${parallelism.toString}"
+      s"Reading metadata from bucket path: $bucketPath with parallelism: ${parallelism.toString}"
     )
 
     val rest = iter.getString(1)
     val params = Bucket.keyValueStringToMap(rest)
-
     val bucket = Bucket(params)
 
     val paths = bucket.getPaths()
+    logger.info(s"Total number of files: ${paths.size} in bucket path: $bucketPath")
 
     paths.zipWithIndex.foreach {
       case (filename, idx) =>

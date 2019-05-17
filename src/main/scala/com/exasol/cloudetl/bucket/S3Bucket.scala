@@ -18,7 +18,7 @@ final case class S3Bucket(path: String, params: Map[String, String]) extends Buc
    * Additionally validates that all required parameters are available
    * in order to create a configuration.
    */
-  override def createConfiguration(): Configuration = {
+  override def getConfiguration(): Configuration = {
     validate()
 
     val conf = new Configuration()

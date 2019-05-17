@@ -16,6 +16,7 @@ import com.exasol.cloudetl.util.SchemaUtil
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.fs.Path
 
+@SuppressWarnings(Array("org.wartremover.warts.Var"))
 object ExportTable extends LazyLogging {
 
   def run(meta: ExaMetadata, iter: ExaIterator): Unit = {
@@ -31,18 +32,22 @@ object ExportTable extends LazyLogging {
     val path = new Path(bucketPath, parquetFilename)
     val messageType = SchemaUtil.createParquetMessageType(columns, "exasol_export_schema")
     val options = ParquetWriteOptions(params)
-    val writer = ParquetRowWriter(path, bucket.createConfiguration(), messageType, options)
+    val writer = ParquetRowWriter(path, bucket.getConfiguration(), messageType, options)
 
-    logger.info(s"Starting export from node = '${meta.getNodeId}' and vm = '${meta.getVmId}'")
+    val nodeId = meta.getNodeId
+    val vmId = meta.getVmId
+    logger.info(s"Starting export from node: $nodeId, vm: $vmId.")
 
+    var count = 0;
     do {
       val row = getRow(iter, firstColumnIdx, columns)
-      logger.debug(s"Writing row '$row'")
       writer.write(row)
+      count = count + 1
     } while (iter.next())
 
     writer.close()
-    logger.info(s"Finished exporting from node = '${meta.getNodeId}' and vm = '${meta.getVmId}'")
+
+    logger.info(s"Exported '$count' records from node: $nodeId, vm: $vmId.")
   }
 
   private[this] def generateParquetFilename(meta: ExaMetadata): String = {
@@ -61,14 +66,16 @@ object ExportTable extends LazyLogging {
   }
 
   /**
-   * Creates a sequence of [[ExaColumnInfo]] columns using an Exasol [[ExaMetadata]] input column
-   * methods.
+   * Creates a sequence of [[ExaColumnInfo]] columns using an Exasol
+   * [[ExaMetadata]] input column methods.
    *
-   * Set the name of the column using `srcColumnNames` parameter. Additionally, set the precision,
-   * scale and length using corresponding functions on Exasol metadata for input columns.
+   * Set the name of the column using `srcColumnNames` parameter.
+   * Additionally, set the precision, scale and length using
+   * corresponding functions on Exasol metadata for input columns.
    *
    * @param meta An Exasol [[ExaMetadata]] metadata
-   * @param srcColumnNames A sequence of column names per each input column in metadata
+   * @param srcColumnNames A sequence of column names per each input
+   *        column in metadata
    * @param startIdx A starting integer index to reference input column
    * @return A sequence of [[ExaColumnInfo]] columns
    */
