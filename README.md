@@ -109,39 +109,21 @@ The following table shows currently supported features with the latest realese.
   </tr>
   <tr>
     <td>Amazon S3</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
+    <td rowspan="4" align="center">&#10004;</td>
+    <td rowspan="4" align="center">&#10004;</td>
+    <td rowspan="4" align="center">&#10004;</td>
+    <td rowspan="4" align="center">&#10005;</td>
+    <td rowspan="4" align="center">&#10004;</td>
+    <td rowspan="4" align="center">&#10005;</td>
   </tr>
   <tr>
     <td>Google Cloud Storage</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
   </tr>
   <tr>
     <td>Azure Blob Storage</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
   </tr>
   <tr>
     <td>Azure Data Lake (Gen1) Storage</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
   </tr>
 </table>
 
