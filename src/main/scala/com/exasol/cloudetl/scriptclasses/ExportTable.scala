@@ -1,7 +1,5 @@
 package com.exasol.cloudetl.scriptclasses
 
-import java.util.UUID
-
 import scala.collection.mutable.ListBuffer
 
 import com.exasol.ExaIterator
@@ -9,52 +7,37 @@ import com.exasol.ExaMetadata
 import com.exasol.cloudetl.bucket.Bucket
 import com.exasol.cloudetl.data.ExaColumnInfo
 import com.exasol.cloudetl.data.Row
-import com.exasol.cloudetl.parquet.ParquetRowWriter
-import com.exasol.cloudetl.parquet.ParquetWriteOptions
+import com.exasol.cloudetl.sink.BatchSizedSink
 import com.exasol.cloudetl.util.SchemaUtil
 
 import com.typesafe.scalalogging.LazyLogging
-import org.apache.hadoop.fs.Path
 
 @SuppressWarnings(Array("org.wartremover.warts.Var"))
 object ExportTable extends LazyLogging {
 
   def run(meta: ExaMetadata, iter: ExaIterator): Unit = {
-    val bucketPath = iter.getString(0)
     val params = Bucket.keyValueStringToMap(iter.getString(1))
     val bucket = Bucket(params)
 
     val srcColumnNames = iter.getString(2).split("\\.")
     val firstColumnIdx = 3
+
+    val nodeId = meta.getNodeId
+    val vmId = meta.getVmId
     val columns = getColumns(meta, srcColumnNames, firstColumnIdx)
 
-    val parquetFilename = generateParquetFilename(meta)
-    val path = new Path(bucketPath, parquetFilename)
-    val messageType = SchemaUtil.createParquetMessageType(columns, "exasol_export_schema")
-    val options = ParquetWriteOptions(params)
-    val writer = ParquetRowWriter(path, bucket.getConfiguration(), messageType, options)
+    val sink = new BatchSizedSink(nodeId, vmId, iter.size(), columns, bucket)
 
-    val nodeId = meta.getNodeId
-    val vmId = meta.getVmId
     logger.info(s"Starting export from node: $nodeId, vm: $vmId.")
 
-    var count = 0;
     do {
       val row = getRow(iter, firstColumnIdx, columns)
-      writer.write(row)
-      count = count + 1
+      sink.write(row)
     } while (iter.next())
 
-    writer.close()
+    sink.close()
 
-    logger.info(s"Exported '$count' records from node: $nodeId, vm: $vmId.")
-  }
-
-  private[this] def generateParquetFilename(meta: ExaMetadata): String = {
-    val nodeId = meta.getNodeId
-    val vmId = meta.getVmId
-    val uuidStr = UUID.randomUUID.toString.replaceAll("-", "")
-    s"exa_export_${nodeId}_${vmId}_$uuidStr.parquet"
+    logger.info(s"Exported '${sink.getTotalRecords()}' records from node: $nodeId, vm: $vmId.")
   }
 
   private[this] def getRow(iter: ExaIterator, startIdx: Int, columns: Seq[ExaColumnInfo]): Row = {

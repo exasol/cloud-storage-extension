@@ -9,8 +9,11 @@ final case class AzureAdlsBucket(path: String, params: Map[String, String]) exte
   override val bucketPath: String = path
 
   /** @inheritdoc */
+  override val properties: Map[String, String] = params
+
+  /** @inheritdoc */
   override def validate(): Unit =
-    Bucket.validate(params, Bucket.AZURE_ADLS_PARAMETERS)
+    Bucket.validate(properties, Bucket.AZURE_ADLS_PARAMETERS)
 
   /**
    * @inheritdoc

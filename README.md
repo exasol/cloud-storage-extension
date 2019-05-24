@@ -157,6 +157,7 @@ cloud-storage-etl-udfs.
 |``PARALLELISM IN IMPORT``       |``nproc()``     |The number of parallel instances to be started for importing data. *Please multiply this to increase the parallelism*.                                    |
 |``PARALLELISM IN EXPORT``       |``iproc()``     |The parallel instances for exporting data. *Add another random number to increase the parallelism per node*. For example, ``iproc(), floor(random()*4)``. |
 |``PARQUET_COMPRESSION_CODEC``   |``uncompressed``|The compression codec to use when exporting the data into parquet files. Other options are: `snappy`, `gzip` and `lzo`.                                   |
+|``EXPORT_BATCH_SIZE``           |``100000``      |The number of records per file from each vm. For exampl, if a single vm gets `1M` records, it will export ten files with default 100000 records each.     |
 |``storage specific parameters`` |*<none>*        |These are parameters for specific cloud storage for authentication purpose.                                                                               |
 
 Please see [the parameters specific for each cloud storage and how to configure
