@@ -109,39 +109,21 @@ The following table shows currently supported features with the latest realese.
   </tr>
   <tr>
     <td>Amazon S3</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
+    <td rowspan="4" align="center">&#10004;</td>
+    <td rowspan="4" align="center">&#10004;</td>
+    <td rowspan="4" align="center">&#10004;</td>
+    <td rowspan="4" align="center">&#10005;</td>
+    <td rowspan="4" align="center">&#10004;</td>
+    <td rowspan="4" align="center">&#10005;</td>
   </tr>
   <tr>
     <td>Google Cloud Storage</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
   </tr>
   <tr>
     <td>Azure Blob Storage</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
   </tr>
   <tr>
     <td>Azure Data Lake (Gen1) Storage</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
-    <td align="center">:heavy_check_mark:</td>
-    <td align="center">:heavy_multiplication_x:</td>
   </tr>
 </table>
 
@@ -157,6 +139,7 @@ cloud-storage-etl-udfs.
 |``PARALLELISM IN IMPORT``       |``nproc()``     |The number of parallel instances to be started for importing data. *Please multiply this to increase the parallelism*.                                    |
 |``PARALLELISM IN EXPORT``       |``iproc()``     |The parallel instances for exporting data. *Add another random number to increase the parallelism per node*. For example, ``iproc(), floor(random()*4)``. |
 |``PARQUET_COMPRESSION_CODEC``   |``uncompressed``|The compression codec to use when exporting the data into parquet files. Other options are: `snappy`, `gzip` and `lzo`.                                   |
+|``EXPORT_BATCH_SIZE``           |``100000``      |The number of records per file from each vm. For exampl, if a single vm gets `1M` records, it will export ten files with default 100000 records each.     |
 |``storage specific parameters`` |*<none>*        |These are parameters for specific cloud storage for authentication purpose.                                                                               |
 
 Please see [the parameters specific for each cloud storage and how to configure

@@ -110,7 +110,7 @@ object Compilation {
     ExtraWart.GenTraversableLikeOps,
     ExtraWart.GenTraversableOnceOps,
     ExtraWart.ScalaGlobalExecutionContext,
-    ExtraWart.StringOpsPartial,
+    // ExtraWart.StringOpsPartial,
     ExtraWart.ThrowablePartial,
     ExtraWart.TraversableOnceOps,
     ExtraWart.UnsafeContains

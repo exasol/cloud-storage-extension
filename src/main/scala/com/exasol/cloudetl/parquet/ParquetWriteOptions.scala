@@ -13,9 +13,7 @@ final case class ParquetWriteOptions(
 
 object ParquetWriteOptions {
 
-  @SuppressWarnings(
-    Array("org.wartremover.warts.Overloading", "org.danielnixon.extrawarts.StringOpsPartial")
-  )
+  @SuppressWarnings(Array("org.wartremover.warts.Overloading"))
   def apply(params: Map[String, String]): ParquetWriteOptions = {
     val compressionCodec = params.getOrElse("PARQUET_COMPRESSION_CODEC", "").toUpperCase() match {
       case "SNAPPY" => CompressionCodecName.SNAPPY

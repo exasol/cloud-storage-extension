@@ -9,8 +9,11 @@ final case class S3Bucket(path: String, params: Map[String, String]) extends Buc
   override val bucketPath: String = path
 
   /** @inheritdoc */
+  override val properties: Map[String, String] = params
+
+  /** @inheritdoc */
   override def validate(): Unit =
-    Bucket.validate(params, Bucket.S3_PARAMETERS)
+    Bucket.validate(properties, Bucket.S3_PARAMETERS)
 
   /**
    * @inheritdoc

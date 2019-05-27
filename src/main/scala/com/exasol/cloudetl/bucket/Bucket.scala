@@ -26,6 +26,9 @@ abstract class Bucket {
   /** The path string of the bucket. */
   val bucketPath: String
 
+  /** The user provided key value pair properties. */
+  val properties: Map[String, String]
+
   /** Validates that all required parameter key values are available. */
   def validate(): Unit
 
