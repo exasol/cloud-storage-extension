@@ -1,3 +1,11 @@
+## v0.4.2
+
+> 2019 MAY 28
+
+* Adds batch size parameter for export that helps exporting large tables
+  [#28](https://github.com/exasol/cloud-storage-etl-udfs/issues/28)
+  [#32](https://github.com/exasol/cloud-storage-etl-udfs/pull/32)
+
 ## v0.4.1
 
 > 2019 APR 15
