@@ -18,30 +18,41 @@ import org.apache.hadoop.fs.Path
  * An Avro source that can read avro formatted files stored in Hadoop
  * like distributed storage file systems.
  */
+@SuppressWarnings(Array("org.wartremover.warts.Var", "org.wartremover.warts.Null"))
 final case class AvroSource(
-  override val paths: Seq[Path],
-  override val fileSystem: FileSystem,
-  override val conf: Configuration
+  override val path: Path,
+  override val conf: Configuration,
+  override val fileSystem: FileSystem
 ) extends Source
     with LazyLogging {
 
+  private var recordReader: DataFileReader[GenericRecord] = createReader()
+
   /** @inheritdoc */
-  override def stream(): Seq[Iterator[Row]] =
-    paths.map { path =>
-      val avroReader = try {
-        createReader(path)
-      } catch {
-        case NonFatal(exception) =>
-          logger.error(s"Could not create avro reader for path: $path", exception);
-          throw exception
-      }
-      AvroRowIterator(avroReader)
+  override def stream(): Iterator[Row] =
+    AvroRowIterator(recordReader)
+
+  private[this] def createReader(): DataFileReader[GenericRecord] =
+    try {
+      new DataFileReader[GenericRecord](
+        new AvroFSInput(fileSystem.open(path), fileSystem.getFileStatus(path).getLen),
+        new GenericDatumReader[GenericRecord]()
+      )
+    } catch {
+      case NonFatal(exception) =>
+        logger.error(s"Could not create avro reader for path: $path", exception);
+        throw exception
     }
 
-  private[this] def createReader(path: Path): DataFileReader[GenericRecord] =
-    new DataFileReader[GenericRecord](
-      new AvroFSInput(fileSystem.open(path), fileSystem.getFileStatus(path).getLen),
-      new GenericDatumReader[GenericRecord]()
-    )
+  // scalastyle:off null
+  override def close(): Unit =
+    if (recordReader != null) {
+      try {
+        recordReader.close()
+      } finally {
+        recordReader = null
+      }
+    }
+  // scalastyle:on null
 
 }

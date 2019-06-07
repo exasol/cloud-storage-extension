@@ -11,7 +11,6 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 
-@SuppressWarnings(Array("org.wartremover.warts.Any", "org.wartremover.warts.Var"))
 class OrcSourceSuite extends FunSuite with BeforeAndAfterAll with Matchers {
 
   private var conf: Configuration = _
@@ -26,10 +25,29 @@ class OrcSourceSuite extends FunSuite with BeforeAndAfterAll with Matchers {
   }
 
   test("reads a single orc format file") {
-    val filePath = Paths.get(s"$orcResourceFolder/sales1*.orc")
+    val filePath = Paths.get(s"$orcResourceFolder/sales*.orc")
     val globbedFilePath = FileSystemUtil.globWithLocal(filePath, fileSystem)
-    val source = OrcSource(globbedFilePath, fileSystem, conf)
-    assert(source.stream.map(_.size).sum === 999)
+    val result = globbedFilePath.map { file =>
+      val source = OrcSource(file, conf, fileSystem)
+      val cnt = source.stream().size
+      source.close()
+      cnt
+    }.sum
+
+    assert(result === 1998)
+  }
+
+  test("reads an employee data orc file") {
+    val filePath = Paths.get(s"$orcResourceFolder/employee*.orc")
+    val globbedFilePath = FileSystemUtil.globWithLocal(filePath, fileSystem)
+    val result = globbedFilePath.map { file =>
+      val source = OrcSource(file, conf, fileSystem)
+      val cnt = source.stream().size
+      source.close()
+      cnt
+    }.sum
+
+    assert(result === 438304)
   }
 
 }

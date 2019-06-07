@@ -25,11 +25,17 @@ class AvroSourceSuite extends FunSuite with BeforeAndAfterAll with Matchers {
     ()
   }
 
-  test("reads a single avro format file") {
-    val filePath = Paths.get(s"$avroResourceFolder/sales1.avro")
+  test("reads the sales avro format files") {
+    val filePath = Paths.get(s"$avroResourceFolder/sales1*.avro")
     val globbedFilePath = FileSystemUtil.globWithLocal(filePath, fileSystem)
-    val source = AvroSource(globbedFilePath, fileSystem, conf)
-    assert(source.stream.map(_.size).sum === 999)
+    val result = globbedFilePath.map { file =>
+      val source = AvroSource(file, conf, fileSystem)
+      val cnt = source.stream().size
+      source.close()
+      cnt
+    }.sum
+
+    assert(result === 1998)
   }
 
 }
