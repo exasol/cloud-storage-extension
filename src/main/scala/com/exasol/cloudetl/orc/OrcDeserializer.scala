@@ -36,6 +36,7 @@ object OrcDeserializer {
   def apply(orcType: TypeDescription): OrcDeserializer[_ <: ColumnVector] =
     orcType.getCategory match {
       case Category.BOOLEAN   => BooleanDeserializer
+      case Category.BYTE      => LongDeserializer
       case Category.CHAR      => StringDeserializer
       case Category.STRING    => StringDeserializer
       case Category.VARCHAR   => StringDeserializer
