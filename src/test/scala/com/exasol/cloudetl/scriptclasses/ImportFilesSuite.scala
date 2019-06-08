@@ -6,7 +6,6 @@ import com.exasol.ExaMetadata
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 
-@SuppressWarnings(Array("org.wartremover.warts.Any"))
 class ImportFilesSuite extends BaseSuite {
 
   test("`run` should throw if the source is not supported") {

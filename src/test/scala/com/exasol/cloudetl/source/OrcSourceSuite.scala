@@ -11,6 +11,7 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 
+@SuppressWarnings(Array("org.wartremover.warts.Var"))
 class OrcSourceSuite extends FunSuite with BeforeAndAfterAll with Matchers {
 
   private var conf: Configuration = _

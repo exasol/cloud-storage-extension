@@ -12,7 +12,7 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 
-@SuppressWarnings(Array("org.wartremover.warts.Any", "org.wartremover.warts.Var"))
+@SuppressWarnings(Array("org.wartremover.warts.Var"))
 class ParquetSourceSuite extends FunSuite with BeforeAndAfterAll with Matchers {
 
   private var conf: Configuration = _
