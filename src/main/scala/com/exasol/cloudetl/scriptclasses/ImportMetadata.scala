@@ -20,7 +20,7 @@ object ImportMetadata extends LazyLogging {
     val params = Bucket.keyValueStringToMap(rest)
     val bucket = Bucket(params)
 
-    val paths = bucket.getPaths()
+    val paths = bucket.getPaths().filter(p => !p.getName().startsWith("_"))
     logger.info(s"Total number of files: ${paths.size} in bucket path: $bucketPath")
 
     paths.zipWithIndex.foreach {
