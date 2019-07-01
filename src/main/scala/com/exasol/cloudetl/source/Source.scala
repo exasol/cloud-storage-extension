@@ -15,7 +15,7 @@ abstract class Source {
   /**
    * The file [[org.apache.hadoop.fs.Path]] paths in the file system.
    */
-  def paths: Seq[Path]
+  val path: Path
 
   /** The Hadoop [[org.apache.hadoop.fs.FileSystem]] file system. */
   def fileSystem: FileSystem
@@ -29,6 +29,11 @@ abstract class Source {
    * Returns sequence of internal [[com.exasol.cloudetl.data.Row]] row
    * iterators per each paths file.
    */
-  def stream(): Seq[Iterator[Row]]
+  def stream(): Iterator[Row]
+
+  /**
+   * Finally close the resource used for this source.
+   */
+  def close(): Unit
 
 }

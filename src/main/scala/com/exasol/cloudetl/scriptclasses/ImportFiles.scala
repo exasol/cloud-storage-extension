@@ -5,6 +5,7 @@ import scala.collection.mutable.ListBuffer
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.bucket._
+import com.exasol.cloudetl.data.Row
 import com.exasol.cloudetl.source._
 
 import com.typesafe.scalalogging.LazyLogging
@@ -12,49 +13,51 @@ import org.apache.hadoop.fs.Path
 
 object ImportFiles extends LazyLogging {
 
-  def run(meta: ExaMetadata, iter: ExaIterator): Unit = {
-    val rest = iter.getString(1)
+  def run(meta: ExaMetadata, ctx: ExaIterator): Unit = {
+    val rest = ctx.getString(1)
     val params = Bucket.keyValueStringToMap(rest)
     val format = Bucket.optionalParameter(params, "DATA_FORMAT", "PARQUET")
     val bucket = Bucket(params)
 
-    val files = groupFiles(iter, 2)
+    val files = groupFiles(ctx, 2)
     val nodeId = meta.getNodeId
     val vmId = meta.getVmId
     logger.info(s"The total number of files for node: $nodeId, vm: $vmId is '${files.size}'.")
 
-    val source = createSource(format, files, bucket)
-    readAndEmit(source, iter)
-  }
-
-  @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
-  private[this] def groupFiles(iter: ExaIterator, iterIndex: Int): Seq[String] = {
-    val files = ListBuffer[String]()
-
-    do {
-      files.append(iter.getString(iterIndex))
-    } while (iter.next())
-
-    files.toSeq
-  }
-
-  private[this] def createSource(format: String, files: Seq[String], bucket: Bucket): Source = {
-    val paths = files.map(f => new Path(f))
-    format.toLowerCase match {
-      case "avro"    => AvroSource(paths, bucket.fileSystem, bucket.getConfiguration())
-      case "orc"     => OrcSource(paths, bucket.fileSystem, bucket.getConfiguration())
-      case "parquet" => ParquetSource(paths, bucket.fileSystem, bucket.getConfiguration())
-      case _ =>
-        throw new IllegalArgumentException(s"Unsupported storage format: '$format'")
+    files.foreach { file =>
+      logger.debug(s"Importing from file: '$file'")
+      val source = createSource(format, file, bucket)
+      readAndEmit(source.stream(), ctx)
+      source.close()
     }
   }
 
-  private[this] def readAndEmit(src: Source, ctx: ExaIterator): Unit =
-    src.stream.foreach { iter =>
-      iter.foreach { row =>
-        val columns: Seq[Object] = row.getValues().map(_.asInstanceOf[AnyRef])
-        ctx.emit(columns: _*)
-      }
+  @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
+  private[this] def groupFiles(
+    exasolIterator: ExaIterator,
+    fileStartingIndex: Int
+  ): Seq[String] = {
+    val files = ListBuffer[String]()
+    do {
+      files.append(exasolIterator.getString(fileStartingIndex))
+    } while (exasolIterator.next())
+    files.toSeq
+  }
+
+  private[this] def createSource(format: String, file: String, bucket: Bucket): Source =
+    format.toLowerCase match {
+      case "avro" => AvroSource(new Path(file), bucket.getConfiguration(), bucket.fileSystem)
+      case "orc"  => OrcSource(new Path(file), bucket.getConfiguration(), bucket.fileSystem)
+      case "parquet" =>
+        ParquetSource(new Path(file), bucket.getConfiguration(), bucket.fileSystem)
+      case _ =>
+        throw new IllegalArgumentException(s"Unsupported storage format: '$format'")
+    }
+
+  private[this] def readAndEmit(rowIterator: Iterator[Row], ctx: ExaIterator): Unit =
+    rowIterator.foreach { row =>
+      val columns: Seq[Object] = row.getValues().map(_.asInstanceOf[AnyRef])
+      ctx.emit(columns: _*)
     }
 
 }

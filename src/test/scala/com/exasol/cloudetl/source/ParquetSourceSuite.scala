@@ -12,7 +12,7 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 
-@SuppressWarnings(Array("org.wartremover.warts.Any", "org.wartremover.warts.Var"))
+@SuppressWarnings(Array("org.wartremover.warts.Var"))
 class ParquetSourceSuite extends FunSuite with BeforeAndAfterAll with Matchers {
 
   private var conf: Configuration = _
@@ -29,20 +29,26 @@ class ParquetSourceSuite extends FunSuite with BeforeAndAfterAll with Matchers {
 
   test("reads a single sales_positions parquet format file") {
     val filePath = Paths.get(s"$parquetResourceFolder/sales_positions1.snappy.parquet")
-    val globbedFilePath = FileSystemUtil.globWithLocal(filePath, fileSystem)
-    val source = ParquetSource(globbedFilePath, fileSystem, conf)
-    assert(source.stream.map(_.size).sum === 500)
+    FileSystemUtil.globWithLocal(filePath, fileSystem).foreach { file =>
+      val source = ParquetSource(file, conf, fileSystem)
+      assert(source.stream().size === 500)
+    }
   }
 
   test("reads multiple sales_positions parquet format files") {
-    val filePattern = s"$parquetResourceFolder/sales_positions*.parquet"
-    val source = ParquetSource(filePattern, fileSystem, conf)
-    assert(source.stream.map(_.size).sum === 1005)
+    val filePattern = Paths.get(s"$parquetResourceFolder/sales_positions*.parquet")
+    val globbedFilePath = FileSystemUtil.globWithLocal(filePattern, fileSystem)
+    val result = globbedFilePath.map { file =>
+      val source = ParquetSource(file, conf, fileSystem)
+      val cnt = source.stream().size
+      source.close()
+      cnt
+    }.sum
+
+    assert(result === 1005)
   }
 
   test("reads sales_positions parquet format files schema") {
-    val filePattern = s"$parquetResourceFolder/sales_pos*.parquet"
-    val schema = ParquetSource(filePattern, fileSystem, conf).getSchema()
     val expectedMsgType = MessageTypeParser
       .parseMessageType("""message spark_schema {
                           |  optional int64 sales_id;
@@ -55,15 +61,26 @@ class ParquetSourceSuite extends FunSuite with BeforeAndAfterAll with Matchers {
                           |}
       """.stripMargin)
 
-    assert(schema.isDefined)
-    schema.foreach { case msgType => assert(msgType === expectedMsgType) }
+    val filePattern = Paths.get(s"$parquetResourceFolder/sales_pos*.parquet")
+    val globbedFilePath = FileSystemUtil.globWithLocal(filePattern, fileSystem)
+    globbedFilePath.foreach { file =>
+      val schema = ParquetSource(file, conf, fileSystem).getSchema()
+      assert(schema.isDefined)
+      schema.foreach { case msgType => assert(msgType === expectedMsgType) }
+    }
   }
 
   test("reads a sales parquet format file with richer types") {
     val filePath = Paths.get(s"$parquetResourceFolder/sales1.snappy.parquet")
     val globbedFilePath = FileSystemUtil.globWithLocal(filePath, fileSystem)
-    val source = ParquetSource(globbedFilePath, fileSystem, conf)
-    assert(source.stream.map(_.size).sum === 999)
+    val result = globbedFilePath.map { file =>
+      val source = ParquetSource(file, conf, fileSystem)
+      val cnt = source.stream().size
+      source.close()
+      cnt
+    }.sum
+
+    assert(result === 999)
   }
 
 }
