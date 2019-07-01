@@ -1,3 +1,14 @@
+## v0.4.3
+
+> 2019 JUL 01
+
+* Deserialize Orc BYTE format as a Long value
+  [#33](https://github.com/exasol/cloud-storage-etl-udfs/issues/33)
+  [#38](https://github.com/exasol/cloud-storage-etl-udfs/pull/38)
+* Improve import process
+  [#34](https://github.com/exasol/cloud-storage-etl-udfs/issues/34)
+  [#38](https://github.com/exasol/cloud-storage-etl-udfs/pull/38)
+
 ## v0.4.2
 
 > 2019 MAY 28
