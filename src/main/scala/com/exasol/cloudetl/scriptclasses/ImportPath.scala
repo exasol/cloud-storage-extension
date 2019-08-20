@@ -9,10 +9,13 @@ import com.exasol.cloudetl.storage.StorageProperties
 
 object ImportPath {
 
+<<<<<<< HEAD
   def generateSqlForImportSpec(
     metadata: ExaMetadata,
     importSpec: ExaImportSpecification
   ): String = {
+    import org.apache.hadoop.security.UserGroupInformation
+    UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exadefusr"))
     val storageProperties = StorageProperties(importSpec.getParameters.asScala.toMap)
     val bucket = Bucket(storageProperties)
     bucket.validate()
