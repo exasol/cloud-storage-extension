@@ -9,7 +9,6 @@ import com.typesafe.scalalogging.LazyLogging
 
 object ImportMetadata extends LazyLogging {
 
-<<<<<<< HEAD
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
     import org.apache.hadoop.security.UserGroupInformation
     UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exadefusr"))
