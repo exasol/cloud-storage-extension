@@ -14,6 +14,8 @@ import org.apache.hadoop.fs.Path
 object ImportFiles extends LazyLogging {
 
   def run(meta: ExaMetadata, ctx: ExaIterator): Unit = {
+    import org.apache.hadoop.security.UserGroupInformation
+    UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exadefusr"))
     val rest = ctx.getString(1)
     val params = Bucket.keyValueStringToMap(rest)
     val format = Bucket.optionalParameter(params, "DATA_FORMAT", "PARQUET")

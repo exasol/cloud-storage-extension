@@ -9,6 +9,8 @@ import com.exasol.cloudetl.bucket._
 object ImportPath {
 
   def generateSqlForImportSpec(exaMeta: ExaMetadata, exaSpec: ExaImportSpecification): String = {
+    import org.apache.hadoop.security.UserGroupInformation
+    UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exadefusr"))
     val params = exaSpec.getParameters.asScala.toMap
 
     val bucket = Bucket(params)

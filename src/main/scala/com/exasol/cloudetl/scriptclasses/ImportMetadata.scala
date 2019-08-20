@@ -9,6 +9,8 @@ import com.typesafe.scalalogging.LazyLogging
 object ImportMetadata extends LazyLogging {
 
   def run(meta: ExaMetadata, iter: ExaIterator): Unit = {
+    import org.apache.hadoop.security.UserGroupInformation
+    UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exadefusr"))
     val bucketPath = iter.getString(0)
     val parallelism = iter.getInteger(2)
 
