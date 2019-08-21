@@ -1,0 +1,33 @@
+name: Publish
+
+on: [release]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build JAR
+      run: ./sbtx assembly
+    - name: Check if JAR is present
+      run: test -f target/scala*/cloud-storage-etl-udfs-*.jar
+    - name: Deploy JAR to releases
+      run: |
+        AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
+        RELEASE_ID=$(jq --raw-output '.release.id' $GITHUB_EVENT_PATH)
+  
+        for file in target/scala-*/*.jar; do
+          FILENAME=$(basename ${file})
+          UPLOAD_URL="https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=${FILENAME}"
+          # Upload
+          curl \
+            -sSL \
+            -XPOST \
+            -H "${AUTH_HEADER}" \
+            --upload-file "${file}" \
+            --header "Content-Type:application/octet-stream" \
+            "${UPLOAD_URL}"
+        done
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
