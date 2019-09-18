@@ -169,7 +169,7 @@ object Bucket extends LazyLogging {
    * map. If it does not exist, throws an [[IllegalArgumentException]]
    * exception.
    */
-  private[bucket] def requiredParam(params: Map[String, String], key: String): String = {
+  def requiredParam(params: Map[String, String], key: String): String = {
     val opt = params.get(key)
     opt.fold {
       throw new IllegalArgumentException(s"The required parameter $key is not defined!")
