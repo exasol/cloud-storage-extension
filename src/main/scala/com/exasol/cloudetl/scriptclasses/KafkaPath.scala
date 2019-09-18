@@ -30,7 +30,7 @@ object KafkaPath {
        |    FROM $tableName
        |    GROUP BY kafka_partition
        |    UNION ALL
-       |    SELECT 0, 0
+       |    SELECT 0, -1
        |    FROM DUAL
        |    WHERE NOT EXISTS (SELECT * FROM $tableName)
        |  )

@@ -29,15 +29,18 @@ object KafkaMetadata extends LazyLogging {
 
     val brokers = Bucket.requiredParam(params, "BROKER_ADDRESS")
     val groupId = Bucket.requiredParam(params, "GROUP_ID")
+    val schemaRegistryUrl = Bucket.requiredParam(params, "SCHEMA_REGISTRY_URL")
     val topics = Bucket.requiredParam(params, "TOPICS")
 
-    val kafkaConsumer = Consumer(brokers, groupId)
-    val topicPartitions = kafkaConsumer.partitionsFor(topics).asScala.toList.map(_.partition())
-    kafkaConsumer.close()
-
-    topicPartitions.foreach { partitionId =>
-      val offset: JLong = idOffsetPairs.getOrElse(partitionId, 0L)
-      iter.emit(new Integer(partitionId), offset)
+    val kafkaConsumer = Consumer(brokers, groupId, schemaRegistryUrl)
+    try {
+      val topicPartitions = kafkaConsumer.partitionsFor(topics).asScala.toList.map(_.partition())
+      topicPartitions.foreach { partitionId =>
+        val offset: JLong = idOffsetPairs.getOrElse(partitionId, -1)
+        iter.emit(new Integer(partitionId), offset)
+      }
+    } finally {
+      kafkaConsumer.close()
     }
   }
 

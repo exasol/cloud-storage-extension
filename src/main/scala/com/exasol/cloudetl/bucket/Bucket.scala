@@ -166,8 +166,8 @@ object Bucket extends LazyLogging {
 
   /**
    * Checks if the provided key is available in the key value parameter
-   * map. If it does not exist, throws an [[IllegalArgumentException]]
-   * exception.
+   * map. If it does not exist, throws an
+   * [[java.lang.IllegalArgumentException]] exception.
    */
   def requiredParam(params: Map[String, String], key: String): String = {
     val opt = params.get(key)
