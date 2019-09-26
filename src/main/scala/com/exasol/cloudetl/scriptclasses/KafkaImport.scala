@@ -9,12 +9,12 @@ import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.bucket.Bucket
 import com.exasol.cloudetl.data.Row
-import com.exasol.cloudetl.kafka.Consumer
+import com.exasol.cloudetl.kafka.KafkaConsumerBuilder
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.kafka.common.TopicPartition
 
-object KafkaConsume extends LazyLogging {
+object KafkaImport extends LazyLogging {
 
   private[this] val POLL_TIMEOUT_MS: Long = 2000L
 
@@ -32,18 +32,16 @@ object KafkaConsume extends LazyLogging {
     )
 
     val params = Bucket.keyValueStringToMap(rest)
-    val brokers = Bucket.requiredParam(params, "BROKER_ADDRESS")
-    val groupId = Bucket.requiredParam(params, "GROUP_ID")
-    val schemaRegistryUrl = Bucket.requiredParam(params, "SCHEMA_REGISTRY_URL")
     val topics = Bucket.requiredParam(params, "TOPICS")
-
     val topicPartition = new TopicPartition(topics, partitionId)
-    val kafkaConsumer = Consumer(brokers, groupId, schemaRegistryUrl)
+
+    val kafkaConsumer = KafkaConsumerBuilder(params)
     kafkaConsumer.assign(Arrays.asList(topicPartition))
     kafkaConsumer.seek(topicPartition, partitionNextOffset)
 
     try {
       val records = kafkaConsumer.poll(Duration.ofMillis(POLL_TIMEOUT_MS))
+      val recordsCount = records.count()
       records.asScala.foreach { record =>
         logger.debug(
           s"Emitting partition=${record.partition()} offset=${record.offset()} " +
@@ -57,6 +55,7 @@ object KafkaConsume extends LazyLogging {
           allColumns: _*
         )
       }
+      logger.info(s"Emitted total=$recordsCount records in node=$nodeId, vm=$vmId")
     } finally {
       kafkaConsumer.close();
     }

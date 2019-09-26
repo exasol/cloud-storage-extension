@@ -19,7 +19,7 @@ object KafkaPath {
     val scriptSchema = exaMeta.getScriptSchema
 
     s"""SELECT
-       |  $scriptSchema.KAFKA_CONSUME(
+       |  $scriptSchema.KAFKA_IMPORT(
        |    '$rest', partition_index, max_offset
        |)
        |FROM (
@@ -32,7 +32,7 @@ object KafkaPath {
        |    UNION ALL
        |    SELECT 0, -1
        |    FROM DUAL
-       |    WHERE NOT EXISTS (SELECT * FROM $tableName)
+       |    WHERE NOT EXISTS (SELECT * FROM $tableName LIMIT 2)
        |  )
        |)
        |GROUP BY
