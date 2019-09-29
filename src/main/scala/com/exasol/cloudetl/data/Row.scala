@@ -1,5 +1,9 @@
 package com.exasol.cloudetl.data
 
+import scala.collection.JavaConverters._
+
+import org.apache.avro.Schema
+import org.apache.avro.generic.GenericFixed
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.util.Utf8
 
@@ -42,22 +46,50 @@ object Row {
   def fromAvroGenericRecord(record: GenericRecord): Row = {
     val size = record.getSchema.getFields.size
     val values = Array.ofDim[Any](size)
-    for { index <- 0 until size } {
-      values.update(index, getAvroRecordValue(record.get(index)))
+    record.getSchema.getFields.asScala.zipWithIndex.foreach {
+      case (field, index) =>
+        values.update(index, getAvroRecordValue(record.get(index), field.schema))
     }
     Row(values.toSeq)
   }
 
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
-  private[this] def getAvroRecordValue(value: Any): Any = value match {
-    case _: GenericRecord =>
-      throw new IllegalArgumentException("Avro nested record type is not supported yet!")
-    case _: java.util.Collection[_] =>
-      throw new IllegalArgumentException("Avro collection type is not supported yet!")
-    case _: java.util.Map[_, _] =>
-      throw new IllegalArgumentException("Avro map type is not supported yet!")
-    case _: Utf8       => value.asInstanceOf[Utf8].toString
-    case primitiveType => primitiveType
+  @SuppressWarnings(
+    Array(
+      "org.wartremover.warts.AsInstanceOf",
+      "org.wartremover.warts.Null",
+      "org.wartremover.warts.Return",
+      "org.wartremover.warts.ToString"
+    )
+  )
+  def getAvroRecordValue(value: Any, field: Schema): Any = {
+    // scalastyle:off
+    if (value == null) {
+      return null
+    }
+    // scalastyle:on
+    field.getType match {
+      case Schema.Type.NULL    => value
+      case Schema.Type.BOOLEAN => value
+      case Schema.Type.INT     => value
+      case Schema.Type.LONG    => value
+      case Schema.Type.FLOAT   => value
+      case Schema.Type.DOUBLE  => value
+      case Schema.Type.STRING  => value.toString
+      case Schema.Type.ENUM    => value.toString
+      case Schema.Type.UNION   => getAvroUnionValue(value, field)
+      case Schema.Type.FIXED   => value.asInstanceOf[GenericFixed].bytes().toString
+      case Schema.Type.BYTES   => value.asInstanceOf[Utf8].toString
+      case field =>
+        throw new IllegalArgumentException(s"Avro ${field.getName} type is not supperted!")
+    }
+  }
+
+  def getAvroUnionValue(value: Any, field: Schema): Any = field.getTypes.asScala.toSeq match {
+    case Seq(f)                                     => getAvroRecordValue(value, f)
+    case Seq(n, f) if n.getType == Schema.Type.NULL => getAvroRecordValue(value, f)
+    case Seq(f, n) if n.getType == Schema.Type.NULL => getAvroRecordValue(value, f)
+    case _ =>
+      throw new IllegalArgumentException("Avro UNION type should contain a primitive and null!")
   }
 
 }
