@@ -166,10 +166,10 @@ object Bucket extends LazyLogging {
 
   /**
    * Checks if the provided key is available in the key value parameter
-   * map. If it does not exist, throws an [[IllegalArgumentException]]
-   * exception.
+   * map. If it does not exist, throws an
+   * [[java.lang.IllegalArgumentException]] exception.
    */
-  private[bucket] def requiredParam(params: Map[String, String], key: String): String = {
+  def requiredParam(params: Map[String, String], key: String): String = {
     val opt = params.get(key)
     opt.fold {
       throw new IllegalArgumentException(s"The required parameter $key is not defined!")

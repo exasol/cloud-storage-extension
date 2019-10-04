@@ -12,9 +12,12 @@ object Dependencies {
   private val ParquetVersion = "1.8.1"
   private val AzureStorageVersion = "2.2.0"
   private val GoogleStorageVersion = "hadoop2-1.9.10"
+  private val KafkaClientsVersion = "2.3.0"
+  private val KafkaAvroSerializerVersion = "5.2.1"
   private val TypesafeLoggingVersion = "3.9.0"
 
   val Resolvers: Seq[Resolver] = Seq(
+    "Confluent Maven Repo" at "http://packages.confluent.io/maven/",
     "Exasol Releases" at "https://maven.exasol.com/artifactory/exasol-releases"
   )
 
@@ -31,6 +34,8 @@ object Dependencies {
     "org.apache.parquet" % "parquet-avro" % ParquetVersion,
     "com.microsoft.azure" % "azure-storage" % AzureStorageVersion,
     "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion,
+    "org.apache.kafka" % "kafka-clients" % KafkaClientsVersion,
+    "io.confluent" % "kafka-avro-serializer" % KafkaAvroSerializerVersion,
     "com.typesafe.scala-logging" %% "scala-logging" % TypesafeLoggingVersion
   )
 
