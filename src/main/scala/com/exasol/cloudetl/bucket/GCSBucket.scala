@@ -1,19 +1,21 @@
 package com.exasol.cloudetl.bucket
 
+import com.exasol.cloudetl.storage.StorageProperties
+
 import org.apache.hadoop.conf.Configuration
 
 /** A [[Bucket]] implementation for the Google Cloud Storage (GCS) */
-final case class GCSBucket(path: String, params: Map[String, String]) extends Bucket {
+final case class GCSBucket(path: String, params: StorageProperties) extends Bucket {
 
   /** @inheritdoc */
   override val bucketPath: String = path
 
   /** @inheritdoc */
-  override val properties: Map[String, String] = params
+  override val properties: StorageProperties = params
 
   /** @inheritdoc */
-  override def validate(): Unit =
-    Bucket.validate(properties, Bucket.GCS_PARAMETERS)
+  override def getRequiredProperties(): Seq[String] =
+    Bucket.GCS_PARAMETERS
 
   /**
    * @inheritdoc
@@ -27,10 +29,10 @@ final case class GCSBucket(path: String, params: Map[String, String]) extends Bu
     val conf = new Configuration()
     conf.set("fs.gs.impl", classOf[com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem].getName)
     conf.setBoolean("fs.gs.auth.service.account.enable", true)
-    conf.set("fs.gs.project.id", Bucket.requiredParam(params, "GCS_PROJECT_ID"))
+    conf.set("fs.gs.project.id", properties.getAs[String]("GCS_PROJECT_ID"))
     conf.set(
       "fs.gs.auth.service.account.json.keyfile",
-      Bucket.requiredParam(params, "GCS_KEYFILE_PATH")
+      properties.getAs[String]("GCS_KEYFILE_PATH")
     )
 
     conf

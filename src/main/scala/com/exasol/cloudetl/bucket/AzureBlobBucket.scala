@@ -1,19 +1,21 @@
 package com.exasol.cloudetl.bucket
 
+import com.exasol.cloudetl.storage.StorageProperties
+
 import org.apache.hadoop.conf.Configuration
 
 /** A [[Bucket]] implementation for the Azure Blob Storage */
-final case class AzureBlobBucket(path: String, params: Map[String, String]) extends Bucket {
+final case class AzureBlobBucket(path: String, params: StorageProperties) extends Bucket {
 
   /** @inheritdoc */
   override val bucketPath: String = path
 
   /** @inheritdoc */
-  override val properties: Map[String, String] = params
+  override val properties: StorageProperties = params
 
   /** @inheritdoc */
-  override def validate(): Unit =
-    Bucket.validate(properties, Bucket.AZURE_BLOB_PARAMETERS)
+  override def getRequiredProperties(): Seq[String] =
+    Bucket.AZURE_BLOB_PARAMETERS
 
   /**
    * @inheritdoc
@@ -25,8 +27,8 @@ final case class AzureBlobBucket(path: String, params: Map[String, String]) exte
     validate()
 
     val conf = new Configuration()
-    val accountName = Bucket.requiredParam(params, "AZURE_ACCOUNT_NAME")
-    val accountSecretKey = Bucket.requiredParam(params, "AZURE_SECRET_KEY")
+    val accountName = properties.getAs[String]("AZURE_ACCOUNT_NAME")
+    val accountSecretKey = properties.getAs[String]("AZURE_SECRET_KEY")
     conf.set("fs.azure", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
     conf.set("fs.wasb.impl", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
     conf.set("fs.wasbs.impl", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)

@@ -4,6 +4,7 @@ import java.net.URI
 
 import scala.collection.SortedMap
 
+import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.cloudetl.util.FileSystemUtil
 
 import com.typesafe.scalalogging.LazyLogging
@@ -27,10 +28,41 @@ abstract class Bucket {
   val bucketPath: String
 
   /** The user provided key value pair properties. */
-  val properties: Map[String, String]
+  val properties: StorageProperties
+
+  /**
+   * Returns the sequence of key-value properties required for this
+   * specific storage class.
+   */
+  def getRequiredProperties(): Seq[String]
 
   /** Validates that all required parameter key values are available. */
-  def validate(): Unit
+  final def validate(): Unit = {
+    validateBaseProperties()
+    validateRequiredProperties()
+  }
+
+  private[this] def validateBaseProperties(): Unit = {
+    if (!properties.containsKey(Bucket.BUCKET_PATH)) {
+      throw new IllegalArgumentException(
+        s"Please provide a value for the ${Bucket.BUCKET_PATH} property!"
+      )
+    }
+    if (!properties.containsKey(Bucket.DATA_FORMAT)) {
+      throw new IllegalArgumentException(
+        s"Please provide a value for the ${Bucket.DATA_FORMAT} property!"
+      )
+    }
+  }
+
+  private[this] def validateRequiredProperties(): Unit =
+    getRequiredProperties().foreach { key =>
+      if (!properties.containsKey(key)) {
+        throw new IllegalArgumentException(
+          s"Please provide a value for the $key property!"
+        )
+      }
+    }
 
   /**
    * Creates a Hadoop [[org.apache.hadoop.conf.Configuration]] for this
@@ -65,6 +97,9 @@ object Bucket extends LazyLogging {
   /** A required key string for a bucket path. */
   final val BUCKET_PATH: String = "BUCKET_PATH"
 
+  /** A required key string for a data format. */
+  final val DATA_FORMAT: String = "DATA_FORMAT"
+
   /** The list of required parameter keys for AWS S3 bucket. */
   final val S3_PARAMETERS: Seq[String] =
     Seq("S3_ENDPOINT", "S3_ACCESS_KEY", "S3_SECRET_KEY")
@@ -96,15 +131,16 @@ object Bucket extends LazyLogging {
    * @return A [[Bucket]] class for the given path
    */
   def apply(params: Map[String, String]): Bucket = {
-    val path = requiredParam(params, BUCKET_PATH)
-    val scheme = getScheme(path)
+    val properties = new StorageProperties(params)
+    val path = properties.getStoragePath()
+    val scheme = properties.getStoragePathScheme()
 
     scheme match {
-      case "s3a"            => S3Bucket(path, params)
-      case "gs"             => GCSBucket(path, params)
-      case "wasb" | "wasbs" => AzureBlobBucket(path, params)
-      case "adl"            => AzureAdlsBucket(path, params)
-      case "file"           => LocalBucket(path, params)
+      case "s3a"            => S3Bucket(path, properties)
+      case "gs"             => GCSBucket(path, properties)
+      case "wasb" | "wasbs" => AzureBlobBucket(path, properties)
+      case "adl"            => AzureAdlsBucket(path, properties)
+      case "file"           => LocalBucket(path, properties)
       case _ =>
         throw new IllegalArgumentException(s"Unsupported path scheme $scheme")
     }
@@ -175,9 +211,6 @@ object Bucket extends LazyLogging {
       throw new IllegalArgumentException(s"The required parameter $key is not defined!")
     }(identity)
   }
-
-  private[this] def getScheme(path: String): String =
-    new URI(path).getScheme
 
   private[this] final val PARAMETER_SEPARATOR: String = ";"
   private[this] final val KEY_VALUE_SEPARATOR: String = ":=:"

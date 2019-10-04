@@ -48,7 +48,7 @@ class ImportPathSuite extends BaseSuite {
       ImportPath.generateSqlForImportSpec(exaMeta, exaSpec)
     }
 
-    assert(thrown.getMessage === "The required parameter S3_ACCESS_KEY is not defined!")
+    assert(thrown.getMessage === "Please provide a value for the S3_ACCESS_KEY property!")
     verify(exaSpec, times(1)).getParameters
   }
 

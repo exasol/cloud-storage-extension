@@ -62,6 +62,7 @@ class BucketSuite extends FunSuite with Matchers {
   test("creates an AzureBlobBucket with given parameters") {
     val azureBlobParams = Map(
       Bucket.BUCKET_PATH -> "wasbs://container@account1/parquet-bucket/",
+      "DATA_FORMAT" -> "AVRO",
       "AZURE_ACCOUNT_NAME" -> "account1",
       "AZURE_SECRET_KEY" -> "secret"
     )
@@ -87,6 +88,7 @@ class BucketSuite extends FunSuite with Matchers {
   test("creates an AzureAdlsBucket with provided parameters") {
     val params = Map(
       Bucket.BUCKET_PATH -> "adl://my_container.azuredatalakestore.net/orc/*",
+      "DATA_FORMAT" -> "CSV",
       "AZURE_CLIENT_ID" -> "clientX",
       "AZURE_CLIENT_SECRET" -> "client_secret",
       "AZURE_DIRECTORY_ID" -> "directory_id_secret"
