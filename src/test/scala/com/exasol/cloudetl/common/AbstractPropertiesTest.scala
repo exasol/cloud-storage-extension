@@ -77,6 +77,20 @@ class AbstractPropertiesTest extends FunSuite with BeforeAndAfterEach {
     assert(BaseProperties(properties).size() === 2)
   }
 
+  test("mkString returns empty string by default") {
+    val str = BaseProperties(properties).mkString("->", "=")
+    assert(str.isEmpty === true)
+    assert(str === "")
+  }
+
+  test("mkString returns separated key-value property pairs") {
+    properties = Map("k1" -> "v1", "k2" -> "v2", "a" -> "1")
+    val expected = s"a -> 1;k1 -> v1;k2 -> v2" // sorted
+    val str = BaseProperties(properties).mkString(" -> ", ";")
+    assert(str.isEmpty === false)
+    assert(str === expected)
+  }
+
   test("equals returns true if this and other are equal") {
     properties = Map("key1" -> "value1", "key2" -> "value2")
     val basePropertiesThis = BaseProperties(properties)

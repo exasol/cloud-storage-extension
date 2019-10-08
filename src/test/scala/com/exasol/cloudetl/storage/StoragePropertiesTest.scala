@@ -58,6 +58,32 @@ class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach {
     assert(thrown.getMessage === s"Unsupported file format $fileFormat!")
   }
 
+  test("mkString returns empty string by default") {
+    val str = BaseProperties(properties).mkString()
+    assert(str.isEmpty === true)
+    assert(str === "")
+  }
+
+  test("mkString returns key-value properties string") {
+    properties = Map("k1" -> "v1", "k3" -> "v3", "k2" -> "v2")
+    val expected = "k1 -> v1;k2 -> v2;k3 -> v3"
+    assert(BaseProperties(properties).mkString() === expected)
+  }
+
+  test("fromString throws if input string does not contain separator") {
+    val thrown = intercept[IllegalArgumentException] {
+      StorageProperties.fromString("")
+    }
+    assert(thrown.getMessage === s"The input string is not separated by ';'!")
+  }
+
+  test("fromString returns correct StorageProperties") {
+    properties = Map("k3" -> "v3", "k2" -> "v2")
+    val baseProperty = BaseProperties(properties)
+    val mkStringResult = baseProperty.mkString()
+    assert(StorageProperties.fromString(mkStringResult) === baseProperty)
+  }
+
   private[this] case class BaseProperties(val params: Map[String, String])
       extends StorageProperties(params)
 

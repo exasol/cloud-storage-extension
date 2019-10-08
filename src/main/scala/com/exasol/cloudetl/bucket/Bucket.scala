@@ -92,6 +92,7 @@ abstract class Bucket {
  * Provides a factory method to create bucket and several utility
  * functions.
  */
+@SuppressWarnings(Array("org.wartremover.warts.Overloading"))
 object Bucket extends LazyLogging {
 
   /** A required key string for a bucket path. */
@@ -100,51 +101,38 @@ object Bucket extends LazyLogging {
   /** A required key string for a data format. */
   final val DATA_FORMAT: String = "DATA_FORMAT"
 
-  /** The list of required parameter keys for AWS S3 bucket. */
-  final val S3_PARAMETERS: Seq[String] =
-    Seq("S3_ENDPOINT", "S3_ACCESS_KEY", "S3_SECRET_KEY")
-
   /**
-   * The list of required parameter keys for Google Cloud Storage
-   * bucket.
-   */
-  final val GCS_PARAMETERS: Seq[String] =
-    Seq("GCS_PROJECT_ID", "GCS_KEYFILE_PATH")
-
-  /**
-   * The list of required parameter keys for Azure Blob Storage bucket.
-   */
-  final val AZURE_BLOB_PARAMETERS: Seq[String] =
-    Seq("AZURE_ACCOUNT_NAME", "AZURE_SECRET_KEY")
-
-  /**
-   * The list of required keys for Azure Data Lake Storage bucket.
-   */
-  final val AZURE_ADLS_PARAMETERS: Seq[String] =
-    Seq("AZURE_CLIENT_ID", "AZURE_CLIENT_SECRET", "AZURE_DIRECTORY_ID")
-
-  /**
-   * An apply method that creates different [[Bucket]] classes depending
-   * on the path scheme.
+   * Creates specific [[Bucket]] class using the path scheme from
+   * [[com.exasol.cloudetl.storage.StorageProperties]] properties.
    *
-   * @param params The key value parameters
+   * @param storageProperties The user provided storage key-value
+   *        properties
    * @return A [[Bucket]] class for the given path
    */
-  def apply(params: Map[String, String]): Bucket = {
-    val properties = new StorageProperties(params)
-    val path = properties.getStoragePath()
-    val scheme = properties.getStoragePathScheme()
+  def apply(storageProperties: StorageProperties): Bucket = {
+    val path = storageProperties.getStoragePath()
+    val scheme = storageProperties.getStoragePathScheme()
 
     scheme match {
-      case "s3a"            => S3Bucket(path, properties)
-      case "gs"             => GCSBucket(path, properties)
-      case "wasb" | "wasbs" => AzureBlobBucket(path, properties)
-      case "adl"            => AzureAdlsBucket(path, properties)
-      case "file"           => LocalBucket(path, properties)
+      case "s3a"            => S3Bucket(path, storageProperties)
+      case "gs"             => GCSBucket(path, storageProperties)
+      case "wasb" | "wasbs" => AzureBlobBucket(path, storageProperties)
+      case "adl"            => AzureAdlsBucket(path, storageProperties)
+      case "file"           => LocalBucket(path, storageProperties)
       case _ =>
         throw new IllegalArgumentException(s"Unsupported path scheme $scheme")
     }
   }
+
+  /**
+   * Creates specific [[Bucket]] class using the path scheme from
+   * key-value properties.
+   *
+   * @param params The key value parameters
+   * @return A [[Bucket]] class for the given path
+   */
+  def apply(params: Map[String, String]): Bucket =
+    apply(StorageProperties(params))
 
   /**
    * Checks whether the optional parameter is available. If it is not

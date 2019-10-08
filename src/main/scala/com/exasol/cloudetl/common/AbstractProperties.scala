@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.common
 
+import scala.collection.SortedMap
+
 /**
  * An abstract class that holds the user provided key-value parameters
  * when using the user-defined-functions (UDFs).
@@ -51,6 +53,21 @@ abstract class AbstractProperties(private val properties: Map[String, String]) {
    */
   final def size(): Int =
     properties.size
+
+  /**
+   * Returns a string listing of all key-value property pairs.
+   *
+   * The resulting string contains key-value pairs in a sorted order by
+   * keys.
+   *
+   * @param keyValueSeparator The separator between each key-value pairs
+   * @param propertySeparator The separator between each key-value pair strings
+   * @return The string value of properties with provided separators
+   */
+  final def mkString(keyValueSeparator: String, propertySeparator: String): String =
+    (SortedMap.empty[String, String] ++ properties)
+      .map { case (k, v) => s"$k$keyValueSeparator$v" }
+      .mkString(propertySeparator)
 
   @SuppressWarnings(
     Array(

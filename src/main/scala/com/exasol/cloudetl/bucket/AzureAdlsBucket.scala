@@ -7,15 +7,22 @@ import org.apache.hadoop.conf.Configuration
 /** A [[Bucket]] implementation for the Azure Data Lake Storage */
 final case class AzureAdlsBucket(path: String, params: StorageProperties) extends Bucket {
 
+  private[this] val AZURE_CLIENT_ID: String = "AZURE_CLIENT_ID"
+  private[this] val AZURE_CLIENT_SECRET: String = "AZURE_CLIENT_SECRET"
+  private[this] val AZURE_DIRECTORY_ID: String = "AZURE_DIRECTORY_ID"
+
   /** @inheritdoc */
   override val bucketPath: String = path
 
   /** @inheritdoc */
   override val properties: StorageProperties = params
 
-  /** @inheritdoc */
+  /**
+   * Returns the list of required property keys for Azure Data Lake
+   * Storage.
+   */
   override def getRequiredProperties(): Seq[String] =
-    Bucket.AZURE_ADLS_PARAMETERS
+    Seq(AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_DIRECTORY_ID)
 
   /**
    * @inheritdoc
@@ -27,9 +34,9 @@ final case class AzureAdlsBucket(path: String, params: StorageProperties) extend
     validate()
 
     val conf = new Configuration()
-    val clientId = properties.getAs[String]("AZURE_CLIENT_ID")
-    val clientSecret = properties.getAs[String]("AZURE_CLIENT_SECRET")
-    val directoryId = properties.getAs[String]("AZURE_DIRECTORY_ID")
+    val clientId = properties.getAs[String](AZURE_CLIENT_ID)
+    val clientSecret = properties.getAs[String](AZURE_CLIENT_SECRET)
+    val directoryId = properties.getAs[String](AZURE_DIRECTORY_ID)
     val tokenEndpoint = s"https://login.microsoftonline.com/$directoryId/oauth2/token"
     conf.set("fs.adl.impl", classOf[org.apache.hadoop.fs.adl.AdlFileSystem].getName)
     conf.set("fs.AbstractFileSystem.adl.impl", classOf[org.apache.hadoop.fs.adl.Adl].getName)
