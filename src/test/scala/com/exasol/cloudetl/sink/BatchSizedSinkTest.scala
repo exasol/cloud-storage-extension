@@ -2,7 +2,7 @@ package com.exasol.cloudetl.sink
 
 import java.nio.file.Path
 
-import com.exasol.cloudetl.TestUtils
+import com.exasol.cloudetl.DummyRecordsTest
 import com.exasol.cloudetl.bucket.LocalBucket
 import com.exasol.cloudetl.data.ExaColumnInfo
 import com.exasol.cloudetl.data.Row
@@ -11,8 +11,7 @@ import com.exasol.cloudetl.storage.StorageProperties
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FunSuite
 
-@SuppressWarnings(Array("org.wartremover.warts.Var"))
-class BatchSizedSinkSuite extends FunSuite with BeforeAndAfterEach with TestUtils {
+class BatchSizedSinkTest extends FunSuite with BeforeAndAfterEach with DummyRecordsTest {
 
   private var outputPath: Path = _
   private val properties = Map("BUCKET_PATH" -> "a/path", "DATA_FORMAT" -> "avro")

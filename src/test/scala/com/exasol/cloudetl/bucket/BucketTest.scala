@@ -5,34 +5,44 @@ import org.apache.hadoop.fs.azure.NativeAzureFileSystem
 import org.apache.hadoop.fs.azure.Wasb
 import org.apache.hadoop.fs.azure.Wasbs
 import org.apache.hadoop.fs.s3a.S3AFileSystem
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FunSuite
-import org.scalatest.Matchers
 
 @SuppressWarnings(Array("org.wartremover.warts.IsInstanceOf"))
-class BucketSuite extends FunSuite with Matchers {
+class BucketTest extends FunSuite with BeforeAndAfterEach {
 
-  test("throws an exception if the scheme is not supported") {
-    val thrown = intercept[IllegalArgumentException] {
-      Bucket(Map(Bucket.BUCKET_PATH -> "xyz:/bucket/files*"))
-    }
-    assert(thrown.getMessage === "Unsupported path scheme xyz")
+  private[this] val PATH: String = "BUCKET_PATH"
+  private[this] val FORMAT: String = "DATA_FORMAT"
+  private[this] var properties: Map[String, String] = _
+
+  override final def beforeEach(): Unit = {
+    properties = Map.empty[String, String]
+    ()
   }
 
-  test("creates an LocalBucket with local path parameter") {
-    val bucket = Bucket(Map(Bucket.BUCKET_PATH -> "file://local/path/bucket/"))
+  test("apply throws if the scheme is not supported") {
+    properties = Map(PATH -> "xyz:/bucket/files*", FORMAT -> "ORC")
+    val thrown = intercept[IllegalArgumentException] {
+      Bucket(properties)
+    }
+    assert(thrown.getMessage === "Unsupported path scheme xyz!")
+  }
+
+  test("apply returns LocalBucket") {
+    properties = Map(PATH -> "file://local/path/bucket/", FORMAT -> "ORC")
+    val bucket = Bucket(properties)
     assert(bucket.isInstanceOf[LocalBucket])
   }
 
-  test("creates an S3Bucket with given parameters") {
-    val s3params = Map(
-      Bucket.BUCKET_PATH -> "s3a://my-bucket/",
-      "DATA_FORMAT" -> "PARQUET",
+  test("apply returns S3Bucket") {
+    properties = Map(
+      PATH -> "s3a://my-bucket/",
+      FORMAT -> "ORC",
       "S3_ENDPOINT" -> "eu-central-1",
       "S3_ACCESS_KEY" -> "abc",
       "S3_SECRET_KEY" -> "xyz"
     )
-
-    val bucket = Bucket(s3params)
+    val bucket = Bucket(properties)
     val conf = bucket.getConfiguration()
 
     assert(bucket.isInstanceOf[S3Bucket])
@@ -42,15 +52,14 @@ class BucketSuite extends FunSuite with Matchers {
     assert(conf.get("fs.s3a.secret.key") === "xyz")
   }
 
-  test("creates a GCSBucket with given parameters") {
-    val gcsParams = Map(
-      Bucket.BUCKET_PATH -> "gs://my-bucket/",
-      "DATA_FORMAT" -> "AVRO",
+  test("apply returns GCSBucket") {
+    properties = Map(
+      PATH -> "gs://my-bucket/",
+      FORMAT -> "AVRO",
       "GCS_PROJECT_ID" -> "projX",
       "GCS_KEYFILE_PATH" -> "/bucketfs/bucket1/projX.json"
     )
-
-    val bucket = Bucket(gcsParams)
+    val bucket = Bucket(properties)
     val conf = bucket.getConfiguration()
 
     assert(bucket.isInstanceOf[GCSBucket])
@@ -59,15 +68,14 @@ class BucketSuite extends FunSuite with Matchers {
     assert(conf.get("fs.gs.auth.service.account.json.keyfile") === "/bucketfs/bucket1/projX.json")
   }
 
-  test("creates an AzureBlobBucket with given parameters") {
-    val azureBlobParams = Map(
-      Bucket.BUCKET_PATH -> "wasbs://container@account1/parquet-bucket/",
-      "DATA_FORMAT" -> "AVRO",
+  test("apply returns AzureBlobBucket") {
+    properties = Map(
+      PATH -> "wasbs://container@account1/parquet-bucket/",
+      FORMAT -> "AVRO",
       "AZURE_ACCOUNT_NAME" -> "account1",
       "AZURE_SECRET_KEY" -> "secret"
     )
-
-    val bucket = Bucket(azureBlobParams)
+    val bucket = Bucket(properties)
     val conf = bucket.getConfiguration()
 
     assert(bucket.isInstanceOf[AzureBlobBucket])
@@ -85,16 +93,15 @@ class BucketSuite extends FunSuite with Matchers {
     }
   }
 
-  test("creates an AzureAdlsBucket with provided parameters") {
-    val params = Map(
-      Bucket.BUCKET_PATH -> "adl://my_container.azuredatalakestore.net/orc/*",
-      "DATA_FORMAT" -> "CSV",
+  test("apply returns AzureAdlsBucket") {
+    properties = Map(
+      PATH -> "adl://my_container.azuredatalakestore.net/orc/*",
+      FORMAT -> "CSV",
       "AZURE_CLIENT_ID" -> "clientX",
       "AZURE_CLIENT_SECRET" -> "client_secret",
       "AZURE_DIRECTORY_ID" -> "directory_id_secret"
     )
-
-    val bucket = Bucket(params)
+    val bucket = Bucket(properties)
     assert(bucket.isInstanceOf[AzureAdlsBucket])
 
     val conf = bucket.getConfiguration()

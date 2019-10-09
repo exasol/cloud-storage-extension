@@ -2,11 +2,10 @@ package com.exasol.cloudetl.orc
 
 import org.apache.orc.TypeDescription
 import org.scalatest.FunSuite
-import org.scalatest.Matchers
 
-class OrcDeserializerSuite extends FunSuite with Matchers {
+class OrcDeserializerTest extends FunSuite {
 
-  test("throws IllegalArgumentException when orc struct type contains a list") {
+  test("apply throws if orc type is a list") {
     val orcList = TypeDescription.createList(TypeDescription.createString)
     val thrown = intercept[IllegalArgumentException] {
       OrcDeserializer(orcList)
@@ -14,7 +13,7 @@ class OrcDeserializerSuite extends FunSuite with Matchers {
     assert(thrown.getMessage === "Orc list type is not supported.")
   }
 
-  test("throws IllegalArgumentException when orc struct type contains a map") {
+  test("apply throws f orc type is a map") {
     val orcMap =
       TypeDescription.createMap(TypeDescription.createString, TypeDescription.createString)
     val thrown = intercept[IllegalArgumentException] {
@@ -23,7 +22,7 @@ class OrcDeserializerSuite extends FunSuite with Matchers {
     assert(thrown.getMessage === "Orc map type is not supported.")
   }
 
-  test("throws IllegalArgumentException when orc struct type contains a nested struct") {
+  test("apply throws if orc type is a nested struct") {
     val orcStruct =
       TypeDescription.createStruct().addField("col_int", TypeDescription.createInt())
     val thrown = intercept[IllegalArgumentException] {
@@ -32,7 +31,7 @@ class OrcDeserializerSuite extends FunSuite with Matchers {
     assert(thrown.getMessage === "Orc nested struct type is not supported.")
   }
 
-  test("throws IllegalArgumentException for unsupported type") {
+  test("apply throws if orc type is unsupported") {
     val orcUnion = TypeDescription.createUnion()
     val thrown = intercept[IllegalArgumentException] {
       OrcDeserializer(orcUnion)

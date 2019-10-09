@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.storage
 
+import com.exasol.cloudetl.storage.FileFormat._
+
 import org.scalatest.FunSuite
 
 class FileFormatTest extends FunSuite {

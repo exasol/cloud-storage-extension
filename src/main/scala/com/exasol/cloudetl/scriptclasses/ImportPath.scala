@@ -4,31 +4,31 @@ import scala.collection.JavaConverters._
 
 import com.exasol.ExaImportSpecification
 import com.exasol.ExaMetadata
-import com.exasol.cloudetl.bucket._
+import com.exasol.cloudetl.bucket.Bucket
+import com.exasol.cloudetl.storage.StorageProperties
 
 object ImportPath {
 
-  def generateSqlForImportSpec(exaMeta: ExaMetadata, exaSpec: ExaImportSpecification): String = {
-    val params = exaSpec.getParameters.asScala.toMap
-
-    val bucket = Bucket(params)
-
+  def generateSqlForImportSpec(
+    metadata: ExaMetadata,
+    importSpec: ExaImportSpecification
+  ): String = {
+    val storageProperties = StorageProperties(importSpec.getParameters.asScala.toMap)
+    val bucket = Bucket(storageProperties)
     bucket.validate()
 
     val bucketPath = bucket.bucketPath
-    val parallelism = Bucket.optionalParameter(params, "PARALLELISM", "nproc()")
-
-    val rest = Bucket.keyValueMapToString(params)
-
-    val scriptSchema = exaMeta.getScriptSchema
+    val parallelism = storageProperties.getParallelism("nproc()")
+    val storagePropertiesStr = storageProperties.mkString()
+    val scriptSchema = metadata.getScriptSchema
 
     s"""SELECT
        |  $scriptSchema.IMPORT_FILES(
-       |    '$bucketPath', '$rest', filename
+       |    '$bucketPath', '$storagePropertiesStr', filename
        |)
        |FROM (
        |  SELECT $scriptSchema.IMPORT_METADATA(
-       |    '$bucketPath', '$rest', $parallelism
+       |    '$bucketPath', '$storagePropertiesStr', $parallelism
        |  )
        |)
        |GROUP BY

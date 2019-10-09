@@ -8,7 +8,7 @@ import org.scalatest.FunSuite
 import org.scalatest.Matchers
 
 @SuppressWarnings(Array("org.wartremover.contrib.warts.OldTime"))
-class DateTimeUtilSuite extends FunSuite with Matchers {
+class DateTimeUtilTest extends FunSuite with Matchers {
 
   final def daysSinceEpochToDate(dt: Date): Unit = {
     val newDT = DateTimeUtil.daysToDate(DateTimeUtil.daysSinceEpoch(dt))

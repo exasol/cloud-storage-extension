@@ -62,9 +62,14 @@ object StorageProperties {
    */
   private[storage] final val KEY_VALUE_SEPARATOR: String = " -> "
 
-  val BUCKET_PATH: String = "BUCKET_PATH"
-  val DATA_FORMAT: String = "DATA_FORMAT"
-  val PARALLELISM: String = "PARALLELISM"
+  /** A required property key name for a bucket path. */
+  private[storage] final val BUCKET_PATH: String = "BUCKET_PATH"
+
+  /** A required property key name for a data format. */
+  private[storage] final val DATA_FORMAT: String = "DATA_FORMAT"
+
+  /** An optional property key name for the parallelism. */
+  private[storage] final val PARALLELISM: String = "PARALLELISM"
 
   def apply(params: Map[String, String]): StorageProperties =
     new StorageProperties(params)

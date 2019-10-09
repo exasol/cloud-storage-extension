@@ -37,23 +37,8 @@ abstract class Bucket {
   def getRequiredProperties(): Seq[String]
 
   /** Validates that all required parameter key values are available. */
-  final def validate(): Unit = {
-    validateBaseProperties()
+  final def validate(): Unit =
     validateRequiredProperties()
-  }
-
-  private[this] def validateBaseProperties(): Unit = {
-    if (!properties.containsKey(Bucket.BUCKET_PATH)) {
-      throw new IllegalArgumentException(
-        s"Please provide a value for the ${Bucket.BUCKET_PATH} property!"
-      )
-    }
-    if (!properties.containsKey(Bucket.DATA_FORMAT)) {
-      throw new IllegalArgumentException(
-        s"Please provide a value for the ${Bucket.DATA_FORMAT} property!"
-      )
-    }
-  }
 
   private[this] def validateRequiredProperties(): Unit =
     getRequiredProperties().foreach { key =>
@@ -95,12 +80,6 @@ abstract class Bucket {
 @SuppressWarnings(Array("org.wartremover.warts.Overloading"))
 object Bucket extends LazyLogging {
 
-  /** A required key string for a bucket path. */
-  final val BUCKET_PATH: String = "BUCKET_PATH"
-
-  /** A required key string for a data format. */
-  final val DATA_FORMAT: String = "DATA_FORMAT"
-
   /**
    * Creates specific [[Bucket]] class using the path scheme from
    * [[com.exasol.cloudetl.storage.StorageProperties]] properties.
@@ -120,7 +99,7 @@ object Bucket extends LazyLogging {
       case "adl"            => AzureAdlsBucket(path, storageProperties)
       case "file"           => LocalBucket(path, storageProperties)
       case _ =>
-        throw new IllegalArgumentException(s"Unsupported path scheme $scheme")
+        throw new IllegalArgumentException(s"Unsupported path scheme $scheme!")
     }
   }
 

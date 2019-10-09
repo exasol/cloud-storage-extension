@@ -7,7 +7,7 @@ import java.nio.file.attribute.BasicFileAttributes
 import java.sql.Date
 import java.sql.Timestamp
 
-trait TestUtils {
+trait DummyRecordsTest {
 
   val BIG_DECIMAL_VALUE1: BigDecimal = new BigDecimal("5555555555555555555555555555555.55555")
   val BIG_DECIMAL_VALUE2: BigDecimal = new BigDecimal("5555555555555555555555555555555.55555")

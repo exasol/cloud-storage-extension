@@ -3,7 +3,6 @@ package com.exasol.cloudetl.common
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FunSuite
 
-@SuppressWarnings(Array("org.wartremover.warts.Var"))
 class AbstractPropertiesTest extends FunSuite with BeforeAndAfterEach {
 
   private[this] var properties: Map[String, String] = _

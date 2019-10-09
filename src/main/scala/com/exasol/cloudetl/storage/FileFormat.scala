@@ -16,13 +16,14 @@ object FileFormat {
     case _         => throw new IllegalArgumentException(s"Unsupported file format $fileFormat!")
   }
 
+  case object AVRO extends FileFormat
+  case object FILE extends FileFormat
+  case object ORC extends FileFormat
+  case object PARQUET extends FileFormat
+
 }
 
 /**
  * An enum for supported file formats.
  */
 sealed trait FileFormat extends Product with Serializable
-case object AVRO extends FileFormat
-case object FILE extends FileFormat
-case object ORC extends FileFormat
-case object PARQUET extends FileFormat

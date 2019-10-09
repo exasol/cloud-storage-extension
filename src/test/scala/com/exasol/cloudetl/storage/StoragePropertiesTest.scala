@@ -3,7 +3,6 @@ package com.exasol.cloudetl.storage
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FunSuite
 
-@SuppressWarnings(Array("org.wartremover.warts.Var"))
 class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach {
 
   private[this] var properties: Map[String, String] = _
@@ -43,7 +42,7 @@ class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach {
       StorageProperties.BUCKET_PATH -> "path",
       StorageProperties.DATA_FORMAT -> "orc"
     )
-    assert(BaseProperties(properties).getFileFormat() === ORC)
+    assert(BaseProperties(properties).getFileFormat() === FileFormat.ORC)
   }
 
   test("getFileFormat throws if file format is not supported") {

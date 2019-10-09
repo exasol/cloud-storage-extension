@@ -8,6 +8,7 @@ import com.exasol.cloudetl.bucket.Bucket
 import com.exasol.cloudetl.data.ExaColumnInfo
 import com.exasol.cloudetl.data.Row
 import com.exasol.cloudetl.sink.BatchSizedSink
+import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.cloudetl.util.SchemaUtil
 
 import com.typesafe.scalalogging.LazyLogging
@@ -15,25 +16,24 @@ import com.typesafe.scalalogging.LazyLogging
 @SuppressWarnings(Array("org.wartremover.warts.Var"))
 object ExportTable extends LazyLogging {
 
-  def run(meta: ExaMetadata, iter: ExaIterator): Unit = {
-    val params = Bucket.keyValueStringToMap(iter.getString(1))
-    val bucket = Bucket(params)
-
-    val srcColumnNames = iter.getString(2).split("\\.")
+  def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
+    val storageProperties = StorageProperties.fromString(iterator.getString(1))
+    val bucket = Bucket(storageProperties)
+    val srcColumnNames = iterator.getString(2).split("\\.")
     val firstColumnIdx = 3
 
-    val nodeId = meta.getNodeId
-    val vmId = meta.getVmId
-    val columns = getColumns(meta, srcColumnNames, firstColumnIdx)
+    val nodeId = metadata.getNodeId
+    val vmId = metadata.getVmId
+    val columns = getColumns(metadata, srcColumnNames, firstColumnIdx)
 
-    val sink = new BatchSizedSink(nodeId, vmId, iter.size(), columns, bucket)
+    val sink = new BatchSizedSink(nodeId, vmId, iterator.size(), columns, bucket)
 
     logger.info(s"Starting export from node: $nodeId, vm: $vmId.")
 
     do {
-      val row = getRow(iter, firstColumnIdx, columns)
+      val row = getRow(iterator, firstColumnIdx, columns)
       sink.write(row)
-    } while (iter.next())
+    } while (iterator.next())
 
     sink.close()
 
