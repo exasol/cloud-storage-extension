@@ -16,7 +16,11 @@ import org.apache.kafka.common.TopicPartition
 
 object KafkaImport extends LazyLogging {
 
-  private[this] val POLL_TIMEOUT_MS: Long = 2000L
+  private[this] val POLL_TIMEOUT_MS: Int = 30000
+
+  private[this] val MAX_RECORDS_PER_RUN = 1000000
+
+  private[this] val MIN_RECORDS_PER_RUN = 100
 
   @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   def run(meta: ExaMetadata, ctx: ExaIterator): Unit = {
@@ -33,6 +37,11 @@ object KafkaImport extends LazyLogging {
 
     val params = Bucket.keyValueStringToMap(rest)
     val topics = Bucket.requiredParam(params, "TOPICS")
+    val timeout = Bucket.optionalIntParameter(params, "POLL_TIMEOUT_MS", POLL_TIMEOUT_MS)
+    val maxRecords =
+      Bucket.optionalIntParameter(params, "MAX_RECORDS_PER_RUN", MAX_RECORDS_PER_RUN)
+    val minRecords =
+      Bucket.optionalIntParameter(params, "MIN_RECORDS_PER_RUN", MIN_RECORDS_PER_RUN)
     val topicPartition = new TopicPartition(topics, partitionId)
 
     val kafkaConsumer = KafkaConsumerBuilder(params)
@@ -40,22 +49,34 @@ object KafkaImport extends LazyLogging {
     kafkaConsumer.seek(topicPartition, partitionNextOffset)
 
     try {
-      val records = kafkaConsumer.poll(Duration.ofMillis(POLL_TIMEOUT_MS))
-      val recordsCount = records.count()
-      records.asScala.foreach { record =>
-        logger.debug(
-          s"Emitting partition=${record.partition()} offset=${record.offset()} " +
-            s"key=${record.key()} value=${record.value()}"
+      @SuppressWarnings(Array("org.wartremover.warts.Var"))
+      var recordsCount = 0
+
+      @SuppressWarnings(Array("org.wartremover.warts.Var"))
+      var total = 0
+
+      do {
+        val records = kafkaConsumer.poll(Duration.ofMillis(timeout.toLong))
+        recordsCount = records.count()
+        total += recordsCount
+        records.asScala.foreach { record =>
+          logger.debug(
+            s"Read partition=${record.partition()} offset=${record.offset()} " +
+              s"key=${record.key()} value=${record.value()}"
+          )
+          val metadata: Seq[Object] =
+            Seq(record.partition().asInstanceOf[AnyRef], record.offset().asInstanceOf[AnyRef])
+          val row = Row.fromAvroGenericRecord(record.value())
+          val allColumns: Seq[Object] = metadata ++ row.getValues().map(_.asInstanceOf[AnyRef])
+          ctx.emit(
+            allColumns: _*
+          )
+        }
+        logger.info(
+          s"Emitted total=$recordsCount records in node=$nodeId, vm=$vmId, partition=$partitionId"
         )
-        val metadata: Seq[Object] =
-          Seq(record.partition().asInstanceOf[AnyRef], record.offset().asInstanceOf[AnyRef])
-        val row = Row.fromAvroGenericRecord(record.value())
-        val allColumns: Seq[Object] = metadata ++ row.getValues().map(_.asInstanceOf[AnyRef])
-        ctx.emit(
-          allColumns: _*
-        )
-      }
-      logger.info(s"Emitted total=$recordsCount records in node=$nodeId, vm=$vmId")
+
+      } while (recordsCount >= minRecords && total < maxRecords)
     } finally {
       kafkaConsumer.close();
     }

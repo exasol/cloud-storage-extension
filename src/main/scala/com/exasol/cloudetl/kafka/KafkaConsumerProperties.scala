@@ -76,6 +76,14 @@ object KafkaConsumerProperties {
     params.put(ConsumerConfig.GROUP_ID_CONFIG, Bucket.requiredParam(importParams, "GROUP_ID"))
     val schemaRegistryUrl = Bucket.requiredParam(importParams, "SCHEMA_REGISTRY_URL")
     params.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl)
+    params.put(
+      ConsumerConfig.MAX_POLL_RECORDS_CONFIG,
+      Bucket.optionalParameter(importParams, "MAX_POLL_RECORDS", "500")
+    )
+    params.put(
+      ConsumerConfig.FETCH_MIN_BYTES_CONFIG,
+      Bucket.optionalParameter(importParams, "FETCH_MIN_BYTES", "1")
+    )
     val sslEnabled = Bucket.optionalParameter(importParams, "SSL_ENABLED", "false")
     if (sslEnabled.equals("true")) {
       params.put(
@@ -101,6 +109,15 @@ object KafkaConsumerProperties {
       params.put(
         SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG,
         Bucket.requiredParam(importParams, "SSL_TRUSTSTORE_PASSWORD")
+      )
+      val idAlgo = Bucket.optionalParameter(
+        importParams,
+        "SSL_ENDPOINT_IDENTIFICATION_ALGORITHM",
+        SslConfigs.DEFAULT_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
+      )
+      params.put(
+        SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG,
+        if (idAlgo == "none") "" else idAlgo
       )
     }
 
