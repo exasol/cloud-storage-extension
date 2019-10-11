@@ -125,6 +125,20 @@ object Bucket extends LazyLogging {
     params.get(key).fold(defaultValue)(identity)
 
   /**
+   * Checks whether the optional parameter is available. If it is not
+   * available returns the default value.
+   *
+   * @param params The parameters key value map
+   * @param key The optional parameter key
+   * @param defaultValue The default value to return if key not
+   *        available
+   * @return The the value for the optional key if it exists; otherwise
+   *         return the default value
+   */
+  def optionalIntParameter(params: Map[String, String], key: String, defaultValue: Int): Int =
+    params.get(key).map(_.toInt).fold(defaultValue)(identity)
+
+  /**
    * Converts key value pair strings into a single string with
    * separators in between.
    *

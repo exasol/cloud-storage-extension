@@ -5,6 +5,7 @@ import java.lang.{Long => JLong}
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.HashMap
+import scala.util.{Failure, Success, Try}
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
@@ -27,18 +28,28 @@ object KafkaMetadata extends LazyLogging {
       idOffsetPairs += (partitionId -> partitionOffset)
     } while (iter.next())
 
-    val kafkaConsumer = KafkaConsumerBuilder(params)
-    val topics = Bucket.requiredParam(params, "TOPICS")
-    val topicPartitions = kafkaConsumer.partitionsFor(topics).asScala.toList.map(_.partition())
+    val kafkaConsumerTry = Try(KafkaConsumerBuilder(params))
+    kafkaConsumerTry match {
 
-    try {
-      topicPartitions.foreach { partitionId =>
-        val offset: JLong = idOffsetPairs.getOrElse(partitionId, -1)
-        iter.emit(new Integer(partitionId), offset)
-      }
-    } finally {
-      kafkaConsumer.close()
+      case Failure(ex) =>
+        logger.error("Unable to create consumer", ex)
+        throw ex
+
+      case Success(kafkaConsumer) =>
+        val topics = Bucket.requiredParam(params, "TOPICS")
+        val topicPartitions =
+          kafkaConsumer.partitionsFor(topics).asScala.toList.map(_.partition())
+
+        try {
+          topicPartitions.foreach { partitionId =>
+            val offset: JLong = idOffsetPairs.getOrElse(partitionId, -1)
+            iter.emit(new Integer(partitionId), offset)
+          }
+        } finally {
+          kafkaConsumer.close()
+        }
     }
+
   }
 
 }
