@@ -15,11 +15,21 @@ class StorageProperties(private val properties: Map[String, String])
 
   import StorageProperties._
 
-  /** Returns the storage main path. */
+  /**
+   * Returns the storage path.
+   *
+   * It is a main path, for example, to a bucket where data files are
+   * stored.
+   */
   final def getStoragePath(): String =
     getAs[String](BUCKET_PATH)
 
-  /** Returns the main storage path scheme. */
+  /**
+   * Returns the storage path scheme.
+   *
+   * For example, given the S3 bucket, `s3a://my-bucket/data/` path to
+   * load data, returns the scheme `s3a` value.
+   */
   final def getStoragePathScheme(): String =
     new URI(getStoragePath()).getScheme
 
@@ -27,6 +37,11 @@ class StorageProperties(private val properties: Map[String, String])
   final def getFileFormat(): FileFormat =
     FileFormat(getAs[String](DATA_FORMAT))
 
+  /**
+   * Returns the number of partitions provided as user property.
+   *
+   * If it is not set, returns default value {@code nproc}.
+   */
   final def getParallelism(defaultValue: => String): String =
     get(PARALLELISM).fold(defaultValue)(identity)
 
