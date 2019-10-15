@@ -29,9 +29,14 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
 
   import KafkaConsumerProperties._
 
+  /** Returns user provided Kafka bootstrap servers string. */
   final def getBootstrapServers(): String =
     getString(BOOTSTRAP_SERVERS.userPropertyName)
 
+  /**
+   * Returns user provided group id, if it is not provided by user
+   * returns default value.
+   */
   final def getGroupId(): String =
     get(GROUP_ID.userPropertyName).fold(GROUP_ID.defaultValue)(identity)
 
@@ -39,18 +44,42 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
   final def getTopics(): String =
     getString(TOPICS)
 
-  /** Returns the user provided Exasol table name. */
+  /**
+   * Returns the user provided Exasol table name; otherwise returns
+   * default value.
+   */
   final def getTableName(): String =
     getString(TABLE_NAME)
 
+  /**
+   * Returns poll timeout millisecords if provided by user; otherwise
+   * returns default value.
+   *
+   * @throws java.lang.NumberFormatException If value is not a Long.
+   */
+  @throws[NumberFormatException]("If value is not a Long.")
   final def getPollTimeoutMs(): Long =
-    get(POLL_TIMEOUT_MS).fold(POLL_TIMEOUT_MS_DEFAULT_VALUE)(_.asInstanceOf[Long])
+    get(POLL_TIMEOUT_MS.userPropertyName).fold(POLL_TIMEOUT_MS.defaultValue)(_.toLong)
 
-  final def getMaxRecordsPerRun(): Int =
-    get(MAX_RECORDS_PER_RUN).fold(MAX_RECORDS_PER_RUN_DEFAULT_VALUE)(_.asInstanceOf[Int])
-
+  /**
+   * Returns minimum records per run property value when provided by
+   * user; otherwise returns default value.
+   *
+   * @throws java.lang.NumberFormatException If value is not an Int.
+   */
+  @throws[NumberFormatException]("If value is not an Int.")
   final def getMinRecordsPerRun(): Int =
-    get(MIN_RECORDS_PER_RUN).fold(MIN_RECORDS_PER_RUN_DEFAULT_VALUE)(_.asInstanceOf[Int])
+    get(MIN_RECORDS_PER_RUN.userPropertyName).fold(MIN_RECORDS_PER_RUN.defaultValue)(_.toInt)
+
+  /**
+   * Returns maximum records per run property value when provided by
+   * user; otherwise returns default value.
+   *
+   * @throws java.lang.NumberFormatException If value is not an Int.
+   */
+  @throws[NumberFormatException]("If value is not an Int.")
+  final def getMaxRecordsPerRun(): Int =
+    get(MAX_RECORDS_PER_RUN.userPropertyName).fold(MAX_RECORDS_PER_RUN.defaultValue)(_.toInt)
 
   /** Checks if the {@code SSL_ENABLED} property is set. */
   final def isSSLEnabled(): Boolean =
@@ -189,6 +218,20 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
 object KafkaConsumerProperties extends CommonProperties {
 
   /**
+   * Internal configuration helper class.
+   *
+   * @param userPropertyName A UDF user provided property key name
+   * @param kafkaPropertyName An equivalent property in Kafka
+   *        configuration that maps user property key name
+   * @param defaultValue A default value for the property key name
+   */
+  private[kafka] final case class Config[T](
+    val userPropertyName: String,
+    val kafkaPropertyName: String,
+    val defaultValue: T
+  )
+
+  /**
    * A required property key name for a Kafka topic name to import data
    * from.
    */
@@ -200,20 +243,54 @@ object KafkaConsumerProperties extends CommonProperties {
    */
   private[kafka] final val TABLE_NAME: String = "TABLE_NAME"
 
-  private[kafka] final val POLL_TIMEOUT_MS: String = "POLL_TIMEOUT_MS"
-  private[kafka] final val POLL_TIMEOUT_MS_DEFAULT_VALUE: Long = 30000L
-
-  private[kafka] final val MAX_RECORDS_PER_RUN: String = "MAX_RECORDS_PER_RUN"
-  private[kafka] final val MAX_RECORDS_PER_RUN_DEFAULT_VALUE: Int = 1000000
-
-  private[kafka] final val MIN_RECORDS_PER_RUN: String = "MIN_RECORDS_PER_RUN"
-  private[kafka] final val MIN_RECORDS_PER_RUN_DEFAULT_VALUE: Int = 100
-
   /**
    * An optional property key name to set SSL secure connections to
    * Kafka cluster.
    */
   private[kafka] val SSL_ENABLED: String = "SSL_ENABLED"
+
+  /**
+   * A number of milliseconds to wait for Kafka consumer {@code poll} to
+   * return any data.
+   */
+  private[kafka] final val POLL_TIMEOUT_MS = Config[Long](
+    "POLL_TIMEOUT_MS",
+    "",
+    30000L // scalastyle:ignore magic.number
+  )
+
+  /**
+   * An upper bound on the minimum number of records to consume per UDF
+   * run.
+   *
+   * That is, if the {@code poll} returns fewer records than this
+   * number, consume them and finish the process. Otherwise, continue
+   * polling more data until the total number of records reaches
+   * [[MAX_RECORDS_PER_RUN]].
+   *
+   * See [[MAX_RECORDS_PER_RUN]].
+   */
+  private[kafka] final val MIN_RECORDS_PER_RUN = Config[Int](
+    "MIN_RECORDS_PER_RUN",
+    "",
+    100 // scalastyle:ignore magic.number
+  )
+
+  /**
+   * An lower bound on the maximum number of records to consumer per UDF
+   * run.
+   *
+   * When the returned number of records from {@code poll} is more than
+   * [[MIN_RECORDS_PER_RUN]], it continues polling for more records
+   * until total number reaches this number.
+   *
+   * See [[MIN_RECORDS_PER_RUN]].
+   */
+  private[kafka] final val MAX_RECORDS_PER_RUN = Config[Int](
+    "MAX_RECORDS_PER_RUN",
+    "",
+    1000000 // scalastyle:ignore magic.number
+  )
 
   /**
    * Below are relavant Kafka consumer configuration parameters are
@@ -222,20 +299,6 @@ object KafkaConsumerProperties extends CommonProperties {
    * See [[https://kafka.apache.org/documentation.html#consumerconfigs]]
    */
   /**
-   * Internal configuration helper class.
-   *
-   * @param userPropertyName A UDF user provided property key name
-   * @param kafkaPropertyName An equivalent property in Kafka
-   *        configuration that maps user property key name
-   * @param defaultValue A default value for the property key name
-   */
-  private[kafka] final case class Config(
-    val userPropertyName: String,
-    val kafkaPropertyName: String,
-    val defaultValue: String
-  )
-
-  /**
    * This is the {@code enable.auto.commit} configuration setting.
    *
    * If set to true the offset of consumer will be periodically
@@ -243,21 +306,21 @@ object KafkaConsumerProperties extends CommonProperties {
    * by default, since we manage the offset commits ourselves in the
    * Exasol table.
    */
-  private[kafka] val ENABLE_AUTO_COMMIT: Config = Config(
+  private[kafka] val ENABLE_AUTO_COMMIT = Config[String](
     "ENABLE_AUTO_COMMIT",
     ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,
     "false"
   )
 
   /**
-   * This is the `bootstrap.servers` configuration setting.
+   * This is the {@code bootstrap.servers} configuration setting.
    *
    * A list of host and port pairs to use for establishing the initial
    * connection to the Kafka cluster.
    *
    * It is a required property that should be provided by the user.
    */
-  private[kafka] val BOOTSTRAP_SERVERS: Config = Config(
+  private[kafka] val BOOTSTRAP_SERVERS = Config[String](
     "BOOTSTRAP_SERVERS",
     ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
     ""
@@ -269,7 +332,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * It is a unique string that identifies the consumer group this
    * consumer belongs to.
    */
-  private[kafka] val GROUP_ID: Config = Config(
+  private[kafka] val GROUP_ID = Config[String](
     "GROUP_ID",
     ConsumerConfig.GROUP_ID_CONFIG,
     "EXASOL_KAFKA_UDFS_CONSUMERS"
@@ -281,7 +344,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * It is the maximum number of records returned in a single call to
    * poll() function. Default value is `500`.
    */
-  private[kafka] val MAX_POLL_RECORDS: Config = Config(
+  private[kafka] val MAX_POLL_RECORDS = Config[String](
     "MAX_POLL_RECORDS",
     ConsumerConfig.MAX_POLL_RECORDS_CONFIG,
     "500"
@@ -293,7 +356,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * It is the minimum amount of data the server should return for a
    * fetch request. Default value is `1`.
    */
-  private[kafka] val FETCH_MIN_BYTES: Config = Config(
+  private[kafka] val FETCH_MIN_BYTES = Config[String](
     "FETCH_MIN_BYTES",
     ConsumerConfig.FETCH_MIN_BYTES_CONFIG,
     "1"
@@ -305,7 +368,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * The Avro value deserializer will be used when user sets this
    * property value.
    */
-  private[kafka] val SCHEMA_REGISTRY_URL: Config = Config(
+  private[kafka] val SCHEMA_REGISTRY_URL = Config[String](
     "SCHEMA_REGISTRY_URL",
     AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG,
     ""
@@ -318,7 +381,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * [[SSL_ENABLED]] is set to {@code true}. Default value is
    * [[SslConfigs.DEFAULT_SSL_PROTOCOL]].
    */
-  private[kafka] val SECURITY_PROTOCOL: Config = Config(
+  private[kafka] val SECURITY_PROTOCOL = Config[String](
     "SECURITY_PROTOCOL",
     CommonClientConfigs.SECURITY_PROTOCOL_CONFIG,
     SslConfigs.DEFAULT_SSL_PROTOCOL
@@ -331,7 +394,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * file. It is required property when [[SSL_ENABLED]] is set to {@code
    * true}.
    */
-  private[kafka] val SSL_KEY_PASSWORD: Config = Config(
+  private[kafka] val SSL_KEY_PASSWORD = Config[String](
     "SSL_KEY_PASSWORD",
     SslConfigs.SSL_KEY_PASSWORD_CONFIG,
     ""
@@ -343,7 +406,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * It the store password for the keystore file. It is required
    * property when [[SSL_ENABLED]] is set to {@code true}.
    */
-  private[kafka] val SSL_KEYSTORE_PASSWORD: Config = Config(
+  private[kafka] val SSL_KEYSTORE_PASSWORD = Config[String](
     "SSL_KEYSTORE_PASSWORD",
     SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG,
     ""
@@ -356,7 +419,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * property when [[SSL_ENABLED]] is set to {@code true} and can be
    * used for two-way authentication for the clients.
    */
-  private[kafka] val SSL_KEYSTORE_LOCATION: Config = Config(
+  private[kafka] val SSL_KEYSTORE_LOCATION = Config[String](
     "SSL_KEYSTORE_LOCATION",
     SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG,
     ""
@@ -368,7 +431,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * It is the password for the truststore file, and required property
    * when [[SSL_ENABLED]] is set to {@code true}.
    */
-  private[kafka] val SSL_TRUSTSTORE_PASSWORD: Config = Config(
+  private[kafka] val SSL_TRUSTSTORE_PASSWORD = Config[String](
     "SSL_TRUSTSTORE_PASSWORD",
     SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG,
     ""
@@ -380,7 +443,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * It is the location of the truststore file, and required property
    * when [[SSL_ENABLED]] is set to {@code true}.
    */
-  private[kafka] val SSL_TRUSTSTORE_LOCATION: Config = Config(
+  private[kafka] val SSL_TRUSTSTORE_LOCATION = Config[String](
     "SSL_TRUSTSTORE_LOCATION",
     SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG,
     ""
@@ -395,7 +458,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * is set to {@code true}. Default value is
    * [[SslConfigs.DEFAULT_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM]].
    */
-  private[kafka] val SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: Config = Config(
+  private[kafka] val SSL_ENDPOINT_IDENTIFICATION_ALGORITHM = Config[String](
     "SSL_ENDPOINT_IDENTIFICATION_ALGORITHM",
     SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG,
     SslConfigs.DEFAULT_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
