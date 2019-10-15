@@ -34,9 +34,9 @@ final case class AzureAdlsBucket(path: String, params: StorageProperties) extend
     validate()
 
     val conf = new Configuration()
-    val clientId = properties.getAs[String](AZURE_CLIENT_ID)
-    val clientSecret = properties.getAs[String](AZURE_CLIENT_SECRET)
-    val directoryId = properties.getAs[String](AZURE_DIRECTORY_ID)
+    val clientId = properties.getString(AZURE_CLIENT_ID)
+    val clientSecret = properties.getString(AZURE_CLIENT_SECRET)
+    val directoryId = properties.getString(AZURE_DIRECTORY_ID)
     val tokenEndpoint = s"https://login.microsoftonline.com/$directoryId/oauth2/token"
     conf.set("fs.adl.impl", classOf[org.apache.hadoop.fs.adl.AdlFileSystem].getName)
     conf.set("fs.AbstractFileSystem.adl.impl", classOf[org.apache.hadoop.fs.adl.Adl].getName)

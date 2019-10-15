@@ -23,7 +23,7 @@ class StorageProperties(private val properties: Map[String, String])
    * stored.
    */
   final def getStoragePath(): String =
-    getAs[String](BUCKET_PATH)
+    getString(BUCKET_PATH)
 
   /**
    * Returns the storage path scheme.
@@ -36,7 +36,7 @@ class StorageProperties(private val properties: Map[String, String])
 
   /** Returns the [[FileFormat]] file format. */
   final def getFileFormat(): FileFormat =
-    FileFormat(getAs[String](DATA_FORMAT))
+    FileFormat(getString(DATA_FORMAT))
 
   /**
    * Returns the number of partitions provided as user property.
@@ -46,15 +46,10 @@ class StorageProperties(private val properties: Map[String, String])
   final def getParallelism(defaultValue: => String): String =
     get(PARALLELISM).fold(defaultValue)(identity)
 
-  final def getAs[T](key: String): T =
-    get(key).fold {
-      throw new IllegalArgumentException(s"Please provide a value for the $key property!")
-    }(_.asInstanceOf[T])
-
   /**
    * Returns a string value of key-value property pairs.
    *
-   * The resulting string is sorted by keys ordering.
+   * The returned string is sorted by keys ordering.
    */
   @SuppressWarnings(Array("org.wartremover.warts.Overloading"))
   final def mkString(): String =

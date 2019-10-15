@@ -30,18 +30,18 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
   import KafkaConsumerProperties._
 
   final def getBootstrapServers(): String =
-    getAs[String](BOOTSTRAP_SERVERS.userPropertyName)
+    getString(BOOTSTRAP_SERVERS.userPropertyName)
 
   final def getGroupId(): String =
     get(GROUP_ID.userPropertyName).fold(GROUP_ID.defaultValue)(identity)
 
   /** Returns the user provided topic name. */
   final def getTopics(): String =
-    getAs[String](TOPICS)
+    getString(TOPICS)
 
   /** Returns the user provided Exasol table name. */
   final def getTableName(): String =
-    getAs[String](TABLE_NAME)
+    getString(TABLE_NAME)
 
   final def getPollTimeoutMs(): Long =
     get(POLL_TIMEOUT_MS).fold(POLL_TIMEOUT_MS_DEFAULT_VALUE)(_.asInstanceOf[Long])
@@ -62,7 +62,7 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
 
   /** Returns the user provided schema registry url property. */
   final def getSchemaRegistryUrl(): String =
-    getAs[String](SCHEMA_REGISTRY_URL.userPropertyName)
+    getString(SCHEMA_REGISTRY_URL.userPropertyName)
 
   /**
    * Returns {@code MAX_POLL_RECORDS} property value if provided,
@@ -91,35 +91,35 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
    * Returns the user provided {@code SSL_KEY_PASSWORD} property value.
    */
   final def getSSLKeyPassword(): String =
-    getAs[String](SSL_KEY_PASSWORD.userPropertyName)
+    getString(SSL_KEY_PASSWORD.userPropertyName)
 
   /**
    * Returns the user provided {@code SSL_KEYSTORE_PASSWORD} property
    * value.
    */
   final def getSSLKeystorePassword(): String =
-    getAs[String](SSL_KEYSTORE_PASSWORD.userPropertyName)
+    getString(SSL_KEYSTORE_PASSWORD.userPropertyName)
 
   /**
    * Returns the user provided {@code SSL_KEYSTORE_LOCATION} property
    * value.
    */
   final def getSSLKeystoreLocation(): String =
-    getAs[String](SSL_KEYSTORE_LOCATION.userPropertyName)
+    getString(SSL_KEYSTORE_LOCATION.userPropertyName)
 
   /**
    * Returns the user provided {@code SSL_TRUSTSTORE_PASSWORD} property
    * value.
    */
   final def getSSLTruststorePassword(): String =
-    getAs[String](SSL_TRUSTSTORE_PASSWORD.userPropertyName)
+    getString(SSL_TRUSTSTORE_PASSWORD.userPropertyName)
 
   /**
    * Returns the user provided {@code SSL_TRUSTSTORE_LOCATION} property
    * value.
    */
   final def getSSLTruststoreLocation(): String =
-    getAs[String](SSL_TRUSTSTORE_LOCATION.userPropertyName)
+    getString(SSL_TRUSTSTORE_LOCATION.userPropertyName)
 
   /**
    * Returns {@code SSL_ENDPOINT_IDENTIFICATION_ALGORITHM} property
@@ -170,11 +170,6 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
     }
     props.toMap.asInstanceOf[Map[String, AnyRef]].asJava
   }
-
-  final def getAs[T](key: String): T =
-    get(key).fold {
-      throw new IllegalArgumentException(s"Please provide a value for the $key property!")
-    }(_.asInstanceOf[T])
 
   /**
    * Returns a string value of key-value property pairs.

@@ -67,6 +67,21 @@ class AbstractPropertiesTest extends FunSuite with BeforeAndAfterEach {
     assert(BaseProperties(properties).get("key") === Option("value"))
   }
 
+  test("getString returns value as String") {
+    properties = Map("key" -> "value")
+    assert(BaseProperties(properties).getString("key") === "value")
+  }
+
+  test("getString throws if key does not exits") {
+    val key = "key"
+    val thrown = intercept[IllegalArgumentException] {
+      BaseProperties(properties).getString(key)
+    }
+    assert(
+      thrown.getMessage === s"Please provide a value for the $key property!"
+    )
+  }
+
   test("size returns zero by default") {
     assert(BaseProperties(properties).size() === 0)
   }

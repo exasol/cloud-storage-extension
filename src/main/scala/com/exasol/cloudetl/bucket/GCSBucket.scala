@@ -35,10 +35,10 @@ final case class GCSBucket(path: String, params: StorageProperties) extends Buck
     val conf = new Configuration()
     conf.set("fs.gs.impl", classOf[com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem].getName)
     conf.setBoolean("fs.gs.auth.service.account.enable", true)
-    conf.set("fs.gs.project.id", properties.getAs[String](GCS_PROJECT_ID))
+    conf.set("fs.gs.project.id", properties.getString(GCS_PROJECT_ID))
     conf.set(
       "fs.gs.auth.service.account.json.keyfile",
-      properties.getAs[String](GCS_KEYFILE_PATH)
+      properties.getString(GCS_KEYFILE_PATH)
     )
 
     conf

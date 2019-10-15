@@ -32,8 +32,8 @@ final case class AzureBlobBucket(path: String, params: StorageProperties) extend
     validate()
 
     val conf = new Configuration()
-    val accountName = properties.getAs[String](AZURE_ACCOUNT_NAME)
-    val accountSecretKey = properties.getAs[String](AZURE_SECRET_KEY)
+    val accountName = properties.getString(AZURE_ACCOUNT_NAME)
+    val accountSecretKey = properties.getString(AZURE_SECRET_KEY)
     conf.set("fs.azure", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
     conf.set("fs.wasb.impl", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
     conf.set("fs.wasbs.impl", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)

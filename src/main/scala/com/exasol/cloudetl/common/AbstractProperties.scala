@@ -49,6 +49,17 @@ abstract class AbstractProperties(private val properties: Map[String, String]) {
     properties.get(key)
 
   /**
+   * Returns the value of the key as a String.
+   *
+   * @throws java.lang.IllegalArgumentException If key does not exist.
+   */
+  @throws[IllegalArgumentException]("If key does not exist.")
+  final def getString(key: String): String =
+    get(key).fold {
+      throw new IllegalArgumentException(s"Please provide a value for the $key property!")
+    }(identity)
+
+  /**
    * Returns the count of the key-value properties.
    */
   final def size(): Int =

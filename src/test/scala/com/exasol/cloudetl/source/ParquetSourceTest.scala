@@ -37,7 +37,7 @@ class ParquetSourceTest extends SourceTest {
     assert(getRecordsCount(filePath) === 500)
   }
 
-  test("stream reaturns count of records from PARQUET files") {
+  test("stream returns count of records from PARQUET files") {
     val filePattern = Paths.get(s"$resourceDir/sales_positions*.parquet")
     assert(getRecordsCount(filePattern) === 1005)
   }
