@@ -4,6 +4,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.{Map => MMap}
 
 import com.exasol.cloudetl.common.AbstractProperties
+import com.exasol.cloudetl.common.CommonProperties
 
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
@@ -189,18 +190,8 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
 /**
  * A companion object for [[KafkaConsumerProperties]] class.
  */
-object KafkaConsumerProperties {
-
-  /**
-   * A line separator string used for creating key-value property
-   * strings.
-   */
-  private[kafka] final val PROPERTY_SEPARATOR: String = ";"
-
-  /**
-   * A default separator string used for concatenate key-value pairs.
-   */
-  private[kafka] final val KEY_VALUE_SEPARATOR: String = " -> "
+@SuppressWarnings(Array("org.wartremover.warts.Overloading"))
+object KafkaConsumerProperties extends CommonProperties {
 
   /**
    * A required property key name for a Kafka topic name to import data
@@ -423,24 +414,10 @@ object KafkaConsumerProperties {
     new KafkaConsumerProperties(params)
 
   /**
-   * Creates [[KafkaConsumerProperties]] from properly separated string.
+   * Returns [[KafkaConsumerProperties]] from properly separated string.
    */
-  def fromString(string: String): KafkaConsumerProperties = {
-    if (!string.contains(PROPERTY_SEPARATOR)) {
-      throw new IllegalArgumentException(
-        s"The input string is not separated by '$PROPERTY_SEPARATOR'!"
-      )
-    }
-    val properties = string
-      .split(PROPERTY_SEPARATOR)
-      .map { word =>
-        val pairs = word.split(KEY_VALUE_SEPARATOR)
-        pairs(0) -> pairs(1)
-      }
-      .toMap
-
-    new KafkaConsumerProperties(properties)
-  }
+  def apply(string: String): KafkaConsumerProperties =
+    apply(mapFromString(string))
 
   /**
    * Creates a [[org.apache.kafka.clients.consumer.KafkaConsumer]] from

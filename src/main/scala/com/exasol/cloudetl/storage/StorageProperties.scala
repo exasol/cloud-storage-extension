@@ -3,6 +3,7 @@ package com.exasol.cloudetl.storage
 import java.net.URI
 
 import com.exasol.cloudetl.common.AbstractProperties
+import com.exasol.cloudetl.common.CommonProperties
 
 /**
  * A specific implementation of
@@ -64,18 +65,8 @@ class StorageProperties(private val properties: Map[String, String])
 /**
  * A companion object for [[StorageProperties]] class.
  */
-object StorageProperties {
-
-  /**
-   * A line separator string used for creating key-value property
-   * strings.
-   */
-  private[storage] final val PROPERTY_SEPARATOR: String = ";"
-
-  /**
-   * A default separator string used for concatenate key-value pairs.
-   */
-  private[storage] final val KEY_VALUE_SEPARATOR: String = " -> "
+@SuppressWarnings(Array("org.wartremover.warts.Overloading"))
+object StorageProperties extends CommonProperties {
 
   /** A required property key name for a bucket path. */
   private[storage] final val BUCKET_PATH: String = "BUCKET_PATH"
@@ -86,27 +77,12 @@ object StorageProperties {
   /** An optional property key name for the parallelism. */
   private[storage] final val PARALLELISM: String = "PARALLELISM"
 
+  /** Returns [[StorageProperties]] from key-value pairs map. */
   def apply(params: Map[String, String]): StorageProperties =
     new StorageProperties(params)
 
-  /**
-   * Creates [[StorageProperties]] from properly separated string.
-   */
-  def fromString(string: String): StorageProperties = {
-    if (!string.contains(PROPERTY_SEPARATOR)) {
-      throw new IllegalArgumentException(
-        s"The input string is not separated by '$PROPERTY_SEPARATOR'!"
-      )
-    }
-    val properties = string
-      .split(PROPERTY_SEPARATOR)
-      .map { word =>
-        val pairs = word.split(KEY_VALUE_SEPARATOR)
-        pairs(0) -> pairs(1)
-      }
-      .toMap
-
-    new StorageProperties(properties)
-  }
+  /** Returns [[StorageProperties]] from properly separated string. */
+  def apply(string: String): StorageProperties =
+    apply(mapFromString(string))
 
 }

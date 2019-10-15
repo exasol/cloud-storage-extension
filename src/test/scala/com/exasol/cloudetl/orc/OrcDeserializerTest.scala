@@ -13,7 +13,7 @@ class OrcDeserializerTest extends FunSuite {
     assert(thrown.getMessage === "Orc list type is not supported.")
   }
 
-  test("apply throws f orc type is a map") {
+  test("apply throws if orc type is a map") {
     val orcMap =
       TypeDescription.createMap(TypeDescription.createString, TypeDescription.createString)
     val thrown = intercept[IllegalArgumentException] {

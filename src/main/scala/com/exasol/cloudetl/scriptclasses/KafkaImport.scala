@@ -17,7 +17,7 @@ object KafkaImport extends LazyLogging {
 
   @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
-    val kafkaProperties = KafkaConsumerProperties.fromString(iterator.getString(0))
+    val kafkaProperties = KafkaConsumerProperties(iterator.getString(0))
     val partitionId = iterator.getInteger(1)
     val partitionOffset = iterator.getLong(2)
     val partitionNextOffset = partitionOffset + 1L

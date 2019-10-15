@@ -57,6 +57,15 @@ class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach {
     assert(thrown.getMessage === s"Unsupported file format $fileFormat!")
   }
 
+  test("getParallelism returns user provided value") {
+    properties = Map(StorageProperties.PARALLELISM -> "2")
+    assert(BaseProperties(properties).getParallelism("default") === "2")
+  }
+
+  test("getParallelism returns default value if parallelism is not set") {
+    assert(BaseProperties(properties).getParallelism("nproc()") === "nproc()")
+  }
+
   test("mkString returns empty string by default") {
     val str = BaseProperties(properties).mkString()
     assert(str.isEmpty === true)
@@ -69,18 +78,24 @@ class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach {
     assert(BaseProperties(properties).mkString() === expected)
   }
 
-  test("fromString throws if input string does not contain separator") {
+  test("apply(map) returns correct StorageProperties") {
+    properties = Map("a" -> "b")
+    val baseProperty = BaseProperties(properties)
+    assert(StorageProperties(properties) === baseProperty)
+  }
+
+  test("apply(string) throws if input string does not contain separator") {
     val thrown = intercept[IllegalArgumentException] {
-      StorageProperties.fromString("")
+      StorageProperties("")
     }
     assert(thrown.getMessage === s"The input string is not separated by ';'!")
   }
 
-  test("fromString returns correct StorageProperties") {
+  test("apply(string) returns correct StorageProperties") {
     properties = Map("k3" -> "v3", "k2" -> "v2")
     val baseProperty = BaseProperties(properties)
     val mkStringResult = baseProperty.mkString()
-    assert(StorageProperties.fromString(mkStringResult) === baseProperty)
+    assert(StorageProperties(mkStringResult) === baseProperty)
   }
 
   private[this] case class BaseProperties(val params: Map[String, String])
