@@ -2,8 +2,6 @@ package com.exasol.cloudetl.bucket
 
 import java.net.URI
 
-import scala.collection.SortedMap
-
 import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.cloudetl.util.FileSystemUtil
 
@@ -113,86 +111,4 @@ object Bucket extends LazyLogging {
   def apply(params: Map[String, String]): Bucket =
     apply(StorageProperties(params))
 
-  /**
-   * Checks whether the optional parameter is available. If it is not
-   * available returns the default value.
-   *
-   * @param params The parameters key value map
-   * @param key The optional parameter key
-   * @param defaultValue The default value to return if key not
-   *        available
-   * @return The the value for the optional key if it exists; otherwise
-   *         return the default value
-   */
-  def optionalParameter(params: Map[String, String], key: String, defaultValue: String): String =
-    params.get(key).fold(defaultValue)(identity)
-
-  /**
-   * Checks whether the optional parameter is available. If it is not
-   * available returns the default value.
-   *
-   * @param params The parameters key value map
-   * @param key The optional parameter key
-   * @param defaultValue The default value to return if key not
-   *        available
-   * @return The the value for the optional key if it exists; otherwise
-   *         return the default value
-   */
-  def optionalIntParameter(params: Map[String, String], key: String, defaultValue: Int): Int =
-    params.get(key).map(_.toInt).fold(defaultValue)(identity)
-
-  /**
-   * Converts key value pair strings into a single string with
-   * separators in between.
-   *
-   * In the resulting string, key value pairs will be sorted by the
-   * keys.
-   *
-   * @param params The key value parameters map
-   * @return A single string with separators
-   */
-  def keyValueMapToString(params: Map[String, String]): String =
-    (SortedMap.empty[String, String] ++ params)
-      .map { case (k, v) => s"$k$KEY_VALUE_SEPARATOR$v" }
-      .mkString(PARAMETER_SEPARATOR)
-
-  /**
-   * This is opposite of [[Bucket#keyValueMapToString]], given a string
-   * with separators returns a key value pairs map.
-   *
-   * @param params The key value parameters map
-   * @return A single string with separators
-   */
-  def keyValueStringToMap(keyValueString: String): Map[String, String] =
-    keyValueString
-      .split(PARAMETER_SEPARATOR)
-      .map { word =>
-        val kv = word.split(KEY_VALUE_SEPARATOR)
-        kv(0) -> kv(1)
-      }
-      .toMap
-
-  /**
-   * Checks if the sequence of keys are available in the key value
-   * parameter map.
-   */
-  private[bucket] def validate(params: Map[String, String], keys: Seq[String]): Unit =
-    keys.foreach { key =>
-      requiredParam(params, key)
-    }
-
-  /**
-   * Checks if the provided key is available in the key value parameter
-   * map. If it does not exist, throws an
-   * [[java.lang.IllegalArgumentException]] exception.
-   */
-  def requiredParam(params: Map[String, String], key: String): String = {
-    val opt = params.get(key)
-    opt.fold {
-      throw new IllegalArgumentException(s"The required parameter $key is not defined!")
-    }(identity)
-  }
-
-  private[this] final val PARAMETER_SEPARATOR: String = ";"
-  private[this] final val KEY_VALUE_SEPARATOR: String = ":=:"
 }
