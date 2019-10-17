@@ -64,7 +64,7 @@ steps below to submit your patches.
 - **Make sure everything is working**, run `./scripts/ci.sh`
 - If everything is okay, commit and push to your fork
 - [Submit a pull request][submit-pr]
-- Let's work together to get your changes reviewed
+- Let us work together to get your changes reviewed
 - Merge into master or development branches
 
 If your commit fixes any particular issue, please specify it in your commit
