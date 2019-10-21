@@ -15,7 +15,7 @@ trait PathTest extends FunSuite with BeforeAndAfterEach with MockitoSugar {
 
   private[scriptclasses] val schema = "myDBSchema"
 
-  private[scriptclasses] val properties = Map(
+  private[scriptclasses] var properties = Map(
     "BUCKET_PATH" -> "s3a://my_bucket/folder1/*",
     "DATA_FORMAT" -> "PARQUET",
     "S3_ENDPOINT" -> "s3.eu-central-1.com",
@@ -27,7 +27,8 @@ trait PathTest extends FunSuite with BeforeAndAfterEach with MockitoSugar {
   private[scriptclasses] var importSpec: ExaImportSpecification = _
   private[scriptclasses] var exportSpec: ExaExportSpecification = _
 
-  override final def beforeEach(): Unit = {
+  @SuppressWarnings(Array("org.wartremover.contrib.warts.UnsafeInheritance"))
+  override def beforeEach(): Unit = {
     metadata = mock[ExaMetadata]
     importSpec = mock[ExaImportSpecification]
     exportSpec = mock[ExaExportSpecification]

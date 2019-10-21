@@ -1,6 +1,7 @@
 package com.exasol.cloudetl.sbt
 
 import sbt._
+import sbt.librarymanagement.InclExclRule
 
 /** A list of required dependencies */
 object Dependencies {
@@ -42,8 +43,19 @@ object Dependencies {
   /** Test dependencies only required in `test` */
   private val TestDependencies: Seq[ModuleID] = Seq(
     "org.scalatest" %% "scalatest" % "3.0.5",
-    "org.mockito" % "mockito-core" % "2.23.4"
+    "org.mockito" % "mockito-core" % "2.23.4",
+    "io.github.embeddedkafka" %% "embedded-kafka-schema-registry" % "5.3.0"
   ).map(_ % Test)
+
+  lazy val ExcludedDependencies: Seq[InclExclRule] = Seq(
+    ExclusionRule("org.ow2.asm", "asm"),
+    ExclusionRule("javax.ws.rs", "jsr311-api"),
+    ExclusionRule("com.sun.jersey", "jersey-core"),
+    ExclusionRule("com.sun.jersey", "jersey-server"),
+    ExclusionRule("com.sun.jersey", "jersey-json"),
+    ExclusionRule("javax.servlet", "servlet-api"),
+    ExclusionRule("javax.servlet.jsp", "jsp-api")
+  )
 
   /** The list of all dependencies for the connector */
   lazy val AllDependencies: Seq[ModuleID] = CoreDependencies ++ TestDependencies

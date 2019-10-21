@@ -1,7 +1,5 @@
 package com.exasol.cloudetl.kafka
 
-import org.apache.avro.generic.GenericRecord
-import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FunSuite
 
@@ -242,20 +240,43 @@ class KafkaConsumerPropertiesTest extends FunSuite with BeforeAndAfterEach {
     assert(BaseProperties(properties).getSSLEndpointIdentificationAlgorithm() === "https")
   }
 
-  test("build throws if required properties are not provided") {
+  test("build throws if required BOOTSTRAP_SERVERS property is not provided") {
     val thrown = intercept[IllegalArgumentException] {
       BaseProperties(properties).build()
     }
     assert(thrown.getMessage === errorMessage("BOOTSTRAP_SERVERS"))
   }
 
-  ignore("build returns a KafkaConsumer[String, GenericRecord]") {
-    properties = Map(
-      "BOOTSTRAP_SERVERS" -> "kafka01.internal:9092",
-      "SCHEMA_REGISTRY_URL" -> "https://schema-registry.internal.com"
+  test("build throws if required SCHEMA_REGISTRY_URL property is not provided") {
+    properties = Map("BOOTSTRAP_SERVERS" -> "kafka01.internal:9092")
+    val thrown = intercept[IllegalArgumentException] {
+      BaseProperties(properties).build()
+    }
+    assert(thrown.getMessage === errorMessage("SCHEMA_REGISTRY_URL"))
+  }
+
+  test("getProperties returns Java map properties") {
+    import KafkaConsumerProperties._
+    val testData = Map(
+      BOOTSTRAP_SERVERS -> "kafka.broker.com:9092",
+      SCHEMA_REGISTRY_URL -> "http://schema-registry.com:8080",
+      SECURITY_PROTOCOL -> "SSL",
+      SSL_KEY_PASSWORD -> "sslKeyPass",
+      SSL_KEYSTORE_PASSWORD -> "sslKeystorePass",
+      SSL_KEYSTORE_LOCATION -> "/bucket/keystore.JKS",
+      SSL_TRUSTSTORE_PASSWORD -> "sslTruststorePass",
+      SSL_TRUSTSTORE_LOCATION -> "/bucket/truststore.JKS"
     )
-    val kafkaConsumer = BaseProperties(properties).build()
-    assert(kafkaConsumer.isInstanceOf[KafkaConsumer[String, GenericRecord]])
+    properties = Map("SSL_ENABLED" -> "true") ++ testData.map {
+      case (key, value) =>
+        key.userPropertyName -> value
+    }
+    val javaProps = BaseProperties(properties).getProperties()
+    assert(javaProps.isInstanceOf[java.util.Map[String, Object]])
+    testData.foreach {
+      case (key, value) =>
+        assert(javaProps.get(key.kafkaPropertyName) === value)
+    }
   }
 
   private[this] case class BaseProperties(val params: Map[String, String])

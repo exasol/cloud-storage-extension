@@ -247,13 +247,13 @@ object KafkaConsumerProperties extends CommonProperties {
    * An optional property key name to set SSL secure connections to
    * Kafka cluster.
    */
-  private[kafka] val SSL_ENABLED: String = "SSL_ENABLED"
+  private[kafka] final val SSL_ENABLED: String = "SSL_ENABLED"
 
   /**
    * A number of milliseconds to wait for Kafka consumer {@code poll} to
    * return any data.
    */
-  private[kafka] final val POLL_TIMEOUT_MS = Config[Long](
+  private[kafka] final val POLL_TIMEOUT_MS: Config[Long] = Config[Long](
     "POLL_TIMEOUT_MS",
     "",
     30000L // scalastyle:ignore magic.number
@@ -270,7 +270,7 @@ object KafkaConsumerProperties extends CommonProperties {
    *
    * See [[MAX_RECORDS_PER_RUN]].
    */
-  private[kafka] final val MIN_RECORDS_PER_RUN = Config[Int](
+  private[kafka] final val MIN_RECORDS_PER_RUN: Config[Int] = Config[Int](
     "MIN_RECORDS_PER_RUN",
     "",
     100 // scalastyle:ignore magic.number
@@ -286,7 +286,7 @@ object KafkaConsumerProperties extends CommonProperties {
    *
    * See [[MIN_RECORDS_PER_RUN]].
    */
-  private[kafka] final val MAX_RECORDS_PER_RUN = Config[Int](
+  private[kafka] final val MAX_RECORDS_PER_RUN: Config[Int] = Config[Int](
     "MAX_RECORDS_PER_RUN",
     "",
     1000000 // scalastyle:ignore magic.number
@@ -306,7 +306,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * by default, since we manage the offset commits ourselves in the
    * Exasol table.
    */
-  private[kafka] val ENABLE_AUTO_COMMIT = Config[String](
+  private[kafka] final val ENABLE_AUTO_COMMIT: Config[String] = Config[String](
     "ENABLE_AUTO_COMMIT",
     ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,
     "false"
@@ -320,7 +320,7 @@ object KafkaConsumerProperties extends CommonProperties {
    *
    * It is a required property that should be provided by the user.
    */
-  private[kafka] val BOOTSTRAP_SERVERS = Config[String](
+  private[kafka] final val BOOTSTRAP_SERVERS: Config[String] = Config[String](
     "BOOTSTRAP_SERVERS",
     ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
     ""
@@ -332,7 +332,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * It is a unique string that identifies the consumer group this
    * consumer belongs to.
    */
-  private[kafka] val GROUP_ID = Config[String](
+  private[kafka] final val GROUP_ID: Config[String] = Config[String](
     "GROUP_ID",
     ConsumerConfig.GROUP_ID_CONFIG,
     "EXASOL_KAFKA_UDFS_CONSUMERS"
@@ -344,7 +344,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * It is the maximum number of records returned in a single call to
    * poll() function. Default value is `500`.
    */
-  private[kafka] val MAX_POLL_RECORDS = Config[String](
+  private[kafka] final val MAX_POLL_RECORDS: Config[String] = Config[String](
     "MAX_POLL_RECORDS",
     ConsumerConfig.MAX_POLL_RECORDS_CONFIG,
     "500"
@@ -356,7 +356,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * It is the minimum amount of data the server should return for a
    * fetch request. Default value is `1`.
    */
-  private[kafka] val FETCH_MIN_BYTES = Config[String](
+  private[kafka] final val FETCH_MIN_BYTES: Config[String] = Config[String](
     "FETCH_MIN_BYTES",
     ConsumerConfig.FETCH_MIN_BYTES_CONFIG,
     "1"
@@ -368,7 +368,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * The Avro value deserializer will be used when user sets this
    * property value.
    */
-  private[kafka] val SCHEMA_REGISTRY_URL = Config[String](
+  private[kafka] final val SCHEMA_REGISTRY_URL: Config[String] = Config[String](
     "SCHEMA_REGISTRY_URL",
     AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG,
     ""
@@ -381,7 +381,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * [[SSL_ENABLED]] is set to {@code true}. Default value is
    * [[SslConfigs.DEFAULT_SSL_PROTOCOL]].
    */
-  private[kafka] val SECURITY_PROTOCOL = Config[String](
+  private[kafka] final val SECURITY_PROTOCOL: Config[String] = Config[String](
     "SECURITY_PROTOCOL",
     CommonClientConfigs.SECURITY_PROTOCOL_CONFIG,
     SslConfigs.DEFAULT_SSL_PROTOCOL
@@ -394,7 +394,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * file. It is required property when [[SSL_ENABLED]] is set to {@code
    * true}.
    */
-  private[kafka] val SSL_KEY_PASSWORD = Config[String](
+  private[kafka] final val SSL_KEY_PASSWORD: Config[String] = Config[String](
     "SSL_KEY_PASSWORD",
     SslConfigs.SSL_KEY_PASSWORD_CONFIG,
     ""
@@ -406,7 +406,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * It the store password for the keystore file. It is required
    * property when [[SSL_ENABLED]] is set to {@code true}.
    */
-  private[kafka] val SSL_KEYSTORE_PASSWORD = Config[String](
+  private[kafka] final val SSL_KEYSTORE_PASSWORD: Config[String] = Config[String](
     "SSL_KEYSTORE_PASSWORD",
     SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG,
     ""
@@ -419,7 +419,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * property when [[SSL_ENABLED]] is set to {@code true} and can be
    * used for two-way authentication for the clients.
    */
-  private[kafka] val SSL_KEYSTORE_LOCATION = Config[String](
+  private[kafka] final val SSL_KEYSTORE_LOCATION: Config[String] = Config[String](
     "SSL_KEYSTORE_LOCATION",
     SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG,
     ""
@@ -431,7 +431,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * It is the password for the truststore file, and required property
    * when [[SSL_ENABLED]] is set to {@code true}.
    */
-  private[kafka] val SSL_TRUSTSTORE_PASSWORD = Config[String](
+  private[kafka] final val SSL_TRUSTSTORE_PASSWORD: Config[String] = Config[String](
     "SSL_TRUSTSTORE_PASSWORD",
     SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG,
     ""
@@ -443,7 +443,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * It is the location of the truststore file, and required property
    * when [[SSL_ENABLED]] is set to {@code true}.
    */
-  private[kafka] val SSL_TRUSTSTORE_LOCATION = Config[String](
+  private[kafka] final val SSL_TRUSTSTORE_LOCATION: Config[String] = Config[String](
     "SSL_TRUSTSTORE_LOCATION",
     SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG,
     ""
@@ -458,7 +458,7 @@ object KafkaConsumerProperties extends CommonProperties {
    * is set to {@code true}. Default value is
    * [[SslConfigs.DEFAULT_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM]].
    */
-  private[kafka] val SSL_ENDPOINT_IDENTIFICATION_ALGORITHM = Config[String](
+  private[kafka] final val SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: Config[String] = Config[String](
     "SSL_ENDPOINT_IDENTIFICATION_ALGORITHM",
     SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG,
     SslConfigs.DEFAULT_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
