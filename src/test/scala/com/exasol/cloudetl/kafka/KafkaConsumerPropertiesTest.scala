@@ -158,6 +158,25 @@ class KafkaConsumerPropertiesTest extends FunSuite with BeforeAndAfterEach {
     assert(BaseProperties(properties).getFetchMinBytes() === "1")
   }
 
+  test("getFetchMaxBytes returns maximum fetch bytes property value") {
+    properties = Map("FETCH_MAX_BYTES" -> "27")
+    assert(BaseProperties(properties).getFetchMaxBytes() === "27")
+  }
+
+  test("getFetchMaxBytes returns default value if property is not set") {
+    // intentionally hardcoded, get alert if it changes.
+    assert(BaseProperties(properties).getFetchMaxBytes() === "52428800")
+  }
+
+  test("getMaxPartitionFetchBytes returns maximum partition fetch bytes property value") {
+    properties = Map("MAX_PARTITION_FETCH_BYTES" -> "4")
+    assert(BaseProperties(properties).getMaxPartitionFetchBytes() === "4")
+  }
+
+  test("getMaxPartitionFetchBytes returns default value if property is not set") {
+    assert(BaseProperties(properties).getMaxPartitionFetchBytes() === "1048576")
+  }
+
   test("getSecurityProtocol returns user provided security protocol property value") {
     properties = Map("SECURITY_PROTOCOL" -> "SSL")
     assert(BaseProperties(properties).getSecurityProtocol() === "SSL")
@@ -257,7 +276,7 @@ class KafkaConsumerPropertiesTest extends FunSuite with BeforeAndAfterEach {
 
   test("getProperties returns Java map properties") {
     import KafkaConsumerProperties._
-    val testData = Map(
+    val requiredProperties = Map(
       BOOTSTRAP_SERVERS -> "kafka.broker.com:9092",
       SCHEMA_REGISTRY_URL -> "http://schema-registry.com:8080",
       SECURITY_PROTOCOL -> "SSL",
@@ -267,13 +286,22 @@ class KafkaConsumerPropertiesTest extends FunSuite with BeforeAndAfterEach {
       SSL_TRUSTSTORE_PASSWORD -> "sslTruststorePass",
       SSL_TRUSTSTORE_LOCATION -> "/bucket/truststore.JKS"
     )
-    properties = Map("SSL_ENABLED" -> "true") ++ testData.map {
+    val optionalProperties = Map(
+      ENABLE_AUTO_COMMIT -> "false",
+      GROUP_ID -> "EXASOL_KAFKA_UDFS_CONSUMERS",
+      MAX_POLL_RECORDS -> "500",
+      FETCH_MIN_BYTES -> "1",
+      FETCH_MAX_BYTES -> "52428800",
+      MAX_PARTITION_FETCH_BYTES -> "1048576"
+    )
+
+    properties = Map("SSL_ENABLED" -> "true") ++ requiredProperties.map {
       case (key, value) =>
         key.userPropertyName -> value
     }
     val javaProps = BaseProperties(properties).getProperties()
     assert(javaProps.isInstanceOf[java.util.Map[String, Object]])
-    testData.foreach {
+    (requiredProperties ++ optionalProperties).foreach {
       case (key, value) =>
         assert(javaProps.get(key.kafkaPropertyName) === value)
     }

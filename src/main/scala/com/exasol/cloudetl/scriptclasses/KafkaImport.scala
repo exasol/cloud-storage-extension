@@ -61,7 +61,7 @@ object KafkaImport extends LazyLogging {
           iterator.emit(allColumns: _*)
         }
         logger.info(
-          s"Emitted total=$recordsCount records in node=$nodeId, vm=$vmId, partition=$partitionId"
+          s"Emitted total=$total records in node=$nodeId, vm=$vmId, partition=$partitionId"
         )
 
       } while (recordsCount >= minRecords && total < maxRecords)

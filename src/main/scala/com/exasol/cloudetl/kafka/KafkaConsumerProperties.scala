@@ -107,6 +107,21 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
   final def getFetchMinBytes(): String =
     get(FETCH_MIN_BYTES.userPropertyName).fold(FETCH_MIN_BYTES.defaultValue)(identity)
 
+  /**
+   * Returns {@code FETCH_MAX_BYTES} property value if provided,
+   * otherwise returns the default value.
+   */
+  final def getFetchMaxBytes(): String =
+    get(FETCH_MAX_BYTES.userPropertyName).fold(FETCH_MAX_BYTES.defaultValue)(identity)
+
+  /**
+   * Returns {@code MAX_PARTITION_FETCH_BYTES} property value if
+   * provided, otherwise returns the default value.
+   */
+  final def getMaxPartitionFetchBytes(): String =
+    get(MAX_PARTITION_FETCH_BYTES.userPropertyName)
+      .fold(MAX_PARTITION_FETCH_BYTES.defaultValue)(identity)
+
   // Secure Connection Related Properties
 
   /**
@@ -185,6 +200,8 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
     props.put(SCHEMA_REGISTRY_URL.kafkaPropertyName, getSchemaRegistryUrl())
     props.put(MAX_POLL_RECORDS.kafkaPropertyName, getMaxPollRecords())
     props.put(FETCH_MIN_BYTES.kafkaPropertyName, getFetchMinBytes())
+    props.put(FETCH_MAX_BYTES.kafkaPropertyName, getFetchMaxBytes())
+    props.put(MAX_PARTITION_FETCH_BYTES.kafkaPropertyName, getMaxPartitionFetchBytes())
     if (isSSLEnabled()) {
       props.put(SECURITY_PROTOCOL.kafkaPropertyName, getSecurityProtocol())
       props.put(SSL_KEY_PASSWORD.kafkaPropertyName, getSSLKeyPassword())
@@ -360,6 +377,33 @@ object KafkaConsumerProperties extends CommonProperties {
     "FETCH_MIN_BYTES",
     ConsumerConfig.FETCH_MIN_BYTES_CONFIG,
     "1"
+  )
+
+  /**
+   * This is the {@code fetch.max.bytes} configuration setting.
+   *
+   * It is the maximum amount of data the server should return for a
+   * fetch request. Default value is
+   * [[ConsumerConfig.DEFAULT_FETCH_MAX_BYTES]].
+   */
+  private[kafka] final val FETCH_MAX_BYTES: Config[String] = Config[String](
+    "FETCH_MAX_BYTES",
+    ConsumerConfig.FETCH_MAX_BYTES_CONFIG,
+    s"${ConsumerConfig.DEFAULT_FETCH_MAX_BYTES}"
+  )
+
+  /**
+   * This is the {@code max.partition.fetch.bytes} configuration
+   * setting.
+   *
+   * It is the maximum amount of data the server will return per
+   * partition. Default value is
+   * [[ConsumerConfig.DEFAULT_MAX_PARTITION_FETCH_BYTES]].
+   */
+  private[kafka] final val MAX_PARTITION_FETCH_BYTES: Config[String] = Config[String](
+    "MAX_PARTITION_FETCH_BYTES",
+    ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG,
+    s"${ConsumerConfig.DEFAULT_MAX_PARTITION_FETCH_BYTES}"
   )
 
   /**
