@@ -132,6 +132,22 @@ INTO SCRIPT ETL.EXPORT_PATH WITH
   PARALLELISM        = 'iproc()';
 ```
 
+Furthermore, you can use Shared Access Signature (SAS) token to access the Azure
+Blob Storage. In that case, you need to provide the Azure SAS token and
+container name as parameters.
+
+For example:
+```sql
+IMPORT INTO SALES_POSITIONS
+FROM SCRIPT ETL.IMPORT_PATH WITH
+  BUCKET_PATH          = 'wasbs://AZURE_CONTAINER_NAME@AZURE_ACCOUNT_NAME.blob.core.windows.net/orc/sales-positions/*'
+  DATA_FORMAT          = 'ORC'
+  AZURE_ACCOUNT_NAME   = 'AZURE_ACCOUNT_NAME'
+  AZURE_CONTAINER_NAME = 'AZURE_CONTAINER_NAME'
+  AZURE_SAS_TOKEN      = 'AZURE_SAS_TOKEN'
+  PARALLELISM          = 'nproc()';
+```
+
 ## Azure Data Lake (Gen1) Storage
 
 Similarly the following parameters and values are required in order to access
