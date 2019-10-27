@@ -44,7 +44,8 @@ object Dependencies {
   private val TestDependencies: Seq[ModuleID] = Seq(
     "org.scalatest" %% "scalatest" % "3.0.5",
     "org.mockito" % "mockito-core" % "2.23.4",
-    "io.github.embeddedkafka" %% "embedded-kafka-schema-registry" % "5.3.0"
+    "org.apache.kafka" %% "kafka" % "2.3.0" exclude ("org.slf4j", "slf4j-log4j12") exclude ("org.apache.kafka", "kafka-clients"),
+    "io.github.embeddedkafka" %% "embedded-kafka-schema-registry" % "5.3.0" exclude ("org.apacha.kafka", "kafka")
   ).map(_ % Test)
 
   lazy val ExcludedDependencies: Seq[InclExclRule] = Seq(
