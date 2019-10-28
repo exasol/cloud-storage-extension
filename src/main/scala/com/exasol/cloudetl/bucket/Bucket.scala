@@ -80,7 +80,7 @@ object Bucket extends LazyLogging {
    * The list of required parameter keys for Azure Blob Storage bucket.
    */
   final val AZURE_BLOB_PARAMETERS: Seq[String] =
-    Seq("AZURE_ACCOUNT_NAME", "AZURE_SECRET_KEY")
+    Seq("AZURE_ACCOUNT_NAME")
 
   /**
    * The list of required keys for Azure Data Lake Storage bucket.

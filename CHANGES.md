@@ -1,3 +1,11 @@
+## v0.4.4
+
+> 2019 OCT 27
+
+* Adds Shared Access Signature (SAS) token authentication when using Azure Blob
+  Storage [#42](https://github.com/exasol/cloud-storage-etl-udfs/issues/42)
+  [#44](https://github.com/exasol/cloud-storage-etl-udfs/pull/44)
+
 ## v0.4.3
 
 > 2019 JUL 01
