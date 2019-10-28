@@ -1,24 +1,10 @@
 package com.exasol.cloudetl.bucket
 
 import com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem
-import org.apache.hadoop.fs.azure.NativeAzureFileSystem
-import org.apache.hadoop.fs.azure.Wasb
-import org.apache.hadoop.fs.azure.Wasbs
 import org.apache.hadoop.fs.s3a.S3AFileSystem
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
 
 @SuppressWarnings(Array("org.wartremover.warts.IsInstanceOf"))
-class BucketTest extends FunSuite with BeforeAndAfterEach {
-
-  private[this] val PATH: String = "BUCKET_PATH"
-  private[this] val FORMAT: String = "DATA_FORMAT"
-  private[this] var properties: Map[String, String] = _
-
-  override final def beforeEach(): Unit = {
-    properties = Map.empty[String, String]
-    ()
-  }
+class BucketTest extends AbstractBucketTest {
 
   test("apply throws if the scheme is not supported") {
     properties = Map(PATH -> "xyz:/bucket/files*", FORMAT -> "ORC")
@@ -66,31 +52,6 @@ class BucketTest extends FunSuite with BeforeAndAfterEach {
     assert(conf.get("fs.gs.impl") === classOf[GoogleHadoopFileSystem].getName)
     assert(conf.get("fs.gs.project.id") === "projX")
     assert(conf.get("fs.gs.auth.service.account.json.keyfile") === "/bucketfs/bucket1/projX.json")
-  }
-
-  test("apply returns AzureBlobBucket") {
-    properties = Map(
-      PATH -> "wasbs://container@account1/parquet-bucket/",
-      FORMAT -> "AVRO",
-      "AZURE_ACCOUNT_NAME" -> "account1",
-      "AZURE_SECRET_KEY" -> "secret"
-    )
-    val bucket = Bucket(properties)
-    val conf = bucket.getConfiguration()
-
-    assert(bucket.isInstanceOf[AzureBlobBucket])
-    assert(conf.get("fs.azure.account.key.account1.blob.core.windows.net") === "secret")
-    val mappings = Map(
-      "fs.azure" -> classOf[NativeAzureFileSystem].getName,
-      "fs.wasb.impl" -> classOf[NativeAzureFileSystem].getName,
-      "fs.wasbs.impl" -> classOf[NativeAzureFileSystem].getName,
-      "fs.AbstractFileSystem.wasb.impl" -> classOf[Wasb].getName,
-      "fs.AbstractFileSystem.wasbs.impl" -> classOf[Wasbs].getName
-    )
-    mappings.foreach {
-      case (given, expected) =>
-        assert(conf.get(given) === expected)
-    }
   }
 
   test("apply returns AzureAdlsBucket") {
