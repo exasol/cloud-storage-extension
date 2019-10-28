@@ -1,19 +1,28 @@
 package com.exasol.cloudetl.bucket
 
+import com.exasol.cloudetl.storage.StorageProperties
+
 import org.apache.hadoop.conf.Configuration
 
 /** A [[Bucket]] implementation for the Azure Data Lake Storage */
-final case class AzureAdlsBucket(path: String, params: Map[String, String]) extends Bucket {
+final case class AzureAdlsBucket(path: String, params: StorageProperties) extends Bucket {
+
+  private[this] val AZURE_CLIENT_ID: String = "AZURE_CLIENT_ID"
+  private[this] val AZURE_CLIENT_SECRET: String = "AZURE_CLIENT_SECRET"
+  private[this] val AZURE_DIRECTORY_ID: String = "AZURE_DIRECTORY_ID"
 
   /** @inheritdoc */
   override val bucketPath: String = path
 
   /** @inheritdoc */
-  override val properties: Map[String, String] = params
+  override val properties: StorageProperties = params
 
-  /** @inheritdoc */
-  override def validate(): Unit =
-    Bucket.validate(properties, Bucket.AZURE_ADLS_PARAMETERS)
+  /**
+   * Returns the list of required property keys for Azure Data Lake
+   * Storage.
+   */
+  override def getRequiredProperties(): Seq[String] =
+    Seq(AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_DIRECTORY_ID)
 
   /**
    * @inheritdoc
@@ -25,9 +34,9 @@ final case class AzureAdlsBucket(path: String, params: Map[String, String]) exte
     validate()
 
     val conf = new Configuration()
-    val clientId = Bucket.requiredParam(params, "AZURE_CLIENT_ID")
-    val clientSecret = Bucket.requiredParam(params, "AZURE_CLIENT_SECRET")
-    val directoryId = Bucket.requiredParam(params, "AZURE_DIRECTORY_ID")
+    val clientId = properties.getString(AZURE_CLIENT_ID)
+    val clientSecret = properties.getString(AZURE_CLIENT_SECRET)
+    val directoryId = properties.getString(AZURE_DIRECTORY_ID)
     val tokenEndpoint = s"https://login.microsoftonline.com/$directoryId/oauth2/token"
     conf.set("fs.adl.impl", classOf[org.apache.hadoop.fs.adl.AdlFileSystem].getName)
     conf.set("fs.AbstractFileSystem.adl.impl", classOf[org.apache.hadoop.fs.adl.Adl].getName)

@@ -8,13 +8,12 @@ import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
 import org.apache.parquet.schema.Type.Repetition
 import org.mockito.Mockito._
 import org.scalatest.FunSuite
-import org.scalatest.Matchers
 import org.scalatest.mockito.MockitoSugar
 
 @SuppressWarnings(Array("org.wartremover.contrib.warts.ExposedTuples"))
-class SchemaUtilSuite extends FunSuite with Matchers with MockitoSugar {
+class SchemaUtilTest extends FunSuite with MockitoSugar {
 
-  test("`createParquetMessageType` throws an exception for unknown type") {
+  test("createParquetMessageType throws if type is unknown") {
     val thrown = intercept[IllegalArgumentException] {
       SchemaUtil.createParquetMessageType(
         Seq(ExaColumnInfo("c_short", classOf[java.lang.Short], 0, 0, 0, false)),
@@ -25,8 +24,7 @@ class SchemaUtilSuite extends FunSuite with Matchers with MockitoSugar {
     assert(thrown.getMessage === expectedMsg)
   }
 
-  test("`createParquetMessageType` creates parquet message type from list of Exasol columns") {
-
+  test("createParquetMessageType returns Parquet MessageType from Exasol columns") {
     val exasolColumns = Seq(
       ExaColumnInfo("c_int", classOf[java.lang.Integer], 0, 0, 0, true),
       ExaColumnInfo("c_int", classOf[java.lang.Integer], 1, 0, 0, true),
@@ -116,9 +114,7 @@ class SchemaUtilSuite extends FunSuite with Matchers with MockitoSugar {
     assert(SchemaUtil.createParquetMessageType(exasolColumns, schemaName) === messageType)
   }
 
-  test(
-    "`createParquetMessageType` throws an exception if the integer precision is more than allowed"
-  ) {
+  test("createParquetMessageType throws if integer precision is larger than allowed") {
     val exasolColumns = Seq(ExaColumnInfo("c_int", classOf[java.lang.Integer], 10, 0, 0, true))
     val thrown = intercept[IllegalArgumentException] {
       SchemaUtil.createParquetMessageType(exasolColumns, "test")
@@ -127,9 +123,7 @@ class SchemaUtilSuite extends FunSuite with Matchers with MockitoSugar {
     assert(thrown.getMessage === expectedMsg)
   }
 
-  test(
-    "`createParquetMessageType` throws an exception if the long precision is more than allowed"
-  ) {
+  test("createParquetMessageType throws if long precision is larger than allowed") {
     val exasolColumns = Seq(ExaColumnInfo("c_long", classOf[java.lang.Long], 20, 0, 0, true))
     val thrown = intercept[IllegalArgumentException] {
       SchemaUtil.createParquetMessageType(exasolColumns, "test")
@@ -138,7 +132,7 @@ class SchemaUtilSuite extends FunSuite with Matchers with MockitoSugar {
     assert(thrown.getMessage === expectedMsg)
   }
 
-  test("`exaColumnToValue` returns value with column type") {
+  test("exaColumnToValue returns value with column type") {
     val iter = mock[ExaIterator]
     val startIdx = 3
     val bd = new java.math.BigDecimal(1337)

@@ -4,28 +4,30 @@ import scala.collection.JavaConverters._
 
 import com.exasol.ExaExportSpecification
 import com.exasol.ExaMetadata
-import com.exasol.cloudetl.bucket._
+import com.exasol.cloudetl.bucket.Bucket
+import com.exasol.cloudetl.storage.StorageProperties
 
 object ExportPath {
 
-  def generateSqlForExportSpec(exaMeta: ExaMetadata, exaSpec: ExaExportSpecification): String = {
-    val params = exaSpec.getParameters.asScala.toMap
-    val bucket = Bucket(params)
-
+  def generateSqlForExportSpec(
+    metadata: ExaMetadata,
+    exportSpec: ExaExportSpecification
+  ): String = {
+    val storageProperties = StorageProperties(exportSpec.getParameters.asScala.toMap)
+    val bucket = Bucket(storageProperties)
     bucket.validate()
 
     val bucketPath = bucket.bucketPath
-    val parallelism = Bucket.optionalParameter(params, "PARALLELISM", "iproc()")
-    val rest = Bucket.keyValueMapToString(params)
+    val parallelism = storageProperties.getParallelism("iproc()")
+    val storagePropertiesStr = storageProperties.mkString()
+    val scriptSchema = metadata.getScriptSchema
 
-    val scriptSchema = exaMeta.getScriptSchema
-
-    val srcColumns = getSourceColumns(exaSpec)
-    val srcColumnsParam = srcColumns.mkString(".")
+    val srcColumns = getSourceColumns(exportSpec)
+    val srcColumnsStr = srcColumns.mkString(".")
 
     s"""SELECT
        |  $scriptSchema.EXPORT_TABLE(
-       |    '$bucketPath', '$rest', '$srcColumnsParam', ${srcColumns.mkString(", ")}
+       |    '$bucketPath', '$storagePropertiesStr', '$srcColumnsStr', ${srcColumns.mkString(", ")}
        |)
        |FROM
        |  DUAL
