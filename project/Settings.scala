@@ -45,8 +45,8 @@ object Settings {
     coverageMinimum := 50,
     coverageOutputHTML := true,
     coverageOutputXML := true,
+    coverageOutputCobertura := true,
     coverageFailOnMinimum := false,
-    coverageOutputCobertura := false,
     // Git versioning, use git describe
     git.useGitDescribe := true
   )

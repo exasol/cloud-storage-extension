@@ -2,6 +2,7 @@
 
 [![Build Status][travis-badge]][travis-link]
 [![Codecov][codecov-badge]][codecov-link]
+[![Coveralls][coveralls-badge]][coveralls-link]
 [![GitHub Latest Release][gh-release-badge]][gh-release-link]
 
 <p style="border: 1px solid black;padding: 10px; background-color: #FFFFCC;">
@@ -53,6 +54,8 @@ open a [Github issue][gh-issues].
 [travis-link]: https://travis-ci.org/exasol/cloud-storage-etl-udfs
 [codecov-badge]: https://codecov.io/gh/exasol/cloud-storage-etl-udfs/branch/master/graph/badge.svg
 [codecov-link]: https://codecov.io/gh/exasol/cloud-storage-etl-udfs
+[coveralls-badge]: https://img.shields.io/coveralls/exasol/cloud-storage-etl-udfs.svg
+[coveralls-link]: https://coveralls.io/github/exasol/cloud-storage-etl-udfs
 [gh-release-badge]: https://img.shields.io/github/release/exasol/cloud-storage-etl-udfs.svg?logo=github
 [gh-release-link]: https://github.com/exasol/cloud-storage-etl-udfs/releases/latest
 [gh-issues]: https://github.com/exasol/cloud-storage-etl-udfs/issues

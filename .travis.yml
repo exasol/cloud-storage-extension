@@ -37,6 +37,7 @@ script:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - ./sbtx coveralls
 
 before_deploy:
   - echo "Ensure assembly jar file is created for a $TRAVIS_TAG"
