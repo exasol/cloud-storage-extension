@@ -40,6 +40,7 @@ For more information please check out the following guides.
   - [Cloud Storage Systems](docs/storage/cloud_storages.md)
   - [Apache Kafka Import](docs/kafka/import.md)
 * [Deployment Guide](docs/deployment_guide.md)
+* [Developer Guide](docs/developer_guide.md)
 
 ## Contributing
 
