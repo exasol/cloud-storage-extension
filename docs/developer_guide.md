@@ -75,7 +75,7 @@ the target path, `target/scala-<SCALA.VERSION>/scoverage-report/`.
 You can open the `index.html` file, it should show the code coverage reports per
 file.
 
-![alt text](../images/code_coverage_example.png "Code Coverage Example")
+![alt text](images/code_coverage_example.png "Code Coverage Example")
 
 You can also generage the coverage reports using the `sbt` command line, by
 running:
