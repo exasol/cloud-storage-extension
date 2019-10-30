@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.data
 
+import java.nio.ByteBuffer
+
 import scala.collection.JavaConverters._
 
 import org.apache.avro.Schema
@@ -74,14 +76,26 @@ object Row {
       case Schema.Type.LONG    => value
       case Schema.Type.FLOAT   => value
       case Schema.Type.DOUBLE  => value
-      case Schema.Type.STRING  => value.toString
+      case Schema.Type.STRING  => getAvroValueAsString(value, field)
+      case Schema.Type.FIXED   => getAvroValueAsString(value, field)
+      case Schema.Type.BYTES   => getAvroValueAsString(value, field)
       case Schema.Type.ENUM    => value.toString
       case Schema.Type.UNION   => getAvroUnionValue(value, field)
-      case Schema.Type.FIXED   => value.asInstanceOf[GenericFixed].bytes().toString
-      case Schema.Type.BYTES   => value.asInstanceOf[Utf8].toString
       case field =>
-        throw new IllegalArgumentException(s"Avro ${field.getName} type is not supperted!")
+        throw new IllegalArgumentException(s"Avro ${field.getName} type is not supported!")
     }
+  }
+
+  def getAvroValueAsString(value: Any, field: Schema): String = value match {
+    case str: String            => str
+    case utf: Utf8              => utf.toString
+    case byteBuffer: ByteBuffer => new String(byteBuffer.array)
+    case arrayByte: Array[Byte] => new String(arrayByte)
+    case fixed: GenericFixed    => new String(fixed.bytes())
+    case other =>
+      throw new IllegalArgumentException(
+        s"Avro ${field.getName} type with value $other cannot be converted to string!"
+      )
   }
 
   def getAvroUnionValue(value: Any, field: Schema): Any = field.getTypes.asScala.toSeq match {
@@ -89,7 +103,7 @@ object Row {
     case Seq(n, f) if n.getType == Schema.Type.NULL => getAvroRecordValue(value, f)
     case Seq(f, n) if n.getType == Schema.Type.NULL => getAvroRecordValue(value, f)
     case _ =>
-      throw new IllegalArgumentException("Avro UNION type should contain a primitive and null!")
+      throw new IllegalArgumentException("Avro Union type should contain a primitive and null!")
   }
 
 }

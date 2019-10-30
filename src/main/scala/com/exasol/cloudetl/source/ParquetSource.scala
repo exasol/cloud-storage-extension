@@ -36,15 +36,14 @@ final case class ParquetSource(
 
   private[this] def createReader(): ParquetReader[Row] = {
     val newConf = new Configuration(conf)
-    getSchema.foreach { schema =>
-      newConf.set(ReadSupport.PARQUET_READ_SCHEMA, schema.toString)
-    }
-
     try {
+      getSchema().foreach { schema =>
+        newConf.set(ReadSupport.PARQUET_READ_SCHEMA, schema.toString)
+      }
       ParquetReader.builder(new RowReadSupport, path).withConf(newConf).build()
     } catch {
       case NonFatal(exception) =>
-        logger.error(s"Could not create parquet reader for path: $path", exception);
+        logger.error(s"Could not create parquet reader for path: $path", exception)
         throw exception
     }
   }

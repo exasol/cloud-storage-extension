@@ -4,20 +4,17 @@ import java.nio.file.Path
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
-import com.exasol.cloudetl.TestUtils
+import com.exasol.cloudetl.DummyRecordsTest
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ExtraMockito
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 
-@SuppressWarnings(Array("org.wartremover.warts.JavaSerializable", "org.wartremover.warts.Var"))
-class ExportTableSuite extends BaseSuite with BeforeAndAfterEach with TestUtils {
+class ExportTableTest extends StorageTest with DummyRecordsTest with BeforeAndAfterEach {
 
-  private var outputPath: Path = _
-  private var exasolMetadata: ExaMetadata = _
-  private var exasolIterator: ExaIterator = _
-  private val srcColumns: Seq[String] = Seq(
+  private[this] var outputPath: Path = _
+  private[this] val srcColumns: Seq[String] = Seq(
     "c_int",
     "c_long",
     "c_decimal",
@@ -28,8 +25,12 @@ class ExportTableSuite extends BaseSuite with BeforeAndAfterEach with TestUtils 
     "c_timestamp"
   )
 
+  private[this] var metadata: ExaMetadata = _
+  private[this] var iterator: ExaIterator = _
+
   final def createMockedIterator(resourceDir: String): ExaIterator = {
-    val mockedIterator = commonExaIterator(resourceDir)
+    val properties = Map("BUCKET_PATH" -> resourceDir, "DATA_FORMAT" -> "PARQUET")
+    val mockedIterator = mockExasolIterator(properties)
     when(mockedIterator.getString(2)).thenReturn(srcColumns.mkString("."))
     when(mockedIterator.next()).thenReturn(true, false)
     when(mockedIterator.size()).thenReturn(2L)
@@ -46,6 +47,7 @@ class ExportTableSuite extends BaseSuite with BeforeAndAfterEach with TestUtils 
     mockedIterator
   }
 
+  @SuppressWarnings(Array("org.wartremover.warts.JavaSerializable"))
   final def createMockedMetadata(): ExaMetadata = {
     val mockedMetadata = mock[ExaMetadata]
     when(mockedMetadata.getInputColumnCount()).thenReturn(11L)
@@ -72,8 +74,8 @@ class ExportTableSuite extends BaseSuite with BeforeAndAfterEach with TestUtils 
 
   override final def beforeEach(): Unit = {
     outputPath = createTemporaryFolder("exportTableTest")
-    exasolMetadata = createMockedMetadata()
-    exasolIterator = createMockedIterator(outputPath.toUri.toString)
+    metadata = createMockedMetadata()
+    iterator = createMockedIterator(outputPath.toUri.toString)
     ()
   }
 
@@ -82,31 +84,32 @@ class ExportTableSuite extends BaseSuite with BeforeAndAfterEach with TestUtils 
     ()
   }
 
-  test("`run` should export the Exasol rows from ExaIterator") {
-    ExportTable.run(exasolMetadata, exasolIterator)
+  test("run exports table rows") {
+    ExportTable.run(metadata, iterator)
 
-    verify(exasolMetadata, times(1)).getInputColumnCount
+    verify(metadata, times(1)).getInputColumnCount
     for { idx <- 3 to 10 } {
-      verify(exasolMetadata, times(1)).getInputColumnType(idx)
-      verify(exasolMetadata, times(1)).getInputColumnPrecision(idx)
-      verify(exasolMetadata, times(1)).getInputColumnScale(idx)
-      verify(exasolMetadata, times(1)).getInputColumnLength(idx)
+      verify(metadata, times(1)).getInputColumnType(idx)
+      verify(metadata, times(1)).getInputColumnPrecision(idx)
+      verify(metadata, times(1)).getInputColumnScale(idx)
+      verify(metadata, times(1)).getInputColumnLength(idx)
     }
 
-    verify(exasolIterator, times(2)).getInteger(3)
-    verify(exasolIterator, times(2)).getLong(4)
-    verify(exasolIterator, times(2)).getBigDecimal(5)
-    verify(exasolIterator, times(2)).getDouble(6)
-    verify(exasolIterator, times(2)).getString(7)
-    verify(exasolIterator, times(2)).getBoolean(8)
-    verify(exasolIterator, times(2)).getDate(9)
-    verify(exasolIterator, times(2)).getTimestamp(10)
+    verify(iterator, times(2)).getInteger(3)
+    verify(iterator, times(2)).getLong(4)
+    verify(iterator, times(2)).getBigDecimal(5)
+    verify(iterator, times(2)).getDouble(6)
+    verify(iterator, times(2)).getString(7)
+    verify(iterator, times(2)).getBoolean(8)
+    verify(iterator, times(2)).getDate(9)
+    verify(iterator, times(2)).getTimestamp(10)
   }
 
-  test("import exported rows from a file") {
-    ExportTable.run(exasolMetadata, exasolIterator)
+  test("imports exported rows from a path") {
+    ExportTable.run(metadata, iterator)
 
-    val importIter = commonExaIterator(resourceImportBucket)
+    val properties = Map("BUCKET_PATH" -> testResourceDir, "DATA_FORMAT" -> "PARQUET")
+    val importIter = mockExasolIterator(properties)
     when(importIter.next()).thenReturn(false)
     when(importIter.getString(2)).thenReturn(outputPath.toUri.toString)
 

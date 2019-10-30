@@ -30,7 +30,8 @@ object Settings {
     compileOrder in Compile := CompileOrder.JavaThenScala,
     // Dependency settings
     resolvers ++= Dependencies.Resolvers,
-    libraryDependencies ++= Dependencies.AllDependencies
+    libraryDependencies ++= Dependencies.AllDependencies,
+    excludeDependencies ++= Dependencies.ExcludedDependencies
   )
 
   def miscSettings(): Seq[Setting[_]] = Seq(

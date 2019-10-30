@@ -9,26 +9,24 @@ import scala.util.{Failure, Success, Try}
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
-import com.exasol.cloudetl.bucket.Bucket
-import com.exasol.cloudetl.kafka.KafkaConsumerBuilder
+import com.exasol.cloudetl.kafka.KafkaConsumerProperties
 
 import com.typesafe.scalalogging.LazyLogging
 
 object KafkaMetadata extends LazyLogging {
 
   @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
-  def run(meta: ExaMetadata, iter: ExaIterator): Unit = {
-    val rest = iter.getString(0)
-    val params = Bucket.keyValueStringToMap(rest)
+  def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
+    val kafkaProperties = KafkaConsumerProperties(iterator.getString(0))
 
     val idOffsetPairs: HashMap[JInt, JLong] = HashMap.empty[JInt, JLong]
     do {
-      val partitionId = iter.getInteger(1)
-      val partitionOffset = iter.getLong(2)
+      val partitionId = iterator.getInteger(1)
+      val partitionOffset = iterator.getLong(2)
       idOffsetPairs += (partitionId -> partitionOffset)
-    } while (iter.next())
+    } while (iterator.next())
 
-    val kafkaConsumerTry = Try(KafkaConsumerBuilder(params))
+    val kafkaConsumerTry = Try(kafkaProperties.build())
     kafkaConsumerTry match {
 
       case Failure(ex) =>
@@ -36,14 +34,14 @@ object KafkaMetadata extends LazyLogging {
         throw ex
 
       case Success(kafkaConsumer) =>
-        val topics = Bucket.requiredParam(params, "TOPICS")
+        val topics = kafkaProperties.getTopics()
         val topicPartitions =
           kafkaConsumer.partitionsFor(topics).asScala.toList.map(_.partition())
 
         try {
           topicPartitions.foreach { partitionId =>
             val offset: JLong = idOffsetPairs.getOrElse(partitionId, -1)
-            iter.emit(new Integer(partitionId), offset)
+            iterator.emit(new Integer(partitionId), offset)
           }
         } finally {
           kafkaConsumer.close()

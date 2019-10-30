@@ -1,6 +1,8 @@
 package com.exasol.cloudetl.source
 
 import com.exasol.cloudetl.data.Row
+import com.exasol.cloudetl.storage.FileFormat
+import com.exasol.cloudetl.storage.FileFormat._
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
@@ -35,5 +37,28 @@ abstract class Source {
    * Finally close the resource used for this source.
    */
   def close(): Unit
+
+}
+
+/**
+ * A companion object to the [[Source]] class.
+ *
+ * Provides a helper methods to create specific implementations of
+ * Source class.
+ */
+object Source {
+
+  def apply(
+    fileFormat: FileFormat,
+    filePath: Path,
+    conf: Configuration,
+    fileSystem: FileSystem
+  ): Source = fileFormat match {
+    case AVRO    => AvroSource(filePath, conf, fileSystem)
+    case ORC     => OrcSource(filePath, conf, fileSystem)
+    case PARQUET => ParquetSource(filePath, conf, fileSystem)
+    case _ =>
+      throw new IllegalArgumentException(s"Unsupported storage format: '$fileFormat'")
+  }
 
 }
