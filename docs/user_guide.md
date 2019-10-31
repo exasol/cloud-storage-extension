@@ -17,7 +17,7 @@ started with using the cloud-storage-etl-udfs.
 In order to use the cloud-storage-etl-udfs, you should deploy the jar file and
 create UDF scripts.
 
-Please follow the steps from [deployment guide](docs/deployment_guide.md).
+Please follow the steps from [deployment guide](./deployment_guide.md).
 
 ## Getting started
 
@@ -145,7 +145,7 @@ importing or exporting data.
 * ``BUCKET_PATH`` - It specifies a path to the cloud storage filesystem.
   Additionally, it should start with storage specific schema, such as `s3a`. You
   can check out the currently [supported list of cloud storage
-  systems](docs/storage/cloud_storages.md).
+  systems](storage/cloud_storages.md).
 
 * ``DATA_FORMAT`` - It defines the data file format in the user provided path.
   Currently, we support importing data from **Avro**, **Orc** and **Parquet**
@@ -153,7 +153,7 @@ importing or exporting data.
 
 * Additional storage related properties that enable accessing storage
   filesystems. Please refer to the [supported cloud storage
-  systems](docs/storage/cloud_storages.md) documentation for more information.
+  systems](storage/cloud_storages.md) documentation for more information.
 
 #### Optional Properties
 
@@ -166,7 +166,7 @@ These are optional parameters that usually have default values.
   For example, multiply with a number when importing `PARALLELISM = 'nproc()*4'`
   or append additional numbers when exporting `PARALLELISM = 'iproc(),
   floor(random()*4)'`. Please check out the [supported cloud storage
-  systems](docs/storage/cloud_storages.md) for more examples.
+  systems](storage/cloud_storages.md) for more examples.
 
 * ``PARQUET_COMPRESSION_CODEC`` - This property is only used in export SQL
   statement. It defines the compression codec to use when exporting data into
@@ -208,7 +208,7 @@ Kafka topic partitions. That is, when importing data from Kafka topic, we will
 be importing from each topic partition in parallel. Therefore, it is important
 to configure Kafka topics with several partitions.
 
-Please check out the [Kafka import examples](docs/kafka/import.md) for more
+Please check out the [Kafka import examples](kafka/import.md) for more
 information.
 
 #### Optional Properties

@@ -17,9 +17,9 @@ formats.
 Before start, you should deploy the latest jar file to the Exasol BucketFS
 bucket and create UDF scripts for importing or exporing data from cloud storage
 filesystems. Please follow the instructions from [deployment
-guide](docs/deployment_guide.md) if you have not done so.
+guide](../deployment_guide.md) if you have not done so.
 
-Additionally, you can read the [user guide](docs/user_guide.md) in order to get
+Additionally, you can read the [user guide](../user_guide.md) in order to get
 familiar with cloud-storage-etl-udfs in general.
 
 In this guide, we will be using `RETAIL` schema and `SALES_POSITIONS` table in

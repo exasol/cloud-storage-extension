@@ -126,7 +126,7 @@ Follow these steps in order to create a new release:
 - Push tags to remote, `git push --tags`.
 
 Please make sure that the new version tag follows the [Semantic Versioning
-2.0.0](https://semver.org/)
+2.0.0](https://semver.org/).
 
 The next Travis CI run will detect the new tag and create a new Github release
 and publish the artifacts.

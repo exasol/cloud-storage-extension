@@ -15,10 +15,10 @@ clusters.
 
 Before start, you should deploy the latest jar file to the Exasol BucketFS
 bucket and create UDF scripts for importing Avro data from Kafka cluster.
-Please follow the instructions from [deployment guide](docs/deployment_guide.md)
+Please follow the instructions from [deployment guide](../deployment_guide.md)
 if you have not done so.
 
-Additionally, you can read the [user guide](docs/user_guide.md) in order to get
+Additionally, you can read the [user guide](../user_guide.md) in order to get
 familiar with cloud-storage-etl-udfs in general.
 
 In this guide, we will be using `RETAIL` schema and `SALES_POSITIONS` table to
@@ -78,8 +78,7 @@ The **TABLE_NAME** is the Exasol table name that we are going to import Kafka
 topic data.
 
 For more information on Kafka import parameters, please refer to the [Kafka
-import properties in the user
-guide](docs/user_guide.md#kafka-import-properties).
+import properties in the user guide](../user_guide.md#kafka-import-properties).
 
 ### Usage
 
@@ -120,7 +119,7 @@ and [Kafka client configurations][kafka-secure-clients] for more information.
 
 Additionally, we have provide extra parameters to the UDF in order to enable
 secure connection to Kafka cluster. Please check out the [Kafka import
-properties in the user guide](docs/user_guide.md#kafka-import-properties) for
+properties in the user guide](../user_guide.md#kafka-import-properties) for
 secure property descriptions.
 
 ### Usage with SSL enabled
