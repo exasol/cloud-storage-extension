@@ -30,7 +30,8 @@ object Settings {
     compileOrder in Compile := CompileOrder.JavaThenScala,
     // Dependency settings
     resolvers ++= Dependencies.Resolvers,
-    libraryDependencies ++= Dependencies.AllDependencies
+    libraryDependencies ++= Dependencies.AllDependencies,
+    excludeDependencies ++= Dependencies.ExcludedDependencies
   )
 
   def miscSettings(): Seq[Setting[_]] = Seq(
@@ -45,8 +46,8 @@ object Settings {
     coverageMinimum := 50,
     coverageOutputHTML := true,
     coverageOutputXML := true,
+    coverageOutputCobertura := true,
     coverageFailOnMinimum := false,
-    coverageOutputCobertura := false,
     // Git versioning, use git describe
     git.useGitDescribe := true
   )

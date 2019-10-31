@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.parquet
 
+import com.exasol.cloudetl.storage.StorageProperties
+
 import org.apache.parquet.hadoop.ParquetWriter
 import org.apache.parquet.hadoop.metadata.CompressionCodecName
 
@@ -14,13 +16,14 @@ final case class ParquetWriteOptions(
 object ParquetWriteOptions {
 
   @SuppressWarnings(Array("org.wartremover.warts.Overloading"))
-  def apply(params: Map[String, String]): ParquetWriteOptions = {
-    val compressionCodec = params.getOrElse("PARQUET_COMPRESSION_CODEC", "").toUpperCase() match {
-      case "SNAPPY" => CompressionCodecName.SNAPPY
-      case "GZIP"   => CompressionCodecName.GZIP
-      case "LZO"    => CompressionCodecName.LZO
-      case _        => CompressionCodecName.UNCOMPRESSED
-    }
+  def apply(params: StorageProperties): ParquetWriteOptions = {
+    val compressionCodec =
+      params.get("PARQUET_COMPRESSION_CODEC").getOrElse("").toUpperCase() match {
+        case "SNAPPY" => CompressionCodecName.SNAPPY
+        case "GZIP"   => CompressionCodecName.GZIP
+        case "LZO"    => CompressionCodecName.LZO
+        case _        => CompressionCodecName.UNCOMPRESSED
+      }
     val blockSize =
       params.get("PARQUET_BLOCK_SIZE").fold(ParquetWriter.DEFAULT_BLOCK_SIZE)(_.toInt)
     val pageSize = params.get("PARQUET_PAGE_SIZE").fold(ParquetWriter.DEFAULT_PAGE_SIZE)(_.toInt)
