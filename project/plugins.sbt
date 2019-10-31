@@ -14,7 +14,8 @@ addSbtPlugin("org.wartremover" % "sbt-wartremover-contrib" % "1.2.4")
 // http://github.com/danielnixon/extrawarts
 addSbtPlugin("org.danielnixon" % "sbt-extrawarts" % "1.0.3")
 
-// Adds a `assembly` task to create a fat JAR with all of its dependencies
+// Adds a `assembly` task to create a fat JAR with all of its
+// dependencies
 // https://github.com/sbt/sbt-assembly
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.9")
 
@@ -30,7 +31,13 @@ addSbtPlugin("com.thoughtworks.sbt-api-mappings" % "sbt-api-mappings" % "2.1.0")
 // http://github.com/scoverage/sbt-scoverage
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.1")
 
-// Adds a `dependencyUpdates` task to check Maven repositories for dependency updates
+// Adds SBT Coveralls plugin for uploading Scala code coverage to
+// https://coveralls.io
+// https://github.com/scoverage/sbt-coveralls
+addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.2.7")
+
+// Adds a `dependencyUpdates` task to check Maven repositories for
+// dependency updates
 // http://github.com/rtimush/sbt-updates
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.4.0")
 
@@ -62,7 +69,8 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 // https://github.com/cb372/sbt-explicit-dependencies
 addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.9")
 
-// Setup this and project/project/plugins.sbt for formatting project/*.scala files with scalafmt
+// Setup this and project/project/plugins.sbt for formatting
+// project/*.scala files with scalafmt
 inThisBuild(
   Seq(
     scalafmtOnCompile := true,
