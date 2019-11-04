@@ -9,7 +9,6 @@ import com.exasol.cloudetl.storage.StorageProperties
 
 object ImportPath {
 
-<<<<<<< HEAD
   def generateSqlForImportSpec(
     metadata: ExaMetadata,
     importSpec: ExaImportSpecification
