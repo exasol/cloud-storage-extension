@@ -2,6 +2,8 @@ package com.exasol.cloudetl.storage
 
 import java.net.URI
 
+import com.exasol.ExaConnectionInformation
+import com.exasol.ExaMetadata
 import com.exasol.cloudetl.common.AbstractProperties
 import com.exasol.cloudetl.common.CommonProperties
 
@@ -11,8 +13,10 @@ import com.exasol.cloudetl.common.CommonProperties
  * provided key-value parameters for storage import and export
  * user-defined-functions (udfs).
  */
-class StorageProperties(private val properties: Map[String, String])
-    extends AbstractProperties(properties) {
+class StorageProperties(
+  private val properties: Map[String, String],
+  private val exaMetadata: Option[ExaMetadata]
+) extends AbstractProperties(properties) {
 
   import StorageProperties._
 
@@ -47,6 +51,20 @@ class StorageProperties(private val properties: Map[String, String])
     get(PARALLELISM).fold(defaultValue)(identity)
 
   /**
+   * Returns an Exasol [[ExaConnectionInformation]] named connection
+   * information.
+   */
+  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
+  final def getConnectionInformation(): ExaConnectionInformation =
+    exaMetadata.fold {
+      throw new IllegalArgumentException("Exasol metadata is None!")
+    }(_.getConnection(getString(CONNECTION_NAME)))
+
+  /** Checks if the Exasol named connection property is provided. */
+  final def hasNamedConnection(): Boolean =
+    containsKey(CONNECTION_NAME)
+
+  /**
    * Returns a string value of key-value property pairs.
    *
    * The returned string is sorted by keys ordering.
@@ -72,9 +90,26 @@ object StorageProperties extends CommonProperties {
   /** An optional property key name for the parallelism. */
   private[storage] final val PARALLELISM: String = "PARALLELISM"
 
-  /** Returns [[StorageProperties]] from key-value pairs map. */
+  /** An optional property key name for the named connection object. */
+  private[storage] final val CONNECTION_NAME: String = "CONNECTION_NAME"
+
+  /**
+   * Returns [[StorageProperties]] from key values map and
+   * [[ExaMetadata]] metadata object.
+   */
+  def apply(params: Map[String, String], metadata: ExaMetadata): StorageProperties =
+    new StorageProperties(params, Option(metadata))
+
+  /** Returns [[StorageProperties]] from only key-value pairs map. */
   def apply(params: Map[String, String]): StorageProperties =
-    new StorageProperties(params)
+    new StorageProperties(params, None)
+
+  /**
+   * Returns [[StorageProperties]] from properly separated string and
+   * [[ExaMetadata]] metadata object.
+   */
+  def apply(string: String, metadata: ExaMetadata): StorageProperties =
+    apply(mapFromString(string), metadata)
 
   /** Returns [[StorageProperties]] from properly separated string. */
   def apply(string: String): StorageProperties =

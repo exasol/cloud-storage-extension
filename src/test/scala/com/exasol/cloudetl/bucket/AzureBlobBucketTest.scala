@@ -31,15 +31,15 @@ class AzureBlobBucketTest extends AbstractBucketTest {
   test("getConfiguration throws if account name is not provided") {
     properties = defaultProperties
     val thrown = intercept[IllegalArgumentException] {
-      assertAzureBlobBucket(Bucket(properties))
+      assertAzureBlobBucket(getBucket(properties))
     }
     assert(thrown.getMessage === "Please provide a value for the AZURE_ACCOUNT_NAME property!")
   }
 
-  test("getConfiguration throws if neither secret key nor sas tokan account is provided") {
+  test("getConfiguration throws if neither secret key nor sas token account is provided") {
     properties = defaultProperties ++ Map("AZURE_ACCOUNT_NAME" -> "account1")
     val thrown = intercept[IllegalArgumentException] {
-      assertAzureBlobBucket(Bucket(properties))
+      assertAzureBlobBucket(getBucket(properties))
     }
     assert(
       thrown.getMessage === "Please provide a value for either " +
@@ -52,7 +52,7 @@ class AzureBlobBucketTest extends AbstractBucketTest {
       "AZURE_ACCOUNT_NAME" -> "account1",
       "AZURE_SECRET_KEY" -> "secret"
     )
-    val bucket = Bucket(properties)
+    val bucket = getBucket(properties)
     assertAzureBlobBucket(bucket)
     assert(
       bucket
@@ -67,7 +67,7 @@ class AzureBlobBucketTest extends AbstractBucketTest {
       "AZURE_SAS_TOKEN" -> "token"
     )
     val thrown = intercept[IllegalArgumentException] {
-      assertAzureBlobBucket(Bucket(properties))
+      assertAzureBlobBucket(getBucket(properties))
     }
     assert(thrown.getMessage === "Please provide a value for the AZURE_CONTAINER_NAME property!")
   }
@@ -78,7 +78,7 @@ class AzureBlobBucketTest extends AbstractBucketTest {
       "AZURE_SAS_TOKEN" -> "token",
       "AZURE_CONTAINER_NAME" -> "container1"
     )
-    val bucket = Bucket(properties)
+    val bucket = getBucket(properties)
     assertAzureBlobBucket(bucket)
     assert(
       bucket

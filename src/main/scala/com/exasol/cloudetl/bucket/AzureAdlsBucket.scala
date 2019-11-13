@@ -17,6 +17,10 @@ final case class AzureAdlsBucket(path: String, params: StorageProperties) extend
   /** @inheritdoc */
   override val properties: StorageProperties = params
 
+  /** @inheritdoc */
+  override def validate(): Unit =
+    validateRequiredProperties()
+
   /**
    * Returns the list of required property keys for Azure Data Lake
    * Storage.

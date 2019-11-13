@@ -20,7 +20,7 @@ import org.apache.hadoop.fs.Path
  *
  * All specific implementation of a bucket should extend this class.
  */
-abstract class Bucket {
+abstract class Bucket extends LazyLogging {
 
   /** The path string of the bucket. */
   val bucketPath: String
@@ -34,11 +34,19 @@ abstract class Bucket {
    */
   def getRequiredProperties(): Seq[String]
 
-  /** Validates that all required parameter key values are available. */
-  final def validate(): Unit =
-    validateRequiredProperties()
+  /**
+   * Creates a Hadoop [[org.apache.hadoop.conf.Configuration]] for this
+   * specific bucket type.
+   */
+  def getConfiguration(): Configuration
 
-  private[this] def validateRequiredProperties(): Unit =
+  /**
+   * Validates that user provided key-value properties are available for
+   * this bucket implementation.
+   */
+  def validate(): Unit
+
+  protected[this] final def validateRequiredProperties(): Unit =
     getRequiredProperties().foreach { key =>
       if (!properties.containsKey(key)) {
         throw new IllegalArgumentException(
@@ -46,12 +54,6 @@ abstract class Bucket {
         )
       }
     }
-
-  /**
-   * Creates a Hadoop [[org.apache.hadoop.conf.Configuration]] for this
-   * specific bucket type.
-   */
-  def getConfiguration(): Configuration
 
   /**
    * The Hadoop [[org.apache.hadoop.fs.FileSystem]] for this specific
@@ -100,15 +102,5 @@ object Bucket extends LazyLogging {
         throw new IllegalArgumentException(s"Unsupported path scheme $scheme!")
     }
   }
-
-  /**
-   * Creates specific [[Bucket]] class using the path scheme from
-   * key-value properties.
-   *
-   * @param params The key value parameters
-   * @return A [[Bucket]] class for the given path
-   */
-  def apply(params: Map[String, String]): Bucket =
-    apply(StorageProperties(params))
 
 }

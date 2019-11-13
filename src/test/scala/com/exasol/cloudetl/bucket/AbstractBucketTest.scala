@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.bucket
 
+import com.exasol.cloudetl.storage.StorageProperties
+
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FunSuite
 
@@ -13,5 +15,8 @@ class AbstractBucketTest extends FunSuite with BeforeAndAfterEach {
     properties = Map.empty[String, String]
     ()
   }
+
+  protected[this] final def getBucket(params: Map[String, String]): Bucket =
+    Bucket(StorageProperties(params))
 
 }
