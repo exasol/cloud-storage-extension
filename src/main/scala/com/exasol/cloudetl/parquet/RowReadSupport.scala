@@ -124,7 +124,7 @@ class RowRootConverter(schema: GroupType) extends GroupConverter {
         }
       case PrimitiveTypeName.INT64 =>
         originalType match {
-          case OriginalType.TIMESTAMP_MILLIS => new RowTimestampConverter(this, idx)
+          case OriginalType.TIMESTAMP_MILLIS => new RowTimestampMillisConverter(this, idx)
           case OriginalType.DECIMAL =>
             val decimalMetadata = primitiveType.getDecimalMetadata
             new RowDecimalConverter(
@@ -136,12 +136,7 @@ class RowRootConverter(schema: GroupType) extends GroupConverter {
           case _ => new RowPrimitiveConverter(this, idx)
         }
 
-      case PrimitiveTypeName.INT96 => new RowTimestampConverter(this, idx)
-
-      case _ =>
-        throw new UnsupportedOperationException(
-          s"Parquet type '$typeName' cannot be read into Exasol type."
-        )
+      case PrimitiveTypeName.INT96 => new RowTimestampInt96Converter(this, idx)
     }
   }
 
@@ -149,7 +144,7 @@ class RowRootConverter(schema: GroupType) extends GroupConverter {
       extends PrimitiveConverter {
 
     override def addBinary(value: Binary): Unit =
-      parent.currentResult.update(index, value.getBytes())
+      parent.currentResult.update(index, new String(value.getBytes()))
 
     override def addBoolean(value: Boolean): Unit =
       parent.currentResult.update(index, value)
@@ -194,7 +189,14 @@ class RowRootConverter(schema: GroupType) extends GroupConverter {
     }
   }
 
-  private final class RowTimestampConverter(val parent: RowRootConverter, val index: Int)
+  private final class RowTimestampMillisConverter(val parent: RowRootConverter, val index: Int)
+      extends PrimitiveConverter {
+
+    override def addLong(value: Long): Unit =
+      parent.currentResult.update(index, DateTimeUtil.getTimestampFromMillis(value))
+  }
+
+  private final class RowTimestampInt96Converter(val parent: RowRootConverter, val index: Int)
       extends PrimitiveConverter {
 
     override def addBinary(value: Binary): Unit = {
