@@ -65,6 +65,35 @@ class StorageProperties(
     containsKey(CONNECTION_NAME)
 
   /**
+   * Returns a new [[StorageProperties]] what merges the key-value pairs
+   * parsed from user provided Exasol named connection object.
+   */
+  final def merge(accountName: String): StorageProperties = {
+    val connectionParsedMap = parseConnectionInfo(accountName)
+    val newProperties = properties ++ connectionParsedMap
+    new StorageProperties(newProperties, exaMetadata)
+  }
+
+  /**
+   * Parses the connection object password into key-value map pairs.
+   *
+   * If the connection object contains the username, it is mapped to the
+   * {@code keyForUsername} parameter. However, this value is
+   * overwritted if the provided key is available in password string of
+   * connection object.
+   */
+  private[this] def parseConnectionInfo(keyForUsername: String): Map[String, String] = {
+    val connection = getConnectionInformation()
+    val username = connection.getUser()
+    val password = connection.getPassword();
+    val map = password.split(";").map { str =>
+      val idx = str.indexOf('=')
+      str.substring(0, idx) -> str.substring(idx + 1)
+    }
+    Map(keyForUsername -> username) ++ map
+  }
+
+  /**
    * Returns a string value of key-value property pairs.
    *
    * The returned string is sorted by keys ordering.
