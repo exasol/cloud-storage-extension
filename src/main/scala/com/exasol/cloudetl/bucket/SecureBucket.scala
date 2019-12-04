@@ -28,8 +28,8 @@ trait SecureBucket extends LazyLogging { self: Bucket =>
       )
     }
     val connectionExceptionMessage =
-      "Please provide either only CONNECTION_NAME property or secure access " +
-        "credential property pairs, but not the both!"
+      "Please provide either CONNECTION_NAME property or secure access " +
+        "credentials parameters, but not the both!"
     if (properties.hasNamedConnection()) {
       if (hasSecureProperties()) {
         throw new IllegalArgumentException(connectionExceptionMessage)

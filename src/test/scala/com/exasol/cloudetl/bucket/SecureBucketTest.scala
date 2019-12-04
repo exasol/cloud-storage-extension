@@ -11,7 +11,7 @@ class SecureBucketTest extends AbstractBucketTest {
     val thrown = intercept[IllegalArgumentException] {
       BaseSecureBucket(properties).validate()
     }
-    assert(thrown.getMessage.contains("Please provide either only CONNECTION_NAME property or"))
+    assert(thrown.getMessage.contains("Please provide either CONNECTION_NAME property or"))
   }
 
   test("validate throws if both connection name and access properties are provided") {
@@ -23,8 +23,8 @@ class SecureBucketTest extends AbstractBucketTest {
     val thrown = intercept[IllegalArgumentException] {
       BaseSecureBucket(properties).validate()
     }
-    assert(thrown.getMessage.contains("Please provide either only CONNECTION_NAME property or"))
-    assert(thrown.getMessage.contains("property pairs, but not the both!"))
+    assert(thrown.getMessage.contains("Please provide either CONNECTION_NAME property or"))
+    assert(thrown.getMessage.contains("secure access credentials parameters, but not the both!"))
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))

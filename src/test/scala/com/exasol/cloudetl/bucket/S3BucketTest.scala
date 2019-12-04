@@ -1,14 +1,9 @@
 package com.exasol.cloudetl.bucket
 
-import com.exasol.ExaConnectionInformation
-import com.exasol.ExaMetadata
-
 import org.apache.hadoop.fs.s3a.S3AFileSystem
-import org.mockito.Mockito.when
-import org.scalatest.mockito.MockitoSugar
 
 @SuppressWarnings(Array("org.wartremover.warts.IsInstanceOf"))
-class S3BucketTest extends AbstractBucketTest with MockitoSugar {
+class S3BucketTest extends AbstractBucketTest {
 
   private[this] val defaultProperties = Map(
     PATH -> "s3a://my-bucket/",
@@ -43,6 +38,16 @@ class S3BucketTest extends AbstractBucketTest with MockitoSugar {
       case (given, expected) =>
         assert(conf.get(given) === expected)
     }
+  }
+
+  test("apply throws when no secrets nor connection name is provided") {
+    properties = defaultProperties
+    val thrown = intercept[IllegalArgumentException] {
+      assertS3Bucket(getBucket(properties), Map.empty[String, String])
+    }
+    val expected = "Please provide either CONNECTION_NAME property or secure access " +
+      "credentials parameters, but not the both!"
+    assert(thrown.getMessage === expected)
   }
 
   test("apply returns S3Bucket with access and secret parameters") {
@@ -93,19 +98,6 @@ class S3BucketTest extends AbstractBucketTest with MockitoSugar {
       mockConnectionInfo("", "S3_ACCESS_KEY=access;S3_SECRET_KEY=secret;S3_SESSION_TOKEN=token")
     val bucket = getBucket(properties, exaMetadata)
     assertS3Bucket(bucket, configMappings)
-  }
-
-  private[this] final def mockConnectionInfo(username: String, password: String): ExaMetadata = {
-    val metadata = mock[ExaMetadata]
-    val connectionInfo: ExaConnectionInformation = new ExaConnectionInformation() {
-      override def getType(): ExaConnectionInformation.ConnectionType =
-        ExaConnectionInformation.ConnectionType.PASSWORD
-      override def getAddress(): String = ""
-      override def getUser(): String = username
-      override def getPassword(): String = password
-    }
-    when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
-    metadata
   }
 
 }

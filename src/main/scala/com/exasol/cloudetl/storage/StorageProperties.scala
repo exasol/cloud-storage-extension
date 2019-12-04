@@ -86,11 +86,19 @@ class StorageProperties(
     val connection = getConnectionInformation()
     val username = connection.getUser()
     val password = connection.getPassword();
-    val map = password.split(";").map { str =>
-      val idx = str.indexOf('=')
-      str.substring(0, idx) -> str.substring(idx + 1)
+    val map = password
+      .split(";")
+      .map { str =>
+        val idx = str.indexOf('=')
+        str.substring(0, idx) -> str.substring(idx + 1)
+      }
+      .toMap
+
+    if (username.isEmpty()) {
+      map
+    } else {
+      Map(keyForUsername -> username) ++ map
     }
-    Map(keyForUsername -> username) ++ map
   }
 
   /**
