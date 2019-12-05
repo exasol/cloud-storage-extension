@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.bucket
 
+import scala.util.matching.Regex
+
 import com.exasol.cloudetl.storage.StorageProperties
 
 import org.apache.hadoop.conf.Configuration
@@ -24,7 +26,7 @@ final case class AzureBlobBucket(path: String, params: StorageProperties)
    * Returns the list of required property keys for Azure Blob Storage.
    */
   override def getRequiredProperties(): Seq[String] =
-    Seq(AZURE_ACCOUNT_NAME)
+    Seq.empty[String]
 
   /** @inheritdoc */
   override def getSecureProperties(): Seq[String] =
@@ -61,10 +63,15 @@ final case class AzureBlobBucket(path: String, params: StorageProperties)
       properties
     }
 
-    val accountName = mergedProperties.getString(AZURE_ACCOUNT_NAME)
+    val accountAndContainer = regexParsePath(path)
+
+    val accountName =
+      mergedProperties.get(AZURE_ACCOUNT_NAME).getOrElse(accountAndContainer.accountName)
+
     if (mergedProperties.containsKey(AZURE_SAS_TOKEN)) {
       val sasToken = mergedProperties.getString(AZURE_SAS_TOKEN)
-      val containerName = mergedProperties.getString(AZURE_CONTAINER_NAME)
+      val containerName =
+        mergedProperties.get(AZURE_CONTAINER_NAME).getOrElse(accountAndContainer.containerName)
       conf.set(s"fs.azure.sas.$containerName.$accountName.blob.core.windows.net", sasToken)
     } else {
       val secretKey = mergedProperties.getString(AZURE_SECRET_KEY)
@@ -73,5 +80,16 @@ final case class AzureBlobBucket(path: String, params: StorageProperties)
 
     conf
   }
+
+  private[this] final val AZURE_BLOB_PATH_REGEX: Regex =
+    """wasbs?://(.*)@([^.]+).blob.core.windows.net/(.*)$""".r
+
+  private[this] def regexParsePath(path: String): AccountAndContainer = path match {
+    case AZURE_BLOB_PATH_REGEX(containerName, accountName, _) =>
+      AccountAndContainer(accountName, containerName)
+    case _ => throw new IllegalArgumentException(s"Invalid Azure blob wasb(s) path: $path!")
+  }
+
+  private[this] case class AccountAndContainer(accountName: String, containerName: String)
 
 }
