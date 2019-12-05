@@ -80,17 +80,22 @@ class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach with Mockit
     assert(thrown.getMessage === "Exasol metadata is None!")
   }
 
-  test("getConnectionInformation returns storage connection information") {
-    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
-    val metadata = mock[ExaMetadata]
-    val connectionInfo: ExaConnectionInformation = new ExaConnectionInformation() {
+  final def newConnectionInformation(
+    username: String,
+    password: String
+  ): ExaConnectionInformation =
+    new ExaConnectionInformation() {
       override def getType(): ExaConnectionInformation.ConnectionType =
         ExaConnectionInformation.ConnectionType.PASSWORD
       override def getAddress(): String = ""
-      override def getUser(): String = "user"
-      override def getPassword(): String = "secret"
+      override def getUser(): String = username
+      override def getPassword(): String = password
     }
 
+  test("getConnectionInformation returns storage connection information") {
+    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    val metadata = mock[ExaMetadata]
+    val connectionInfo = newConnectionInformation("user", "secret")
     when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
     assert(StorageProperties(properties, metadata).getConnectionInformation() === connectionInfo)
     verify(metadata, times(1)).getConnection("connection_info")
@@ -103,6 +108,49 @@ class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach with Mockit
   test("hasNamedConnection returns true if connection name is set") {
     properties = Map(StorageProperties.CONNECTION_NAME -> "named_connection")
     assert(BaseProperties(properties).hasNamedConnection() === true)
+  }
+
+  test("merge returns StorageProperties with new properties") {
+    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    val metadata = mock[ExaMetadata]
+    val connectionInfo = newConnectionInformation("", "KEY1=secret1==;KEY2=sec=ret2;KEY3=secret")
+    when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
+    val storageProperties = StorageProperties(properties, metadata).merge("")
+    assert(storageProperties.getString("KEY1") === "secret1==")
+    assert(storageProperties.getString("KEY2") === "sec=ret2")
+    assert(storageProperties.getString("KEY3") === "secret")
+  }
+
+  test("merge returns with keyForUsername mapped to connection username") {
+    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    val metadata = mock[ExaMetadata]
+    val connectionInfo = newConnectionInformation("usernameValue", "KEY1=secret1")
+    when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
+    val storageProperties = StorageProperties(properties, metadata).merge("usernameKey")
+    assert(storageProperties.getString("usernameKey") === "usernameValue")
+    assert(storageProperties.getString("KEY1") === "secret1")
+  }
+
+  test("merge returns with keyForUsername -> connection username overwritted") {
+    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    val metadata = mock[ExaMetadata]
+    val connectionInfo =
+      newConnectionInformation("usernameValue", "KEY1=secret1;usernameKey=newUsername")
+    when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
+    val storageProperties = StorageProperties(properties, metadata).merge("usernameKey")
+    assert(storageProperties.getString("usernameKey") === "newUsername")
+    assert(storageProperties.getString("KEY1") === "secret1")
+  }
+
+  test("merge throws if it cannot find key=value pairs in connection passoword") {
+    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    val metadata = mock[ExaMetadata]
+    val connectionInfo = newConnectionInformation("", "secret1;key=value")
+    when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
+    val thrown = intercept[IllegalArgumentException] {
+      StorageProperties(properties, metadata).merge("")
+    }
+    assert(thrown.getMessage === "Connection object password does not contain key=value pairs!")
   }
 
   test("mkString returns empty string by default") {

@@ -90,6 +90,11 @@ class StorageProperties(
       .split(";")
       .map { str =>
         val idx = str.indexOf('=')
+        if (idx < 0) {
+          throw new IllegalArgumentException(
+            "Connection object password does not contain key=value pairs!"
+          )
+        }
         str.substring(0, idx) -> str.substring(idx + 1)
       }
       .toMap
