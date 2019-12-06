@@ -17,7 +17,7 @@ import com.typesafe.scalalogging.LazyLogging
 object ExportTable extends LazyLogging {
 
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
-    val storageProperties = StorageProperties(iterator.getString(1))
+    val storageProperties = StorageProperties(iterator.getString(1), metadata)
     val bucket = Bucket(storageProperties)
     val srcColumnNames = iterator.getString(2).split("\\.")
     val firstColumnIdx = 3

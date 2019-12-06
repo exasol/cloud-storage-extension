@@ -36,14 +36,14 @@ class ExportPathTest extends PathTest {
   }
 
   test("generateSqlForExportSpec throws if required property is not set") {
-    val newProperties = properties - ("S3_ACCESS_KEY")
+    val newProperties = properties - ("S3_ENDPOINT")
     when(metadata.getScriptSchema()).thenReturn(schema)
     when(exportSpec.getParameters()).thenReturn(newProperties.asJava)
 
     val thrown = intercept[IllegalArgumentException] {
       ExportPath.generateSqlForExportSpec(metadata, exportSpec)
     }
-    assert(thrown.getMessage === "Please provide a value for the S3_ACCESS_KEY property!")
+    assert(thrown.getMessage === "Please provide a value for the S3_ENDPOINT property!")
     verify(exportSpec, times(1)).getParameters
     verify(exportSpec, never).getSourceColumnNames
   }

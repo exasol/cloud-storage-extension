@@ -15,7 +15,7 @@ import org.apache.hadoop.fs.Path
 object ImportFiles extends LazyLogging {
 
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
-    val storageProperties = StorageProperties(iterator.getString(1))
+    val storageProperties = StorageProperties(iterator.getString(1), metadata)
     val fileFormat = storageProperties.getFileFormat()
     val bucket = Bucket(storageProperties)
 

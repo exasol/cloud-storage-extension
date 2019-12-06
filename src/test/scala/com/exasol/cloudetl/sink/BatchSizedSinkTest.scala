@@ -42,7 +42,7 @@ class BatchSizedSinkTest extends FunSuite with BeforeAndAfterEach with DummyReco
   test("export single file with default batch size") {
     val bucket = LocalBucket(
       outputPath.toUri.toString,
-      new StorageProperties(properties ++ Map("EXPORT_BATCH_SIZE" -> "4"))
+      StorageProperties(properties ++ Map("EXPORT_BATCH_SIZE" -> "4"))
     )
     val sink = new BatchSizedSink(1L, "vm1", 2, columnMetadata, bucket)
     rows.foreach { row =>
@@ -55,7 +55,7 @@ class BatchSizedSinkTest extends FunSuite with BeforeAndAfterEach with DummyReco
   test("export several files with batch size smaller than total records") {
     val bucket = LocalBucket(
       outputPath.toUri.toString,
-      new StorageProperties(properties ++ Map("EXPORT_BATCH_SIZE" -> "3"))
+      StorageProperties(properties ++ Map("EXPORT_BATCH_SIZE" -> "3"))
     )
     val sink = new BatchSizedSink(1L, "vm1", 7, columnMetadata, bucket)
     val newRows = rows ++ rows ++ rows ++ rows.take(1)

@@ -36,14 +36,14 @@ class ImportPathTest extends PathTest {
   }
 
   test("generateSqlForImportSpec throws if required property is not set") {
-    val newProperties = properties - ("S3_ACCESS_KEY")
+    val newProperties = properties - ("S3_ENDPOINT")
     when(metadata.getScriptSchema()).thenReturn(schema)
     when(importSpec.getParameters()).thenReturn(newProperties.asJava)
 
     val thrown = intercept[IllegalArgumentException] {
       ImportPath.generateSqlForImportSpec(metadata, importSpec)
     }
-    assert(thrown.getMessage === "Please provide a value for the S3_ACCESS_KEY property!")
+    assert(thrown.getMessage === "Please provide a value for the S3_ENDPOINT property!")
     verify(importSpec, times(1)).getParameters
   }
 

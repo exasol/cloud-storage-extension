@@ -2,7 +2,7 @@
 
 > 2019 OCT 31 :jack_o_lantern:
 
-* Adds Apach Kafka consumer UDF to import Avro formatted data from Kafka
+* Adds Apache Kafka consumer UDF to import Avro formatted data from Kafka
   clusters. [#40](https://github.com/exasol/cloud-storage-etl-udfs/issues/40)
   [#39](https://github.com/exasol/cloud-storage-etl-udfs/pull/39)
   [#48](https://github.com/exasol/cloud-storage-etl-udfs/pull/48)

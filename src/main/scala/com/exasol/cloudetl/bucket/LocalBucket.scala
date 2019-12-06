@@ -19,6 +19,10 @@ final case class LocalBucket(path: String, params: StorageProperties) extends Bu
   override def getRequiredProperties(): Seq[String] = Seq.empty[String]
 
   /** @inheritdoc */
+  override def validate(): Unit =
+    validateRequiredProperties()
+
+  /** @inheritdoc */
   override def getConfiguration(): Configuration = {
     validate()
     new Configuration()
