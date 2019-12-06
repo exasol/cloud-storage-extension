@@ -1,3 +1,21 @@
+## v0.6.0
+
+> 2019 DEC 06
+
+* Improves Azure Blob Storage parameters, do not enforce requirement of
+  `AZURE_ACCOUNT_NAME` and `AZURE_CONTAINER_NAME` properties since they are
+  available in the path.
+  [#50](https://github.com/exasol/cloud-storage-etl-udfs/issues/50)
+  [#55](https://github.com/exasol/cloud-storage-etl-udfs/pull/55)
+
+* Adds support for Exasol named connection object
+  [#24](https://github.com/exasol/cloud-storage-etl-udfs/issues/24)
+  [#54](https://github.com/exasol/cloud-storage-etl-udfs/pull/54)
+
+* Fixes bug when importing Parquet `INT64 (TIMESTAMP_MILLIS)` type values.
+  [#52](https://github.com/exasol/cloud-storage-etl-udfs/issues/52)
+  [#53](https://github.com/exasol/cloud-storage-etl-udfs/pull/53)
+
 ## v0.5.0
 
 > 2019 OCT 31 :jack_o_lantern:
