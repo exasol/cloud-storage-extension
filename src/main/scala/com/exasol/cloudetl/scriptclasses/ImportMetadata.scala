@@ -14,6 +14,7 @@ object ImportMetadata extends LazyLogging {
     UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exadefusr"))
     val bucketPath = iterator.getString(0)
     val parallelism = iterator.getInteger(2)
+
     logger.info(
       s"Reading metadata from bucket path: $bucketPath "
         + s"with parallelism: ${parallelism.toString}"
