@@ -157,11 +157,11 @@ object TimestampDeserializer extends OrcDeserializer[TimestampColumnVector] {
 
 @SuppressWarnings(Array("org.wartremover.warts.Null"))
 object DecimalDeserializer extends OrcDeserializer[DecimalColumnVector] {
-  override def readAt(vector: DecimalColumnVector, index: Int): BigDecimal =
+  override def readAt(vector: DecimalColumnVector, index: Int): java.math.BigDecimal =
     if (vector.isNull(index)) {
       null // scalastyle:ignore null
     } else {
-      BigDecimal(vector.vector(index).getHiveDecimal.bigDecimalValue)
+      vector.vector(index).getHiveDecimal.bigDecimalValue()
     }
 }
 
