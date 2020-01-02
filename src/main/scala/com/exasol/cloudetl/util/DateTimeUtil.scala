@@ -6,7 +6,7 @@ import java.time._
 import java.util.TimeZone
 
 /**
- * Helper functions to convert date time values
+ * Helper functions to convert date time values.
  */
 object DateTimeUtil {
   // scalastyle:off magic.number
@@ -21,11 +21,14 @@ object DateTimeUtil {
   val MICROS_PER_SECOND: Long = MICROS_PER_MILLIS * MILLIS_PER_SECOND
   val MICROS_PER_DAY: Long = MICROS_PER_SECOND * SECONDS_PER_DAY
 
-  /** Returns a [[java.sql.Timestamp]] timestamp from number of microseconds since epoch */
+  /**
+   * Returns a [[java.sql.Timestamp]] timestamp from number of
+   * microseconds since epoch.
+   */
   @SuppressWarnings(Array("org.wartremover.warts.Var"))
   def getTimestampFromMicros(us: Long): Timestamp = {
-    // setNanos() will overwrite the millisecond part, so the milliseconds should be cut off at
-    // seconds
+    // setNanos() will overwrite the millisecond part, so the
+    // milliseconds should be cut off at seconds
     var seconds = us / MICROS_PER_SECOND
     var micros = us % MICROS_PER_SECOND
     if (micros < 0) { // setNanos() can not accept negative value
@@ -38,7 +41,17 @@ object DateTimeUtil {
     ts
   }
 
-  /** Returns the number of micros since epoch from [[java.sql.Timestamp]] */
+  /**
+   * Returns a [[java.sql.Timestamp]] timestamp from number of
+   * milliseconds since epoch.
+   */
+  def getTimestampFromMillis(millis: Long): Timestamp =
+    new Timestamp(millis)
+
+  /**
+   * Returns the number of micros since epoch from
+   * [[java.sql.Timestamp]].
+   */
   def getMicrosFromTimestamp(ts: Timestamp): Long =
     if (ts != null) {
       ts.getTime() * 1000L + (ts.getNanos().toLong / 1000) % 1000L
@@ -46,7 +59,10 @@ object DateTimeUtil {
       0L
     }
 
-  /** Returns Julian day and nanoseconds in a day from microseconds since epoch */
+  /**
+   * Returns Julian day and nanoseconds in a day from microseconds since
+   * epoch.
+   */
   @SuppressWarnings(Array("org.wartremover.contrib.warts.ExposedTuples"))
   def getJulianDayAndNanos(us: Long): (Int, Long) = {
     val julian_us = us + JULIAN_DAY_OF_EPOCH * MICROS_PER_DAY
@@ -55,13 +71,16 @@ object DateTimeUtil {
     (day.toInt, micros * 1000L)
   }
 
-  /** Returns microseconds since epoch from Julian day and nanoseconds in a day */
+  /**
+   * Returns microseconds since epoch from Julian day and nanoseconds in
+   * a day.
+   */
   def getMicrosFromJulianDay(day: Int, nanos: Long): Long = {
     val seconds = (day - JULIAN_DAY_OF_EPOCH).toLong * SECONDS_PER_DAY
     seconds * MICROS_PER_SECOND + nanos / 1000L
   }
 
-  /** Returns the number of days since unix epoch */
+  /** Returns the number of days since unix epoch. */
   @SuppressWarnings(Array("org.wartremover.contrib.warts.OldTime"))
   def daysSinceEpoch(date: Date): Long = {
     val millisUtc = date.getTime
@@ -69,7 +88,7 @@ object DateTimeUtil {
     Math.floor(millis.toDouble / MILLIS_PER_DAY).toLong
   }
 
-  /** Returns a [[java.sql.Date]] date given the days since epoch */
+  /** Returns a [[java.sql.Date]] date given the days since epoch. */
   def daysToDate(days: Long): Date = {
     val date = UnixEpochDateTime.plusDays(days)
     val millis = date.atZone(ZoneId.systemDefault).toInstant.toEpochMilli

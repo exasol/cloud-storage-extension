@@ -1,9 +1,16 @@
 package com.exasol.cloudetl.storage
 
+import com.exasol.ExaConnectionInformation
+import com.exasol.ExaMetadata
+
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FunSuite
+import org.scalatest.mockito.MockitoSugar
 
-class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach {
+class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach with MockitoSugar {
 
   private[this] var properties: Map[String, String] = _
 
@@ -66,6 +73,86 @@ class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach {
     assert(BaseProperties(properties).getParallelism("nproc()") === "nproc()")
   }
 
+  test("getConnectionInformation throws if Exasol metadata is not provided") {
+    val thrown = intercept[IllegalArgumentException] {
+      BaseProperties(properties).getConnectionInformation()
+    }
+    assert(thrown.getMessage === "Exasol metadata is None!")
+  }
+
+  final def newConnectionInformation(
+    username: String,
+    password: String
+  ): ExaConnectionInformation =
+    new ExaConnectionInformation() {
+      override def getType(): ExaConnectionInformation.ConnectionType =
+        ExaConnectionInformation.ConnectionType.PASSWORD
+      override def getAddress(): String = ""
+      override def getUser(): String = username
+      override def getPassword(): String = password
+    }
+
+  test("getConnectionInformation returns storage connection information") {
+    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    val metadata = mock[ExaMetadata]
+    val connectionInfo = newConnectionInformation("user", "secret")
+    when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
+    assert(StorageProperties(properties, metadata).getConnectionInformation() === connectionInfo)
+    verify(metadata, times(1)).getConnection("connection_info")
+  }
+
+  test("hasNamedConnection returns false by default") {
+    assert(BaseProperties(properties).hasNamedConnection() === false)
+  }
+
+  test("hasNamedConnection returns true if connection name is set") {
+    properties = Map(StorageProperties.CONNECTION_NAME -> "named_connection")
+    assert(BaseProperties(properties).hasNamedConnection() === true)
+  }
+
+  test("merge returns StorageProperties with new properties") {
+    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    val metadata = mock[ExaMetadata]
+    val connectionInfo = newConnectionInformation("", "KEY1=secret1==;KEY2=sec=ret2;KEY3=secret")
+    when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
+    val storageProperties = StorageProperties(properties, metadata).merge("")
+    assert(storageProperties.getString("KEY1") === "secret1==")
+    assert(storageProperties.getString("KEY2") === "sec=ret2")
+    assert(storageProperties.getString("KEY3") === "secret")
+  }
+
+  test("merge returns with keyForUsername mapped to connection username") {
+    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    val metadata = mock[ExaMetadata]
+    val connectionInfo = newConnectionInformation("usernameValue", "KEY1=secret1")
+    when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
+    val storageProperties = StorageProperties(properties, metadata).merge("usernameKey")
+    assert(storageProperties.getString("usernameKey") === "usernameValue")
+    assert(storageProperties.getString("KEY1") === "secret1")
+  }
+
+  test("merge returns with keyForUsername -> connection username overwritted") {
+    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    val metadata = mock[ExaMetadata]
+    val connectionInfo =
+      newConnectionInformation("usernameValue", "KEY1=secret1;usernameKey=newUsername")
+    when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
+    val storageProperties = StorageProperties(properties, metadata).merge("usernameKey")
+    assert(storageProperties.getString("usernameKey") === "newUsername")
+    assert(storageProperties.getString("KEY1") === "secret1")
+  }
+
+  test("merge throws if it cannot find key=value pairs in connection passoword") {
+    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    val metadata = mock[ExaMetadata]
+    val connectionInfo = newConnectionInformation("", "secret1;key=value")
+    when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
+    val thrown = intercept[IllegalArgumentException] {
+      StorageProperties(properties, metadata).merge("")
+    }
+    assert(thrown.getMessage === "Connection object password does not contain key=value pairs!")
+  }
+
   test("mkString returns empty string by default") {
     val str = BaseProperties(properties).mkString()
     assert(str.isEmpty === true)
@@ -84,6 +171,13 @@ class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach {
     assert(StorageProperties(properties) === baseProperty)
   }
 
+  test("apply(map) with Exasol metadata returns correct StorageProperties") {
+    properties = Map("k" -> "v")
+    val metadata = mock[ExaMetadata]
+    val expected = StorageProperties(properties, metadata)
+    assert(StorageProperties(properties, metadata) === expected)
+  }
+
   test("apply(string) throws if input string does not contain separator") {
     val thrown = intercept[IllegalArgumentException] {
       StorageProperties("")
@@ -98,7 +192,15 @@ class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach {
     assert(StorageProperties(mkStringResult) === baseProperty)
   }
 
+  test("apply(string) with Exasol metadata returns correct StorageProperties") {
+    properties = Map("k1" -> "v1", "k2" -> "v2")
+    val metadata = mock[ExaMetadata]
+    val expected = StorageProperties(properties, metadata)
+    val mkStringResult = BaseProperties(properties).mkString()
+    assert(StorageProperties(mkStringResult, metadata) === expected)
+  }
+
   private[this] case class BaseProperties(val params: Map[String, String])
-      extends StorageProperties(params)
+      extends StorageProperties(params, None)
 
 }

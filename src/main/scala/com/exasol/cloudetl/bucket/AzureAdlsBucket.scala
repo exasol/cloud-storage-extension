@@ -5,7 +5,9 @@ import com.exasol.cloudetl.storage.StorageProperties
 import org.apache.hadoop.conf.Configuration
 
 /** A [[Bucket]] implementation for the Azure Data Lake Storage */
-final case class AzureAdlsBucket(path: String, params: StorageProperties) extends Bucket {
+final case class AzureAdlsBucket(path: String, params: StorageProperties)
+    extends Bucket
+    with SecureBucket {
 
   private[this] val AZURE_CLIENT_ID: String = "AZURE_CLIENT_ID"
   private[this] val AZURE_CLIENT_SECRET: String = "AZURE_CLIENT_SECRET"
@@ -22,7 +24,17 @@ final case class AzureAdlsBucket(path: String, params: StorageProperties) extend
    * Storage.
    */
   override def getRequiredProperties(): Seq[String] =
+    Seq.empty[String]
+
+  /** @inheritdoc */
+  override def getSecureProperties(): Seq[String] =
     Seq(AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_DIRECTORY_ID)
+
+  /** @inheritdoc */
+  override def validate(): Unit = {
+    validateRequiredProperties()
+    validateConnectionProperties()
+  }
 
   /**
    * @inheritdoc
@@ -34,9 +46,14 @@ final case class AzureAdlsBucket(path: String, params: StorageProperties) extend
     validate()
 
     val conf = new Configuration()
-    val clientId = properties.getString(AZURE_CLIENT_ID)
-    val clientSecret = properties.getString(AZURE_CLIENT_SECRET)
-    val directoryId = properties.getString(AZURE_DIRECTORY_ID)
+    val mergedProperties = if (properties.hasNamedConnection()) {
+      properties.merge(AZURE_CLIENT_ID)
+    } else {
+      properties
+    }
+    val clientId = mergedProperties.getString(AZURE_CLIENT_ID)
+    val clientSecret = mergedProperties.getString(AZURE_CLIENT_SECRET)
+    val directoryId = mergedProperties.getString(AZURE_DIRECTORY_ID)
     val tokenEndpoint = s"https://login.microsoftonline.com/$directoryId/oauth2/token"
     conf.set("fs.adl.impl", classOf[org.apache.hadoop.fs.adl.AdlFileSystem].getName)
     conf.set("fs.AbstractFileSystem.adl.impl", classOf[org.apache.hadoop.fs.adl.Adl].getName)

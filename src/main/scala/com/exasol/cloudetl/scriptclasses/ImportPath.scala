@@ -19,18 +19,18 @@ object ImportPath {
     val bucket = Bucket(storageProperties)
     bucket.validate()
 
+    val scriptSchema = metadata.getScriptSchema
     val bucketPath = bucket.bucketPath
     val parallelism = storageProperties.getParallelism("nproc()")
-    val storagePropertiesStr = storageProperties.mkString()
-    val scriptSchema = metadata.getScriptSchema
+    val storagePropertiesAsString = storageProperties.mkString()
 
     s"""SELECT
        |  $scriptSchema.IMPORT_FILES(
-       |    '$bucketPath', '$storagePropertiesStr', filename
+       |    '$bucketPath', '$storagePropertiesAsString', filename
        |)
        |FROM (
        |  SELECT $scriptSchema.IMPORT_METADATA(
-       |    '$bucketPath', '$storagePropertiesStr', $parallelism
+       |    '$bucketPath', '$storagePropertiesAsString', $parallelism
        |  )
        |)
        |GROUP BY

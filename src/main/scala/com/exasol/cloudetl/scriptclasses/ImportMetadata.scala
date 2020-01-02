@@ -20,7 +20,7 @@ object ImportMetadata extends LazyLogging {
         + s"with parallelism: ${parallelism.toString}"
     )
 
-    val storageProperties = StorageProperties(iterator.getString(1))
+    val storageProperties = StorageProperties(iterator.getString(1), metadata)
     val bucket = Bucket(storageProperties)
     val paths = bucket.getPaths().filter(p => !p.getName().startsWith("_"))
     logger.info(s"Total number of files: ${paths.size} in bucket path: $bucketPath")
