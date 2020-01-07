@@ -1,5 +1,7 @@
 # Exasol Public Cloud Storage ETL UDFs
 
+<img alt="cloud-storage-etl-udfs logo" src="docs/images/cloud-storage-etl-udfs_128x128.png" style="float:left; padding:0px 10px 10px 10px;"/>
+
 [![Build Status][travis-badge]][travis-link]
 [![Codecov][codecov-badge]][codecov-link]
 [![Coveralls][coveralls-badge]][coveralls-link]
