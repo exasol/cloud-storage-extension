@@ -28,15 +28,16 @@ object SchemaUtil {
   }
 
   /**
-   * Given the Exasol column information returns Parquet [[org.apache.parquet.schema.MessageType]]
+   * Given the Exasol column information returns Parquet
+   * [[org.apache.parquet.schema.MessageType]].
    */
   def createParquetMessageType(columns: Seq[ExaColumnInfo], schemaName: String): MessageType = {
     val types = columns.map(exaColumnToParquetType(_))
     new MessageType(schemaName, types: _*)
   }
 
-  // In below several lines, I try to pattern match on Class[X] of Java types.
-  // Please also read:
+  // In below several lines, I try to pattern match on Class[X] of Java
+  // types. Please also read:
   // https://stackoverflow.com/questions/7519140/pattern-matching-on-class-type
   object JTypes {
     val jInteger: Class[java.lang.Integer] = classOf[java.lang.Integer]
@@ -50,8 +51,8 @@ object SchemaUtil {
   }
 
   /**
-   * Given Exasol column [[com.exasol.cloudetl.data.ExaColumnInfo]] information convert it into
-   * Parquet [[org.apache.parquet.schema.Type$]]
+   * Given Exasol column [[com.exasol.cloudetl.data.ExaColumnInfo]]
+   * information convert it into Parquet schema type.
    */
   def exaColumnToParquetType(colInfo: ExaColumnInfo): Type = {
     val colName = colInfo.name
@@ -149,8 +150,8 @@ object SchemaUtil {
   }
 
   /**
-   * Returns a value from Exasol [[ExaIterator]] iterator on given index which have
-   * [[com.exasol.cloudetl.data.ExaColumnInfo]] column type
+   * Returns a value from Exasol [[ExaIterator]] iterator on given index
+   * which have [[com.exasol.cloudetl.data.ExaColumnInfo]] column type.
    */
   def exaColumnToValue(iter: ExaIterator, idx: Int, colInfo: ExaColumnInfo): Any = {
     val colType = colInfo.`type`

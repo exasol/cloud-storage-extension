@@ -2,9 +2,9 @@ package com.exasol.cloudetl.storage
 
 import com.exasol.cloudetl.storage.FileFormat._
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class FileFormatTest extends FunSuite {
+class FileFormatTest extends AnyFunSuite {
 
   test("apply returns supported file formats") {
     val testData = Map(

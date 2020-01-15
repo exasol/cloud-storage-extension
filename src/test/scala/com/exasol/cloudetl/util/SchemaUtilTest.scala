@@ -7,11 +7,11 @@ import org.apache.parquet.schema._
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
 import org.apache.parquet.schema.Type.Repetition
 import org.mockito.Mockito._
-import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.mockito.MockitoSugar
 
 @SuppressWarnings(Array("org.wartremover.contrib.warts.ExposedTuples"))
-class SchemaUtilTest extends FunSuite with MockitoSugar {
+class SchemaUtilTest extends AnyFunSuite with MockitoSugar {
 
   test("createParquetMessageType throws if type is unknown") {
     val thrown = intercept[IllegalArgumentException] {

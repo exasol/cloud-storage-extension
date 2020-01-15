@@ -13,12 +13,12 @@ import org.apache.hadoop.hive.ql.exec.vector.DecimalColumnVector
 import org.apache.orc.OrcFile
 import org.apache.orc.TypeDescription
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 @SuppressWarnings(
   Array("org.wartremover.warts.AsInstanceOf", "org.wartremover.warts.IsInstanceOf")
 )
-class OrcDeserializerTest extends FunSuite with BeforeAndAfterEach with DummyRecordsTest {
+class OrcDeserializerTest extends AnyFunSuite with BeforeAndAfterEach with DummyRecordsTest {
 
   private[this] var conf: Configuration = _
   private[this] var fileSystem: FileSystem = _

@@ -7,9 +7,9 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class FileSystemUtilTest extends FunSuite with BeforeAndAfterEach {
+class FileSystemUtilTest extends AnyFunSuite with BeforeAndAfterEach {
 
   private[this] var temporaryDirectory: FPath = _
   private[this] var files: Seq[FPath] = _

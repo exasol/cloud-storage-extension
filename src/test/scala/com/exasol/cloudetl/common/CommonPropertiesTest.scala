@@ -1,8 +1,8 @@
 package com.exasol.cloudetl.common
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class CommonPropertiesTest extends FunSuite {
+class CommonPropertiesTest extends AnyFunSuite {
 
   test("mapFromString returns key-value map") {
     val testData = Map(

@@ -5,9 +5,9 @@ import com.exasol.cloudetl.storage.StorageProperties
 import org.apache.parquet.hadoop.ParquetWriter
 import org.apache.parquet.hadoop.metadata.CompressionCodecName
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ParquetWriteOptionsTest extends FunSuite with BeforeAndAfterEach {
+class ParquetWriteOptionsTest extends AnyFunSuite with BeforeAndAfterEach {
 
   private[this] var properties: Map[String, String] = _
 

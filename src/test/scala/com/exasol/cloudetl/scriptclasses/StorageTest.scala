@@ -7,14 +7,14 @@ import com.exasol.ExaIterator
 import com.exasol.cloudetl.storage.StorageProperties
 
 import org.mockito.Mockito.when
-import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.mockito.MockitoSugar
 
 /**
  * A trait with helper methods and default values for storage test
  * classes.
  */
-trait StorageTest extends FunSuite with MockitoSugar {
+trait StorageTest extends AnyFunSuite with MockitoSugar {
 
   private[scriptclasses] val testResourceDir: String =
     normalize(Paths.get(getClass.getResource("/data").toURI))

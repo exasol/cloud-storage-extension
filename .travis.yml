@@ -26,10 +26,10 @@ matrix:
       scala: 2.11.12
 
     - jdk: openjdk8
-      scala: 2.12.8
+      scala: 2.12.10
 
     - jdk: oraclejdk8
-      scala: 2.12.8
+      scala: 2.12.10
       env: RELEASE=true
 
 script:

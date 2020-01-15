@@ -7,10 +7,10 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.mockito.MockitoSugar
 
-class StoragePropertiesTest extends FunSuite with BeforeAndAfterEach with MockitoSugar {
+class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with MockitoSugar {
 
   private[this] var properties: Map[String, String] = _
 

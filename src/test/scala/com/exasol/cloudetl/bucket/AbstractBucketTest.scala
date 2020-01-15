@@ -6,11 +6,11 @@ import com.exasol.cloudetl.storage.StorageProperties
 
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.mockito.MockitoSugar
 
 @SuppressWarnings(Array("org.wartremover.warts.Overloading"))
-class AbstractBucketTest extends FunSuite with BeforeAndAfterEach with MockitoSugar {
+class AbstractBucketTest extends AnyFunSuite with BeforeAndAfterEach with MockitoSugar {
 
   private[bucket] val PATH: String = "BUCKET_PATH"
   private[bucket] val FORMAT: String = "DATA_FORMAT"

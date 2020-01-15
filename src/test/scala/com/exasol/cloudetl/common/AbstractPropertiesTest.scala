@@ -1,9 +1,9 @@
 package com.exasol.cloudetl.common
 
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class AbstractPropertiesTest extends FunSuite with BeforeAndAfterEach {
+class AbstractPropertiesTest extends AnyFunSuite with BeforeAndAfterEach {
 
   private[this] var properties: Map[String, String] = _
 
