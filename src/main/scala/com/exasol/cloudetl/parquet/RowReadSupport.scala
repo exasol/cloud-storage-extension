@@ -51,9 +51,7 @@ class RowRecordMaterializer(messageType: MessageType, readContext: ReadContext)
   override def getCurrentRecord: Row = Row(getRootConverter.currentResult.toSeq)
 }
 
-@SuppressWarnings(
-  Array("org.wartremover.warts.Var", "org.wartremover.contrib.warts.UnsafeInheritance")
-)
+@SuppressWarnings(Array("org.wartremover.contrib.warts.UnsafeInheritance"))
 class RowRootConverter(schema: GroupType) extends GroupConverter {
   private val size = schema.getFieldCount
   private var values: Array[Any] = Array.ofDim[Any](size)

@@ -20,7 +20,6 @@ import org.apache.parquet.schema.MessageType
  * A Parquet source that can read parquet formatted files from Hadoop
  * compatible storage systems.
  */
-@SuppressWarnings(Array("org.wartremover.warts.Var", "org.wartremover.warts.Null"))
 final case class ParquetSource(
   override val path: Path,
   override val conf: Configuration,
@@ -67,7 +66,6 @@ final case class ParquetSource(
       }
     }
 
-  // scalastyle:off null
   override def close(): Unit =
     if (recordReader != null) {
       try {
@@ -76,6 +74,5 @@ final case class ParquetSource(
         recordReader = null
       }
     }
-  // scalastyle:on null
 
 }

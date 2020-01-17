@@ -28,7 +28,6 @@ import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
  *  - org.apache.spark.sql.execution.datasources.parquet.ParquetWriteSupport
  *
  */
-@SuppressWarnings(Array("org.wartremover.warts.Null", "org.wartremover.warts.Var"))
 class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
 
   // The number bytes required for timestamp buffer in Parquet

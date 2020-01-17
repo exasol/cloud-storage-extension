@@ -10,10 +10,6 @@ addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.4.3")
 // http://github.com/wartremover/wartremover-contrib/
 addSbtPlugin("org.wartremover" % "sbt-wartremover-contrib" % "1.3.2")
 
-// Adds Extra Warts
-// http://github.com/danielnixon/extrawarts
-addSbtPlugin("org.danielnixon" % "sbt-extrawarts" % "1.0.3")
-
 // Adds a `assembly` task to create a fat JAR with all of its
 // dependencies
 // https://github.com/sbt/sbt-assembly

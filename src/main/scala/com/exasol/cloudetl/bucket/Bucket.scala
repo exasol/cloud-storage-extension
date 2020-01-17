@@ -77,7 +77,6 @@ abstract class Bucket extends LazyLogging {
  * Provides a factory method to create bucket and several utility
  * functions.
  */
-@SuppressWarnings(Array("org.wartremover.warts.Overloading"))
 object Bucket extends LazyLogging {
 
   /**

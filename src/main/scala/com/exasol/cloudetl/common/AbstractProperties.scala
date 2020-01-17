@@ -37,7 +37,7 @@ abstract class AbstractProperties(private val properties: Map[String, String]) {
    */
   final def isNull(key: String): Boolean =
     properties.get(key).fold(true) { value =>
-      value eq null // scalastyle:ignore null
+      value eq null
     }
 
   /**
@@ -80,13 +80,7 @@ abstract class AbstractProperties(private val properties: Map[String, String]) {
       .map { case (k, v) => s"$k$keyValueSeparator$v" }
       .mkString(propertySeparator)
 
-  @SuppressWarnings(
-    Array(
-      "org.wartremover.warts.AsInstanceOf",
-      "org.wartremover.warts.IsInstanceOf",
-      "org.wartremover.warts.Return"
-    )
-  )
+  @SuppressWarnings(Array("org.wartremover.warts.Return"))
   // scalastyle:off
   final override def equals(other: Any): Boolean = {
     if (!other.isInstanceOf[AbstractProperties]) {

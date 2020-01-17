@@ -13,7 +13,6 @@ import com.exasol.cloudetl.util.SchemaUtil
 
 import com.typesafe.scalalogging.LazyLogging
 
-@SuppressWarnings(Array("org.wartremover.warts.Var"))
 object ExportTable extends LazyLogging {
 
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
@@ -62,7 +61,6 @@ object ExportTable extends LazyLogging {
    * @param startIdx A starting integer index to reference input column
    * @return A sequence of [[ExaColumnInfo]] columns
    */
-  @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
   private[this] def getColumns(
     meta: ExaMetadata,
     srcColumnNames: Seq[String],

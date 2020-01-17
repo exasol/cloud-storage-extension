@@ -54,7 +54,6 @@ class StorageProperties(
    * Returns an Exasol [[ExaConnectionInformation]] named connection
    * information.
    */
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   final def getConnectionInformation(): ExaConnectionInformation =
     exaMetadata.fold {
       throw new IllegalArgumentException("Exasol metadata is None!")
@@ -111,7 +110,6 @@ class StorageProperties(
    *
    * The returned string is sorted by keys ordering.
    */
-  @SuppressWarnings(Array("org.wartremover.warts.Overloading"))
   final def mkString(): String =
     mkString(KEY_VALUE_SEPARATOR, PROPERTY_SEPARATOR)
 
@@ -120,7 +118,6 @@ class StorageProperties(
 /**
  * A companion object for [[StorageProperties]] class.
  */
-@SuppressWarnings(Array("org.wartremover.warts.Overloading"))
 object StorageProperties extends CommonProperties {
 
   /** A required property key name for a bucket path. */

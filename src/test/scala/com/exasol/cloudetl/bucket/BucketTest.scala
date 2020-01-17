@@ -2,7 +2,6 @@ package com.exasol.cloudetl.bucket
 
 import com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem
 
-@SuppressWarnings(Array("org.wartremover.warts.IsInstanceOf"))
 class BucketTest extends AbstractBucketTest {
 
   test("apply throws if the scheme is not supported") {

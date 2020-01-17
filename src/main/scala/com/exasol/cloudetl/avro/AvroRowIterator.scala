@@ -14,30 +14,28 @@ import org.apache.avro.generic.GenericRecord
  */
 object AvroRowIterator {
 
-  def apply(reader: DataFileReader[GenericRecord]): Iterator[Row] =
-    new Iterator[Row] {
-      @SuppressWarnings(Array("org.wartremover.warts.Var"))
-      private[this] var isCompleted = false
+  def apply(reader: DataFileReader[GenericRecord]): Iterator[Row] = new Iterator[Row] {
+    private[this] var isCompleted = false
 
-      override def hasNext: Boolean =
-        if (isCompleted) {
-          false
-        } else {
-          val hasNext = reader.hasNext
-          if (!hasNext) {
-            reader.close()
-            isCompleted = true
-          }
-          hasNext
-        }
-
-      override def next(): Row = {
+    override def hasNext: Boolean =
+      if (isCompleted) {
+        false
+      } else {
+        val hasNext = reader.hasNext
         if (!hasNext) {
-          throw new NoSuchElementException("Avro reader called next on an empty iterator!")
+          reader.close()
+          isCompleted = true
         }
-        val record = reader.next()
-        Row.fromAvroGenericRecord(record)
+        hasNext
       }
+
+    override def next(): Row = {
+      if (!hasNext) {
+        throw new NoSuchElementException("Avro reader called next on an empty iterator!")
+      }
+      val record = reader.next()
+      Row.fromAvroGenericRecord(record)
     }
+  }
 
 }

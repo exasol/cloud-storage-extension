@@ -65,7 +65,6 @@ object OrcDeserializer {
 final class StructDeserializer(fieldTypes: Seq[TypeDescription])
     extends OrcDeserializer[StructColumnVector] {
 
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   def readFromColumn[T <: ColumnVector](
     struct: StructColumnVector,
     rowIndex: Int,
@@ -94,82 +93,74 @@ object BooleanDeserializer extends OrcDeserializer[LongColumnVector] {
     vector.vector(index) == 1
 }
 
-@SuppressWarnings(Array("org.wartremover.warts.Null"))
 object IntDeserializer extends OrcDeserializer[LongColumnVector] {
   override def readAt(vector: LongColumnVector, index: Int): Any =
     if (vector.isNull(index)) {
-      null // scalastyle:ignore null
+      null
     } else {
       vector.vector(index).toInt
     }
 }
 
-@SuppressWarnings(Array("org.wartremover.warts.Null"))
 object LongDeserializer extends OrcDeserializer[LongColumnVector] {
   override def readAt(vector: LongColumnVector, index: Int): Any =
     if (vector.isNull(index)) {
-      null // scalastyle:ignore null
+      null
     } else {
       vector.vector(index)
     }
 }
 
-@SuppressWarnings(Array("org.wartremover.warts.Null"))
 object DoubleDeserializer extends OrcDeserializer[DoubleColumnVector] {
   override def readAt(vector: DoubleColumnVector, index: Int): Any =
     if (vector.isNull(index)) {
-      null // scalastyle:ignore null
+      null
     } else {
       vector.vector(index)
     }
 }
 
-@SuppressWarnings(Array("org.wartremover.warts.Null"))
 object FloatDeserializer extends OrcDeserializer[DoubleColumnVector] {
   override def readAt(vector: DoubleColumnVector, index: Int): Any =
     if (vector.isNull(index)) {
-      null // scalastyle:ignore null
+      null
     } else {
       vector.vector(index).toFloat
     }
 }
 
-@SuppressWarnings(Array("org.wartremover.warts.Null"))
 object DateDeserializer extends OrcDeserializer[LongColumnVector] {
   override def readAt(vector: LongColumnVector, index: Int): java.sql.Date =
     if (vector.isNull(index)) {
-      null // scalastyle:ignore null
+      null
     } else {
       val daysSinceEpoch = vector.vector(index)
       DateTimeUtil.daysToDate(daysSinceEpoch)
     }
 }
 
-@SuppressWarnings(Array("org.wartremover.warts.Null"))
 object TimestampDeserializer extends OrcDeserializer[TimestampColumnVector] {
   override def readAt(vector: TimestampColumnVector, index: Int): java.sql.Timestamp =
     if (vector.isNull(index)) {
-      null // scalastyle:ignore null
+      null
     } else {
       new java.sql.Timestamp(vector.getTime(index))
     }
 }
 
-@SuppressWarnings(Array("org.wartremover.warts.Null"))
 object DecimalDeserializer extends OrcDeserializer[DecimalColumnVector] {
   override def readAt(vector: DecimalColumnVector, index: Int): java.math.BigDecimal =
     if (vector.isNull(index)) {
-      null // scalastyle:ignore null
+      null
     } else {
       vector.vector(index).getHiveDecimal.bigDecimalValue()
     }
 }
 
-@SuppressWarnings(Array("org.wartremover.warts.Null"))
 object StringDeserializer extends OrcDeserializer[BytesColumnVector] with LazyLogging {
   override def readAt(vector: BytesColumnVector, index: Int): String =
     if (vector.isNull(index)) {
-      null // scalastyle:ignore null
+      null
     } else {
       try {
         val bytes = vector.vector.headOption.fold(Array.empty[Byte])(

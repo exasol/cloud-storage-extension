@@ -15,9 +15,7 @@ import org.apache.orc.TypeDescription
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
 
-@SuppressWarnings(
-  Array("org.wartremover.warts.AsInstanceOf", "org.wartremover.warts.IsInstanceOf")
-)
+@SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
 class OrcDeserializerTest extends AnyFunSuite with BeforeAndAfterEach with DummyRecordsTest {
 
   private[this] var conf: Configuration = _
