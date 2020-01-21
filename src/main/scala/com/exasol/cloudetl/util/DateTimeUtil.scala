@@ -25,7 +25,6 @@ object DateTimeUtil {
    * Returns a [[java.sql.Timestamp]] timestamp from number of
    * microseconds since epoch.
    */
-  @SuppressWarnings(Array("org.wartremover.warts.Var"))
   def getTimestampFromMicros(us: Long): Timestamp = {
     // setNanos() will overwrite the millisecond part, so the
     // milliseconds should be cut off at seconds

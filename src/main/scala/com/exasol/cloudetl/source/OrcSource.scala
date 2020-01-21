@@ -18,7 +18,6 @@ import org.apache.orc.Reader
 /**
  * An Orc source that is able to read orc formatted files.
  */
-@SuppressWarnings(Array("org.wartremover.warts.Var", "org.wartremover.warts.Null"))
 final case class OrcSource(
   override val path: Path,
   override val conf: Configuration,
@@ -45,7 +44,6 @@ final case class OrcSource(
       batchIterator.next()
   }
 
-  // scalastyle:off null
   override def close(): Unit =
     if (recordReader != null) {
       try {
@@ -54,7 +52,6 @@ final case class OrcSource(
         recordReader = null
       }
     }
-  // scalastyle:on null
 
   private[this] def createReader(): Reader = {
     val options = OrcFile.readerOptions(conf).filesystem(fileSystem)

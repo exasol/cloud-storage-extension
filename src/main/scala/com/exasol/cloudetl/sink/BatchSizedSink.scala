@@ -19,7 +19,6 @@ import org.apache.hadoop.fs.Path
  * records, it is possible to balance the exported file sizes. Thus,
  * small files are not created for the last records.
  */
-@SuppressWarnings(Array("org.wartremover.warts.Null", "org.wartremover.warts.Var"))
 final class BatchSizedSink(
   nodeId: Long,
   vmId: String,
@@ -28,8 +27,6 @@ final class BatchSizedSink(
   override val bucket: Bucket
 ) extends Sink[Row]
     with LazyLogging {
-
-  // scalastyle:off null
 
   final val DEFAULT_BATCH_SIZE: Int = 100000
 
@@ -110,5 +107,4 @@ final class BatchSizedSink(
     s"exa_export_${nodeId}_${vmId}_$uuidStr.parquet"
   }
 
-  // scalastyle:on
 }

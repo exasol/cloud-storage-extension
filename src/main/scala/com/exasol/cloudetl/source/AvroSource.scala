@@ -18,7 +18,6 @@ import org.apache.hadoop.fs.Path
  * An Avro source that can read avro formatted files stored in Hadoop
  * like distributed storage file systems.
  */
-@SuppressWarnings(Array("org.wartremover.warts.Var", "org.wartremover.warts.Null"))
 final case class AvroSource(
   override val path: Path,
   override val conf: Configuration,
@@ -44,7 +43,6 @@ final case class AvroSource(
         throw exception
     }
 
-  // scalastyle:off null
   override def close(): Unit =
     if (recordReader != null) {
       try {
@@ -53,6 +51,5 @@ final case class AvroSource(
         recordReader = null
       }
     }
-  // scalastyle:on null
 
 }

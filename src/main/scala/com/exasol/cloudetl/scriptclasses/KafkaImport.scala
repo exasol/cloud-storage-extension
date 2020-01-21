@@ -15,7 +15,6 @@ import org.apache.kafka.common.TopicPartition
 
 object KafkaImport extends LazyLogging {
 
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
     val kafkaProperties = KafkaConsumerProperties(iterator.getString(0))
     val partitionId = iterator.getInteger(1)
@@ -39,10 +38,7 @@ object KafkaImport extends LazyLogging {
     kafkaConsumer.seek(topicPartition, partitionNextOffset)
 
     try {
-      @SuppressWarnings(Array("org.wartremover.warts.Var"))
       var recordsCount = 0
-
-      @SuppressWarnings(Array("org.wartremover.warts.Var"))
       var total = 0
 
       do {

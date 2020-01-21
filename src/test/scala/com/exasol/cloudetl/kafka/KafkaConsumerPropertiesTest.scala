@@ -1,10 +1,9 @@
 package com.exasol.cloudetl.kafka
 
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-@SuppressWarnings(Array("org.wartremover.warts.IsInstanceOf"))
-class KafkaConsumerPropertiesTest extends FunSuite with BeforeAndAfterEach {
+class KafkaConsumerPropertiesTest extends AnyFunSuite with BeforeAndAfterEach {
 
   private[this] var properties: Map[String, String] = _
 

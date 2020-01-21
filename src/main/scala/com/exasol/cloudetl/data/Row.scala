@@ -12,7 +12,6 @@ import org.apache.avro.util.Utf8
 /**
  * The internal class that holds column data in an array.
  */
-@SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
 final case class Row(protected[data] val values: Seq[Any]) {
 
   /** Checks whether the value at position {@code index} is null. */
@@ -55,20 +54,12 @@ object Row {
     Row(values.toSeq)
   }
 
-  @SuppressWarnings(
-    Array(
-      "org.wartremover.warts.AsInstanceOf",
-      "org.wartremover.warts.Null",
-      "org.wartremover.warts.Return",
-      "org.wartremover.warts.ToString"
-    )
-  )
+  @SuppressWarnings(Array("org.wartremover.warts.Return", "org.wartremover.warts.ToString"))
   def getAvroRecordValue(value: Any, field: Schema): Any = {
-    // scalastyle:off
     if (value == null) {
-      return null
+      return null // scalastyle:ignore return
+
     }
-    // scalastyle:on
     field.getType match {
       case Schema.Type.NULL    => value
       case Schema.Type.BOOLEAN => value

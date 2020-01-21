@@ -9,10 +9,9 @@ import com.exasol.cloudetl.util.FileSystemUtil
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-@SuppressWarnings(Array("org.wartremover.warts.Overloading"))
-class AbstractSourceTest extends FunSuite with BeforeAndAfterEach {
+class AbstractSourceTest extends AnyFunSuite with BeforeAndAfterEach {
 
   private[this] var conf: Configuration = _
   private[this] var fileSystem: FileSystem = _

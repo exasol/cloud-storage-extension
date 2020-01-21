@@ -1,6 +1,5 @@
 package com.exasol.cloudetl.source
 
-import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
 import com.exasol.cloudetl.data.Row
@@ -10,17 +9,17 @@ import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
-import org.apache.parquet.hadoop.Footer
 import org.apache.parquet.hadoop.ParquetFileReader
 import org.apache.parquet.hadoop.ParquetReader
 import org.apache.parquet.hadoop.api.ReadSupport
+import org.apache.parquet.hadoop.metadata.ParquetMetadata
+import org.apache.parquet.hadoop.util.HadoopInputFile
 import org.apache.parquet.schema.MessageType
 
 /**
  * A Parquet source that can read parquet formatted files from Hadoop
  * compatible storage systems.
  */
-@SuppressWarnings(Array("org.wartremover.warts.Var", "org.wartremover.warts.Null"))
 final case class ParquetSource(
   override val path: Path,
   override val conf: Configuration,
@@ -54,15 +53,19 @@ final case class ParquetSource(
       logger.error(s"Could not read parquet metadata from paths: $path")
       throw new RuntimeException("Parquet footers are empty!")
     }
-    footers.headOption.map(_.getParquetMetadata().getFileMetaData().getSchema())
+    footers.headOption.map(_.getFileMetaData().getSchema())
   }
 
-  private[this] def getFooters(): Seq[Footer] = {
-    val status = fileSystem.getFileStatus(path)
-    ParquetFileReader.readAllFootersInParallel(fileSystem.getConf, status).asScala
-  }
+  private[this] def getFooters(): Seq[ParquetMetadata] =
+    fileSystem.listStatus(path).toList.map { status =>
+      val reader = ParquetFileReader.open(HadoopInputFile.fromStatus(status, conf))
+      try {
+        reader.getFooter()
+      } finally {
+        reader.close()
+      }
+    }
 
-  // scalastyle:off null
   override def close(): Unit =
     if (recordReader != null) {
       try {
@@ -71,6 +74,5 @@ final case class ParquetSource(
         recordReader = null
       }
     }
-  // scalastyle:on null
 
 }

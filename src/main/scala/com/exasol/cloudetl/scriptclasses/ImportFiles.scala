@@ -33,7 +33,6 @@ object ImportFiles extends LazyLogging {
     }
   }
 
-  @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
   private[this] def groupFiles(
     iterator: ExaIterator,
     fileStartingIndex: Int

@@ -15,7 +15,6 @@ import com.typesafe.scalalogging.LazyLogging
 
 object KafkaMetadata extends LazyLogging {
 
-  @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
     val kafkaProperties = KafkaConsumerProperties(iterator.getString(0))
 

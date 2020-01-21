@@ -428,7 +428,7 @@
   <check level="error" class="org.scalastyle.scalariform.ReturnChecker" enabled="true"></check>
 
   <!-- Check that null is not used, prefer Option if possible -->
-  <check level="error" class="org.scalastyle.scalariform.NullChecker" enabled="true"></check>
+  <check level="error" class="org.scalastyle.scalariform.NullChecker" enabled="false"></check>
 
   <!-- Check that classes and objects do not define the clone() method -->
   <check level="error" class="org.scalastyle.scalariform.NoCloneChecker" enabled="true"></check>

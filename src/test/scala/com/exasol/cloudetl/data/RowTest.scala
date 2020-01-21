@@ -4,9 +4,9 @@ import scala.collection.JavaConverters._
 
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericData
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class RowTest extends FunSuite {
+class RowTest extends AnyFunSuite {
 
   test("fromAvroGenericRecord returns Row from GenericRecord with ByteBuffer column") {
     val recordSchema = createRecord(

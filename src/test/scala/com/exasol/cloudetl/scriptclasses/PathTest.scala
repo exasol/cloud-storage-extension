@@ -5,13 +5,13 @@ import com.exasol.ExaImportSpecification
 import com.exasol.ExaMetadata
 
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.mockito.MockitoSugar
 
 /**
  * A trait with helper variables for import or export path test classes.
  */
-trait PathTest extends FunSuite with BeforeAndAfterEach with MockitoSugar {
+trait PathTest extends AnyFunSuite with BeforeAndAfterEach with MockitoSugar {
 
   private[scriptclasses] val schema = "myDBSchema"
 

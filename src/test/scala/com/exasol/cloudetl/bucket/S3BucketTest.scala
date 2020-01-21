@@ -2,7 +2,6 @@ package com.exasol.cloudetl.bucket
 
 import org.apache.hadoop.fs.s3a.S3AFileSystem
 
-@SuppressWarnings(Array("org.wartremover.warts.IsInstanceOf"))
 class S3BucketTest extends AbstractBucketTest {
 
   private[this] val defaultProperties = Map(

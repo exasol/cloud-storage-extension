@@ -8,11 +8,11 @@ import org.apache.avro.Schema
 import org.apache.avro.specific.SpecificRecordBase
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.mockito.MockitoSugar
 
 trait KafkaIntegrationTest
-    extends FunSuite
+    extends AnyFunSuite
     with BeforeAndAfterEach
     with MockitoSugar
     with EmbeddedKafka {

@@ -4,7 +4,6 @@ import org.apache.hadoop.fs.azure.NativeAzureFileSystem
 import org.apache.hadoop.fs.azure.Wasb
 import org.apache.hadoop.fs.azure.Wasbs
 
-@SuppressWarnings(Array("org.wartremover.warts.IsInstanceOf"))
 class AzureBlobBucketTest extends AbstractBucketTest {
 
   private[this] val defaultProperties = Map(

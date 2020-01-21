@@ -3,7 +3,6 @@ package com.exasol.cloudetl.sbt
 import sbt._
 import wartremover.Wart
 import wartremover.Warts
-import org.danielnixon.extrawarts.ExtraWart
 
 /** Compiler related settings (flags, warts, lints) */
 object Compilation {
@@ -103,28 +102,27 @@ object Compilation {
     contribWart("SealedCaseClass"),
     contribWart("SomeApply"),
     contribWart("SymbolicName"),
-    contribWart("UnsafeInheritance"),
-    ExtraWart.EnumerationPartial,
-    ExtraWart.FutureObject,
-    ExtraWart.GenMapLikePartial,
-    ExtraWart.GenTraversableLikeOps,
-    ExtraWart.GenTraversableOnceOps,
-    ExtraWart.ScalaGlobalExecutionContext,
-    // ExtraWart.StringOpsPartial,
-    ExtraWart.ThrowablePartial,
-    ExtraWart.TraversableOnceOps,
-    ExtraWart.UnsafeContains
+    contribWart("UnintendedLaziness"),
+    contribWart("UnsafeInheritance")
   )
 
   val WartremoverFlags: Seq[Wart] = ExtraWartremoverFlags ++ Warts.allBut(
     Wart.Any,
+    Wart.AsInstanceOf,
     Wart.Equals,
+    Wart.IsInstanceOf,
+    Wart.Null,
+    Wart.MutableDataStructures,
+    Wart.Overloading,
     Wart.Throw,
+    Wart.Var,
     Wart.While
   )
 
   val WartremoverTestFlags: Seq[Wart] = ExtraWartremoverFlags ++ Warts.allBut(
     Wart.Any,
+    Wart.IsInstanceOf,
+    Wart.Overloading,
     Wart.NonUnitStatements,
     Wart.Null,
     Wart.Var

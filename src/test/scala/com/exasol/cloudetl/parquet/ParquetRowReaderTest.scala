@@ -18,9 +18,9 @@ import org.apache.parquet.io.api.RecordConsumer
 import org.apache.parquet.schema.MessageType
 import org.apache.parquet.schema.MessageTypeParser
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ParquetRowReaderTest extends FunSuite with BeforeAndAfterEach with DummyRecordsTest {
+class ParquetRowReaderTest extends AnyFunSuite with BeforeAndAfterEach with DummyRecordsTest {
 
   private[this] var conf: Configuration = _
   private[this] var fileSystem: FileSystem = _

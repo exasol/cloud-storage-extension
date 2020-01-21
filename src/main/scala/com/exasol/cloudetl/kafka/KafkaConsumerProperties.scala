@@ -185,13 +185,7 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
     KafkaConsumerProperties.createKafkaConsumer(this)
 
   /** Returns the Kafka consumer properties as Java map. */
-  @SuppressWarnings(
-    Array(
-      "org.wartremover.warts.AsInstanceOf",
-      "org.wartremover.warts.MutableDataStructures",
-      "org.wartremover.warts.NonUnitStatements"
-    )
-  )
+  @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   final def getProperties(): java.util.Map[String, AnyRef] = {
     val props = MMap.empty[String, String]
     props.put(ENABLE_AUTO_COMMIT.kafkaPropertyName, ENABLE_AUTO_COMMIT.defaultValue)
@@ -222,7 +216,6 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
    *
    * The resulting string is sorted by keys ordering.
    */
-  @SuppressWarnings(Array("org.wartremover.warts.Overloading"))
   final def mkString(): String =
     mkString(KEY_VALUE_SEPARATOR, PROPERTY_SEPARATOR)
 
@@ -231,7 +224,6 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
 /**
  * A companion object for [[KafkaConsumerProperties]] class.
  */
-@SuppressWarnings(Array("org.wartremover.warts.Overloading"))
 object KafkaConsumerProperties extends CommonProperties {
 
   /**
@@ -525,7 +517,6 @@ object KafkaConsumerProperties extends CommonProperties {
    * Creates a [[org.apache.kafka.clients.consumer.KafkaConsumer]] from
    * [[KafkaConsumerProperties]].
    */
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   def createKafkaConsumer(
     properties: KafkaConsumerProperties
   ): KafkaConsumer[String, GenericRecord] = {

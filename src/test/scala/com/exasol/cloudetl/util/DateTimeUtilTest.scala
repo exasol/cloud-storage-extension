@@ -4,11 +4,11 @@ import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-import org.scalatest.FunSuite
-import org.scalatest.Matchers
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
 @SuppressWarnings(Array("org.wartremover.contrib.warts.OldTime"))
-class DateTimeUtilTest extends FunSuite with Matchers {
+class DateTimeUtilTest extends AnyFunSuite with Matchers {
 
   final def daysSinceEpochToDate(dt: Date): Unit = {
     val newDT = DateTimeUtil.daysToDate(DateTimeUtil.daysSinceEpoch(dt))

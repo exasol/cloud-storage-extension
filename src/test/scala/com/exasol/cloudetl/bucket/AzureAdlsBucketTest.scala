@@ -1,6 +1,5 @@
 package com.exasol.cloudetl.bucket
 
-@SuppressWarnings(Array("org.wartremover.warts.IsInstanceOf"))
 class AzureAdlsBucketTest extends AbstractBucketTest {
 
   private[this] val defaultProperties = Map(
