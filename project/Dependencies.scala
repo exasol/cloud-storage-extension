@@ -9,12 +9,14 @@ object Dependencies {
   // Versions
   private val ExasolVersion = "6.1.7"
   private val HadoopVersion = "3.2.1"
+  private val AvroVersion = "1.9.1"
   private val OrcVersion = "1.6.2"
   private val ParquetVersion = "1.10.1"
   private val AzureStorageVersion = "8.6.0"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val KafkaClientsVersion = "2.4.0"
   private val KafkaAvroSerializerVersion = "5.4.0"
+  private val SLF4JApiVersion = "1.7.30"
   private val TypesafeLoggingVersion = "3.9.2"
 
   val Resolvers: Seq[Resolver] = Seq(
@@ -25,7 +27,7 @@ object Dependencies {
   /** Core dependencies needed for connector */
   private val CoreDependencies: Seq[ModuleID] = Seq(
     "com.exasol" % "exasol-script-api" % ExasolVersion,
-    "org.slf4j" % "slf4j-api" % "1.7.28",
+    "org.slf4j" % "slf4j-api" % SLF4JApiVersion,
     "org.apache.hadoop" % "hadoop-aws" % HadoopVersion,
     "org.apache.hadoop" % "hadoop-azure" % HadoopVersion
       exclude ("org.slf4j", "slf4j-api")
@@ -55,7 +57,7 @@ object Dependencies {
     "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion
       exclude ("com.google.guava", "guava")
       exclude ("org.apache.httpcomponents", "httpclient"),
-    "org.apache.avro" % "avro" % "1.9.1"
+    "org.apache.avro" % "avro" % AvroVersion
       exclude ("org.slf4j", "slf4j-api")
       exclude ("com.fasterxml.jackson.core", "jackson-core"),
     "org.apache.orc" % "orc-core" % OrcVersion

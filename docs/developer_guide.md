@@ -103,6 +103,22 @@ Check if any dependencies have new versions:
 dependencyUpdates
 ```
 
+### Dependency tree and artifact eviction
+
+You can check the dependency tree by running the comman below:
+
+```bash
+coursierDependencyTree
+```
+
+Additionally, it is also good practice to check the evicted artifacts, and maybe
+to exclude them explicitly when declaring the library dependencies. In order to
+check the evicted artifacts, run:
+
+```bash
+evicted
+```
+
 ## Releasing
 
 Currently, the releasing is performed using the git tags and artifacts are
