@@ -18,32 +18,63 @@ object Dependencies {
   private val TypesafeLoggingVersion = "3.9.2"
 
   val Resolvers: Seq[Resolver] = Seq(
-    "Confluent Maven Repo" at "http://packages.confluent.io/maven/",
+    "Confluent Maven Repo" at "https://packages.confluent.io/maven/",
     "Exasol Releases" at "https://maven.exasol.com/artifactory/exasol-releases"
   )
 
   /** Core dependencies needed for connector */
   private val CoreDependencies: Seq[ModuleID] = Seq(
     "com.exasol" % "exasol-script-api" % ExasolVersion,
+    "org.slf4j" % "slf4j-api" % "1.7.28",
     "org.apache.hadoop" % "hadoop-aws" % HadoopVersion,
-    "org.apache.hadoop" % "hadoop-azure" % HadoopVersion,
-    "org.apache.hadoop" % "hadoop-azure-datalake" % HadoopVersion,
+    "org.apache.hadoop" % "hadoop-azure" % HadoopVersion
+      exclude ("org.slf4j", "slf4j-api")
+      exclude ("org.eclipse.jetty", "jetty-util-ajax")
+      exclude ("com.fasterxml.jackson.core", "jackson-core")
+      exclude ("com.microsoft.azure", "azure-keyvault-core"),
+    "org.apache.hadoop" % "hadoop-azure-datalake" % HadoopVersion
+      exclude ("org.slf4j", "slf4j-api")
+      exclude ("com.fasterxml.jackson.core", "jackson-core"),
     "org.apache.hadoop" % "hadoop-client" % HadoopVersion
+      exclude ("org.slf4j", "slf4j-api")
+      exclude ("org.slf4j", "slf4j-log4j12")
+      exclude ("commons-cli", "commons-cli")
+      exclude ("commons-logging", "commons-logging")
+      exclude ("com.google.code.findbugs", "jsr305")
+      exclude ("org.apache.commons", "commons-compress")
       exclude ("org.apache.avro", "avro")
       exclude ("org.apache.hadoop", "hadoop-yarn-api")
       exclude ("org.apache.hadoop", "hadoop-yarn-client")
       exclude ("org.apache.hadoop", "hadoop-yarn-common")
       excludeAll (
+        ExclusionRule(organization = "org.eclipse.jetty"),
+        ExclusionRule(organization = "org.apache.kerby"),
         ExclusionRule(organization = "org.apache.curator"),
-        ExclusionRule(organization = "org.apache.kerby")
+        ExclusionRule(organization = "org.apache.zookeeper")
     ),
-    "org.apache.orc" % "orc-core" % OrcVersion,
-    "org.apache.parquet" % "parquet-hadoop" % ParquetVersion,
-    "com.microsoft.azure" % "azure-storage" % AzureStorageVersion,
-    "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion,
+    "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion
+      exclude ("com.google.guava", "guava")
+      exclude ("org.apache.httpcomponents", "httpclient"),
+    "org.apache.avro" % "avro" % "1.9.1"
+      exclude ("org.slf4j", "slf4j-api")
+      exclude ("com.fasterxml.jackson.core", "jackson-core"),
+    "org.apache.orc" % "orc-core" % OrcVersion
+      exclude ("org.slf4j", "slf4j-api")
+      exclude ("javax.xml.bind", "jaxb-api"),
+    "org.apache.parquet" % "parquet-hadoop" % ParquetVersion
+      exclude ("org.slf4j", "slf4j-api")
+      exclude ("commons-codec", "commons-codec")
+      exclude ("org.xerial.snappy", "snappy-java"),
     "org.apache.kafka" % "kafka-clients" % KafkaClientsVersion,
-    "io.confluent" % "kafka-avro-serializer" % KafkaAvroSerializerVersion,
+    "io.confluent" % "kafka-avro-serializer" % KafkaAvroSerializerVersion
+      exclude ("org.slf4j", "slf4j-api")
+      exclude ("org.apache.avro", "avro")
+      exclude ("com.google.guava", "guava")
+      exclude ("org.apache.commons", "commons-lang3"),
     "com.typesafe.scala-logging" %% "scala-logging" % TypesafeLoggingVersion
+      exclude ("org.slf4j", "slf4j-api")
+      exclude ("org.scala-lang", "scala-library")
+      exclude ("org.scala-lang", "scala-reflect")
   )
 
   /** Test dependencies only required in `test` */
