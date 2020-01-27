@@ -15,10 +15,6 @@ addSbtPlugin("org.wartremover" % "sbt-wartremover-contrib" % "1.3.2")
 // https://github.com/sbt/sbt-assembly
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.10")
 
-// Adds a `BuildInfo` tasks
-// https://github.com/sbt/sbt-buildinfo
-addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.9.0")
-
 // Adds most common doc api mappings
 // https://github.com/ThoughtWorksInc/sbt-api-mappings
 addSbtPlugin("com.thoughtworks.sbt-api-mappings" % "sbt-api-mappings" % "3.0.0")
@@ -46,16 +42,8 @@ addSbtPlugin("com.lucidchart" % "sbt-scalafmt-coursier" % "1.16")
 addSbtPlugin("org.scalastyle" % "scalastyle-sbt-plugin" % "1.0.0")
 
 // Adds a `dependencyUpdates` task to check for dependency updates
-// http://github.com/rtimush/sbt-updates
+// https://github.com/jrudolph/sbt-dependency-graph
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
-
-// Adds a `sonatype` release tasks
-// https://github.com/xerial/sbt-sonatype
-addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "3.8.1")
-
-// Adds a `gnu-pgp` plugin
-// https://github.com/sbt/sbt-pgp
-addSbtPlugin("com.jsuereth" % "sbt-pgp" % "2.0.1")
 
 // Adds a `git` plugin
 // https://github.com/sbt/sbt-git
@@ -63,7 +51,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 
 // Adds a `sbt-explicit-dependencies` plugin
 // https://github.com/cb372/sbt-explicit-dependencies
-addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.11")
+addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.12")
 
 // Setup this and project/project/plugins.sbt for formatting
 // project/*.scala files with scalafmt

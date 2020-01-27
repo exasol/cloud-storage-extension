@@ -1,3 +1,20 @@
+## Unreleased
+
+* Adds list of dependencies with their licenses to the README.md.
+  [#63](https://github.com/exasol/cloud-storage-etl-udfs/issues/63)
+  [#64](https://github.com/exasol/cloud-storage-etl-udfs/pull/64)
+
+* Refactors code linting and styling checks.
+  [#51](https://github.com/exasol/cloud-storage-etl-udfs/issues/51)
+  [#62](https://github.com/exasol/cloud-storage-etl-udfs/pull/62)
+
+* Adds a log to the project.
+  [#60](https://github.com/exasol/cloud-storage-etl-udfs/pull/60)
+
+* Fixes bug related to BigDecimal.
+  [#56](https://github.com/exasol/cloud-storage-etl-udfs/issues/56)
+  [#57](https://github.com/exasol/cloud-storage-etl-udfs/pull/57)
+
 ## v0.6.0
 
 > 2019 DEC 06
