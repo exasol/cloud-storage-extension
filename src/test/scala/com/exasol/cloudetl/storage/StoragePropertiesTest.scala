@@ -44,6 +44,12 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     }
   }
 
+  test("getStoragePathScheme returns path scheme with regex pattern") {
+    val path = "s3a://bucket/{year=2019/month=1,year=2019/month=2}/*"
+    properties = Map(StorageProperties.BUCKET_PATH -> path)
+    assert(BaseProperties(properties).getStoragePathScheme() === "s3a")
+  }
+
   test("getFileFormat returns supported file format value") {
     properties = Map(
       StorageProperties.BUCKET_PATH -> "path",

@@ -1,11 +1,11 @@
 package com.exasol.cloudetl.storage
 
-import java.net.URI
-
 import com.exasol.ExaConnectionInformation
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.common.AbstractProperties
 import com.exasol.cloudetl.common.CommonProperties
+
+import org.apache.hadoop.fs.Path
 
 /**
  * A specific implementation of
@@ -36,7 +36,7 @@ class StorageProperties(
    * load data, returns the scheme `s3a` value.
    */
   final def getStoragePathScheme(): String =
-    new URI(getStoragePath()).getScheme
+    new Path(getStoragePath()).toUri.getScheme
 
   /** Returns the [[FileFormat]] file format. */
   final def getFileFormat(): FileFormat =
