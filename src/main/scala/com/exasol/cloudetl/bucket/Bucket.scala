@@ -1,7 +1,5 @@
 package com.exasol.cloudetl.bucket
 
-import java.net.URI
-
 import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.cloudetl.util.FileSystemUtil
 
@@ -60,7 +58,7 @@ abstract class Bucket extends LazyLogging {
    * bucket path.
    */
   final lazy val fileSystem: FileSystem =
-    FileSystem.get(new URI(bucketPath), getConfiguration())
+    FileSystem.get(new Path(bucketPath).toUri, getConfiguration())
 
   /**
    * Get the all the paths in this bucket path.
