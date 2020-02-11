@@ -11,7 +11,7 @@ formats.
 - [Amazon S3](#amazon-s3)
 - [Google Cloud Storage](#google-cloud-storage)
 - [Azure Blob Storage](#azure-blob-storage)
-- [Azure Data Lake (Gen1) Storage](#azure-blob-storage)
+- [Azure Data Lake (Gen1) Storage](#azure-data-lake-gen1-storage)
 
 ## Prerequisites
 
@@ -455,4 +455,4 @@ The container path should start with `adl` URI scheme.
 [azure-blob-keys]: https://docs.microsoft.com/en-us/azure/storage/common/storage-account-manage#access-keys
 [azure-blob-sas]: https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview
 [azure-adl-s2s-auth]: https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-service-to-service-authenticate-using-active-directory
-[azure-adl-src-prin]: https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal
+[azure-adl-srv-prin]: https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal
