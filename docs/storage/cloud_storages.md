@@ -11,7 +11,8 @@ formats.
 - [Amazon S3](#amazon-s3)
 - [Google Cloud Storage](#google-cloud-storage)
 - [Azure Blob Storage](#azure-blob-storage)
-- [Azure Data Lake (Gen1) Storage](#azure-data-lake-gen1-storage)
+- [Azure Data Lake Gen1 Storage](#azure-data-lake-gen1-storage)
+- [Azure Data Lake Gen2 Storage](#azure-data-lake-gen2-storage)
 
 ## Prerequisites
 
