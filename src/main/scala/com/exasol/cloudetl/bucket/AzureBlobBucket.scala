@@ -64,14 +64,15 @@ final case class AzureBlobBucket(path: String, params: StorageProperties)
     }
 
     val accountAndContainer = regexParsePath(path)
-
-    val accountName =
-      mergedProperties.get(AZURE_ACCOUNT_NAME).getOrElse(accountAndContainer.accountName)
+    val accountName = mergedProperties
+      .get(AZURE_ACCOUNT_NAME)
+      .getOrElse(accountAndContainer.accountName)
 
     if (mergedProperties.containsKey(AZURE_SAS_TOKEN)) {
       val sasToken = mergedProperties.getString(AZURE_SAS_TOKEN)
-      val containerName =
-        mergedProperties.get(AZURE_CONTAINER_NAME).getOrElse(accountAndContainer.containerName)
+      val containerName = mergedProperties
+        .get(AZURE_CONTAINER_NAME)
+        .getOrElse(accountAndContainer.containerName)
       conf.set(s"fs.azure.sas.$containerName.$accountName.blob.core.windows.net", sasToken)
     } else {
       val secretKey = mergedProperties.getString(AZURE_SECRET_KEY)
