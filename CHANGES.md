@@ -1,4 +1,4 @@
-## Unreleased
+## v0.6.1
 
 * Add Azure Data Lake Gen2 Storage support.
   [#58](https://github.com/exasol/cloud-storage-etl-udfs/issues/58)
@@ -16,7 +16,7 @@
   [#51](https://github.com/exasol/cloud-storage-etl-udfs/issues/51)
   [#62](https://github.com/exasol/cloud-storage-etl-udfs/pull/62)
 
-* Adds a log to the project.
+* Adds a logo to the project.
   [#60](https://github.com/exasol/cloud-storage-etl-udfs/pull/60)
 
 * Fixes bug related to BigDecimal.
