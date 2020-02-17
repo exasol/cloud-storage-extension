@@ -54,8 +54,7 @@ abstract class Bucket extends LazyLogging {
     }
 
   /**
-   * The Hadoop [[org.apache.hadoop.fs.FileSystem]] for this specific
-   * bucket path.
+   * The Hadoop FileSystem for this specific bucket path.
    */
   final lazy val fileSystem: FileSystem =
     FileSystem.get(new Path(bucketPath).toUri, getConfiguration())

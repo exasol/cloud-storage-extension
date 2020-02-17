@@ -19,7 +19,7 @@ abstract class Source {
    */
   val path: Path
 
-  /** The Hadoop [[org.apache.hadoop.fs.FileSystem]] file system. */
+  /** The Hadoop FileSystem file system. */
   def fileSystem: FileSystem
 
   /**
