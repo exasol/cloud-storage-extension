@@ -355,9 +355,7 @@ INTO SCRIPT ETL.EXPORT_PATH WITH
 
 The Azure Blob Storage container path URI scheme can be `wasbs` or `wasb`.
 
-## Azure Data Lake (Gen1) Storage
-
-Currently only Azure Data Lake Storage Gen1 version is supported.
+## Azure Data Lake Gen1 Storage
 
 The following properties should be provided to the UDF in order to access the
 Azure Data Lake (Gen1) Storage.
@@ -444,6 +442,53 @@ INTO SCRIPT ETL.EXPORT_PATH WITH
 ```
 
 The container path should start with `adl` URI scheme.
+
+## Azure Data Lake Gen2 Storage
+
+Currently, the Azure Data Lake Gen2 Storage UDF requires secret key of
+storage account in order to authenticate itself.
+
+- `AZURE_SECRET_KEY`
+
+Please refer to Azure documentation on [creating storage
+account][azure-blob-account] and managing [storage access
+keys][azure-blob-keys].
+
+### Using connection object
+
+Create a named connection object that includes secret key for Azure Data
+Lake Gen2 Storage in the identification field:
+
+```sql
+CREATE OR REPLACE CONNECTION AZURE_ABFS_CONNECTION
+TO ''
+USER ''
+IDENTIFIED BY 'AZURE_SECRET_KEY=<AZURE_SECRET_KEY>';
+```
+
+#### Import
+
+```sql
+IMPORT INTO RETAIL.SALES_POSITIONS
+FROM SCRIPT ETL.IMPORT_PATH WITH
+  BUCKET_PATH     = 'abfs://<AZURE_CONTAINER_NAME>@<AZURE_ACCOUNT_NAME>.dfs.core.windows.net/import/orc/*'
+  DATA_FORMAT     = 'ORC'
+  CONNECTION_NAME = 'AZURE_ABFS_CONNECTION'
+  PARALLELISM     = 'nproc()';
+```
+
+#### Export
+
+```sql
+EXPORT RETAIL.SALES_POSITIONS
+INTO SCRIPT ETL.EXPORT_PATH WITH
+  BUCKET_PATH     = 'abfss://<AZURE_CONTAINER_NAME>@<AZURE_ACCOUNT_NAME>.dfs.core.windows.net/export/parquet/'
+  DATA_FORMAT     = 'PARQUET'
+  CONNECTION_NAME = 'AZURE_ABFS_CONNECTION'
+  PARALLELISM     = 'iproc(), floor(random()*2)';
+```
+
+The bucket path should start with `abfs` or `abfss` URI scheme.
 
 [exa-connection]: https://docs.exasol.com/sql/create_connection.htm
 [aws-creds]: https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html

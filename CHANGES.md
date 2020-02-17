@@ -1,5 +1,13 @@
 ## Unreleased
 
+* Add Azure Data Lake Gen2 Storage support.
+  [#58](https://github.com/exasol/cloud-storage-etl-udfs/issues/58)
+  [#69](https://github.com/exasol/cloud-storage-etl-udfs/pull/69)
+
+* Fixes a bug with regex pattern matching on the paths.
+  [#65](https://github.com/exasol/cloud-storage-etl-udfs/issues/65)
+  [#67](https://github.com/exasol/cloud-storage-etl-udfs/pull/67)
+
 * Adds list of dependencies with their licenses to the README.md.
   [#63](https://github.com/exasol/cloud-storage-etl-udfs/issues/63)
   [#64](https://github.com/exasol/cloud-storage-etl-udfs/pull/64)
