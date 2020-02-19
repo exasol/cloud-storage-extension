@@ -9,7 +9,7 @@ object Dependencies {
   // Versions
   private val ExasolVersion = "6.1.7"
   private val HadoopVersion = "3.2.1"
-  private val AvroVersion = "1.9.1"
+  private val AvroVersion = "1.9.2"
   private val OrcVersion = "1.6.2"
   private val ParquetVersion = "1.10.1"
   private val AzureStorageVersion = "8.6.0"

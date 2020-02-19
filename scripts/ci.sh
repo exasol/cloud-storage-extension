@@ -85,7 +85,7 @@ run_dependency_info () {
   echo "#        Dependency information            #"
   echo "#                                          #"
   echo "############################################"
-  ./sbtx ++$TRAVIS_SCALA_VERSION dependencyUpdates pluginUpdates coursierDependencyTree
+  ./sbtx ++$TRAVIS_SCALA_VERSION dependencyUpdates pluginUpdates dependencyTree
 }
 
 run_shell_check () {
