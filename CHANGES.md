@@ -1,3 +1,9 @@
+## Unreleased
+
+* Updated dependencies to make the project run with IntelliJ IDEA.
+  [#70](https://github.com/exasol/cloud-storage-etl-udfs/issues/70)
+  [#71](https://github.com/exasol/cloud-storage-etl-udfs/pull/71)
+
 ## v0.6.1
 
 * Add Azure Data Lake Gen2 Storage support.
