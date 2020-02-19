@@ -108,7 +108,7 @@ dependencyUpdates
 You can check the dependency tree by running the comman below:
 
 ```bash
-coursierDependencyTree
+dependencyTree
 ```
 
 Additionally, it is also good practice to check the evicted artifacts, and maybe

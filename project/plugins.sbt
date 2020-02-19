@@ -1,7 +1,3 @@
-// Adds a pure Scala artifact fetcher `coursier`
-// https://github.com/coursier/coursier
-addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.3")
-
 // Adds a `wartremover` a flexible Scala code linting tool
 // http://github.com/puffnfresh/wartremover
 addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.4.3")
@@ -43,7 +39,7 @@ addSbtPlugin("org.scalastyle" % "scalastyle-sbt-plugin" % "1.0.0")
 
 // Adds a `dependencyUpdates` task to check for dependency updates
 // https://github.com/jrudolph/sbt-dependency-graph
-addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
+addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.10.0-RC1")
 
 // Adds a `git` plugin
 // https://github.com/sbt/sbt-git
