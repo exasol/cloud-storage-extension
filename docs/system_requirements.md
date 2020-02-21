@@ -84,3 +84,15 @@ Covers:
 * [feat~transerring-data-from-kinesis-streams-to-exasol~1](#transferring-data-from-kinesis-streams-to-exasol)
 
 Needs: dsn
+
+### Import without duplicates
+`req~import-without-duplicates~1`
+
+EKC imports the data from a Kinesis Stream to an Exasol table without duplicates.
+
+Covers:
+
+* [feat~transerring-data-from-kinesis-streams-to-exasol~1](#transferring-data-from-kinesis-streams-to-exasol)
+
+Needs: dsn
+
