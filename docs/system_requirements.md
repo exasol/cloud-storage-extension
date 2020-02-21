@@ -2,7 +2,7 @@
 
 ## Introduction 
 
-Exasol Kinesis Connector (short "EKC") is a plug-in for Exasol that provides the ability to transfer data from [Amazon Kinesis](https://aws.amazon.com/kinesis/) to the Exasol database.
+Exasol Kinesis Connector (short "EKC") is a User Defined Function (UDF) for Exasol that provides the ability to transfer data from [Amazon Kinesis](https://aws.amazon.com/kinesis/) to the Exasol database.
 
 ## About This Document
 
@@ -12,7 +12,7 @@ The target audience are end-users, requirement engineers, software designers and
 
 ### Goal
 
-The EKC main goal is to provide a plug-in for transferring data from Amazon Kinesis directly to the Exasol database. 
+The EKC main goal is to provide a UDF for transferring data from Amazon Kinesis directly to the Exasol database. 
 
 ### Quality Goals
 
@@ -27,7 +27,7 @@ EKC's main quality goals are:
 
 ### Integrators
 
-Integrators integrate their solution with Exasol. They need to use Exasol as a consumer for data from Amazon Kinesis.
+Integrators integrate their solution with Exasol. They need to use Exasol as a consumer for the data from Amazon Kinesis.
 
 ### Terms and Abbreviations
 
@@ -39,7 +39,7 @@ The following list gives you an overview of terms and abbreviations commonly use
 
 ## Features
 
-Features are the highest level requirements in this document that describe the main functionality of RLS.
+Features are the highest level requirements in this document that describe the main functionality of EKC.
 
 ### Transferring data from Kinesis Streams to Exasol
 `feat~transerring-data-from-kinesis-streams-to-exasol~1`
@@ -63,10 +63,10 @@ Covers:
 
 Needs: dsn
 
-### Transfer data to an Exasol Table
+### Import data to an Exasol Table
 `req~transfer-data-to-an-exasol-table~1`
 
-EKC transfers data from a Kinesis Stream directly to an Exasol table.
+EKC imports data from a Kinesis Stream directly to an Exasol table.
 
 Covers:
 
@@ -74,10 +74,10 @@ Covers:
 
 Needs: dsn
 
-### Transfer without loosing data
+### Import without loosing data
 `req~transfer-without-loosing-data~1`
 
-EKC transfers the data from a Kinesis Stream to an Exasol table without loosing records.
+EKC imports the data from a Kinesis Stream to an Exasol table without loosing records.
 
 Covers:
 
