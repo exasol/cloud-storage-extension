@@ -89,7 +89,7 @@ abstract class Bucket extends LazyLogging {
     latestSnapshot.allFiles
       .select("path")
       .collect()
-      .map { case Row(path: String) => new Path(path) }
+      .map { case Row(path: String) => new Path(s"$bucketPath/$path") }
   }
 }
 

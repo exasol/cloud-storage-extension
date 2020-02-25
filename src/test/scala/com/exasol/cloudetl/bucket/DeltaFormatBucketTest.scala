@@ -1,9 +1,12 @@
 package com.exasol.cloudetl.bucket
 
 import com.exasol.cloudetl.DummyRecordsTest
+import com.exasol.cloudetl.source.Source
+import com.exasol.cloudetl.storage.FileFormat
 
 import org.apache.spark.sql.SparkSession
 
+@SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
 class DeltaFormatBucketTest extends AbstractBucketTest with DummyRecordsTest {
 
   private[this] var path: String = _
@@ -62,6 +65,37 @@ class DeltaFormatBucketTest extends AbstractBucketTest with DummyRecordsTest {
 
     val bucket = getBucket(properties)
     assert(bucket.getPaths().size === 2)
+  }
+
+  test("stream returns records from the latest delta snapshot") {
+    spark.range(1, 6).toDF("id").write.format("delta").save(path)
+    val bucket = getBucket(properties)
+    val set = collectToSet[Int](bucket)
+    assert(set.size === 5)
+    assert(set === Set(1, 2, 3, 4, 5))
+  }
+
+  test("stream returns records from the overwite delta snapshot") {
+    spark.range(1, 6).toDF("id").write.format("delta").save(path)
+    spark.range(10, 13).toDF("id").write.format("delta").mode("overwrite").save(path)
+    val bucket = getBucket(properties)
+    val set = collectToSet[Int](bucket)
+    assert(set.size === 3)
+    assert(set === Set(10, 11, 12))
+  }
+
+  private[this] def collectToSet[T](bucket: Bucket): Set[T] = {
+    val set = scala.collection.mutable.Set[T]()
+    val conf = bucket.getConfiguration()
+    val fileSystem = bucket.fileSystem
+    bucket.getPaths().map { path =>
+      val source = Source(FileFormat("delta"), path, conf, fileSystem)
+      source.stream().foreach { row =>
+        set.add(row.getAs[T](0))
+      }
+      source.close()
+    }
+    set.toSet
   }
 
 }
