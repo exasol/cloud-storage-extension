@@ -1,5 +1,6 @@
 package com.exasol.cloudetl.bucket
 
+import com.exasol.cloudetl.storage.FileFormat
 import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.cloudetl.util.FileSystemUtil
 
@@ -7,6 +8,9 @@ import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.delta.DeltaLog
 
 /**
  * Abstract representation of a bucket.
@@ -64,8 +68,29 @@ abstract class Bucket extends LazyLogging {
    *
    * This method also globifies the bucket path if it contains regex.
    */
-  final def getPaths(): Seq[Path] =
-    FileSystemUtil.globWithPattern(bucketPath, fileSystem)
+  final def getPaths(): Seq[Path] = properties.getFileFormat() match {
+    case FileFormat.DELTA => getPathsFromDeltaLog()
+    case _                => FileSystemUtil.globWithPattern(bucketPath, fileSystem)
+  }
+
+  private[this] def getPathsFromDeltaLog(): Seq[Path] = {
+    lazy val spark = SparkSession
+      .builder()
+      .master("local[*]")
+      .getOrCreate()
+    val deltaLog = DeltaLog.forTable(spark, bucketPath)
+    if (!deltaLog.isValid()) {
+      throw new IllegalArgumentException(
+        s"The provided path: '$bucketPath' is not a Delta format!"
+      )
+    }
+    val latestSnapshot = deltaLog.update()
+
+    latestSnapshot.allFiles
+      .select("path")
+      .collect()
+      .map { case Row(path: String) => new Path(path) }
+  }
 }
 
 /**

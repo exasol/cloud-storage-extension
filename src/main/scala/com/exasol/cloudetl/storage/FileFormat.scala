@@ -10,6 +10,7 @@ object FileFormat {
 
   def apply(fileFormat: String): FileFormat = fileFormat.toUpperCase match {
     case "AVRO"    => AVRO
+    case "DELTA"   => DELTA
     case "FILE"    => FILE
     case "ORC"     => ORC
     case "PARQUET" => PARQUET
@@ -17,6 +18,7 @@ object FileFormat {
   }
 
   case object AVRO extends FileFormat
+  case object DELTA extends FileFormat
   case object FILE extends FileFormat
   case object ORC extends FileFormat
   case object PARQUET extends FileFormat

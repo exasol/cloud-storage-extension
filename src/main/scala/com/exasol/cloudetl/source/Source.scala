@@ -54,9 +54,9 @@ object Source {
     conf: Configuration,
     fileSystem: FileSystem
   ): Source = fileFormat match {
-    case AVRO    => AvroSource(filePath, conf, fileSystem)
-    case ORC     => OrcSource(filePath, conf, fileSystem)
-    case PARQUET => ParquetSource(filePath, conf, fileSystem)
+    case AVRO            => AvroSource(filePath, conf, fileSystem)
+    case ORC             => OrcSource(filePath, conf, fileSystem)
+    case DELTA | PARQUET => ParquetSource(filePath, conf, fileSystem)
     case _ =>
       throw new IllegalArgumentException(s"Unsupported storage format: '$fileFormat'")
   }
