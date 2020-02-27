@@ -38,6 +38,29 @@ class StorageProperties(
   final def getStoragePathScheme(): String =
     new Path(getStoragePath()).toUri.getScheme
 
+  /**
+   * Returns the Delta format LogStore storage class name.
+   *
+   * Please check out the
+   * [[https://docs.delta.io/latest/delta-storage.html Delta Storage]]
+   * documentation for available storage classes and storage class
+   * requirements.
+   */
+  final def getDeltaFormatLogStoreClassName(): String = getStoragePathScheme() match {
+    case "s3a" => "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore"
+    case "gs" =>
+      throw new UnsupportedOperationException(
+        "Delta format LogStore API is not supported on Google Cloud Storage yet."
+      )
+    case "abfs" | "abfss" =>
+      throw new UnsupportedOperationException(
+        "Delta format LogStore API is not supported on Azure Data Lake Gen2 storage yet."
+      )
+    case "adl"            => "org.apache.spark.sql.delta.storage.AzureLogStore"
+    case "wasb" | "wasbs" => "org.apache.spark.sql.delta.storage.AzureLogStore"
+    case _                => "org.apache.spark.sql.delta.storage.HDFSLogStore"
+  }
+
   /** Returns the [[FileFormat]] file format. */
   final def getFileFormat(): FileFormat =
     FileFormat(getString(DATA_FORMAT))

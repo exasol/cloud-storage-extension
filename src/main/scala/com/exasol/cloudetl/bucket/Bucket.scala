@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.bucket
 
+import scala.collection.JavaConverters._
+
 import com.exasol.cloudetl.storage.FileFormat
 import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.cloudetl.util.FileSystemUtil
@@ -74,11 +76,9 @@ abstract class Bucket extends LazyLogging {
   }
 
   private[this] def getPathsFromDeltaLog(): Seq[Path] = {
-    lazy val spark = SparkSession
-      .builder()
-      .master("local[*]")
-      .getOrCreate()
-    val deltaLog = DeltaLog.forTable(spark, bucketPath)
+    val spark = createSparkSession()
+    val strippedBucketPath = stripTrailingStar(bucketPath)
+    val deltaLog = DeltaLog.forTable(spark, strippedBucketPath)
     if (!deltaLog.isValid()) {
       throw new IllegalArgumentException(
         s"The provided path: '$bucketPath' is not a Delta format!"
@@ -89,8 +89,31 @@ abstract class Bucket extends LazyLogging {
     latestSnapshot.allFiles
       .select("path")
       .collect()
-      .map { case Row(path: String) => new Path(s"$bucketPath/$path") }
+      .map { case Row(path: String) => new Path(s"$strippedBucketPath/$path") }
   }
+
+  private[this] def createSparkSession(): SparkSession = {
+    lazy val spark = SparkSession
+      .builder()
+      .master("local[*]")
+      .config("spark.delta.logStore.class", properties.getDeltaFormatLogStoreClassName())
+      .getOrCreate()
+
+    getConfiguration().iterator().asScala.foreach { entry =>
+      val key = entry.getKey()
+      val value = entry.getValue()
+      spark.sparkContext.hadoopConfiguration.set(key, value)
+    }
+
+    spark
+  }
+
+  private[this] def stripTrailingStar(path: String): String =
+    if (path.takeRight(2) == "/*") {
+      path.dropRight(1)
+    } else {
+      path
+    }
 }
 
 /**

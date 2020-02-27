@@ -45,6 +45,15 @@ class DeltaFormatBucketTest extends AbstractBucketTest with DummyRecordsTest {
     assert(bucket.getPaths().size === 20)
   }
 
+  test("getPaths returns delta log files with trailing star bucket path") {
+    properties = Map(PATH -> s"${path.dropRight(1)}/*", FORMAT -> "DELTA")
+    spark.range(1, 5).toDF("id").coalesce(1).write.format("delta").save(path)
+
+    val bucket = getBucket(properties)
+    assert(bucket.getPaths().size === 1)
+    assert(bucket.getPaths().exists(path => path.toUri.toString.contains("/*")) === false)
+  }
+
   test("getPaths returns delta log files with overwrite snapshot") {
     spark
       .range(1, 101)

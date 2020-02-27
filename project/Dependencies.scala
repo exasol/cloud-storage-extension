@@ -33,7 +33,6 @@ object Dependencies {
     "org.apache.hadoop" % "hadoop-aws" % HadoopVersion,
     "org.apache.hadoop" % "hadoop-azure" % HadoopVersion
       exclude ("org.slf4j", "slf4j-api")
-      exclude ("org.eclipse.jetty", "jetty-util-ajax")
       exclude ("com.fasterxml.jackson.core", "jackson-core")
       exclude ("com.microsoft.azure", "azure-keyvault-core"),
     "org.apache.hadoop" % "hadoop-azure-datalake" % HadoopVersion

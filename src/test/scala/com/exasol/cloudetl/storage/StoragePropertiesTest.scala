@@ -50,6 +50,33 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     assert(BaseProperties(properties).getStoragePathScheme() === "s3a")
   }
 
+  test("getDeltaFormatLogStoreClassName returns storage class name for scheme") {
+    val data = Map(
+      "s3a" -> "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore",
+      "adl" -> "org.apache.spark.sql.delta.storage.AzureLogStore",
+      "wasbs" -> "org.apache.spark.sql.delta.storage.AzureLogStore",
+      "wasb" -> "org.apache.spark.sql.delta.storage.AzureLogStore",
+      "file" -> "org.apache.spark.sql.delta.storage.HDFSLogStore"
+    )
+    data.foreach {
+      case (scheme, expected) =>
+        val path = s"$scheme://a/path"
+        properties = Map(StorageProperties.BUCKET_PATH -> path)
+        assert(BaseProperties(properties).getDeltaFormatLogStoreClassName() === expected)
+    }
+  }
+
+  test("getDeltaFormatLogStoreClassName throws for unsupported storage systems") {
+    Seq("gs", "abfs", "abfss").foreach { scheme =>
+      val path = s"$scheme://a/path"
+      properties = Map(StorageProperties.BUCKET_PATH -> path)
+      val thrown = intercept[UnsupportedOperationException] {
+        BaseProperties(properties).getDeltaFormatLogStoreClassName()
+      }
+      assert(thrown.getMessage.startsWith("Delta format LogStore API is not supported"))
+    }
+  }
+
   test("getFileFormat returns supported file format value") {
     properties = Map(
       StorageProperties.BUCKET_PATH -> "path",
