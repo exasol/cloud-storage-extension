@@ -71,6 +71,17 @@ FROM SCRIPT ETL.IMPORT_PATH WITH
   PARALLELISM        = 'nproc()';
 ```
 
+The same can be achieved by using the secret key connection object. Please check the [supported cloud storage systems](storage/cloud_storages.md) for more details.
+
+```sql
+IMPORT INTO RETAIL.SALES_POSITIONS
+FROM SCRIPT ETL.IMPORT_PATH WITH
+  BUCKET_PATH        = 'wasbs://<CONTAINER>@<AZURE_ACCOUNT_NAME>.blob.core.windows.net/data/avro/sales-positions/*'
+  DATA_FORMAT        = 'AVRO'
+  CONNECTION_NAME  = '<PREDEFINED_CONNECTION>'
+  PARALLELISM      = 'nproc()';
+```
+
 When running the import, it will first execute the `IMPORT_METADATA` udf in
 order to calculate the number of files in the user provided path. Then it will
 distribute these files in round-robin fashion into number of `PARALLELISM`
