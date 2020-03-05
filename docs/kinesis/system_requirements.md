@@ -52,10 +52,10 @@ Needs: req
 
 In this section lists functional requirements from the user's perspective.
 
-### Connect to Kinesis Streams from Exasol
-`req~connect-to-kinesis-streams-from-exasol~1`
+### Connect to Kinesis Streams
+`req~connect-to-kinesis-streams~1`
 
-EKC connects to Kinesis Streams directly from Exasol.
+EKC connects to Kinesis Streams.
 
 Covers:
 
@@ -95,4 +95,3 @@ Covers:
 * [feat~transerring-data-from-kinesis-streams-to-exasol~1](#transferring-data-from-kinesis-streams-to-exasol)
 
 Needs: dsn
-

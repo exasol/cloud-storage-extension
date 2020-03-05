@@ -43,7 +43,7 @@ resource such S3.
 Thus, if you want to import data files from an Amazon Simple Storage Service
 (Amazon S3) bucket, your credentials must allow that access.
 
-Thereofore, in order to access the Amazon S3 bucket you should provide the
+Therefore, in order to access the Amazon S3 bucket you should provide the
 following property keys to the UDF scripts with values from AWS credentials
 access key and secret key.
 

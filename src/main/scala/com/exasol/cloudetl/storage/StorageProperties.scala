@@ -87,7 +87,7 @@ class StorageProperties(
     containsKey(CONNECTION_NAME)
 
   /**
-   * Returns a new [[StorageProperties]] what merges the key-value pairs
+   * Returns a new [[StorageProperties]] that merges the key-value pairs
    * parsed from user provided Exasol named connection object.
    */
   final def merge(accountName: String): StorageProperties = {

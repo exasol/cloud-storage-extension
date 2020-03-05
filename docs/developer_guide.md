@@ -119,6 +119,15 @@ check the evicted artifacts, run:
 evicted
 ```
 
+## Short description of Kafka and Kinesis Connectors
+
+* Kafka and Kinesis Connectors use [`IMPORT FROM SCRIPT`](https://docs.exasol.com/loading_data/user_defined_import_export_using_udfs.htm) 
+ statement.
+* `KAFKA_PATH`/`KINESIS_PATH` is an entry point which internally uses two
+ other scripts(`KAFKA_IMPORT`/`KINESIS_IMPORT` and `KAFKA_METADATA
+ `/`KINESIS_METADATA`) to generate an import query. 
+* A complete import process runs as a single transaction in the Exasol Database.
+
 ## Releasing
 
 Currently, the releasing is performed using the git tags and artifacts are
