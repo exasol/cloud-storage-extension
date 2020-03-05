@@ -69,7 +69,15 @@ object Dependencies {
       exclude ("commons-codec", "commons-codec")
       exclude ("org.xerial.snappy", "snappy-java"),
     "io.delta" %% "delta-core" % DeltaVersion,
-    "org.apache.spark" %% "spark-sql" % SparkSQLVersion,
+    "org.apache.spark" %% "spark-sql" % SparkSQLVersion
+      exclude ("org.apache.hadoop", "hadoop-client")
+      excludeAll (
+        ExclusionRule(organization = "org.apache.arrow"),
+        ExclusionRule(organization = "org.apache.avro"),
+        ExclusionRule(organization = "org.apache.curator"),
+        ExclusionRule(organization = "org.apache.orc"),
+        ExclusionRule(organization = "org.apache.zookeeper")
+    ),
     "org.apache.kafka" % "kafka-clients" % KafkaClientsVersion,
     "io.confluent" % "kafka-avro-serializer" % KafkaAvroSerializerVersion
       exclude ("org.slf4j", "slf4j-api")
