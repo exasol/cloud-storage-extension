@@ -11,7 +11,7 @@ Delta format.
 Like other cloud storage systems, you can run the Exasol IMPORT SQL statement to
 import the data from the Delta format.
 
-Here is an example to import delta formatted data from Amazon S3:
+Here is an example of import delta formatted data from Amazon S3:
 
 ```sql
 CREATE OR REPLACE CONNECTION S3_CONNECTION
@@ -39,7 +39,7 @@ the [delta.io/delta-storage.html][delta-storage] page.
 ## Delta Snapshot
 
 When running the import SQL statement, we first query the [latest
-snapshot][delta-history] of the Delta format, and only import the data from the
+snapshot][delta-history] of the Delta format and only import the data from the
 latest snapshot version. Thus, each import from the Delta format will import
 data to the Exasol table.
 

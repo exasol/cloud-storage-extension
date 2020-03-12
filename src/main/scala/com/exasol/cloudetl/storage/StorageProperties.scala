@@ -50,11 +50,11 @@ class StorageProperties(
     case "s3a" => "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore"
     case "gs" =>
       throw new UnsupportedOperationException(
-        "Delta format LogStore API is not supported on Google Cloud Storage yet."
+        "Delta format LogStore API is not supported in Google Cloud Storage yet."
       )
     case "abfs" | "abfss" =>
       throw new UnsupportedOperationException(
-        "Delta format LogStore API is not supported on Azure Data Lake Gen2 storage yet."
+        "Delta format LogStore API is not supported in Azure Data Lake Gen2 storage yet."
       )
     case "adl"            => "org.apache.spark.sql.delta.storage.AzureLogStore"
     case "wasb" | "wasbs" => "org.apache.spark.sql.delta.storage.AzureLogStore"
