@@ -81,7 +81,7 @@ abstract class Bucket extends LazyLogging {
     val deltaLog = DeltaLog.forTable(spark, strippedBucketPath)
     if (!deltaLog.isValid()) {
       throw new IllegalArgumentException(
-        s"The provided path: '$bucketPath' is not a Delta format!"
+        s"The provided path: '$bucketPath' is not a Delta formatted directory!"
       )
     }
     val latestSnapshot = deltaLog.update()
@@ -100,9 +100,9 @@ abstract class Bucket extends LazyLogging {
       .getOrCreate()
 
     getConfiguration().iterator().asScala.foreach { entry =>
-      val key = entry.getKey()
-      val value = entry.getValue()
-      spark.sparkContext.hadoopConfiguration.set(key, value)
+      val hadoopConfigKey = entry.getKey()
+      val hadoopConfigValue = entry.getValue()
+      spark.sparkContext.hadoopConfiguration.set(hadoopConfigKey, hadoopConfigValue)
     }
 
     spark

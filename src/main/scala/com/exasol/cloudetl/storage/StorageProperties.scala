@@ -47,16 +47,16 @@ class StorageProperties(
    * requirements.
    */
   final def getDeltaFormatLogStoreClassName(): String = getStoragePathScheme() match {
-    case "s3a" => "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore"
-    case "gs" =>
-      throw new UnsupportedOperationException(
-        "Delta format LogStore API is not supported in Google Cloud Storage yet."
-      )
     case "abfs" | "abfss" =>
       throw new UnsupportedOperationException(
         "Delta format LogStore API is not supported in Azure Data Lake Gen2 storage yet."
       )
-    case "adl"            => "org.apache.spark.sql.delta.storage.AzureLogStore"
+    case "adl" => "org.apache.spark.sql.delta.storage.AzureLogStore"
+    case "gs" =>
+      throw new UnsupportedOperationException(
+        "Delta format LogStore API is not supported in Google Cloud Storage yet."
+      )
+    case "s3a"            => "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore"
     case "wasb" | "wasbs" => "org.apache.spark.sql.delta.storage.AzureLogStore"
     case _                => "org.apache.spark.sql.delta.storage.HDFSLogStore"
   }
