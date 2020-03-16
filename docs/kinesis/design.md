@@ -10,15 +10,23 @@ Dr. Peter Hruschka.
 
 <dl>
     <dt>EKC</dt><dd>Exasol Kinesis Connector</dd>
-    <dt>UDF</dt><dd>Used-defined function</dd>
+    <dt>Sequence number</dt><dd>An identifier
+     associated with every record put into the stream.</dd>
+    <dt>Shard</dt><dd>A uniquely identified 
+    sequence of data records in a stream.</dd>
+    <dt>Stream</dt><dd>A Kinesis data stream is a set of shards.</dd>
+    <dt>Record</dt><dd>The unit of data of the Kinesis data stream.</dd>
+    <dt>UDF</dt><dd>Used-defined function. UDF scripts provides you the ability 
+    to program your own analysis, processing, or generation functions, 
+    and execute them in parallel inside Exasol</dd>
 </dl>
 
 # Solution Strategy
 
-AWS Kinesis Data Streams provides an [API](https://docs.aws.amazon.com
-/kinesis/latest/APIReference/Welcome.html) for consuming data from streams
-. EKC is an IMPORT UDF script that consume the data from Kinesis Streams and
-import it to an Exasol table. 
+AWS Kinesis Data Streams provide an 
+[API][kinesis-api] for consuming data from streams. 
+EKC is an IMPORT UDF script that consumes 
+data coming from a Kinesis Stream and imports it to an Exasol table. 
 
 ## Requirement Overview
 
@@ -30,9 +38,9 @@ for user-level requirements.
 This section introduces the building blocks of the software.
 Together those building blocks make up the big picture of the software structure.
 
-## UDF functions
+## UDF Functions
 
-Kinesis Connector uses a set of UDF to import the data. 
+Kinesis Connector uses a set of UDFs to import the data. 
 
 ### `KINESIS_METADATA`
 
@@ -47,9 +55,9 @@ Emits data from a single shard.
 Uses `KINESIS_METADATA` and `KINESIS_PATH` internally to generate a single
 import statement.
 
-## Scriptclasses implementation
+## Scriptclasses Implementation
 
-The scriptclasses contain logic that UDF function use.
+The scriptclasses contain logic that the UDF functions use.
 
 ### `KinesisShardsMetadataReader`
 
@@ -65,15 +73,29 @@ The `KinesisShardDataImporter` consumes the data from a single shard.
 The `KinesisImportQueryGenerator` generates an import query that we use for
 an IMPORT UDF. 
 
+## Table for Importing
+
+We request a manually created table for importing data for each stream.
+Users create a table imitating the data types of the data
+stored in the stream and also place columns in the exact order. 
+
+Two last columns of the table have names `KINESIS_SHARD_ID` and `SHARD_SEQUENCE_NUMBER`. 
+We use them for storing metadata. `KINESIS_SHARD_ID` is a string with a shard's name where 
+the data came from. `SHARD_SEQUENCE_NUMBER` is a string with a unique number that identifies 
+a record in a stream.
+
 # Runtime
 
 This section describes the runtime behavior of the software.
 
-## `KinesisShardsMetadataReader` reads shards' metadata
+## `KinesisShardsMetadataReader` Reads Shards' Metadata
 `dsn~kinesisshardsmetadatareader-reads-shards-metadata~1`
 
-The `KinesisShardsMetadataReader` implements a `run` function and emits a
-list of enabled shards.
+The `KinesisShardsMetadataReader` gets all available shards from a stream
+and also check if the user-defined table contains any metadata.
+
+It emits a list of available shards accompanied by sequence numbers of rows 
+to start consuming from (if the numbers are available in the import table). 
 
 Covers:
 
@@ -81,11 +103,12 @@ Covers:
 
 Needs: impl, itest
 
-## `KinesisShardDataImporter` imports data from shard
+## `KinesisShardDataImporter` Imports Data from Shard
 `dsn~kinesissharddataimporter-imports-data-from-shard~1`
 
-The `KinesisShardDataImporter` reads and emits data from a single shard. It
-also implements a `run` function.
+The `KinesisShardDataImporter` reads and emits data from a single shard.
+If shard's metadata has a sequence number, it consumes from the next available record.
+Otherwise, it consumes from the start of the stream.
 
 Covers:
 
@@ -93,7 +116,7 @@ Covers:
 
 Needs: impl, itest
 
-## `KinesisImportQueryGenerator` generates an import query
+## `KinesisImportQueryGenerator` Generates an Import Query
 `dsn~kinesisimportquerygenerator-generates-an-import-query~1`
 
 The `KinesisImportQueryGenerator` implements a `generateSqlForImportSpec` 
@@ -106,12 +129,13 @@ Covers:
 
 Needs: impl, itest
 
-## `KinesisImportQueryGenerator` runs as single transaction
+## `KinesisImportQueryGenerator` Runs as a Single Transaction
 `dsn~kinesisimportquerygenerator-runs-as-single-transaction~1`
 
 The `KinesisImportQueryGenerator` generates a single statement for an IMPORT.
 That means the script commits the data only when a transaction is successful.
-Otherwise we read the data from the same place with the next run.
+In case of an error during the transaction, with the next run we start consuming 
+from the same sequence number.  
 
 Covers:
 
@@ -119,10 +143,10 @@ Covers:
 
 Needs: impl, itest
 
-## `KinesisShardDataImporter` add metadata to each row
+## `KinesisShardDataImporter` Add Metadata to Each Row
 `dsn~KinesisShardDataImporter-add-metadata-to-each-row~1`
 
-The `KinesisShardDataImporter` emit two additional columns for each
+The `KinesisShardDataImporter` emits two additional columns for each
  row of importing data: `KINESIS_SHARD_ID` and `SHARD_SEQUENCE_NUMBER`.
 
 Covers:
@@ -131,7 +155,7 @@ Covers:
 
 Needs: impl, itest
 
-## `KinesisImportQueryGenerator` starts consuming from new data records
+## `KinesisImportQueryGenerator` Starts Consuming From New Data Records
 `dsn~KinesisImportQueryGenerator-starts-consuming-from-new-data-records~1`
 
 The `KinesisImportQueryGenerator` looks for the last read record in  
@@ -145,3 +169,5 @@ Covers:
 * `req~import-without-duplicates~1`
 
 Needs: impl, itest
+
+[kinesis-api]: https://docs.aws.amazon.com/kinesis/latest/APIReference/Welcome.html

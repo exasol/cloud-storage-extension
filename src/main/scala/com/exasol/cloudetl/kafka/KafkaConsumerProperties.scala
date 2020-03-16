@@ -55,7 +55,7 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
    * Returns poll timeout millisecords if provided by user; otherwise
    * returns default value.
    *
-   * @throws java.lang.NumberFormatException If value is not a Long.
+   * throws java.lang.NumberFormatException If value is not a Long.
    */
   @throws[NumberFormatException]("If value is not a Long.")
   final def getPollTimeoutMs(): Long =
@@ -65,7 +65,7 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
    * Returns minimum records per run property value when provided by
    * user; otherwise returns default value.
    *
-   * @throws java.lang.NumberFormatException If value is not an Int.
+   * throws java.lang.NumberFormatException If value is not an Int.
    */
   @throws[NumberFormatException]("If value is not an Int.")
   final def getMinRecordsPerRun(): Int =
@@ -75,7 +75,7 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
    * Returns maximum records per run property value when provided by
    * user; otherwise returns default value.
    *
-   * @throws java.lang.NumberFormatException If value is not an Int.
+   * throws java.lang.NumberFormatException If value is not an Int.
    */
   @throws[NumberFormatException]("If value is not an Int.")
   final def getMaxRecordsPerRun(): Int =

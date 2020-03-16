@@ -1,9 +1,13 @@
 package com.exasol.cloudetl.common
 
+import com.exasol.{ExaConnectionInformation, ExaMetadata}
+
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.mockito.MockitoSugar
 
-class AbstractPropertiesTest extends AnyFunSuite with BeforeAndAfterEach {
+class AbstractPropertiesTest extends AnyFunSuite with BeforeAndAfterEach with MockitoSugar {
 
   private[this] var properties: Map[String, String] = _
 
@@ -149,7 +153,46 @@ class AbstractPropertiesTest extends AnyFunSuite with BeforeAndAfterEach {
     assert(baseProperties.hashCode === properties.hashCode)
   }
 
+  test("hasNamedConnection returns false by default") {
+    assert(BaseProperties(properties).hasNamedConnection() === false)
+  }
+
+  test("hasNamedConnection returns true if connection name is set") {
+    properties = Map("CONNECTION_NAME" -> "named_connection")
+    assert(BaseProperties(properties).hasNamedConnection() === true)
+  }
+
+  test("getConnectionInformation throws if Exasol metadata is not provided") {
+    val thrown = intercept[IllegalArgumentException] {
+      BaseProperties(properties).getConnectionInformation(None)
+    }
+    assert(thrown.getMessage === "Exasol metadata is None!")
+  }
+
+  test("getConnectionInformation returns storage connection information") {
+    properties = Map("CONNECTION_NAME" -> "connection_info")
+    val metadata = mock[ExaMetadata]
+    val connectionInfo = newConnectionInformation("user", "secret")
+    when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
+    assert(
+      BaseProperties(properties)
+        .getConnectionInformation(Option(metadata)) === connectionInfo
+    )
+    verify(metadata, times(1)).getConnection("connection_info")
+  }
+
+  final def newConnectionInformation(
+    username: String,
+    password: String
+  ): ExaConnectionInformation =
+    new ExaConnectionInformation() {
+      override def getType(): ExaConnectionInformation.ConnectionType =
+        ExaConnectionInformation.ConnectionType.PASSWORD
+      override def getAddress(): String = ""
+      override def getUser(): String = username
+      override def getPassword(): String = password
+    }
+
   private[this] case class BaseProperties(val params: Map[String, String])
       extends AbstractProperties(params)
-
 }

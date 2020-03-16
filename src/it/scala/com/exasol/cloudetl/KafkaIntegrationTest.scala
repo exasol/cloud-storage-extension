@@ -47,10 +47,10 @@ trait KafkaIntegrationTest
     val bHead :: bTail = Seq.fill(partitions.size - 1)(true) ++ Seq(false)
     when(mockedIterator.next()).thenReturn(bHead, bTail: _*)
 
-    val pHead :: pTail = partitions.map(new java.lang.Integer(_))
+    val pHead :: pTail = partitions.map(Integer.valueOf)
     when(mockedIterator.getInteger(1)).thenReturn(pHead, pTail: _*)
 
-    val oHead :: oTail = offsets.map(new java.lang.Long(_))
+    val oHead :: oTail = offsets.map(java.lang.Long.valueOf)
     when(mockedIterator.getLong(2)).thenReturn(oHead, oTail: _*)
 
     mockedIterator

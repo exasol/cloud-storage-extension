@@ -18,9 +18,7 @@ class KinesisImportQueryGeneratorTest
   private[this] var importSpecification: ExaImportSpecification = _
   private[this] val kinesisProperties = Map(
     "TABLE_NAME" -> "TEST_TABLE",
-    "AWS_ACCESS_KEY" -> "MY_ACCESS_KEY",
-    "AWS_SECRET_KEY" -> "MY_SECRET_KEY",
-    "AWS_SESSION_TOKEN" -> "MY_SESSION_TOKEN",
+    "CONNECTION_NAME" -> "MY_CONNECTION",
     "STREAM_NAME" -> "Test_stream",
     "REGION" -> "eu-west-1"
   )
@@ -33,11 +31,10 @@ class KinesisImportQueryGeneratorTest
 
   test("generateSqlForImportSpec returns SQL query") {
     val propertiesAsString =
-      """AWS_ACCESS_KEY -> MY_ACCESS_KEY;
-        |AWS_SECRET_KEY -> MY_SECRET_KEY;
-        |AWS_SESSION_TOKEN -> MY_SESSION_TOKEN;
+      """CONNECTION_NAME -> MY_CONNECTION;
         |REGION -> eu-west-1;
-        |STREAM_NAME -> Test_stream""".stripMargin.replace("\n", "")
+        |STREAM_NAME -> Test_stream;
+        |TABLE_NAME -> TEST_TABLE""".stripMargin.replace("\n", "")
     val expected =
       s"""SELECT KINESIS_IMPORT(
          |  '$propertiesAsString',

@@ -89,6 +89,8 @@ however, it should be safe to run it on the newer JVM versions. This is also
 | [Scalatest Plus][scalatestplus-link]        | An integration support between Scalatest and Mockito            | Apache License 2.0 |
 | [Mockito Core][mockitocore-link]            | A mocking framework for unit tests                              | MIT License        |
 | [Embedded Kafka Schema Registry][kafka-link]| An in-memory instances of Kafka and Schema registry for tests   | MIT License        |
+| [Exasol Testcontainers][exasol-cont-link]   | Exasol Docker containers for tests                              | MIT License        |
+| [Localstack Testcontainers][localstack-link]| A local AWS cloud stack                                         | MIT License        |
 
 ### Compiler Plugin Dependencies
 
@@ -111,7 +113,7 @@ These plugins help with project development.
 | [SBT Git][sbt-git-link]                     | A plugin for Git integration, used to version the release jars  | BSD 2-Clause License |
 
 [travis-badge]: https://img.shields.io/travis/exasol/cloud-storage-etl-udfs/master.svg?logo=travis
-[travis-link]: https://travis-ci.org/exasol/cloud-storage-etl-udfs
+[travis-link]: https://travis-ci.com/exasol/cloud-storage-etl-udfs
 [codecov-badge]: https://codecov.io/gh/exasol/cloud-storage-etl-udfs/branch/master/graph/badge.svg
 [codecov-link]: https://codecov.io/gh/exasol/cloud-storage-etl-udfs
 [coveralls-badge]: https://img.shields.io/coveralls/exasol/cloud-storage-etl-udfs.svg
@@ -147,6 +149,8 @@ These plugins help with project development.
 [scalatestplus-link]: https://github.com/scalatest/scalatestplus-mockito
 [mockitocore-link]: https://site.mockito.org/
 [kafka-link]: https://github.com/embeddedkafka/embedded-kafka-schema-registry
+[exasol-cont-link]: https://github.com/exasol/exasol-testcontainers
+[localstack-link]: https://www.testcontainers.org/modules/localstack/
 [sbt-coursier-link]: https://github.com/coursier/coursier
 [sbt-wartremover-link]: http://github.com/puffnfresh/wartremover
 [sbt-wcontrib-link]: http://github.com/wartremover/wartremover-contrib

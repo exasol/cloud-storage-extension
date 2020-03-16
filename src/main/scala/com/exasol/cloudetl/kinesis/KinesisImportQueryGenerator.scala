@@ -22,23 +22,15 @@ object KinesisImportQueryGenerator {
     val kinesisUserProperties = new KinesisUserProperties(
       importSpecification.getParameters.asScala.toMap
     )
-    val tableName = kinesisUserProperties.getTableName
-    val innerUdfProperties =
-      kinesisUserProperties.createSelectedPropertiesMap(
-        KinesisUserProperties.AWS_ACCESS_KEY_PROPERTY,
-        KinesisUserProperties.AWS_SECRET_KEY_PROPERTY,
-        KinesisUserProperties.AWS_SESSION_TOKEN_PROPERTY,
-        KinesisUserProperties.REGION_PROPERTY,
-        KinesisUserProperties.STREAM_NAME_PROPERTY
-      )
-    val innerUdfPropertiesString = kinesisUserProperties.mkString(innerUdfProperties)
+    val tableName = kinesisUserProperties.getTableName()
+    val propertiesString = kinesisUserProperties.mkString()
     s"""SELECT KINESIS_IMPORT(
-       |  '$innerUdfPropertiesString',
+       |  '$propertiesString',
        |  $KINESIS_SHARD_ID_COLUMN_NAME,
        |  $SHARD_SEQUENCE_NUMBER_COLUMN_NAME
        |)
        |FROM (
-       |  SELECT KINESIS_METADATA('$innerUdfPropertiesString',
+       |  SELECT KINESIS_METADATA('$propertiesString',
        |  $KINESIS_SHARD_ID_COLUMN_NAME, $SHARD_SEQUENCE_NUMBER_COLUMN_NAME)
        |  FROM (SELECT
        |  $KINESIS_SHARD_ID_COLUMN_NAME,

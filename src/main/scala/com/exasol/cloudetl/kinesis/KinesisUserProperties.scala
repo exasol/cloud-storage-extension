@@ -2,6 +2,7 @@ package com.exasol.cloudetl.kinesis
 
 import scala.collection.SortedMap
 
+import com.exasol.ExaMetadata
 import com.exasol.cloudetl.common.{AbstractProperties, CommonProperties}
 
 /**
@@ -11,9 +12,11 @@ object KinesisUserProperties extends CommonProperties {
   val AWS_ACCESS_KEY_PROPERTY: String = "AWS_ACCESS_KEY"
   val AWS_SECRET_KEY_PROPERTY: String = "AWS_SECRET_KEY"
   val AWS_SESSION_TOKEN_PROPERTY: String = "AWS_SESSION_TOKEN"
+  val AWS_SERVICE_ENDPOINT_PROPERTY: String = "AWS_SERVICE_ENDPOINT"
   val STREAM_NAME_PROPERTY: String = "STREAM_NAME"
   val REGION_PROPERTY: String = "REGION"
   val TABLE_NAME_PROPERTY: String = "TABLE_NAME"
+  val MAX_RECORDS_PER_RUN_PROPERTY: String = "MAX_RECORDS_PER_RUN"
 
   /**
    * Creates an instance of [[KinesisUserProperties]] from user provided key value
@@ -37,33 +40,61 @@ class KinesisUserProperties(val propertiesMap: Map[String, String])
     extends AbstractProperties(propertiesMap) {
   import KinesisUserProperties._
 
-  final def getAwsAccessKey: String =
+  final def getAwsAccessKey(): String =
     getString(AWS_ACCESS_KEY_PROPERTY)
 
-  final def getAwsSecretKey: String =
+  final def getAwsSecretKey(): String =
     getString(AWS_SECRET_KEY_PROPERTY)
 
-  final def getAwsSessionToken: String =
+  final def containsAwsSecretKey(): Boolean =
+    containsKey(AWS_SECRET_KEY_PROPERTY)
+
+  final def getAwsSessionToken(): String =
     getString(AWS_SESSION_TOKEN_PROPERTY)
 
-  final def getStreamName: String =
+  final def containsAwsSessionToken(): Boolean =
+    containsKey(AWS_SESSION_TOKEN_PROPERTY)
+
+  final def getAwsServiceEndpoint(): String =
+    getString(AWS_SERVICE_ENDPOINT_PROPERTY)
+
+  final def containsAwsServiceEndpoint(): Boolean =
+    containsKey(AWS_SERVICE_ENDPOINT_PROPERTY)
+
+  final def getStreamName(): String =
     getString(STREAM_NAME_PROPERTY)
 
-  final def getRegion: String =
+  final def getRegion(): String =
     getString(REGION_PROPERTY)
 
-  final def getTableName: String =
+  final def getTableName(): String =
     getString(TABLE_NAME_PROPERTY)
 
+  final def containsMaxRecordsPerRun(): Boolean =
+    containsKey(MAX_RECORDS_PER_RUN_PROPERTY)
+
+  final def getMaxRecordsPerRun(): Int =
+    getString(MAX_RECORDS_PER_RUN_PROPERTY).toInt
+
   /**
-   * Converts a properties map to a string.
-   *
-   * @param propertiesMap A map with properties.
+   * Returns a new [[KinesisUserProperties]] that merges the key-value pairs
+   * parsed from user provided Exasol named connection object.
    */
-  final def mkString(propertiesMap: Map[String, String]): String =
-    (SortedMap.empty[String, String] ++ propertiesMap)
-      .map { case (k, v) => s"$k$KEY_VALUE_SEPARATOR$v" }
-      .mkString(PROPERTY_SEPARATOR)
+  final def mergeWithConnectionObject(exaMetadata: ExaMetadata): KinesisUserProperties = {
+    validateConnectionObject()
+    val connectionParsedMap =
+      parseConnectionInfo(AWS_ACCESS_KEY_PROPERTY, Option(exaMetadata))
+    val newProperties = propertiesMap ++ connectionParsedMap
+    new KinesisUserProperties(newProperties)
+  }
+
+  private[this] def validateConnectionObject(): Unit =
+    if (containsAwsSecretKey() || containsAwsSessionToken()) {
+      throw new KinesisConnectorException(
+        "Please provide either CONNECTION_NAME property or " +
+          "secure access credentials parameters, but not the both!"
+      )
+    }
 
   /**
    * Converts a properties map to a string.
@@ -71,14 +102,7 @@ class KinesisUserProperties(val propertiesMap: Map[String, String])
    * Uses a map that user passed to a constructor.
    */
   final def mkString(): String =
-    mkString(propertiesMap)
-
-  /**
-   * Creates a new [[scala.collection.Map]] with user-selected properties based on the existing
-   * one.
-   *
-   * @param propertyNames Names of the properties to include.
-   */
-  final def createSelectedPropertiesMap(propertyNames: String*): Map[String, String] =
-    propertiesMap.filter { case (key, _) => propertyNames.contains(key) }
+    (SortedMap.empty[String, String] ++ propertiesMap)
+      .map { case (k, v) => s"$k$KEY_VALUE_SEPARATOR$v" }
+      .mkString(PROPERTY_SEPARATOR)
 }

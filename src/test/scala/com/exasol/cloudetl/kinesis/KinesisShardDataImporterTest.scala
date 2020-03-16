@@ -2,13 +2,14 @@ package com.exasol.cloudetl.kinesis
 
 import java.nio.ByteBuffer
 
+import scala.collection.JavaConverters._
+
 import com.amazonaws.services.kinesis.AmazonKinesis
 import com.amazonaws.services.kinesis.model._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.mockito.MockitoSugar
-import scala.collection.JavaConverters._
 
 class KinesisShardDataImporterTest extends AnyFunSuite with MockitoSugar {
   test("createShardIteratorRequest with existing shardSequenceNumber") {
@@ -54,7 +55,10 @@ class KinesisShardDataImporterTest extends AnyFunSuite with MockitoSugar {
     when(shardIteratorResult.getShardIterator).thenReturn(shardIterator)
     when(amazonKinesis.getRecords(any(classOf[GetRecordsRequest]))).thenReturn(getRecordsResult)
     when(getRecordsResult.getRecords).thenReturn(records.asJava)
-    assert(KinesisShardDataImporter.getRecords(amazonKinesis, shardIteratorRequest) === records)
+    assert(
+      KinesisShardDataImporter
+        .getRecords(amazonKinesis, shardIteratorRequest, None) === records
+    )
   }
 
   test("createTableValuesListFromRecord returns table values") {
@@ -68,5 +72,26 @@ class KinesisShardDataImporterTest extends AnyFunSuite with MockitoSugar {
     val shardId = "shardId-000000000002"
     val values = KinesisShardDataImporter.createTableValuesListFromRecord(record, shardId)
     assert(values === Seq(17, 147, "WARN", shardId, value))
+  }
+
+  test("getLimit returns Option with value") {
+    val kinesisUserProperties = mock[KinesisUserProperties]
+    when(kinesisUserProperties.containsMaxRecordsPerRun()).thenReturn(true)
+    when(kinesisUserProperties.getMaxRecordsPerRun()).thenReturn(100)
+    KinesisShardDataImporter
+      .getLimit(kinesisUserProperties)
+      .fold {
+        assert(false)
+        ()
+      } { value =>
+        assert(value === 100)
+        ()
+      }
+  }
+
+  test("getLimit returns empty Option") {
+    val kinesisUserProperties = mock[KinesisUserProperties]
+    when(kinesisUserProperties.containsMaxRecordsPerRun()).thenReturn(false)
+    assert(KinesisShardDataImporter.getLimit(kinesisUserProperties) === None)
   }
 }

@@ -26,8 +26,9 @@ object KinesisShardsMetadataReader {
     val kinesisUserProperties = KinesisUserProperties(
       exaIterator.getString(PROPERTIES_STRING_INDEX)
     )
-    val streamName = kinesisUserProperties.getStreamName
-    val amazonKinesis = KinesisClientFactory.createKinesisClient(kinesisUserProperties)
+    val streamName = kinesisUserProperties.getStreamName()
+    val amazonKinesis =
+      KinesisClientFactory.createKinesisClient(kinesisUserProperties, exaMetadata)
     val shardsMetadataFromTable = getShardsMetadataFromTable(exaIterator)
     val shards = getAllShardsFromStream(streamName, amazonKinesis)
     val shardsMetadataFromStream = collectShardsIds(shards)

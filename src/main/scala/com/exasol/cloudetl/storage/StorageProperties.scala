@@ -1,9 +1,7 @@
 package com.exasol.cloudetl.storage
 
-import com.exasol.ExaConnectionInformation
 import com.exasol.ExaMetadata
-import com.exasol.cloudetl.common.AbstractProperties
-import com.exasol.cloudetl.common.CommonProperties
+import com.exasol.cloudetl.common.{AbstractProperties, CommonProperties}
 
 import org.apache.hadoop.fs.Path
 
@@ -74,58 +72,13 @@ class StorageProperties(
     get(PARALLELISM).fold(defaultValue)(identity)
 
   /**
-   * Returns an Exasol [[ExaConnectionInformation]] named connection
-   * information.
-   */
-  final def getConnectionInformation(): ExaConnectionInformation =
-    exaMetadata.fold {
-      throw new IllegalArgumentException("Exasol metadata is None!")
-    }(_.getConnection(getString(CONNECTION_NAME)))
-
-  /** Checks if the Exasol named connection property is provided. */
-  final def hasNamedConnection(): Boolean =
-    containsKey(CONNECTION_NAME)
-
-  /**
    * Returns a new [[StorageProperties]] that merges the key-value pairs
    * parsed from user provided Exasol named connection object.
    */
   final def merge(accountName: String): StorageProperties = {
-    val connectionParsedMap = parseConnectionInfo(accountName)
+    val connectionParsedMap = parseConnectionInfo(accountName, exaMetadata)
     val newProperties = properties ++ connectionParsedMap
     new StorageProperties(newProperties, exaMetadata)
-  }
-
-  /**
-   * Parses the connection object password into key-value map pairs.
-   *
-   * If the connection object contains the username, it is mapped to the
-   * {@code keyForUsername} parameter. However, this value is
-   * overwritted if the provided key is available in password string of
-   * connection object.
-   */
-  private[this] def parseConnectionInfo(keyForUsername: String): Map[String, String] = {
-    val connection = getConnectionInformation()
-    val username = connection.getUser()
-    val password = connection.getPassword();
-    val map = password
-      .split(";")
-      .map { str =>
-        val idx = str.indexOf('=')
-        if (idx < 0) {
-          throw new IllegalArgumentException(
-            "Connection object password does not contain key=value pairs!"
-          )
-        }
-        str.substring(0, idx) -> str.substring(idx + 1)
-      }
-      .toMap
-
-    if (username.isEmpty()) {
-      map
-    } else {
-      Map(keyForUsername -> username) ++ map
-    }
   }
 
   /**
@@ -151,9 +104,6 @@ object StorageProperties extends CommonProperties {
 
   /** An optional property key name for the parallelism. */
   private[storage] final val PARALLELISM: String = "PARALLELISM"
-
-  /** An optional property key name for the named connection object. */
-  private[storage] final val CONNECTION_NAME: String = "CONNECTION_NAME"
 
   /**
    * Returns [[StorageProperties]] from key values map and

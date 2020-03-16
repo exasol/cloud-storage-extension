@@ -1,13 +1,14 @@
 package com.exasol.cloudetl.kinesis
 
+import java.util
+
 import scala.collection.JavaConverters._
 
+import com.exasol._
 import com.exasol.cloudetl.util.JsonDeserializer
 
 import com.amazonaws.services.kinesis.AmazonKinesis
 import com.amazonaws.services.kinesis.model._
-import com.exasol._
-import java.util
 
 /**
  * This object imports data from a single Kinesis Stream's shard.
@@ -29,11 +30,13 @@ object KinesisShardDataImporter {
     )
     val shardId = exaIterator.getString(SHARD_ID_INDEX)
     val shardSequenceNumber = exaIterator.getString(SHARD_SEQUENCE_NUMBER_INDEX)
-    val streamName = kinesisUserProperties.getStreamName
-    val amazonKinesis = KinesisClientFactory.createKinesisClient(kinesisUserProperties)
+    val streamName = kinesisUserProperties.getStreamName()
+    val amazonKinesis =
+      KinesisClientFactory.createKinesisClient(kinesisUserProperties, exaMetadata)
     val shardIteratorRequest =
       createShardIteratorRequest(streamName, shardId, shardSequenceNumber)
-    val records = getRecords(amazonKinesis, shardIteratorRequest)
+    val limit: Option[Int] = getLimit(kinesisUserProperties)
+    val records = getRecords(amazonKinesis, shardIteratorRequest, limit)
     try {
       records.foreach(record => {
         exaIterator.emit(createTableValuesListFromRecord(record, shardId): _*)
@@ -48,6 +51,13 @@ object KinesisShardDataImporter {
       amazonKinesis.shutdown()
     }
   }
+
+  private[kinesis] def getLimit(kinesisUserProperties: KinesisUserProperties): Option[Int] =
+    if (kinesisUserProperties.containsMaxRecordsPerRun()) {
+      Option(kinesisUserProperties.getMaxRecordsPerRun())
+    } else {
+      None
+    }
 
   private[kinesis] def createShardIteratorRequest(
     streamName: String,
@@ -68,12 +78,16 @@ object KinesisShardDataImporter {
 
   private[kinesis] def getRecords(
     amazonKinesis: AmazonKinesis,
-    shardIteratorRequest: GetShardIteratorRequest
+    shardIteratorRequest: GetShardIteratorRequest,
+    limitOption: Option[Int]
   ): List[Record] = {
     val shardIteratorResult = amazonKinesis.getShardIterator(shardIteratorRequest)
     val shardIterator = shardIteratorResult.getShardIterator
     val getRecordsRequest = new GetRecordsRequest
     getRecordsRequest.setShardIterator(shardIterator)
+    limitOption.fold({}) { limitValue =>
+      getRecordsRequest.setLimit(limitValue)
+    }
     val getRecordsResult = amazonKinesis.getRecords(getRecordsRequest)
     getRecordsResult.getRecords.asScala.toList
   }

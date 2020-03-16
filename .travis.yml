@@ -19,16 +19,16 @@ before_install:
 
 matrix:
   include:
-    - jdk: openjdk8
+    - jdk: openjdk11
       scala: 2.11.12
 
-    - jdk: oraclejdk8
+    - jdk: oraclejdk11
       scala: 2.11.12
 
-    - jdk: openjdk8
+    - jdk: openjdk11
       scala: 2.12.10
 
-    - jdk: oraclejdk8
+    - jdk: oraclejdk11
       scala: 2.12.10
       env: RELEASE=true
 

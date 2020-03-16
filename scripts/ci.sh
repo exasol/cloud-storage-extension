@@ -31,7 +31,7 @@ run_cleaning () {
   echo "#        Cleaning                          #"
   echo "#                                          #"
   echo "############################################"
-  ./sbtx ++$TRAVIS_SCALA_VERSION clean
+  ./sbtx ++$TRAVIS_SCALA_VERSION clean assembly
 }
 
 run_unit_tests () {

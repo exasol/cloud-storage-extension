@@ -22,7 +22,7 @@ object DateTimeUtil {
   val MICROS_PER_DAY: Long = MICROS_PER_SECOND * SECONDS_PER_DAY
 
   /**
-   * Returns a [[java.sql.Timestamp]] timestamp from number of
+   * Returns a timestamp from number of
    * microseconds since epoch.
    */
   def getTimestampFromMicros(us: Long): Timestamp = {
@@ -41,15 +41,14 @@ object DateTimeUtil {
   }
 
   /**
-   * Returns a [[java.sql.Timestamp]] timestamp from number of
+   * Returns a timestamp from number of
    * milliseconds since epoch.
    */
   def getTimestampFromMillis(millis: Long): Timestamp =
     new Timestamp(millis)
 
   /**
-   * Returns the number of micros since epoch from
-   * [[java.sql.Timestamp]].
+   * Returns the number of micros since epoch from a timestamp.
    */
   def getMicrosFromTimestamp(ts: Timestamp): Long =
     if (ts != null) {
@@ -87,7 +86,7 @@ object DateTimeUtil {
     Math.floor(millis.toDouble / MILLIS_PER_DAY).toLong
   }
 
-  /** Returns a [[java.sql.Date]] date given the days since epoch. */
+  /** Returns a date given the days since epoch. */
   def daysToDate(days: Long): Date = {
     val date = UnixEpochDateTime.plusDays(days)
     val millis = date.atZone(ZoneId.systemDefault).toInstant.toEpochMilli

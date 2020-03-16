@@ -1,6 +1,14 @@
 package com.exasol.cloudetl.kinesis
 
-import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicSessionCredentials}
+import com.exasol.ExaMetadata
+
+import com.amazonaws.auth.{
+  AWSCredentials,
+  AWSStaticCredentialsProvider,
+  BasicAWSCredentials,
+  BasicSessionCredentials
+}
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.amazonaws.services.kinesis.{AmazonKinesis, AmazonKinesisClientBuilder}
 
 /**
@@ -15,16 +23,42 @@ object KinesisClientFactory {
    * @param kinesisUserProperties An instance of [[KinesisUserProperties]] class
    * with user properties.
    */
-  def createKinesisClient(kinesisUserProperties: KinesisUserProperties): AmazonKinesis = {
-    val awsAccessKeyId = kinesisUserProperties.getAwsAccessKey
-    val awsSecretAccessKey = kinesisUserProperties.getAwsSecretKey
-    val awsSessionToken = kinesisUserProperties.getAwsSessionToken
-    val region = kinesisUserProperties.getRegion
-    val awsCredentials =
-      new BasicSessionCredentials(awsAccessKeyId, awsSecretAccessKey, awsSessionToken)
-    AmazonKinesisClientBuilder.standard
-      .withRegion(region)
+  def createKinesisClient(
+    kinesisUserProperties: KinesisUserProperties,
+    exaMetadata: ExaMetadata
+  ): AmazonKinesis = {
+    val localKinesisUserProperties = if (kinesisUserProperties.hasNamedConnection()) {
+      kinesisUserProperties.mergeWithConnectionObject(exaMetadata)
+    } else {
+      kinesisUserProperties
+    }
+    val region = localKinesisUserProperties.getRegion()
+    val awsCredentials = createAwsCredentials(localKinesisUserProperties)
+    val kinesisClientBuilder = AmazonKinesisClientBuilder.standard
       .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-      .build
+    if (localKinesisUserProperties.containsAwsServiceEndpoint()) {
+      kinesisClientBuilder.setEndpointConfiguration(
+        new EndpointConfiguration(
+          localKinesisUserProperties.getAwsServiceEndpoint(),
+          region
+        )
+      )
+    } else {
+      kinesisClientBuilder.setRegion(region)
+    }
+    kinesisClientBuilder.build
+  }
+
+  private[this] def createAwsCredentials(
+    kinesisUserProperties: KinesisUserProperties
+  ): AWSCredentials = {
+    val awsAccessKeyId = kinesisUserProperties.getAwsAccessKey()
+    val awsSecretAccessKey = kinesisUserProperties.getAwsSecretKey()
+    if (kinesisUserProperties.containsAwsSessionToken()) {
+      val awsSessionToken = kinesisUserProperties.getAwsSessionToken()
+      new BasicSessionCredentials(awsAccessKeyId, awsSecretAccessKey, awsSessionToken)
+    } else {
+      new BasicAWSCredentials(awsAccessKeyId, awsSecretAccessKey)
+    }
   }
 }
