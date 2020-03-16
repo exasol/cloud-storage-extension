@@ -31,8 +31,9 @@ Kafka][apache-kafka] clusters.
 * Following data formats are supported as sink file format when exporting:
   [Apache Parquet][parquet].
 * Following cloud storage systems are supported: [Amazon S3][s3], [Google Cloud
-  Storage][gcs], [Azure Blob Storage][azure-blob] and [Azure Data Lake (Gen1)
-  Storage][azure-data-lake].
+  Storage][gcs], [Azure Blob Storage][azure-blob], [Azure Data Lake (Gen1)
+  Storage][azure-data-lake] and [Azure Data Lake (Gen2)
+  Storage][azure-data-lake-gen2].
 * Import Apache Avro formatted data from Apache Kafka clusters.
 
 ## Documentation
@@ -41,6 +42,7 @@ For more information please check out the following guides.
 
 * [User Guide](docs/user_guide.md)
   - [Cloud Storage Systems](docs/storage/cloud_storages.md)
+  - [Delta Format Import](docs/storage/delta_format.md)
   - [Apache Kafka Import](docs/kafka/import.md)
 * [Deployment Guide](docs/deployment_guide.md)
 * [Developer Guide](docs/developer_guide.md)
@@ -122,6 +124,7 @@ These plugins help with project development.
 [gcs]: https://cloud.google.com/storage/
 [azure-blob]: https://azure.microsoft.com/en-us/services/storage/blobs/
 [azure-data-lake]: https://azure.microsoft.com/en-us/solutions/data-lake/
+[azure-data-lake-gen2]: https://azure.microsoft.com/en-us/services/storage/data-lake-storage/
 [apache-kafka]: https://kafka.apache.org/
 [avro]: https://avro.apache.org/
 [orc]: https://orc.apache.org/

@@ -52,7 +52,7 @@ Please make sure that the Exasol table column names and types (except
 
 ## Import from Kafka cluster
 
-There are two property values that are required in order to access the Kafka
+There are several property values that are required in order to access the Kafka
 cluster when importing data from Kafka topics using cloud-storage-etl-udfs.
 
 - ``BOOTSTRAP_SERVERS``

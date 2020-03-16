@@ -11,11 +11,12 @@ import org.scalatestplus.mockito.MockitoSugar
 
 class AbstractBucketTest extends AnyFunSuite with BeforeAndAfterEach with MockitoSugar {
 
-  private[bucket] val PATH: String = "BUCKET_PATH"
-  private[bucket] val FORMAT: String = "DATA_FORMAT"
-  private[bucket] var properties: Map[String, String] = _
+  private[cloudetl] val PATH: String = "BUCKET_PATH"
+  private[cloudetl] val FORMAT: String = "DATA_FORMAT"
+  private[cloudetl] var properties: Map[String, String] = _
 
-  override final def beforeEach(): Unit = {
+  @SuppressWarnings(Array("org.wartremover.contrib.warts.UnsafeInheritance"))
+  override def beforeEach(): Unit = {
     properties = Map.empty[String, String]
     ()
   }

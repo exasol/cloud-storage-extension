@@ -1,5 +1,8 @@
 package com.exasol.cloudetl.bucket
 
+import scala.collection.JavaConverters._
+
+import com.exasol.cloudetl.storage.FileFormat
 import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.cloudetl.util.FileSystemUtil
 
@@ -7,6 +10,9 @@ import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.delta.DeltaLog
 
 /**
  * Abstract representation of a bucket.
@@ -64,8 +70,50 @@ abstract class Bucket extends LazyLogging {
    *
    * This method also globifies the bucket path if it contains regex.
    */
-  final def getPaths(): Seq[Path] =
-    FileSystemUtil.globWithPattern(bucketPath, fileSystem)
+  final def getPaths(): Seq[Path] = properties.getFileFormat() match {
+    case FileFormat.DELTA => getPathsFromDeltaLog()
+    case _                => FileSystemUtil.globWithPattern(bucketPath, fileSystem)
+  }
+
+  private[this] def getPathsFromDeltaLog(): Seq[Path] = {
+    val spark = createSparkSession()
+    val strippedBucketPath = stripTrailingStar(bucketPath)
+    val deltaLog = DeltaLog.forTable(spark, strippedBucketPath)
+    if (!deltaLog.isValid()) {
+      throw new IllegalArgumentException(
+        s"The provided path: '$bucketPath' is not a Delta formatted directory!"
+      )
+    }
+    val latestSnapshot = deltaLog.update()
+
+    latestSnapshot.allFiles
+      .select("path")
+      .collect()
+      .map { case Row(path: String) => new Path(s"$strippedBucketPath/$path") }
+  }
+
+  private[this] def createSparkSession(): SparkSession = {
+    lazy val spark = SparkSession
+      .builder()
+      .master("local[*]")
+      .config("spark.delta.logStore.class", properties.getDeltaFormatLogStoreClassName())
+      .getOrCreate()
+
+    getConfiguration().iterator().asScala.foreach { entry =>
+      val hadoopConfigKey = entry.getKey()
+      val hadoopConfigValue = entry.getValue()
+      spark.sparkContext.hadoopConfiguration.set(hadoopConfigKey, hadoopConfigValue)
+    }
+
+    spark
+  }
+
+  private[this] def stripTrailingStar(path: String): String =
+    if (path.takeRight(2) == "/*") {
+      path.dropRight(1)
+    } else {
+      path
+    }
 }
 
 /**

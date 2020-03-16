@@ -10,12 +10,14 @@ object Dependencies {
   private val ExasolVersion = "6.1.7"
   private val HadoopVersion = "3.2.1"
   private val AvroVersion = "1.9.2"
+  private val DeltaVersion = "0.5.0"
   private val OrcVersion = "1.6.2"
   private val ParquetVersion = "1.10.1"
   private val AzureStorageVersion = "8.6.0"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val KafkaClientsVersion = "2.4.0"
   private val KafkaAvroSerializerVersion = "5.4.0"
+  private val SparkSQLVersion = "2.4.5"
   private val SLF4JApiVersion = "1.7.30"
   private val TypesafeLoggingVersion = "3.9.2"
 
@@ -31,7 +33,6 @@ object Dependencies {
     "org.apache.hadoop" % "hadoop-aws" % HadoopVersion,
     "org.apache.hadoop" % "hadoop-azure" % HadoopVersion
       exclude ("org.slf4j", "slf4j-api")
-      exclude ("org.eclipse.jetty", "jetty-util-ajax")
       exclude ("com.fasterxml.jackson.core", "jackson-core")
       exclude ("com.microsoft.azure", "azure-keyvault-core"),
     "org.apache.hadoop" % "hadoop-azure-datalake" % HadoopVersion
@@ -67,6 +68,16 @@ object Dependencies {
       exclude ("org.slf4j", "slf4j-api")
       exclude ("commons-codec", "commons-codec")
       exclude ("org.xerial.snappy", "snappy-java"),
+    "io.delta" %% "delta-core" % DeltaVersion,
+    "org.apache.spark" %% "spark-sql" % SparkSQLVersion
+      exclude ("org.apache.hadoop", "hadoop-client")
+      excludeAll (
+        ExclusionRule(organization = "org.apache.arrow"),
+        ExclusionRule(organization = "org.apache.avro"),
+        ExclusionRule(organization = "org.apache.curator"),
+        ExclusionRule(organization = "org.apache.orc"),
+        ExclusionRule(organization = "org.apache.zookeeper")
+    ),
     "org.apache.kafka" % "kafka-clients" % KafkaClientsVersion,
     "io.confluent" % "kafka-avro-serializer" % KafkaAvroSerializerVersion
       exclude ("org.slf4j", "slf4j-api")

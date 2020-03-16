@@ -9,6 +9,7 @@ class FileFormatTest extends AnyFunSuite {
   test("apply returns supported file formats") {
     val testData = Map(
       "AVro" -> AVRO,
+      "delta" -> DELTA,
       "ORC" -> ORC,
       "fiLE" -> FILE,
       "parquet" -> PARQUET

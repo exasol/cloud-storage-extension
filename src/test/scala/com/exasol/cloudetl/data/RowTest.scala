@@ -18,7 +18,7 @@ class RowTest extends AnyFunSuite {
     assert(Row.fromAvroGenericRecord(record) === Row(Seq("hello")))
   }
 
-  test("fromAvroGenericRecord return Row GenericRecord with single type in Union type") {
+  test("fromAvroGenericRecord returns Row GenericRecord with single type in Union type") {
     val schemaTypes = Schema.createUnion(Schema.create(Schema.Type.LONG))
     val longUnionSchema = createUnion("col_union", schemaTypes)
     val recordSchema = createRecord(
