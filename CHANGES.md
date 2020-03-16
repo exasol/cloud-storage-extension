@@ -1,10 +1,28 @@
-## Unreleased
+## v0.6.2
+
+> 2020 MAR 16
+
+* Adds Delta Lake format import integration.
+  [#31](https://github.com/exasol/cloud-storage-etl-udfs/issues/31)
+  [#78](https://github.com/exasol/cloud-storage-etl-udfs/pull/78)
+
+* Adds initial system requirements document for the upcoming Amazon Kinesis
+  Connector.
+  [#72](https://github.com/exasol/cloud-storage-etl-udfs/issues/72)
+  [#73](https://github.com/exasol/cloud-storage-etl-udfs/pull/73)
+
+* Improve the user guide document with an additional Exasol connection object
+  usage example.
+  [#66](https://github.com/exasol/cloud-storage-etl-udfs/issues/66)
+  [#76](https://github.com/exasol/cloud-storage-etl-udfs/pull/76)
 
 * Updated dependencies to make the project run with IntelliJ IDEA.
   [#70](https://github.com/exasol/cloud-storage-etl-udfs/issues/70)
   [#71](https://github.com/exasol/cloud-storage-etl-udfs/pull/71)
 
 ## v0.6.1
+
+> 2020 FEB 17
 
 * Add Azure Data Lake Gen2 Storage support.
   [#58](https://github.com/exasol/cloud-storage-etl-udfs/issues/58)
