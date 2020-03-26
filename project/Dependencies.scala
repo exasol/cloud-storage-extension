@@ -87,8 +87,7 @@ object Dependencies {
     "com.typesafe.scala-logging" %% "scala-logging" % TypesafeLoggingVersion
       exclude ("org.slf4j", "slf4j-api")
       exclude ("org.scala-lang", "scala-library")
-      exclude ("org.scala-lang", "scala-reflect"),
-    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.10.3"
+      exclude ("org.scala-lang", "scala-reflect")
   )
 
   /** Test dependencies only required in `test` */
