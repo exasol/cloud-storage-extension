@@ -20,7 +20,7 @@ functions (UDFs) in order to read from and write to public cloud storage
 systems.
 
 Additionally, it provides UDF scripts to import data from [Apache
-Kafka][apache-kafka] clusters.
+Kafka][apache-kafka] clusters and [AWS Kinesis Streams][aws-kinesis].
 
 ## Features
 
@@ -35,6 +35,7 @@ Kafka][apache-kafka] clusters.
   Storage][azure-data-lake] and [Azure Data Lake (Gen2)
   Storage][azure-data-lake-gen2].
 * Import Apache Avro formatted data from Apache Kafka clusters.
+* Import JSON formatted data from AWS Kinesis Streams.
 
 ## Documentation
 
@@ -44,6 +45,7 @@ For more information please check out the following guides.
   - [Cloud Storage Systems](docs/storage/cloud_storages.md)
   - [Delta Format Import](docs/storage/delta_format.md)
   - [Apache Kafka Import](docs/kafka/import.md)
+  - [AWS Kinesis Streams Import](docs/kinesis/kinesis_connector.md)
 * [Deployment Guide](docs/deployment_guide.md)
 * [Developer Guide](docs/developer_guide.md)
 
@@ -128,6 +130,7 @@ These plugins help with project development.
 [azure-data-lake]: https://azure.microsoft.com/en-us/solutions/data-lake/
 [azure-data-lake-gen2]: https://azure.microsoft.com/en-us/services/storage/data-lake-storage/
 [apache-kafka]: https://kafka.apache.org/
+[aws-kinesis]: https://aws.amazon.com/kinesis/data-streams/
 [avro]: https://avro.apache.org/
 [orc]: https://orc.apache.org/
 [parquet]: https://parquet.apache.org/

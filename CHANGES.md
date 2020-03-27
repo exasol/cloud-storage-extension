@@ -1,3 +1,11 @@
+## v0.7.0
+
+> 2020 MAR 27
+
+* Adds import JSON formatted data from AWS Kinesis Streams.
+   [#74](https://github.com/exasol/cloud-storage-etl-udfs/issues/74)
+   [#77](https://github.com/exasol/cloud-storage-etl-udfs/pull/77)
+
 ## v0.6.2
 
 > 2020 MAR 16
