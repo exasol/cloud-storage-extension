@@ -40,7 +40,7 @@ object KafkaMetadata extends LazyLogging {
         try {
           topicPartitions.foreach { partitionId =>
             val offset: JLong = idOffsetPairs.getOrElse(partitionId, -1)
-            iterator.emit(new Integer(partitionId), offset)
+            iterator.emit(Integer.valueOf(partitionId), offset)
           }
         } finally {
           kafkaConsumer.close()

@@ -41,7 +41,7 @@ The following list gives you an overview of terms and abbreviations commonly use
 
 Features are the highest level requirements in this document that describe the main functionality of EKC.
 
-### Transferring data from Kinesis Streams to Exasol
+### Transferring Data from Kinesis Streams to Exasol
 `feat~transerring-data-from-kinesis-streams-to-exasol~1`
 
 The Exasol Kinesis Connector provides instruments for transferring data directly from [Amazon Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) to the Exasol database.
@@ -52,10 +52,10 @@ Needs: req
 
 In this section lists functional requirements from the user's perspective.
 
-### Connect to Kinesis Streams from Exasol
-`req~connect-to-kinesis-streams-from-exasol~1`
+### Connect to Kinesis Streams
+`req~connect-to-kinesis-streams~1`
 
-EKC connects to Kinesis Streams directly from Exasol.
+EKC connects to Kinesis Streams.
 
 Covers:
 
@@ -63,7 +63,7 @@ Covers:
 
 Needs: dsn
 
-### Import data to an Exasol Table
+### Import Data to an Exasol Table
 `req~transfer-data-to-an-exasol-table~1`
 
 EKC imports data from a Kinesis Stream directly to an Exasol table.
@@ -74,7 +74,7 @@ Covers:
 
 Needs: dsn
 
-### Import without loosing data
+### Import without Loosing Data
 `req~transfer-without-loosing-data~1`
 
 EKC imports the data from a Kinesis Stream to an Exasol table without loosing records.
@@ -85,7 +85,7 @@ Covers:
 
 Needs: dsn
 
-### Import without duplicates
+### Import without Duplicates
 `req~import-without-duplicates~1`
 
 EKC imports the data from a Kinesis Stream to an Exasol table without duplicates.
@@ -95,4 +95,3 @@ Covers:
 * [feat~transerring-data-from-kinesis-streams-to-exasol~1](#transferring-data-from-kinesis-streams-to-exasol)
 
 Needs: dsn
-

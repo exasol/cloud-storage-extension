@@ -28,8 +28,20 @@ class KafkaImportIT extends KafkaIntegrationTest {
       anyInt().asInstanceOf[JInt],
       anyLong().asInstanceOf[JLong]
     )
-    verify(iter, times(1)).emit(new JInt(0), new JLong(0), "abc", new JInt(3), new JLong(13))
-    verify(iter, times(1)).emit(new JInt(0), new JLong(1), "hello", new JInt(4), new JLong(14))
+    verify(iter, times(1)).emit(
+      JInt.valueOf(0),
+      JLong.valueOf(0),
+      "abc",
+      JInt.valueOf(3),
+      JLong.valueOf(13)
+    )
+    verify(iter, times(1)).emit(
+      JInt.valueOf(0),
+      JLong.valueOf(1),
+      "hello",
+      JInt.valueOf(4),
+      JLong.valueOf(14)
+    )
   }
 
   test("run emits records starting from provided offset") {
@@ -51,8 +63,20 @@ class KafkaImportIT extends KafkaIntegrationTest {
       anyInt().asInstanceOf[JInt],
       anyLong().asInstanceOf[JLong]
     )
-    verify(iter, times(1)).emit(new JInt(0), new JLong(2), "def", new JInt(7), new JLong(17))
-    verify(iter, times(1)).emit(new JInt(0), new JLong(3), "xyz", new JInt(13), new JLong(23))
+    verify(iter, times(1)).emit(
+      JInt.valueOf(0),
+      JLong.valueOf(2),
+      "def",
+      JInt.valueOf(7),
+      JLong.valueOf(17)
+    )
+    verify(iter, times(1)).emit(
+      JInt.valueOf(0),
+      JLong.valueOf(3),
+      "xyz",
+      JInt.valueOf(13),
+      JLong.valueOf(23)
+    )
   }
 
   test("run emits records within min / max records per run") {

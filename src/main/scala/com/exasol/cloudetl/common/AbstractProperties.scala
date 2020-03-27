@@ -2,6 +2,8 @@ package com.exasol.cloudetl.common
 
 import scala.collection.SortedMap
 
+import com.exasol.{ExaConnectionInformation, ExaMetadata}
+
 /**
  * An abstract class that holds the user provided key-value parameters
  * when using the user-defined-functions (UDFs).
@@ -11,6 +13,9 @@ import scala.collection.SortedMap
  * key-value parameters.
  */
 abstract class AbstractProperties(private val properties: Map[String, String]) {
+
+  /** An optional property key name for the named connection object. */
+  final val CONNECTION_NAME_PROPERTY: String = "CONNECTION_NAME"
 
   /**
    * Checks whether the key-value properties map is empty.
@@ -48,10 +53,61 @@ abstract class AbstractProperties(private val properties: Map[String, String]) {
   final def get(key: String): Option[String] =
     properties.get(key)
 
+  /** Checks if the Exasol named connection property is provided. */
+  final def hasNamedConnection(): Boolean =
+    containsKey(CONNECTION_NAME_PROPERTY)
+
+  /**
+   * Parses the connection object password into key-value map pairs.
+   *
+   * If the connection object contains the username, it is mapped to the
+   * {@code keyForUsername} parameter. However, this value is
+   * overwritten if the provided key is available in password string of
+   * connection object.
+   */
+  final def parseConnectionInfo(
+    keyForUsername: String,
+    exaMetadata: Option[ExaMetadata]
+  ): Map[String, String] = {
+    val connection = getConnectionInformation(exaMetadata)
+    val username = connection.getUser()
+    val password = connection.getPassword();
+    val map = password
+      .split(";")
+      .map { str =>
+        val idx = str.indexOf('=')
+        if (idx < 0) {
+          throw new IllegalArgumentException(
+            "Connection object password does not contain key=value pairs!"
+          )
+        }
+        str.substring(0, idx).strip().replace("\n", "") ->
+          str.substring(idx + 1).strip().replace("\n", "")
+      }
+      .toMap
+
+    if (username.isEmpty()) {
+      map
+    } else {
+      Map(keyForUsername -> username) ++ map
+    }
+  }
+
+  /**
+   * Returns an Exasol [[ExaConnectionInformation]] named connection
+   * information.
+   */
+  private[common] final def getConnectionInformation(
+    exaMetadata: Option[ExaMetadata]
+  ): ExaConnectionInformation =
+    exaMetadata.fold {
+      throw new IllegalArgumentException("Exasol metadata is None!")
+    }(_.getConnection(getString(CONNECTION_NAME_PROPERTY)))
+
   /**
    * Returns the value of the key as a String.
    *
-   * @throws java.lang.IllegalArgumentException If key does not exist.
+   * throws java.lang.IllegalArgumentException If key does not exist.
    */
   @throws[IllegalArgumentException]("If key does not exist.")
   final def getString(key: String): String =

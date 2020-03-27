@@ -1,6 +1,6 @@
 package com.exasol.cloudetl.sbt
 
-import sbt._
+import sbt.{ExclusionRule, _}
 import sbt.librarymanagement.InclExclRule
 
 /** A list of required dependencies */
@@ -95,7 +95,9 @@ object Dependencies {
     "org.scalatest" %% "scalatest" % "3.1.0",
     "org.scalatestplus" %% "scalatestplus-mockito" % "1.0.0-M2",
     "org.mockito" % "mockito-core" % "3.2.4",
-    "io.github.embeddedkafka" %% "embedded-kafka-schema-registry" % "5.4.0"
+    "io.github.embeddedkafka" %% "embedded-kafka-schema-registry" % "5.4.0",
+    "com.exasol" % "exasol-testcontainers" % "2.0.0",
+    "org.testcontainers" % "localstack" % "1.13.0"
   ).map(_ % Test)
 
   lazy val ExcludedDependencies: Seq[InclExclRule] = Seq(
@@ -105,7 +107,8 @@ object Dependencies {
     ExclusionRule("com.sun.jersey", "jersey-server"),
     ExclusionRule("com.sun.jersey", "jersey-json"),
     ExclusionRule("javax.servlet", "servlet-api"),
-    ExclusionRule("javax.servlet.jsp", "jsp-api")
+    ExclusionRule("javax.servlet.jsp", "jsp-api"),
+    ExclusionRule("org.openjfx", "javafx.base")
   )
 
   /** The list of all dependencies for the connector */

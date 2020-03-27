@@ -1,10 +1,7 @@
 package com.exasol.cloudetl.storage
 
-import com.exasol.ExaConnectionInformation
-import com.exasol.ExaMetadata
+import com.exasol.{ExaConnectionInformation, ExaMetadata}
 
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
@@ -106,13 +103,6 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     assert(BaseProperties(properties).getParallelism("nproc()") === "nproc()")
   }
 
-  test("getConnectionInformation throws if Exasol metadata is not provided") {
-    val thrown = intercept[IllegalArgumentException] {
-      BaseProperties(properties).getConnectionInformation()
-    }
-    assert(thrown.getMessage === "Exasol metadata is None!")
-  }
-
   final def newConnectionInformation(
     username: String,
     password: String
@@ -125,26 +115,8 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
       override def getPassword(): String = password
     }
 
-  test("getConnectionInformation returns storage connection information") {
-    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
-    val metadata = mock[ExaMetadata]
-    val connectionInfo = newConnectionInformation("user", "secret")
-    when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
-    assert(StorageProperties(properties, metadata).getConnectionInformation() === connectionInfo)
-    verify(metadata, times(1)).getConnection("connection_info")
-  }
-
-  test("hasNamedConnection returns false by default") {
-    assert(BaseProperties(properties).hasNamedConnection() === false)
-  }
-
-  test("hasNamedConnection returns true if connection name is set") {
-    properties = Map(StorageProperties.CONNECTION_NAME -> "named_connection")
-    assert(BaseProperties(properties).hasNamedConnection() === true)
-  }
-
   test("merge returns StorageProperties with new properties") {
-    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    properties = Map("CONNECTION_NAME" -> "connection_info")
     val metadata = mock[ExaMetadata]
     val connectionInfo = newConnectionInformation("", "KEY1=secret1==;KEY2=sec=ret2;KEY3=secret")
     when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
@@ -155,7 +127,7 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
   }
 
   test("merge returns with keyForUsername mapped to connection username") {
-    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    properties = Map("CONNECTION_NAME" -> "connection_info")
     val metadata = mock[ExaMetadata]
     val connectionInfo = newConnectionInformation("usernameValue", "KEY1=secret1")
     when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
@@ -165,7 +137,7 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
   }
 
   test("merge returns with keyForUsername -> connection username overwritted") {
-    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    properties = Map("CONNECTION_NAME" -> "connection_info")
     val metadata = mock[ExaMetadata]
     val connectionInfo =
       newConnectionInformation("usernameValue", "KEY1=secret1;usernameKey=newUsername")
@@ -176,7 +148,7 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
   }
 
   test("merge throws if it cannot find key=value pairs in connection passoword") {
-    properties = Map(StorageProperties.CONNECTION_NAME -> "connection_info")
+    properties = Map("CONNECTION_NAME" -> "connection_info")
     val metadata = mock[ExaMetadata]
     val connectionInfo = newConnectionInformation("", "secret1;key=value")
     when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)

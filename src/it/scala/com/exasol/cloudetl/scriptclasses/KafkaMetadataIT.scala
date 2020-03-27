@@ -20,7 +20,7 @@ class KafkaMetadataIT extends KafkaIntegrationTest {
     val iter = mockExasolIterator(properties, Seq(0), Seq(-1))
     KafkaMetadata.run(mock[ExaMetadata], iter)
     verify(iter, times(1)).emit(anyInt().asInstanceOf[JInt], anyLong().asInstanceOf[JLong])
-    verify(iter, times(1)).emit(new JInt(0), new JLong(-1))
+    verify(iter, times(1)).emit(JInt.valueOf(0), JLong.valueOf(-1))
   }
 
   // Default case where Exasol table is empty.
@@ -30,7 +30,7 @@ class KafkaMetadataIT extends KafkaIntegrationTest {
     KafkaMetadata.run(mock[ExaMetadata], iter)
     verify(iter, times(3)).emit(anyInt().asInstanceOf[JInt], anyLong().asInstanceOf[JLong])
     Seq(0, 1, 2).foreach { partitionId =>
-      verify(iter, times(1)).emit(new JInt(partitionId), new JLong(-1))
+      verify(iter, times(1)).emit(JInt.valueOf(partitionId), JLong.valueOf(-1))
     }
   }
 
@@ -44,9 +44,9 @@ class KafkaMetadataIT extends KafkaIntegrationTest {
     verify(iter, times(3)).emit(anyInt().asInstanceOf[JInt], anyLong().asInstanceOf[JLong])
     partitions.zip(offsets).foreach {
       case (partitionId, maxOffset) =>
-        verify(iter, times(1)).emit(new JInt(partitionId), new JLong(maxOffset))
+        verify(iter, times(1)).emit(JInt.valueOf(partitionId), JLong.valueOf(maxOffset))
     }
-    verify(iter, times(1)).emit(new JInt(2), new JLong(-1))
+    verify(iter, times(1)).emit(JInt.valueOf(2), JLong.valueOf(-1))
   }
 
   // Do not emit partitionId maxOffset pairs if partitionId is not
@@ -57,8 +57,8 @@ class KafkaMetadataIT extends KafkaIntegrationTest {
     KafkaMetadata.run(mock[ExaMetadata], iter)
 
     verify(iter, times(2)).emit(anyInt().asInstanceOf[JInt], anyLong().asInstanceOf[JLong])
-    verify(iter, times(1)).emit(new JInt(0), new JLong(-1))
-    verify(iter, times(1)).emit(new JInt(1), new JLong(7))
+    verify(iter, times(1)).emit(JInt.valueOf(0), JLong.valueOf(-1))
+    verify(iter, times(1)).emit(JInt.valueOf(1), JLong.valueOf(7))
   }
 
   test("run throws if it cannot create KafkConsumer") {
