@@ -103,6 +103,15 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     assert(BaseProperties(properties).getParallelism("nproc()") === "nproc()")
   }
 
+  test("isOverwrite returns true is set") {
+    properties = Map(StorageProperties.OVERWRITE -> "true")
+    assert(BaseProperties(properties).isOverwrite() === true)
+  }
+
+  test("isOverwrite returns default false value if it is not set") {
+    assert(BaseProperties(properties).isOverwrite() === false)
+  }
+
   final def newConnectionInformation(
     username: String,
     password: String

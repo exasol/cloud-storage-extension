@@ -72,6 +72,15 @@ class StorageProperties(
     get(PARALLELISM).fold(defaultValue)(identity)
 
   /**
+   * Checks if the overwite parameter is set to true.
+   *
+   * If the overwrite parameter is not set, then returns default {@code
+   * false} value.
+   */
+  final def isOverwrite(): Boolean =
+    isEnabled(OVERWRITE)
+
+  /**
    * Returns a new [[StorageProperties]] that merges the key-value pairs
    * parsed from user provided Exasol named connection object.
    */
@@ -104,6 +113,9 @@ object StorageProperties extends CommonProperties {
 
   /** An optional property key name for the parallelism. */
   private[storage] final val PARALLELISM: String = "PARALLELISM"
+
+  /** An optional property key name for the overwite. */
+  private[storage] final val OVERWRITE: String = "OVERWRITE"
 
   /**
    * Returns [[StorageProperties]] from key values map and
