@@ -7,15 +7,18 @@ import com.exasol.ExaMetadata
 import com.exasol.cloudetl.bucket.Bucket
 import com.exasol.cloudetl.storage.StorageProperties
 
+import org.apache.hadoop.fs.Path
+
 object ExportPath {
 
   def generateSqlForExportSpec(
     metadata: ExaMetadata,
     exportSpec: ExaExportSpecification
   ): String = {
-    val storageProperties = StorageProperties(exportSpec.getParameters.asScala.toMap)
+    val storageProperties = StorageProperties(exportSpec.getParameters.asScala.toMap, metadata)
     val bucket = Bucket(storageProperties)
     bucket.validate()
+    deleteBucketPathIfRequired(bucket)
 
     val bucketPath = bucket.bucketPath
     val parallelism = storageProperties.getParallelism("iproc()")
@@ -34,6 +37,17 @@ object ExportPath {
        |GROUP BY
        |  $parallelism;
        |""".stripMargin
+  }
+
+  private[this] def deleteBucketPathIfRequired(bucket: Bucket): Unit = {
+    if (bucket.properties.isOverwrite()) {
+      val fileSystem = bucket.fileSystem
+      val bucketPath = new Path(bucket.bucketPath)
+      if (fileSystem.exists(bucketPath)) {
+        val _ = fileSystem.delete(bucketPath, true)
+      }
+    }
+    ()
   }
 
   /** Returns source column names with quotes removed. */

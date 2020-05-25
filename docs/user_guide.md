@@ -179,6 +179,13 @@ These are optional parameters that usually have default values.
   floor(random()*4)'`. Please check out the [supported cloud storage
   systems](storage/cloud_storages.md) for more examples.
 
+* ``OVERWRITE`` - This property is only relevant to the export SQL statement. If
+  it is set to `true`, the UDF deletes all the files in the export path. By
+  default it is set to `false`. Please keep in mind the delete operation is
+  blocking, it can take time to finish at least proportional to the number of
+  files. If the delete operation is interrupted, the filesystem is left in an
+  intermediate state.
+
 * ``PARQUET_COMPRESSION_CODEC`` - This property is only used in export SQL
   statement. It defines the compression codec to use when exporting data into
   Parquet formatted files. Default value is **uncompressed**. Other compression
