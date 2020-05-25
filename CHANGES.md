@@ -1,3 +1,15 @@
+## v0.7.1
+
+> 2020 MAY 25
+
+* Adds `OVERWRITE` user parameter to be used with Export UDF.
+  [#36](https://github.com/exasol/cloud-storage-etl-udfs/issues/36)
+  [#81](https://github.com/exasol/cloud-storage-etl-udfs/pull/81)
+
+* Adds compression codec as an additional extension to the exported file.
+  [#82](https://github.com/exasol/cloud-storage-etl-udfs/issues/82)
+  [#83](https://github.com/exasol/cloud-storage-etl-udfs/pull/83)
+
 ## v0.7.0
 
 > 2020 MAR 27
