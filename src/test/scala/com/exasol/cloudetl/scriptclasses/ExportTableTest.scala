@@ -1,6 +1,9 @@
 package com.exasol.cloudetl.scriptclasses
 
+import java.nio.file.Files
 import java.nio.file.Path
+
+import scala.collection.JavaConverters._
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
@@ -27,10 +30,15 @@ class ExportTableTest extends StorageTest with DummyRecordsTest with BeforeAndAf
 
   private[this] var metadata: ExaMetadata = _
   private[this] var iterator: ExaIterator = _
+  private[this] val defaultProperties = Map("DATA_FORMAT" -> "PARQUET")
 
-  final def createMockedIterator(resourceDir: String): ExaIterator = {
-    val properties = Map("BUCKET_PATH" -> resourceDir, "DATA_FORMAT" -> "PARQUET")
+  final def createMockedIterator(
+    resourceDir: String,
+    extraProperties: Map[String, String]
+  ): ExaIterator = {
+    val properties = defaultProperties ++ Map("BUCKET_PATH" -> resourceDir) ++ extraProperties
     val mockedIterator = mockExasolIterator(properties)
+
     when(mockedIterator.getString(2)).thenReturn(srcColumns.mkString("."))
     when(mockedIterator.next()).thenReturn(true, false)
     when(mockedIterator.size()).thenReturn(2L)
@@ -75,7 +83,7 @@ class ExportTableTest extends StorageTest with DummyRecordsTest with BeforeAndAf
   override final def beforeEach(): Unit = {
     outputPath = createTemporaryFolder("exportTableTest")
     metadata = createMockedMetadata()
-    iterator = createMockedIterator(outputPath.toUri.toString)
+    iterator = createMockedIterator(outputPath.toUri.toString, defaultProperties)
     ()
   }
 
@@ -117,6 +125,31 @@ class ExportTableTest extends StorageTest with DummyRecordsTest with BeforeAndAf
 
     val totalRecords = 2
     verify(importIter, times(totalRecords)).emit(Seq(any[Object]): _*)
+  }
+
+  test("export creates file without compression extension if compression codec is not set") {
+    ExportTable.run(metadata, iterator)
+    assert(Files.exists(outputPath) === true)
+    assert(Files.list(outputPath).count() === 2)
+    checkExportFileExtensions(outputPath, "")
+  }
+
+  test("export creates file with compression extension if compression codec is set") {
+    val properties = defaultProperties ++ Map("PARQUET_COMPRESSION_CODEC" -> "SNAPPY")
+    iterator = createMockedIterator(outputPath.toUri.toString, properties)
+    ExportTable.run(metadata, iterator)
+    assert(Files.exists(outputPath) === true)
+    assert(Files.list(outputPath).count() === 2)
+    checkExportFileExtensions(outputPath, ".snappy")
+  }
+
+  private[this] def checkExportFileExtensions(
+    outputPath: Path,
+    compressionCodec: String
+  ): Unit = {
+    val filtered = Files.list(outputPath).iterator().asScala.filter(_.endsWith(".crc"))
+    assert(filtered.forall(_.endsWith(s"$compressionCodec.parquet")))
+    ()
   }
 
 }

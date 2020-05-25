@@ -11,6 +11,7 @@ import com.exasol.cloudetl.util.SchemaUtil
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.fs.Path
+import org.apache.parquet.hadoop.metadata.CompressionCodecName
 
 /**
  * A specific [[Sink]] implementation with records per file request.
@@ -104,7 +105,13 @@ final class BatchSizedSink(
 
   private def getNewPath(): String = {
     val uuidStr = UUID.randomUUID.toString.replaceAll("-", "")
-    s"exa_export_${nodeId}_${vmId}_$uuidStr.parquet"
+    val parquetOptions = ParquetWriteOptions(bucket.properties)
+    if (parquetOptions.compressionCodec == CompressionCodecName.UNCOMPRESSED) {
+      s"exa_export_${nodeId}_${vmId}_$uuidStr.parquet"
+    } else {
+      val compressionExtension = parquetOptions.compressionCodec.getExtension()
+      s"exa_export_${nodeId}_${vmId}_$uuidStr$compressionExtension.parquet"
+    }
   }
 
 }
