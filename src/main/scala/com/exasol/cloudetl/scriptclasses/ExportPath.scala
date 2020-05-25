@@ -15,7 +15,7 @@ object ExportPath {
     metadata: ExaMetadata,
     exportSpec: ExaExportSpecification
   ): String = {
-    val storageProperties = StorageProperties(exportSpec.getParameters.asScala.toMap)
+    val storageProperties = StorageProperties(exportSpec.getParameters.asScala.toMap, metadata)
     val bucket = Bucket(storageProperties)
     bucket.validate()
     deleteBucketPathIfRequired(bucket)
