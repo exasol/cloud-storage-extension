@@ -22,4 +22,11 @@ lazy val root =
     .settings(Settings.projectSettings(scalaVersion))
     .enablePlugins(IntegrationTestPlugin, GitVersioning)
 
+lazy val benchmarks =
+  project
+    .in(file("benchmarks"))
+    .settings(description := "Cloud Storage ETL UDF JMH Microbenchmarks")
+    .dependsOn(root)
+    .enablePlugins(JmhPlugin)
+
 addCommandAlias("pluginUpdates", ";reload plugins;dependencyUpdates;reload return")

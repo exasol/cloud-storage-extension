@@ -49,6 +49,10 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 // https://github.com/cb372/sbt-explicit-dependencies
 addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.12")
 
+// Adds a Java Microbenchmarking Harness (JMH) `sbt-jmh` plugin
+// https://github.com/ktoso/sbt-jmh
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.3.7")
+
 // Setup this and project/project/plugins.sbt for formatting
 // project/*.scala files with scalafmt
 inThisBuild(
