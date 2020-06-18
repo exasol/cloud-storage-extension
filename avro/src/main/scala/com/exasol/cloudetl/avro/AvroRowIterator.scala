@@ -34,7 +34,7 @@ object AvroRowIterator {
         throw new NoSuchElementException("Avro reader called next on an empty iterator!")
       }
       val record = reader.next()
-      Row.fromAvroGenericRecord(record)
+      AvroRow(record)
     }
   }
 

@@ -24,7 +24,7 @@ object Settings {
     scalacOptions ++= Compilation.compilerFlagsFn(scalaVersion.value),
     scalacOptions in (Compile, console) := Compilation.consoleFlagsFn(scalaVersion.value),
     javacOptions ++= Compilation.JavacCompilerFlags,
-    compileOrder in Compile := CompileOrder.JavaThenScala,
+    compileOrder in Compile := CompileOrder.JavaThenScala
   )
 
   def miscSettings(): Seq[Setting[_]] = Seq(
@@ -49,18 +49,30 @@ object Settings {
   def scalaStyleSettings(): Seq[Setting[_]] = {
     lazy val mainScalastyle = taskKey[Unit]("mainScalastyle")
     lazy val testScalastyle = taskKey[Unit]("testScalastyle")
-    lazy val itTestScalastyle = taskKey[Unit]("itTestScalastyle")
     Seq(
       scalastyleFailOnError := true,
       (scalastyleConfig in Compile) := (baseDirectory in ThisBuild).value / "project" / "scalastyle-config.xml",
       (scalastyleConfig in Test) := (baseDirectory in ThisBuild).value / "project" / "scalastyle-test-config.xml",
+      mainScalastyle := scalastyle.in(Compile).toTask("").value,
+      testScalastyle := scalastyle.in(Test).toTask("").value,
+      (test in Test) := ((test in Test) dependsOn mainScalastyle).value,
+      (test in Test) := ((test in Test) dependsOn testScalastyle).value,
+    )
+  }
+
+  /**
+   * Creates settings for integration tests.
+   *
+   * Use only when [[IntegrationTestPlugin]] is enabled.
+   */
+  def integrationTestSettings(): Seq[Setting[_]] = {
+    lazy val mainScalastyle = taskKey[Unit]("mainScalastyle")
+    lazy val itTestScalastyle = taskKey[Unit]("itTestScalastyle")
+    Seq(
       (scalastyleConfig in IntegrationTest) := (scalastyleConfig in Test).value,
       (scalastyleSources in IntegrationTest) := Seq((scalaSource in IntegrationTest).value),
       mainScalastyle := scalastyle.in(Compile).toTask("").value,
-      testScalastyle := scalastyle.in(Test).toTask("").value,
       itTestScalastyle := scalastyle.in(IntegrationTest).toTask("").value,
-      (test in Test) := ((test in Test) dependsOn mainScalastyle).value,
-      (test in Test) := ((test in Test) dependsOn testScalastyle).value,
       (test in IntegrationTest) := ((test in IntegrationTest) dependsOn mainScalastyle).value,
       (test in IntegrationTest) := ((test in IntegrationTest) dependsOn itTestScalastyle).value
     )

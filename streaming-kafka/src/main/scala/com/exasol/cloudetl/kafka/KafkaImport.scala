@@ -7,7 +7,7 @@ import scala.collection.JavaConverters._
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
-import com.exasol.cloudetl.data.Row
+import com.exasol.cloudetl.avro.AvroRow
 import com.exasol.cloudetl.kafka.KafkaConsumerProperties
 
 import com.typesafe.scalalogging.LazyLogging
@@ -52,7 +52,7 @@ object KafkaImport extends LazyLogging {
           )
           val metadata: Seq[Object] =
             Seq(record.partition().asInstanceOf[AnyRef], record.offset().asInstanceOf[AnyRef])
-          val row = Row.fromAvroGenericRecord(record.value())
+          val row = AvroRow(record.value())
           val allColumns: Seq[Object] = metadata ++ row.getValues().map(_.asInstanceOf[AnyRef])
           iterator.emit(allColumns: _*)
         }

@@ -22,7 +22,7 @@ class DeltaFormatBucketTest extends AbstractBucketTest with DummyRecordsTest {
     spark = SparkSession
       .builder()
       .appName("DeltaFormatTest")
-      .master("local[*]")
+      .master("local[2]")
       .getOrCreate()
     spark.sparkContext.setLogLevel("WARN")
   }

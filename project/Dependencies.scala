@@ -40,12 +40,6 @@ object Dependencies {
 
   lazy val CommonDependencies: Seq[ModuleID] = Seq(
     "com.exasol" % "exasol-script-api" % ExasolVersion,
-    "org.apache.avro" % "avro" % AvroVersion
-      exclude ("org.slf4j", "slf4j-api")
-      excludeAll (
-        ExclusionRule(organization = "com.fasterxml.jackson.core"),
-        ExclusionRule(organization = "com.fasterxml.jackson.module")
-    ),
     "com.typesafe.scala-logging" %% "scala-logging" % TypesafeLoggingVersion
       exclude ("org.slf4j", "slf4j-api")
       exclude ("org.scala-lang", "scala-library")
@@ -54,6 +48,15 @@ object Dependencies {
     "org.scalatest" %% "scalatest" % "3.1.0" % "test",
     "org.scalatestplus" %% "scalatestplus-mockito" % "1.0.0-M2" % "test",
     "org.mockito" % "mockito-core" % "3.2.4" % "test"
+  )
+
+  lazy val AvroDependencies: Seq[ModuleID] = Seq(
+    "org.apache.avro" % "avro" % AvroVersion
+      exclude ("org.slf4j", "slf4j-api")
+      excludeAll (
+        ExclusionRule(organization = "com.fasterxml.jackson.core"),
+        ExclusionRule(organization = "com.fasterxml.jackson.module")
+    )
   )
 
   lazy val StorageDependencies: Seq[ModuleID] = Seq(
@@ -86,9 +89,6 @@ object Dependencies {
     "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion
       exclude ("com.google.guava", "guava")
       exclude ("org.apache.httpcomponents", "httpclient"),
-    // "org.apache.avro" % "avro" % AvroVersion
-    //   exclude ("org.slf4j", "slf4j-api")
-    //   exclude ("com.fasterxml.jackson.core", "jackson-core"),
     "org.apache.orc" % "orc-core" % OrcVersion
       exclude ("org.slf4j", "slf4j-api")
       exclude ("javax.xml.bind", "jaxb-api"),

@@ -20,9 +20,8 @@ lazy val root =
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.commonSettings(scalaVersion))
-    .enablePlugins(IntegrationTestPlugin)
-    .disablePlugins(AssemblyPlugin)
-    .aggregate(common, storage, streamingkafka, streamingkinesis)
+    .disablePlugins(AssemblyPlugin, IntegrationTestPlugin, GitVersioning)
+    .aggregate(common, avro, storage, streamingkafka, streamingkinesis)
 
 lazy val common =
   project
@@ -37,8 +36,18 @@ lazy val common =
       libraryDependencies ++= Dependencies.JacksonDependencies,
       dependencyOverrides ++= Dependencies.JacksonDependencies
     )
-    .enablePlugins(IntegrationTestPlugin, GitVersioning)
-    .disablePlugins(AssemblyPlugin)
+    .disablePlugins(AssemblyPlugin, IntegrationTestPlugin, GitVersioning)
+
+lazy val avro =
+  project
+    .in(file("avro"))
+    .settings(moduleName := "avro")
+    .settings(orgSettings)
+    .settings(buildSettings)
+    .settings(Settings.commonSettings(scalaVersion))
+    .settings(libraryDependencies ++= Dependencies.AvroDependencies)
+    .dependsOn(common % "compile->compile;test->test")
+    .disablePlugins(AssemblyPlugin, IntegrationTestPlugin, GitVersioning)
 
 lazy val storage =
   project
@@ -47,10 +56,12 @@ lazy val storage =
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.commonSettings(scalaVersion))
+    .settings(Settings.integrationTestSettings)
     .settings(Settings.assemblySettings)
     .settings(libraryDependencies ++= Dependencies.StorageDependencies)
     .enablePlugins(IntegrationTestPlugin, GitVersioning)
     .dependsOn(common % "compile->compile;test->test")
+    .dependsOn(avro % "compile->compile")
 
 lazy val streamingkafka =
   project
@@ -59,6 +70,7 @@ lazy val streamingkafka =
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.commonSettings(scalaVersion))
+    .settings(Settings.integrationTestSettings)
     .settings(Settings.assemblySettings)
     .settings(
       resolvers ++= Dependencies.ConfluentResolvers,
@@ -67,6 +79,7 @@ lazy val streamingkafka =
     )
     .enablePlugins(IntegrationTestPlugin, GitVersioning)
     .dependsOn(common % "compile->compile;test->test")
+    .dependsOn(avro % "compile->compile")
 
 lazy val streamingkinesis =
   project
@@ -75,6 +88,7 @@ lazy val streamingkinesis =
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.commonSettings(scalaVersion))
+    .settings(Settings.integrationTestSettings)
     .settings(Settings.assemblySettings)
     .settings(libraryDependencies ++= Dependencies.KinesisDependencies)
     .enablePlugins(IntegrationTestPlugin, GitVersioning)

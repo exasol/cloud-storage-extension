@@ -1,24 +1,26 @@
-package com.exasol.cloudetl.data
+package com.exasol.cloudetl.avro
 
 import scala.collection.JavaConverters._
+
+import com.exasol.cloudetl.data.Row
 
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericData
 import org.scalatest.funsuite.AnyFunSuite
 
-class RowTest extends AnyFunSuite {
+class AvroRowTest extends AnyFunSuite {
 
-  test("fromAvroGenericRecord returns Row from GenericRecord with ByteBuffer column") {
+  test("apply returns Row from GenericRecord with ByteBuffer column") {
     val recordSchema = createRecord(
       "record",
       createField("col_str", Schema.create(Schema.Type.STRING))
     )
     val record = new GenericData.Record(recordSchema)
     record.put("col_str", java.nio.ByteBuffer.wrap(Array[Byte](104, 101, 108, 108, 111)))
-    assert(Row.fromAvroGenericRecord(record) === Row(Seq("hello")))
+    assert(AvroRow(record) === Row(Seq("hello")))
   }
 
-  test("fromAvroGenericRecord returns Row GenericRecord with single type in Union type") {
+  test("apply returns Row GenericRecord with single type in Union type") {
     val schemaTypes = Schema.createUnion(Schema.create(Schema.Type.LONG))
     val longUnionSchema = createUnion("col_union", schemaTypes)
     val recordSchema = createRecord(
@@ -29,10 +31,10 @@ class RowTest extends AnyFunSuite {
     val record = new GenericData.Record(recordSchema)
     record.put("col_str", "123")
     record.put("col_union", 13L)
-    assert(Row.fromAvroGenericRecord(record) === Row(Seq("123", 13L)))
+    assert(AvroRow(record) === Row(Seq("123", 13L)))
   }
 
-  test("fromAvroGenericRecord returns Row from GenericRecord with many columns") {
+  test("apply returns Row from GenericRecord with many columns") {
     val fixedSchema = createFixedSchema("fixedSchema", 5)
     val enumSchema = createEnumSchema("enumSchema", Seq("A", "B"))
     val recordSchema = createRecord(
@@ -109,10 +111,10 @@ class RowTest extends AnyFunSuite {
       )
     )
 
-    assert(Row.fromAvroGenericRecord(record) === expectedRow)
+    assert(AvroRow(record) === expectedRow)
   }
 
-  test("fromAvroGenericRecord throws if Avro type (nested record) is not supported") {
+  test("apply throws if Avro type (nested record) is not supported") {
     val innerRecordSchema = createRecord(
       "innerRecord",
       createPrimitiveUnionField("inner_field", Schema.Type.STRING)
@@ -132,12 +134,12 @@ class RowTest extends AnyFunSuite {
     record.put("col_record", innerRecord)
 
     val thrown = intercept[IllegalArgumentException] {
-      Row.fromAvroGenericRecord(record)
+      AvroRow(record)
     }
     assert(thrown.getMessage === "Avro record type is not supported!")
   }
 
-  test("fromAvroGenericRecord throws if GenericRecord value cannot be cast as string") {
+  test("apply throws if GenericRecord value cannot be cast as string") {
     val recordSchema = createRecord(
       "record",
       createField("col_str", Schema.create(Schema.Type.STRING))
@@ -145,12 +147,12 @@ class RowTest extends AnyFunSuite {
     val record = new GenericData.Record(recordSchema)
     record.put("col_str", 1L)
     val thrown = intercept[IllegalArgumentException] {
-      Row.fromAvroGenericRecord(record)
+      AvroRow(record)
     }
     assert(thrown.getMessage === "Avro string type with value 1 cannot be converted to string!")
   }
 
-  test("fromAvroGenericRecord throws if GenericRecord Union type is not primitive and null") {
+  test("apply throws if GenericRecord Union type is not primitive and null") {
     val unionSchemaTypes =
       Schema.createUnion(Seq(Schema.Type.STRING, Schema.Type.INT).map(Schema.create(_)).asJava)
     val unionSchema = createUnion("col_union", unionSchemaTypes)
@@ -163,39 +165,42 @@ class RowTest extends AnyFunSuite {
     record.put("col_str", "abc")
     record.put("col_union", 1)
     val thrown = intercept[IllegalArgumentException] {
-      Row.fromAvroGenericRecord(record)
+      AvroRow(record)
     }
     assert(thrown.getMessage === "Avro Union type should contain a primitive and null!")
   }
 
-  final def createRecord(name: String, fields: Schema.Field*): Schema = {
-    val schema = Schema.createRecord(name, name, "com.exasol.cloudetl.row", false)
+  private[this] final def createRecord(name: String, fields: Schema.Field*): Schema = {
+    val schema = Schema.createRecord(name, name, "com.exasol.cloudetl.avro", false)
     schema.setFields(fields.asJava)
     schema
   }
 
-  final def createField(name: String, schema: Schema): Schema.Field =
+  private[this] final def createField(name: String, schema: Schema): Schema.Field =
     new Schema.Field(name, schema, "", null, Schema.Field.Order.ASCENDING)
 
-  final def createUnionField(name: String, schemas: Schema*): Schema.Field = {
+  private[this] final def createUnionField(name: String, schemas: Schema*): Schema.Field = {
     val schemaTypes = Seq(Schema.create(Schema.Type.NULL)) ++ schemas
     val unionSchema = Schema.createUnion(schemaTypes.asJava)
     createUnion(name, unionSchema)
   }
 
-  final def createPrimitiveUnionField(name: String, types: Schema.Type*): Schema.Field = {
+  private[this] final def createPrimitiveUnionField(
+    name: String,
+    types: Schema.Type*
+  ): Schema.Field = {
     val schemaTypes = (Seq(Schema.Type.NULL) ++ types).map(Schema.create(_))
     val unionSchema = Schema.createUnion(schemaTypes.asJava)
     createUnion(name, unionSchema)
   }
 
-  final def createUnion(name: String, unionSchema: Schema): Schema.Field =
+  private[this] final def createUnion(name: String, unionSchema: Schema): Schema.Field =
     new Schema.Field(name, unionSchema, null, null, Schema.Field.Order.ASCENDING)
 
-  final def createFixedSchema(name: String, size: Int): Schema =
-    Schema.createFixed(name, "", "com.exasol.cloudetl.row", size)
+  private[this] final def createFixedSchema(name: String, size: Int): Schema =
+    Schema.createFixed(name, "", "com.exasol.cloudetl.avro", size)
 
-  final def createEnumSchema(name: String, ordinals: Seq[String]): Schema =
-    Schema.createEnum(name, "", "com.exasol.cloudetl.row", ordinals.asJava)
+  private[this] final def createEnumSchema(name: String, ordinals: Seq[String]): Schema =
+    Schema.createEnum(name, "", "com.exasol.cloudetl.avro", ordinals.asJava)
 
 }
