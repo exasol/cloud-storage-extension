@@ -9,15 +9,15 @@ object Dependencies {
   // Versions
   private val ExasolVersion = "6.1.7"
   private val HadoopVersion = "3.2.1"
-  private val AvroVersion = "1.9.2"
-  private val DeltaVersion = "0.5.0"
-  private val OrcVersion = "1.6.2"
+  private val AvroVersion = "1.10.0"
+  private val DeltaVersion = "0.7.0"
+  private val OrcVersion = "1.6.3"
   private val ParquetVersion = "1.10.1"
   private val AzureStorageVersion = "8.6.0"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
-  private val KafkaClientsVersion = "2.4.0"
+  private val KafkaClientsVersion = "2.5.0"
   private val KafkaAvroSerializerVersion = "5.4.0"
-  private val SparkSQLVersion = "2.4.5"
+  private val SparkSQLVersion = "3.0.0"
   private val SLF4JApiVersion = "1.7.30"
   private val TypesafeLoggingVersion = "3.9.2"
 
@@ -30,11 +30,11 @@ object Dependencies {
   )
 
   lazy val JacksonDependencies: Seq[ModuleID] = Seq(
-    "com.fasterxml.jackson.core" % "jackson-core" % "2.6.7",
-    "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.7.3"
+    "com.fasterxml.jackson.core" % "jackson-core" % "2.10.4",
+    "com.fasterxml.jackson.core" % "jackson-databind" % "2.10.4"
       exclude ("com.fasterxml.jackson.core", "jackson-annotations"),
-    "com.fasterxml.jackson.core" % "jackson-annotations" % "2.6.7",
-    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.7.1"
+    "com.fasterxml.jackson.core" % "jackson-annotations" % "2.10.4",
+    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.10.4"
       exclude ("com.fasterxml.jackson.core", "jackson-databind")
   )
 
@@ -45,9 +45,9 @@ object Dependencies {
       exclude ("org.scala-lang", "scala-library")
       exclude ("org.scala-lang", "scala-reflect"),
     // Common test dependencies
-    "org.scalatest" %% "scalatest" % "3.1.0" % "test",
+    "org.scalatest" %% "scalatest" % "3.2.0" % "test",
     "org.scalatestplus" %% "scalatestplus-mockito" % "1.0.0-M2" % "test",
-    "org.mockito" % "mockito-core" % "3.2.4" % "test"
+    "org.mockito" % "mockito-core" % "3.3.3" % "test"
   )
 
   lazy val AvroDependencies: Seq[ModuleID] = Seq(
@@ -56,7 +56,8 @@ object Dependencies {
       excludeAll (
         ExclusionRule(organization = "com.fasterxml.jackson.core"),
         ExclusionRule(organization = "com.fasterxml.jackson.module")
-    )
+    ),
+    "com.fasterxml.jackson.core" % "jackson-databind" % "2.11.1"
   )
 
   lazy val StorageDependencies: Seq[ModuleID] = Seq(
@@ -130,9 +131,10 @@ object Dependencies {
 
   lazy val KinesisDependencies: Seq[ModuleID] = Seq(
     "org.apache.hadoop" % "hadoop-aws" % HadoopVersion,
+    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.11.1",
     // Tests
-    "com.exasol" % "exasol-testcontainers" % "2.0.0" % "test",
-    "org.testcontainers" % "localstack" % "1.13.0" % "test"
+    "com.exasol" % "exasol-testcontainers" % "2.0.3" % "test",
+    "org.testcontainers" % "localstack" % "1.14.3" % "test"
   )
 
   lazy val ExcludedDependencies: Seq[InclExclRule] = Seq(

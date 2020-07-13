@@ -5,7 +5,6 @@ import java.util
 import scala.collection.JavaConverters._
 
 import com.exasol._
-import com.exasol.cloudetl.util.JsonDeserializer
 
 import com.amazonaws.services.kinesis.AmazonKinesis
 import com.amazonaws.services.kinesis.model._

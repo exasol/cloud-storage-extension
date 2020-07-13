@@ -32,9 +32,7 @@ lazy val common =
     .settings(Settings.commonSettings(scalaVersion))
     .settings(
       resolvers ++= Dependencies.ExasolResolvers,
-      libraryDependencies ++= Dependencies.CommonDependencies,
-      libraryDependencies ++= Dependencies.JacksonDependencies,
-      dependencyOverrides ++= Dependencies.JacksonDependencies
+      libraryDependencies ++= Dependencies.CommonDependencies
     )
     .disablePlugins(AssemblyPlugin, IntegrationTestPlugin, GitVersioning)
 
@@ -58,7 +56,11 @@ lazy val storage =
     .settings(Settings.commonSettings(scalaVersion))
     .settings(Settings.integrationTestSettings)
     .settings(Settings.assemblySettings)
-    .settings(libraryDependencies ++= Dependencies.StorageDependencies)
+    .settings(
+      libraryDependencies ++= Dependencies.StorageDependencies,
+      libraryDependencies ++= Dependencies.JacksonDependencies,
+      dependencyOverrides ++= Dependencies.JacksonDependencies
+    )
     .enablePlugins(IntegrationTestPlugin, GitVersioning)
     .dependsOn(common % "compile->compile;test->test")
     .dependsOn(avro % "compile->compile")

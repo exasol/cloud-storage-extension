@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.util
+package com.exasol.cloudetl.kinesis
 
 import scala.collection.immutable.HashMap
 

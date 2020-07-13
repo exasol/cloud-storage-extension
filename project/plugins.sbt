@@ -1,15 +1,15 @@
 // Adds a `wartremover` a flexible Scala code linting tool
 // http://github.com/puffnfresh/wartremover
-addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.4.3")
+addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.4.9")
 
 // Adds Contrib Warts
 // http://github.com/wartremover/wartremover-contrib/
-addSbtPlugin("org.wartremover" % "sbt-wartremover-contrib" % "1.3.2")
+addSbtPlugin("org.wartremover" % "sbt-wartremover-contrib" % "1.3.7")
 
 // Adds a `assembly` task to create a fat JAR with all of its
 // dependencies
 // https://github.com/sbt/sbt-assembly
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.10")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.15.0")
 
 // Adds most common doc api mappings
 // https://github.com/ThoughtWorksInc/sbt-api-mappings
@@ -27,7 +27,7 @@ addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.2.7")
 // Adds a `dependencyUpdates` task to check Maven repositories for
 // dependency updates
 // http://github.com/rtimush/sbt-updates
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.5.0")
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.5.1")
 
 // Adds a `scalafmt` task for automatic source code formatting
 // https://github.com/lucidsoftware/neo-sbt-scalafmt
@@ -47,7 +47,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 
 // Adds a `sbt-explicit-dependencies` plugin
 // https://github.com/cb372/sbt-explicit-dependencies
-addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.12")
+addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.13")
 
 // Setup this and project/project/plugins.sbt for formatting
 // project/*.scala files with scalafmt
