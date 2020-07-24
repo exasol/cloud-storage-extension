@@ -5,19 +5,10 @@ import java.sql.ResultSet
 import org.testcontainers.containers.localstack.LocalStackContainer
 
 class KinesisShardDataImporterIT extends KinesisAbstractIntegrationTest {
-  val TEST_STREAM_NAME = "Test_stream"
 
   override final def beforeAll(): Unit = {
     prepareContainers()
-    createKinesisStream(TEST_STREAM_NAME, 1)
     setupExasol()
-    val columns =
-      """sensorId DECIMAL(18,0),
-        |currentTemperature DECIMAL(18,0),
-        |status VARCHAR(100),
-        |kinesis_shard_id VARCHAR(2000),
-        |shard_sequence_number VARCHAR(2000)"""
-    createKinesisImportScript(columns)
     val credentials = kinesisLocalStack.getDefaultCredentialsProvider.getCredentials
     statement.execute(
       s"""CREATE OR REPLACE CONNECTION KINESIS_CONNECTION
@@ -29,9 +20,19 @@ class KinesisShardDataImporterIT extends KinesisAbstractIntegrationTest {
     ()
   }
 
-  test("returns data from a shard") {
-    putRecordsIntoStream()
-    val resultSet = this.executeKinesisImportScript("VALUES (('shardId-000000000000', null))")
+  test("returns primitive data from a shard") {
+    val streamName = "Test_stream_1"
+    createKinesisStream(streamName, 1)
+    val columns =
+      """sensorId DECIMAL(18,0),
+        |currentTemperature DECIMAL(18,0),
+        |status VARCHAR(100),
+        |kinesis_shard_id VARCHAR(2000),
+        |shard_sequence_number VARCHAR(2000)"""
+    createKinesisImportScript(columns)
+    putRecordsIntoStream(streamName)
+    val resultSet =
+      this.executeKinesisImportScript("VALUES (('shardId-000000000000', null))", streamName)
     val expected = List(
       (17, 147, "WARN", "shardId-000000000000", true),
       (20, 15, "OK", "shardId-000000000000", true)
@@ -41,14 +42,45 @@ class KinesisShardDataImporterIT extends KinesisAbstractIntegrationTest {
     assert(resultSet.next() === false)
   }
 
-  private[this] def putRecordsIntoStream(): Unit = {
+  private[this] def putRecordsIntoStream(streamName: String): Unit = {
     val partitionKey = "partitionKey-1"
-    putRecordIntoStream(17, 147, "WARN", partitionKey, TEST_STREAM_NAME)
-    putRecordIntoStream(20, 15, "OK", partitionKey, TEST_STREAM_NAME)
-    putRecordIntoStream(36, 65, "OK", partitionKey, TEST_STREAM_NAME)
+    putRecordIntoStream(17, 147, "WARN", partitionKey, streamName)
+    putRecordIntoStream(20, 15, "OK", partitionKey, streamName)
+    putRecordIntoStream(36, 65, "OK", partitionKey, streamName)
   }
 
-  private[this] def executeKinesisImportScript(tableImitatingValues: String): ResultSet = {
+  test("returns nested data from a shard") {
+    val streamName = "Test_stream_2"
+    createKinesisStream(streamName, 1)
+    val columns =
+      """sensorId DECIMAL(18,0),
+        |statuses VARCHAR(1000),
+        |kinesis_shard_id VARCHAR(2000),
+        |shard_sequence_number VARCHAR(2000)"""
+    createKinesisImportScript(columns)
+    putRecordsWithNestedDataIntoStream(streamName)
+    val resultSet =
+      this.executeKinesisImportScript("VALUES (('shardId-000000000000', null))", streamName)
+    val expected = List(
+      (17, "{\"max\":35,\"min\":14,\"cur\":29}", "shardId-000000000000", true),
+      (20, "{\"max\":25,\"min\":11,\"cur\":16}", "shardId-000000000000", true)
+    )
+    val values = collectResultSet(resultSet)(extractTupleWithNestedData)
+    assert(values === expected)
+    assert(resultSet.next() === false)
+  }
+
+  private[this] def putRecordsWithNestedDataIntoStream(streamName: String): Unit = {
+    val partitionKey = "partitionKey-1"
+    putRecordWithNestedDataIntoStream(17, 35, 14, 29, partitionKey, streamName)
+    putRecordWithNestedDataIntoStream(20, 25, 11, 16, partitionKey, streamName)
+    putRecordWithNestedDataIntoStream(36, 24, 17, 20, partitionKey, streamName)
+  }
+
+  private[this] def executeKinesisImportScript(
+    tableImitatingValues: String,
+    streamName: String
+  ): ResultSet = {
     val endpointConfiguration =
       kinesisLocalStack.getEndpointConfiguration(LocalStackContainer.Service.KINESIS)
     val endpointInsideDocker =
@@ -56,7 +88,7 @@ class KinesisShardDataImporterIT extends KinesisAbstractIntegrationTest {
     val properties =
       s"""|'CONNECTION_NAME -> KINESIS_CONNECTION
           |;REGION -> ${endpointConfiguration.getSigningRegion}
-          |;STREAM_NAME -> $TEST_STREAM_NAME
+          |;STREAM_NAME -> $streamName
           |;MAX_RECORDS_PER_RUN -> 2
           |;AWS_SERVICE_ENDPOINT -> $endpointInsideDocker
           |'

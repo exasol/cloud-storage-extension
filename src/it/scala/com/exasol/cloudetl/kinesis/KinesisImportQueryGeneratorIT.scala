@@ -32,23 +32,9 @@ class KinesisImportQueryGeneratorIT
     )
     ()
   }
-
-  override final def beforeEach(): Unit = {
-    val createTableDDL =
-      s"""|CREATE OR REPLACE TABLE $TEST_TABLE_NAME(
-          |sensorId DECIMAL(18,0),
-          |currentTemperature DECIMAL(18,0),
-          |status VARCHAR(100),
-          |kinesis_shard_id VARCHAR(2000),
-          |shard_sequence_number VARCHAR(2000)
-          |)
-        """.stripMargin
-    statement.execute(createTableDDL)
-    ()
-  }
-
   test("KinesisImportQueryGenerator runs with credentials") {
-    val streamName = "Stream_one"
+    createTable()
+    val streamName = "Stream_1"
     createKinesisStream(streamName, 1)
     val partitionKey = "partitionKey-1"
     putRecordIntoStream(17, 147, "WARN", partitionKey, streamName)
@@ -63,8 +49,23 @@ class KinesisImportQueryGeneratorIT
     assertResultSet(expected)
   }
 
+  private[this] def createTable(): Unit = {
+    val createTableDDL =
+      s"""|CREATE OR REPLACE TABLE $TEST_TABLE_NAME(
+          |sensorId DECIMAL(18,0),
+          |currentTemperature DECIMAL(18,0),
+          |status VARCHAR(100),
+          |kinesis_shard_id VARCHAR(2000),
+          |shard_sequence_number VARCHAR(2000)
+          |)
+        """.stripMargin
+    statement.execute(createTableDDL)
+    ()
+  }
+
   test("KinesisImportQueryGenerator runs with connection name") {
-    val streamName = "Stream_two"
+    createTable()
+    val streamName = "Stream_2"
     createKinesisStream(streamName, 2)
     putRecordIntoStream(17, 147, "WARN", "partitionKey-1", streamName)
     putRecordIntoStream(20, 15, "OK", "partitionKey-1", streamName)
@@ -87,9 +88,47 @@ class KinesisImportQueryGeneratorIT
     assertResultSet(expected2)
   }
 
+  test("KinesisImportQueryGenerator imports nested data into Varchar column") {
+    createTableWithNestedData()
+    val streamName = "Stream_3"
+    val partitionKey = "shardId-000000000000"
+    createKinesisStream(streamName, 1)
+    putRecordWithNestedDataIntoStream(17, 35, 14, 29, partitionKey, streamName)
+    putRecordWithNestedDataIntoStream(20, 25, 11, 16, partitionKey, streamName)
+    executeKinesisPathScriptWithConnection(streamName)
+    val expected = List(
+      (17, "{\"max\":35,\"min\":14,\"cur\":29}", partitionKey, true),
+      (20, "{\"max\":25,\"min\":11,\"cur\":16}", partitionKey, true)
+    )
+    assertResultSetWithNestedData(expected)
+  }
+
+  private[this] def createTableWithNestedData(): Unit = {
+    val createTableDDL =
+      s"""|CREATE OR REPLACE TABLE $TEST_TABLE_NAME(
+          |sensorId DECIMAL(18,0),
+          |statuses VARCHAR(1000),
+          |kinesis_shard_id VARCHAR(2000),
+          |shard_sequence_number VARCHAR(2000)
+          |)
+        """.stripMargin
+    statement.execute(createTableDDL)
+    ()
+  }
+
   private def assertResultSet(expected: List[(Int, Int, String, String, Boolean)]): Unit = {
     val resultSet = statement.executeQuery(s"SELECT * FROM $TEST_TABLE_NAME")
     val values = collectResultSet(resultSet)(extractTuple)
+    assert(values === expected)
+    assert(resultSet.next() === false)
+    ()
+  }
+
+  private def assertResultSetWithNestedData(
+    expected: List[(Int, String, String, Boolean)]
+  ): Unit = {
+    val resultSet = statement.executeQuery(s"SELECT * FROM $TEST_TABLE_NAME")
+    val values = collectResultSet(resultSet)(extractTupleWithNestedData)
     assert(values === expected)
     assert(resultSet.next() === false)
     ()

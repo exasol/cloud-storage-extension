@@ -3,9 +3,10 @@ package com.exasol.cloudetl.kinesis
 import java.util
 
 import scala.collection.JavaConverters._
+import scala.collection.immutable.Map.Map3
 
 import com.exasol._
-import com.exasol.cloudetl.util.JsonDeserializer
+import com.exasol.cloudetl.util.JsonMapper
 
 import com.amazonaws.services.kinesis.AmazonKinesis
 import com.amazonaws.services.kinesis.model._
@@ -97,12 +98,16 @@ object KinesisShardDataImporter {
     shardId: String
   ): Seq[AnyRef] = {
     val data = record.getData
-    val parsedValuesMap = JsonDeserializer
+    val parsedValuesMap = JsonMapper
       .parseJson[util.LinkedHashMap[String, AnyRef]](new String(data.array()))
       .values()
       .stream()
       .toArray
       .toSeq
+      .map {
+        case e: Map3[_, _] => JsonMapper.toJson(e)
+        case element       => element
+      }
     parsedValuesMap ++ Seq(shardId, record.getSequenceNumber)
   }
 }

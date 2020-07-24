@@ -29,7 +29,7 @@ trait KinesisAbstractIntegrationTest extends AnyFunSuite with BeforeAndAfterAll 
 
   private[this] var connection: java.sql.Connection = _
   var statement: java.sql.Statement = _
-  private[this] var kinesisClient: AmazonKinesis = _
+  private[kinesis] var kinesisClient: AmazonKinesis = _
 
   private[kinesis] def prepareContainers(): Unit = {
     exasolContainer.start()
@@ -114,6 +114,23 @@ trait KinesisAbstractIntegrationTest extends AnyFunSuite with BeforeAndAfterAll 
     ()
   }
 
+  private[kinesis] def putRecordWithNestedDataIntoStream(
+    sensorId: Int,
+    maxTemperature: Int,
+    minTemperature: Int,
+    currentTemperature: Int,
+    partitionKey: String,
+    streamName: String
+  ): Unit = {
+    val recordData =
+      s"""{\"sensorId\": $sensorId,
+         | \"statuses\": {\"max\": $maxTemperature,\"min\": $minTemperature,\"cur\": $currentTemperature}
+         | }""".stripMargin.replace("\n", "")
+    val data = ByteBuffer.wrap(recordData.getBytes())
+    kinesisClient.putRecord(streamName, data, partitionKey)
+    ()
+  }
+
   private[kinesis] def createKinesisMetadataScript(): Unit = {
     statement.execute(
       s"""CREATE OR REPLACE JAVA SET SCRIPT KINESIS_METADATA (...)
@@ -139,6 +156,16 @@ trait KinesisAbstractIntegrationTest extends AnyFunSuite with BeforeAndAfterAll 
     )
     ()
   }
+
+  private[kinesis] def extractTupleWithNestedData(
+    resultSet: ResultSet
+  ): (Int, String, String, Boolean) =
+    (
+      resultSet.getInt("sensorId"),
+      resultSet.getString("statuses"),
+      resultSet.getString(KINESIS_SHARD_ID_COLUMN_NAME),
+      resultSet.getString(SHARD_SEQUENCE_NUMBER_COLUMN_NAME) != null
+    )
 
   private[kinesis] def extractTuple(resultSet: ResultSet): (Int, Int, String, String, Boolean) =
     (

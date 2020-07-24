@@ -23,14 +23,14 @@ See an example of an invalid JSON format. Note the trailing comma.
 
 ## Deployment
 
-Please refer to the [deployment guide](../deployment_guide.md) up to untill the section
+Please refer to the [deployment guide](../deployment_guide.md) up to until the section
 `Upload the JAR file to the bucket` (inclusive) to prepare a bucket and a JAR.
 
 ## Preparing a Table for Data
 
 To store the data from a stream, we need a table. 
 The columns in the Exasol table have to imitate the data types of the data
- stored in the stream and also be in the exact order.
+ stored in the stream and be in the exact order.
  
 The table also requires two additional columns to store the Kinesis metadata: 
 
@@ -57,6 +57,20 @@ CREATE OR REPLACE TABLE <schema_name>.<table_name>
     SHARD_SEQUENCE_NUMBER VARCHAR(2000));
 
 ```
+
+### JSON Data Mapping
+
+| JSON Data Type       | Support | Recommended Exasol Column Type |
+|----------------------|---------|--------------------------------|
+| Array                | No      |                                |
+| Boolean              | Yes     | BOOLEAN                        |
+| Null                 | Yes     |                                |
+| Number               | Yes     | DECIMAL                        |
+| Object (JSON Object) | *       | VARCHAR                        |
+| String               | Yes     | VARCHAR                        |
+
+* Currently, the Connector does not support mapping of the nested JSON Objects and has a flat data mapping.
+All nested Objects will be mapped to a String. That means you need to prepare a VARCHAR column for nested data.
 
 ## Create ETL UDFs Scripts
 
@@ -127,7 +141,7 @@ FROM SCRIPT KINESIS_PATH WITH
 
 Provide credentials as properties and run an import query.
 
-**Attention! Providing credentials via propeties is 
+**Attention! Providing credentials via properties is 
 deprecated and will be removed in future releases.**
  
 ```sql
