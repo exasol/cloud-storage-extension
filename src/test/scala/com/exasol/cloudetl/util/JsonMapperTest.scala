@@ -5,6 +5,7 @@ import scala.collection.mutable
 
 import org.scalatest.funsuite.AnyFunSuite
 
+@SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
 class JsonMapperTest extends AnyFunSuite {
   test("parseJson parses a String") {
     val jsonString = "{\"sensorId\": 17,\"currentTemperature\": 147,\"status\": \"WARN\"}"

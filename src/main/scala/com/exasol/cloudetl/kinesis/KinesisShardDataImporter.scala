@@ -3,7 +3,6 @@ package com.exasol.cloudetl.kinesis
 import java.util
 
 import scala.collection.JavaConverters._
-import scala.collection.immutable.Map.Map3
 
 import com.exasol._
 import com.exasol.cloudetl.util.JsonMapper
@@ -105,8 +104,9 @@ object KinesisShardDataImporter {
       .toArray
       .toSeq
       .map {
-        case e: Map3[_, _] => JsonMapper.toJson(e)
-        case element       => element
+        case element: Map[_, _] => JsonMapper.toJson(element)
+        case element: List[_]   => JsonMapper.toJson(element)
+        case element            => element
       }
     parsedValuesMap ++ Seq(shardId, record.getSequenceNumber)
   }

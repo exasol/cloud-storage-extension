@@ -60,17 +60,18 @@ CREATE OR REPLACE TABLE <schema_name>.<table_name>
 
 ### JSON Data Mapping
 
-| JSON Data Type       | Support | Recommended Exasol Column Type |
-|----------------------|---------|--------------------------------|
-| Array                | No      |                                |
-| Boolean              | Yes     | BOOLEAN                        |
-| Null                 | Yes     |                                |
-| Number               | Yes     | DECIMAL                        |
-| Object (JSON Object) | *       | VARCHAR                        |
-| String               | Yes     | VARCHAR                        |
+| JSON Data Type       | Support | Recommended Exasol Column Types |
+|----------------------|---------|---------------------------------|
+| Array                | *       | VARCHAR, CHAR                   |
+| Boolean              | Yes     | BOOLEAN                         |
+| Number               | Yes     | DECIMAL, DOUBLE PRECISION       |
+| Object (JSON Object) | *       | VARCHAR, CHAR                   |
+| String               | Yes     | VARCHAR, CHAR                   |
 
-* Currently, the Connector does not support mapping of the nested JSON Objects and has a flat data mapping.
-All nested Objects will be mapped to a String. That means you need to prepare a VARCHAR column for nested data.
+Null values are supported.
+
+* Currently, the Connector has a flat data mapping and does not support mapping of the nested JSON Objects and Arrays.
+All nested Objects and Arrays will be mapped to a String. That means you need to prepare a VARCHAR column for them.
 
 ## Create ETL UDFs Scripts
 

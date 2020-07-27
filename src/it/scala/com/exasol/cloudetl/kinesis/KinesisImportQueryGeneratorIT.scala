@@ -1,5 +1,13 @@
 package com.exasol.cloudetl.kinesis
 
+import java.nio.ByteBuffer
+import java.sql.ResultSet
+
+import com.exasol.cloudetl.kinesis.KinesisConstants.{
+  KINESIS_SHARD_ID_COLUMN_NAME,
+  SHARD_SEQUENCE_NUMBER_COLUMN_NAME
+}
+
 import org.scalatest.BeforeAndAfterEach
 import org.testcontainers.containers.localstack.LocalStackContainer
 
@@ -32,6 +40,7 @@ class KinesisImportQueryGeneratorIT
     )
     ()
   }
+
   test("KinesisImportQueryGenerator runs with credentials") {
     createTable()
     val streamName = "Stream_1"
@@ -47,6 +56,40 @@ class KinesisImportQueryGeneratorIT
     assertResultSet(expected)
     executeKinesisPathScriptWithoutConnection(streamName)
     assertResultSet(expected)
+  }
+
+  private[this] def assertResultSet(expected: List[(Int, Int, String, String, Boolean)]): Unit = {
+    val resultSet = statement.executeQuery(s"SELECT * FROM $TEST_TABLE_NAME")
+    val values = collectResultSet(resultSet)(extractTuple)
+    assert(values === expected)
+    assert(resultSet.next() === false)
+    ()
+  }
+
+  private[this] def extractTuple(resultSet: ResultSet): (Int, Int, String, String, Boolean) =
+    (
+      resultSet.getInt("sensorId"),
+      resultSet.getInt("currentTemperature"),
+      resultSet.getString("status"),
+      resultSet.getString(KINESIS_SHARD_ID_COLUMN_NAME),
+      resultSet.getString(SHARD_SEQUENCE_NUMBER_COLUMN_NAME) != null
+    )
+
+  private[this] def putRecordIntoStream(
+    sensorId: Int,
+    currentTemperature: Int,
+    status: String,
+    partitionKey: String,
+    streamName: String
+  ): Unit = {
+    val recordData =
+      s"""{\"sensorId\": $sensorId,
+         | \"currentTemperature\": $currentTemperature,
+         | \"status\": \"$status\"
+         | }""".stripMargin.replace("\n", "")
+    val data = ByteBuffer.wrap(recordData.getBytes())
+    kinesisClient.putRecord(streamName, data, partitionKey)
+    ()
   }
 
   private[this] def createTable(): Unit = {
@@ -88,26 +131,53 @@ class KinesisImportQueryGeneratorIT
     assertResultSet(expected2)
   }
 
-  test("KinesisImportQueryGenerator imports nested data into Varchar column") {
-    createTableWithNestedData()
+  test("KinesisImportQueryGenerator imports all data types") {
     val streamName = "Stream_3"
-    val partitionKey = "shardId-000000000000"
     createKinesisStream(streamName, 1)
-    putRecordWithNestedDataIntoStream(17, 35, 14, 29, partitionKey, streamName)
-    putRecordWithNestedDataIntoStream(20, 25, 11, 16, partitionKey, streamName)
+    putRecordSWithAllDataTypesIntoStream(streamName)
+    createTableWithAllDataTypes()
     executeKinesisPathScriptWithConnection(streamName)
     val expected = List(
-      (17, "{\"max\":35,\"min\":14,\"cur\":29}", partitionKey, true),
-      (20, "{\"max\":25,\"min\":11,\"cur\":16}", partitionKey, true)
+      (
+        "[\"first\",\"second\"]",
+        true,
+        10,
+        10.55,
+        "{\"firstNestedValue\":10,\"secondNestedValue\":\"second\"}",
+        null,
+        "shardId-000000000000",
+        true
+      )
     )
-    assertResultSetWithNestedData(expected)
+    assertResultSetAllDataTypes(expected)
   }
 
-  private[this] def createTableWithNestedData(): Unit = {
+  private[kinesis] def putRecordSWithAllDataTypesIntoStream(
+    streamName: String
+  ): Unit = {
+    val partitionKey = "shardId-000000000000"
+    val recordData =
+      s"""{\"array_val\": [\"first\", \"second\"],
+         | \"bool_val\": true,
+         | \"int_val\": 10,
+         | \"double_val\": 10.55,
+         | \"object_val\": {\"firstNestedValue\": 10,\"secondNestedValue\": \"second\"},
+         | \"string_val\": null
+         | }""".stripMargin.replace("\n", "")
+    val data = ByteBuffer.wrap(recordData.getBytes())
+    kinesisClient.putRecord(streamName, data, partitionKey)
+    ()
+  }
+
+  private[this] def createTableWithAllDataTypes(): Unit = {
     val createTableDDL =
       s"""|CREATE OR REPLACE TABLE $TEST_TABLE_NAME(
-          |sensorId DECIMAL(18,0),
-          |statuses VARCHAR(1000),
+          |array_val VARCHAR(100),
+          |bool_val BOOLEAN,
+          |int_val DECIMAL(18,0),
+          |double_val DOUBLE PRECISION,
+          |object_val VARCHAR(100),
+          |string_val VARCHAR(100),
           |kinesis_shard_id VARCHAR(2000),
           |shard_sequence_number VARCHAR(2000)
           |)
@@ -116,23 +186,29 @@ class KinesisImportQueryGeneratorIT
     ()
   }
 
-  private def assertResultSet(expected: List[(Int, Int, String, String, Boolean)]): Unit = {
+  private def assertResultSetAllDataTypes(
+    expected: List[(String, Boolean, Int, Double, String, String, String, Boolean)]
+  ): Unit = {
     val resultSet = statement.executeQuery(s"SELECT * FROM $TEST_TABLE_NAME")
-    val values = collectResultSet(resultSet)(extractTuple)
+    val values = collectResultSet(resultSet)(extractTupleAllDataTypes)
     assert(values === expected)
     assert(resultSet.next() === false)
     ()
   }
 
-  private def assertResultSetWithNestedData(
-    expected: List[(Int, String, String, Boolean)]
-  ): Unit = {
-    val resultSet = statement.executeQuery(s"SELECT * FROM $TEST_TABLE_NAME")
-    val values = collectResultSet(resultSet)(extractTupleWithNestedData)
-    assert(values === expected)
-    assert(resultSet.next() === false)
-    ()
-  }
+  private[this] def extractTupleAllDataTypes(
+    resultSet: ResultSet
+  ): (String, Boolean, Int, Double, String, String, String, Boolean) =
+    (
+      resultSet.getString("array_val"),
+      resultSet.getBoolean("bool_val"),
+      resultSet.getInt("int_val"),
+      resultSet.getDouble("double_val"),
+      resultSet.getString("object_val"),
+      resultSet.getString("string_val"),
+      resultSet.getString(KINESIS_SHARD_ID_COLUMN_NAME),
+      resultSet.getString(SHARD_SEQUENCE_NUMBER_COLUMN_NAME) != null
+    )
 
   private[this] def executeKinesisPathScriptWithConnection(streamName: String): Unit = {
     val endpointConfiguration =
