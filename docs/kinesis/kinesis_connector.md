@@ -70,7 +70,7 @@ CREATE OR REPLACE TABLE <schema_name>.<table_name>
 
 Null values are supported.
 
-* Currently, the Connector has a flat data mapping and does not support mapping of the nested JSON Objects and Arrays.
+* Currently, the connector has a flat data mapping and does not support mapping of the nested JSON Objects and Arrays.
 All nested Objects and Arrays will be mapped to a String. That means you need to prepare a VARCHAR column for them.
 
 ## Create ETL UDFs Scripts

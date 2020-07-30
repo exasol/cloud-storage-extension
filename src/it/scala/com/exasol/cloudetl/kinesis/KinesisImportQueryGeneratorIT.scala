@@ -83,9 +83,9 @@ class KinesisImportQueryGeneratorIT
     streamName: String
   ): Unit = {
     val recordData =
-      s"""{\"sensorId\": $sensorId,
-         | \"currentTemperature\": $currentTemperature,
-         | \"status\": \"$status\"
+      s"""{"sensorId": $sensorId,
+         | "currentTemperature": $currentTemperature,
+         | "status": "$status"
          | }""".stripMargin.replace("\n", "")
     val data = ByteBuffer.wrap(recordData.getBytes())
     kinesisClient.putRecord(streamName, data, partitionKey)
@@ -157,12 +157,12 @@ class KinesisImportQueryGeneratorIT
   ): Unit = {
     val partitionKey = "shardId-000000000000"
     val recordData =
-      s"""{\"array_val\": [\"first\", \"second\"],
-         | \"bool_val\": true,
-         | \"int_val\": 10,
-         | \"double_val\": 10.55,
-         | \"object_val\": {\"firstNestedValue\": 10,\"secondNestedValue\": \"second\"},
-         | \"string_val\": null
+      s"""{"array_val": ["first", "second"],
+         | "bool_val": true,
+         | "int_val": 10,
+         | "double_val": 10.55,
+         | "object_val": {"firstNestedValue": 10,"secondNestedValue": "second"},
+         | "string_val": null
          | }""".stripMargin.replace("\n", "")
     val data = ByteBuffer.wrap(recordData.getBytes())
     kinesisClient.putRecord(streamName, data, partitionKey)

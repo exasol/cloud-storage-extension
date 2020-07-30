@@ -55,8 +55,8 @@ class KinesisShardDataImporterIT extends KinesisAbstractIntegrationTest {
     streamName: String
   ): Unit = {
     val recordData =
-      s"""{\"sensorId\": $sensorId,
-         | \"currentTemperature\": $currentTemperature
+      s"""{"sensorId": $sensorId,
+         | "currentTemperature": $currentTemperature
          | }""".stripMargin.replace("\n", "")
     val data = ByteBuffer.wrap(recordData.getBytes())
     kinesisClient.putRecord(streamName, data, partitionKey)
@@ -98,8 +98,8 @@ class KinesisShardDataImporterIT extends KinesisAbstractIntegrationTest {
     streamName: String
   ): Unit = {
     val recordData =
-      s"""{\"sensorId\": \"$sensorId\",
-         | \"status\": \"$status\"
+      s"""{"sensorId": "$sensorId",
+         | "status": "$status"
          | }""".stripMargin.replace("\n", "")
     val data = ByteBuffer.wrap(recordData.getBytes())
     kinesisClient.putRecord(streamName, data, partitionKey)
@@ -141,8 +141,8 @@ class KinesisShardDataImporterIT extends KinesisAbstractIntegrationTest {
     streamName: String
   ): Unit = {
     val recordData =
-      s"""{\"first_sensor_status\": $firstSensorStatus,
-         | \"second_sensor_status\": $secondSensorStatus
+      s"""{"first_sensor_status": $firstSensorStatus,
+         | "second_sensor_status": $secondSensorStatus
          | }""".stripMargin.replace("\n", "")
     val data = ByteBuffer.wrap(recordData.getBytes())
     kinesisClient.putRecord(streamName, data, partitionKey)
@@ -189,9 +189,9 @@ class KinesisShardDataImporterIT extends KinesisAbstractIntegrationTest {
     streamName: String
   ): Unit = {
     val recordData =
-      s"""{\"sensorId\": $sensorId,
-         | \"statuses\": {\"max\": $maxTemperature,
-         | \"min\": $minTemperature,\"cur\": $currentTemperature}
+      s"""{"sensorId": $sensorId,
+         | "statuses": {"max": $maxTemperature,
+         | "min": $minTemperature,"cur": $currentTemperature}
          | }""".stripMargin.replace("\n", "")
     val data = ByteBuffer.wrap(recordData.getBytes())
     kinesisClient.putRecord(streamName, data, partitionKey)
@@ -238,8 +238,8 @@ class KinesisShardDataImporterIT extends KinesisAbstractIntegrationTest {
     streamName: String
   ): Unit = {
     val recordData =
-      s"""{\"sensorId\": $sensorId,
-         | \"statuses\": [$maxTemperature, $minTemperature, $currentTemperature]
+      s"""{"sensorId": $sensorId,
+         | "statuses": [$maxTemperature, $minTemperature, $currentTemperature]
          | }""".stripMargin.replace("\n", "")
     val data = ByteBuffer.wrap(recordData.getBytes())
     kinesisClient.putRecord(streamName, data, partitionKey)
