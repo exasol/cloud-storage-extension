@@ -25,7 +25,7 @@ object KafkaMetadata extends LazyLogging {
       idOffsetPairs += (partitionId -> partitionOffset)
     } while (iterator.next())
 
-    val kafkaConsumerTry = Try(kafkaProperties.build())
+    val kafkaConsumerTry = Try(kafkaProperties.build(metadata))
     kafkaConsumerTry match {
 
       case Failure(ex) =>

@@ -1,9 +1,13 @@
 package com.exasol.cloudetl.kafka
 
+import com.exasol.{ExaConnectionInformation, ExaMetadata}
+
+import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.mockito.MockitoSugar
 
-class KafkaConsumerPropertiesTest extends AnyFunSuite with BeforeAndAfterEach {
+class KafkaConsumerPropertiesTest extends AnyFunSuite with BeforeAndAfterEach with MockitoSugar {
 
   private[this] var properties: Map[String, String] = _
 
@@ -260,7 +264,7 @@ class KafkaConsumerPropertiesTest extends AnyFunSuite with BeforeAndAfterEach {
 
   test("build throws if required BOOTSTRAP_SERVERS property is not provided") {
     val thrown = intercept[IllegalArgumentException] {
-      BaseProperties(properties).build()
+      BaseProperties(properties).build(mock[ExaMetadata])
     }
     assert(thrown.getMessage === errorMessage("BOOTSTRAP_SERVERS"))
   }
@@ -268,7 +272,7 @@ class KafkaConsumerPropertiesTest extends AnyFunSuite with BeforeAndAfterEach {
   test("build throws if required SCHEMA_REGISTRY_URL property is not provided") {
     properties = Map("BOOTSTRAP_SERVERS" -> "kafka01.internal:9092")
     val thrown = intercept[IllegalArgumentException] {
-      BaseProperties(properties).build()
+      BaseProperties(properties).build(mock[ExaMetadata])
     }
     assert(thrown.getMessage === errorMessage("SCHEMA_REGISTRY_URL"))
   }
@@ -304,6 +308,65 @@ class KafkaConsumerPropertiesTest extends AnyFunSuite with BeforeAndAfterEach {
       case (key, value) =>
         assert(javaProps.get(key.kafkaPropertyName) === value)
     }
+  }
+
+  test("mergeWithConnectionObject returns new KafkaConsumerProperties") {
+    val propertiesMap = Map(
+      "TOPICS" -> "test-topic",
+      "CONNECTION_NAME" -> "MY_CONNECTION"
+    )
+    val kafkaConsumerProperties = new BaseProperties(propertiesMap)
+    val exaMetadata = mock[ExaMetadata]
+    val exaConnectionInformation = mock[ExaConnectionInformation]
+    when(exaMetadata.getConnection("MY_CONNECTION")).thenReturn(exaConnectionInformation)
+    when(exaConnectionInformation.getUser()).thenReturn("")
+    when(exaConnectionInformation.getPassword())
+      .thenReturn(
+        """BOOTSTRAP_SERVERS=MY_BOOTSTRAP_SERVERS;
+          |SCHEMA_REGISTRY_URL=MY_SCHEMA_REGISTRY;
+          |SECURITY_PROTOCOL=SSL;
+          |SSL_KEYSTORE_LOCATION=MY_KEYSTORE_LOCATION;
+          |SSL_KEYSTORE_PASSWORD=MY_KEYSTORE_PASSWORD;
+          |SSL_KEY_PASSWORD=MY_SSL_KEY_PASSWORD;
+          |SSL_TRUSTSTORE_LOCATION=MY_TRUSTSTORE_LOCATION;
+          |SSL_TRUSTSTORE_PASSWORD=MY_TRUSTSTORE_PASSWORD""".stripMargin.replace("\n", "")
+      )
+    val mergedKafkaConsumerProperties =
+      kafkaConsumerProperties.mergeWithConnectionObject(exaMetadata)
+    assert(
+      mergedKafkaConsumerProperties.mkString() ===
+        """BOOTSTRAP_SERVERS -> MY_BOOTSTRAP_SERVERS;
+          |CONNECTION_NAME -> MY_CONNECTION;
+          |SCHEMA_REGISTRY_URL -> MY_SCHEMA_REGISTRY;
+          |SECURITY_PROTOCOL -> SSL;
+          |SSL_KEYSTORE_LOCATION -> MY_KEYSTORE_LOCATION;
+          |SSL_KEYSTORE_PASSWORD -> MY_KEYSTORE_PASSWORD;
+          |SSL_KEY_PASSWORD -> MY_SSL_KEY_PASSWORD;
+          |SSL_TRUSTSTORE_LOCATION -> MY_TRUSTSTORE_LOCATION;
+          |SSL_TRUSTSTORE_PASSWORD -> MY_TRUSTSTORE_PASSWORD;
+          |TOPICS -> test-topic""".stripMargin
+          .replace("\n", "")
+    )
+  }
+
+  test("mergeWithConnectionObject throws exception during validation") {
+    val conflictingProperties = Map(
+      "BOOTSTRAP_SERVERS" -> "kafka.broker.com:9092",
+      "CONNECTION_NAME" -> "MY_CONNECTION",
+      "SCHEMA_REGISTRY_URL" -> "http://schema-registry.com:8080"
+    )
+
+    val kafkaConsumerProperties = new BaseProperties(conflictingProperties)
+    val exaMetadata = mock[ExaMetadata]
+    val thrown = intercept[KafkaConnectorException] {
+      kafkaConsumerProperties.mergeWithConnectionObject(exaMetadata)
+    }
+    assert(
+      thrown.getMessage ===
+        """Please provide either CONNECTION_NAME property
+          | or server / credentials parameters, but not both!""".stripMargin
+          .replace("\n", "")
+    )
   }
 
   private[this] case class BaseProperties(val params: Map[String, String])
