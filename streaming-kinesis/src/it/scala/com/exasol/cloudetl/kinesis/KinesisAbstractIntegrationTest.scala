@@ -16,7 +16,7 @@ import org.testcontainers.containers.localstack.LocalStackContainer
 
 trait KinesisAbstractIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
   val JAR_DIRECTORY_PATTERN = "scala-"
-  val JAR_NAME_PATTERN = "streaming-kinesis-"
+  val JAR_NAME_PATTERN = "exasol-kinesis-consumer-extension-"
   val DOCKER_IP_ADDRESS = "172.17.0.1"
   val TEST_SCHEMA_NAME = "kinesis_schema"
   var assembledJarName: String = _

@@ -26,7 +26,7 @@ lazy val root =
 lazy val common =
   project
     .in(file("common"))
-    .settings(moduleName := "common")
+    .settings(moduleName := "import-export-udf-common-scala")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.commonSettings(scalaVersion))
@@ -39,7 +39,7 @@ lazy val common =
 lazy val avro =
   project
     .in(file("avro"))
-    .settings(moduleName := "avro")
+    .settings(moduleName := "import-export-udf-avro-scala")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.commonSettings(scalaVersion))
@@ -50,7 +50,7 @@ lazy val avro =
 lazy val storage =
   project
     .in(file("storage"))
-    .settings(moduleName := "storage")
+    .settings(moduleName := "exasol-cloud-storage-extension")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.commonSettings(scalaVersion))
@@ -68,7 +68,7 @@ lazy val storage =
 lazy val streamingkafka =
   project
     .in(file("streaming-kafka"))
-    .settings(moduleName := "streaming-kafka")
+    .settings(moduleName := "exasol-kafka-consumer-extension")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.commonSettings(scalaVersion))
@@ -86,7 +86,7 @@ lazy val streamingkafka =
 lazy val streamingkinesis =
   project
     .in(file("streaming-kinesis"))
-    .settings(moduleName := "streaming-kinesis")
+    .settings(moduleName := "exasol-kinesis-consumer-extension")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.commonSettings(scalaVersion))
