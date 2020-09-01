@@ -353,7 +353,7 @@ class KafkaConsumerPropertiesTest extends AnyFunSuite with BeforeAndAfterEach wi
     val conflictingProperties = Map(
       "BOOTSTRAP_SERVERS" -> "kafka.broker.com:9092",
       "CONNECTION_NAME" -> "MY_CONNECTION",
-      "SCHEMA_REGISTRY_URL" -> "http://schema-registry.com:8080"
+      "SSL_KEY_PASSWORD" -> "sslK3YP@ssword"
     )
 
     val kafkaConsumerProperties = new BaseProperties(conflictingProperties)
