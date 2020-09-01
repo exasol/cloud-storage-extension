@@ -229,10 +229,6 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
 
   private[this] def validateConnectionObject(): Unit = {
     val connectionProperties = List(
-      "BOOTSTRAP_SERVERS",
-      "SCHEMA_REGISTRY_URL",
-      "SECURITY_PROTOCOL",
-      "SSL_ENABLED",
       "SSL_KEYSTORE_LOCATION",
       "SSL_KEYSTORE_PASSWORD",
       "SSL_KEY_PASSWORD",
