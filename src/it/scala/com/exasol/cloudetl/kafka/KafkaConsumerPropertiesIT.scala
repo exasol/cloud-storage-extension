@@ -8,7 +8,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 class KafkaConsumerPropertiesIT extends KafkaIntegrationTest {
 
   test("build returns a KafkaConsumer[String, GenericRecord]") {
-    val kafkaConsumer = KafkaConsumerProperties(properties).build(mock[ExaMetadata]))
+    val kafkaConsumer = KafkaConsumerProperties(properties).build(mock[ExaMetadata])
     assert(kafkaConsumer.isInstanceOf[KafkaConsumer[String, GenericRecord]])
   }
 
