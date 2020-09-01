@@ -369,6 +369,24 @@ class KafkaConsumerPropertiesTest extends AnyFunSuite with BeforeAndAfterEach wi
     )
   }
 
+  test("build uses connection object in created consumer if supplied") {
+    val propertiesMap = Map(
+      "TOPICS" -> "test-topic",
+      "CONNECTION_NAME" -> "MY_CONNECTION"
+    )
+    val exaMetadata = mock[ExaMetadata]
+    val exaConnectionInformation = mock[ExaConnectionInformation]
+    when(exaMetadata.getConnection("MY_CONNECTION")).thenReturn(exaConnectionInformation)
+    when(exaConnectionInformation.getUser()).thenReturn("")
+    when(exaConnectionInformation.getPassword())
+      .thenReturn("BOOTSTRAP_SERVERS=kafka01.internal:9092")
+
+    val mergedProperties = BaseProperties(propertiesMap).mergeWithConnectionObject(exaMetadata)
+
+    assert(mergedProperties.getTopics === "test-topic")
+    assert(mergedProperties.getBootstrapServers === "kafka01.internal:9092")
+  }
+
   private[this] case class BaseProperties(val params: Map[String, String])
       extends KafkaConsumerProperties(params)
 

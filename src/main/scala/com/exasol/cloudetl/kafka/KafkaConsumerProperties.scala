@@ -179,7 +179,7 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
    *
    * At the moment Avro based specific {@code KafkaConsumer[String,
    * GenericRecord]} consumer is returned. Therefore, in order to define
-   * the schem of [[org.apache.avro.generic.GenericRecord]] the {@code
+   * the schema of [[org.apache.avro.generic.GenericRecord]] the {@code
    * SCHEMA_REGISTRY_URL} value should be provided.
    */
   final def build(exaMetadata: ExaMetadata): KafkaConsumer[String, GenericRecord] =
@@ -216,13 +216,16 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
    * Returns a new [[KafkaConsumerProperties]] that merges the key-value pairs
    * parsed from user provided Exasol named connection object.
    */
-  final def mergeWithConnectionObject(exaMetadata: ExaMetadata): KafkaConsumerProperties = {
-    validateConnectionObject()
-    val connectionParsedMap =
-      parseConnectionInfo(SSL_KEYSTORE_LOCATION.userPropertyName, Option(exaMetadata))
-    val newProperties = properties ++ connectionParsedMap
-    new KafkaConsumerProperties(newProperties)
-  }
+  final def mergeWithConnectionObject(exaMetadata: ExaMetadata): KafkaConsumerProperties =
+    if (hasNamedConnection()) {
+      validateConnectionObject()
+      val connectionParsedMap =
+        parseConnectionInfo(SSL_KEYSTORE_LOCATION.userPropertyName, Option(exaMetadata))
+      val newProperties = properties ++ connectionParsedMap
+      new KafkaConsumerProperties(newProperties)
+    } else {
+      this
+    }
 
   private[this] def validateConnectionObject(): Unit = {
     val connectionProperties = List(
@@ -555,13 +558,9 @@ object KafkaConsumerProperties extends CommonProperties {
     kafkaConsumerProperties: KafkaConsumerProperties,
     exaMetadata: ExaMetadata
   ): KafkaConsumer[String, GenericRecord] = {
-    val properties = if (kafkaConsumerProperties.hasNamedConnection()) {
-      kafkaConsumerProperties.mergeWithConnectionObject(exaMetadata)
-    } else {
-      kafkaConsumerProperties
-    }
-
+    val properties = kafkaConsumerProperties.mergeWithConnectionObject(exaMetadata)
     validate(properties)
+
     new KafkaConsumer[String, GenericRecord](
       properties.getProperties(),
       new StringDeserializer,
