@@ -33,7 +33,7 @@ object KafkaImport extends LazyLogging {
     val minRecords = kafkaProperties.getMinRecordsPerRun()
     val topicPartition = new TopicPartition(topics, partitionId)
 
-    val kafkaConsumer = kafkaProperties.build()
+    val kafkaConsumer = kafkaProperties.build(metadata)
     kafkaConsumer.assign(Arrays.asList(topicPartition))
     kafkaConsumer.seek(topicPartition, partitionNextOffset)
 
