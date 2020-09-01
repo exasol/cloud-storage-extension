@@ -220,7 +220,7 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
     if (hasNamedConnection()) {
       validateConnectionObject()
       val connectionParsedMap =
-        parseConnectionInfo(SSL_KEYSTORE_LOCATION.userPropertyName, Option(exaMetadata))
+        parseConnectionInfo(BOOTSTRAP_SERVERS.userPropertyName, Option(exaMetadata))
       val newProperties = properties ++ connectionParsedMap
       new KafkaConsumerProperties(newProperties)
     } else {
