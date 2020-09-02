@@ -1,11 +1,9 @@
 package com.exasol.cloudetl.kinesis
 
 import java.io.File
-import java.nio.ByteBuffer
 import java.nio.file.Paths
 import java.sql.ResultSet
 
-import com.exasol.cloudetl.kinesis.KinesisConstants._
 import com.exasol.containers.{ExasolContainer, ExasolContainerConstants}
 
 import com.amazonaws.SDKGlobalConfiguration.AWS_CBOR_DISABLE_SYSTEM_PROPERTY
@@ -29,7 +27,7 @@ trait KinesisAbstractIntegrationTest extends AnyFunSuite with BeforeAndAfterAll 
 
   private[this] var connection: java.sql.Connection = _
   var statement: java.sql.Statement = _
-  private[this] var kinesisClient: AmazonKinesis = _
+  private[kinesis] var kinesisClient: AmazonKinesis = _
 
   private[kinesis] def prepareContainers(): Unit = {
     exasolContainer.start()
@@ -97,23 +95,6 @@ trait KinesisAbstractIntegrationTest extends AnyFunSuite with BeforeAndAfterAll 
     }
   }
 
-  private[kinesis] def putRecordIntoStream(
-    sensorId: Int,
-    currentTemperature: Int,
-    status: String,
-    partitionKey: String,
-    streamName: String
-  ): Unit = {
-    val recordData =
-      s"""{\"sensorId\": $sensorId,
-         | \"currentTemperature\": $currentTemperature,
-         | \"status\": \"$status\"
-         | }""".stripMargin.replace("\n", "")
-    val data = ByteBuffer.wrap(recordData.getBytes())
-    kinesisClient.putRecord(streamName, data, partitionKey)
-    ()
-  }
-
   private[kinesis] def createKinesisMetadataScript(): Unit = {
     statement.execute(
       s"""CREATE OR REPLACE JAVA SET SCRIPT KINESIS_METADATA (...)
@@ -139,15 +120,6 @@ trait KinesisAbstractIntegrationTest extends AnyFunSuite with BeforeAndAfterAll 
     )
     ()
   }
-
-  private[kinesis] def extractTuple(resultSet: ResultSet): (Int, Int, String, String, Boolean) =
-    (
-      resultSet.getInt("sensorId"),
-      resultSet.getInt("currentTemperature"),
-      resultSet.getString("status"),
-      resultSet.getString(KINESIS_SHARD_ID_COLUMN_NAME),
-      resultSet.getString(SHARD_SEQUENCE_NUMBER_COLUMN_NAME) != null
-    )
 
   private[kinesis] def collectResultSet[T](resultSet: ResultSet)(func: ResultSet => T): List[T] =
     new Iterator[T] {

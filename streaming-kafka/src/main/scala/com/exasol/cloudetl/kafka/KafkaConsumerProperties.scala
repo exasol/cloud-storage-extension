@@ -3,6 +3,7 @@ package com.exasol.cloudetl.kafka
 import scala.collection.JavaConverters._
 import scala.collection.mutable.{Map => MMap}
 
+import com.exasol.ExaMetadata
 import com.exasol.cloudetl.common.AbstractProperties
 import com.exasol.cloudetl.common.CommonProperties
 
@@ -178,11 +179,11 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
    *
    * At the moment Avro based specific {@code KafkaConsumer[String,
    * GenericRecord]} consumer is returned. Therefore, in order to define
-   * the schem of [[org.apache.avro.generic.GenericRecord]] the {@code
+   * the schema of [[org.apache.avro.generic.GenericRecord]] the {@code
    * SCHEMA_REGISTRY_URL} value should be provided.
    */
-  final def build(): KafkaConsumer[String, GenericRecord] =
-    KafkaConsumerProperties.createKafkaConsumer(this)
+  final def build(exaMetadata: ExaMetadata): KafkaConsumer[String, GenericRecord] =
+    KafkaConsumerProperties.createKafkaConsumer(this, exaMetadata)
 
   /** Returns the Kafka consumer properties as Java map. */
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
@@ -209,6 +210,38 @@ class KafkaConsumerProperties(private val properties: Map[String, String])
       )
     }
     props.toMap.asInstanceOf[Map[String, AnyRef]].asJava
+  }
+
+  /**
+   * Returns a new [[KafkaConsumerProperties]] that merges the key-value pairs
+   * parsed from user provided Exasol named connection object.
+   */
+  final def mergeWithConnectionObject(exaMetadata: ExaMetadata): KafkaConsumerProperties =
+    if (hasNamedConnection()) {
+      validateConnectionObject()
+      val connectionParsedMap =
+        parseConnectionInfo(BOOTSTRAP_SERVERS.userPropertyName, Option(exaMetadata))
+      val newProperties = properties ++ connectionParsedMap
+      new KafkaConsumerProperties(newProperties)
+    } else {
+      this
+    }
+
+  private[this] def validateConnectionObject(): Unit = {
+    val connectionProperties = List(
+      "SSL_KEYSTORE_LOCATION",
+      "SSL_KEYSTORE_PASSWORD",
+      "SSL_KEY_PASSWORD",
+      "SSL_TRUSTSTORE_LOCATION",
+      "SSL_TRUSTSTORE_PASSWORD"
+    )
+
+    if (connectionProperties.exists(p => containsKey(p))) {
+      throw new KafkaConnectorException(
+        "Please provide either CONNECTION_NAME property or " +
+          "server / credentials parameters, but not both!"
+      )
+    }
   }
 
   /**
@@ -518,9 +551,12 @@ object KafkaConsumerProperties extends CommonProperties {
    * [[KafkaConsumerProperties]].
    */
   def createKafkaConsumer(
-    properties: KafkaConsumerProperties
+    kafkaConsumerProperties: KafkaConsumerProperties,
+    exaMetadata: ExaMetadata
   ): KafkaConsumer[String, GenericRecord] = {
+    val properties = kafkaConsumerProperties.mergeWithConnectionObject(exaMetadata)
     validate(properties)
+
     new KafkaConsumer[String, GenericRecord](
       properties.getProperties(),
       new StringDeserializer,
