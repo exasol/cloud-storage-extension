@@ -72,6 +72,7 @@ object Row {
       case Schema.Type.BYTES   => getAvroValueAsString(value, field)
       case Schema.Type.ENUM    => value.toString
       case Schema.Type.UNION   => getAvroUnionValue(value, field)
+      case Schema.Type.ARRAY   => value.toString
       case field =>
         throw new IllegalArgumentException(s"Avro ${field.getName} type is not supported!")
     }
