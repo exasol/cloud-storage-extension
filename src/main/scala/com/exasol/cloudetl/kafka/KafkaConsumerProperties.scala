@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.kafka
 
+import java.nio.file.{Files, Paths}
+
 import scala.collection.JavaConverters._
 import scala.collection.mutable.{Map => MMap}
 
@@ -566,8 +568,6 @@ object KafkaConsumerProperties extends CommonProperties {
   }
 
   private[this] def validate(properties: KafkaConsumerProperties): Unit = {
-    import java.nio.file.{Files, Paths}
-
     if (!properties.containsKey(BOOTSTRAP_SERVERS.userPropertyName)) {
       throw new IllegalArgumentException(
         s"Please provide a value for the "
