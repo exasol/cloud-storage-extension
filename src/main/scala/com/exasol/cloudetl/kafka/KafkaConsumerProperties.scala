@@ -566,17 +566,34 @@ object KafkaConsumerProperties extends CommonProperties {
   }
 
   private[this] def validate(properties: KafkaConsumerProperties): Unit = {
+    import java.nio.file.{Files, Paths}
+
     if (!properties.containsKey(BOOTSTRAP_SERVERS.userPropertyName)) {
       throw new IllegalArgumentException(
         s"Please provide a value for the "
           + s"${BOOTSTRAP_SERVERS.userPropertyName} property!"
       )
     }
+
     if (!properties.hasSchemaRegistryUrl()) {
       throw new IllegalArgumentException(
         s"Please provide a value for the "
           + s"${SCHEMA_REGISTRY_URL.userPropertyName} property!"
       )
+    }
+
+    if (properties.isSSLEnabled()) {
+      if (!Files.isRegularFile(Paths.get(properties.getSSLKeystoreLocation()))) {
+        throw new KafkaConnectorException(
+          s"Unable to find the SSL keystore: ${properties.getSSLKeystoreLocation()}"
+        )
+      }
+
+      if (!Files.isRegularFile(Paths.get(properties.getSSLTruststoreLocation()))) {
+        throw new KafkaConnectorException(
+          s"Unable to find the SSL truststore: ${properties.getSSLTruststoreLocation()}"
+        )
+      }
     }
   }
 
