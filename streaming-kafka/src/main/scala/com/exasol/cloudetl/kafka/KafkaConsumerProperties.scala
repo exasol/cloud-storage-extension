@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.kafka
 
+import java.nio.file.{Files, Paths}
+
 import scala.collection.JavaConverters._
 import scala.collection.mutable.{Map => MMap}
 
@@ -572,11 +574,26 @@ object KafkaConsumerProperties extends CommonProperties {
           + s"${BOOTSTRAP_SERVERS.userPropertyName} property!"
       )
     }
+
     if (!properties.hasSchemaRegistryUrl()) {
       throw new IllegalArgumentException(
         s"Please provide a value for the "
           + s"${SCHEMA_REGISTRY_URL.userPropertyName} property!"
       )
+    }
+
+    if (properties.isSSLEnabled()) {
+      if (!Files.isRegularFile(Paths.get(properties.getSSLKeystoreLocation()))) {
+        throw new KafkaConnectorException(
+          s"Unable to find the SSL keystore: ${properties.getSSLKeystoreLocation()}"
+        )
+      }
+
+      if (!Files.isRegularFile(Paths.get(properties.getSSLTruststoreLocation()))) {
+        throw new KafkaConnectorException(
+          s"Unable to find the SSL truststore: ${properties.getSSLTruststoreLocation()}"
+        )
+      }
     }
   }
 
