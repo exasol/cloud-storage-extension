@@ -16,28 +16,15 @@ import com.lucidchart.sbt.scalafmt.ScalafmtCorePlugin.autoImport._
 /** A list of (boilerplate) settings for build process */
 object Settings {
 
-  def projectSettings(scalaVersion: SettingKey[String]): Seq[Setting[_]] =
-    buildSettings(scalaVersion) ++
-      miscSettings ++
-      assemblySettings ++
-      scalaStyleSettings
+  def commonSettings(scalaVersion: SettingKey[String]): Seq[Setting[_]] =
+    buildSettings(scalaVersion) ++ miscSettings ++ scalaStyleSettings
 
   def buildSettings(scalaVersion: SettingKey[String]): Seq[Setting[_]] = Seq(
     // Compiler settings
     scalacOptions ++= Compilation.compilerFlagsFn(scalaVersion.value),
     scalacOptions in (Compile, console) := Compilation.consoleFlagsFn(scalaVersion.value),
     javacOptions ++= Compilation.JavacCompilerFlags,
-    compileOrder in Compile := CompileOrder.JavaThenScala,
-    // Dependency settings
-    resolvers ++= Dependencies.Resolvers,
-    libraryDependencies ++= Dependencies.AllDependencies,
-    excludeDependencies ++= Dependencies.ExcludedDependencies,
-    dependencyOverrides ++= Seq(
-      "com.fasterxml.jackson.core" % "jackson-core" % "2.6.7",
-      "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.7.3",
-      "com.fasterxml.jackson.core" % "jackson-annotations" % "2.6.7",
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.7.1"
-    )
+    compileOrder in Compile := CompileOrder.JavaThenScala
   )
 
   def miscSettings(): Seq[Setting[_]] = Seq(
@@ -58,6 +45,39 @@ object Settings {
     git.useGitDescribe := true
   )
 
+  /** Creates a Scalastyle tasks that run with unit and integration tests. */
+  def scalaStyleSettings(): Seq[Setting[_]] = {
+    lazy val mainScalastyle = taskKey[Unit]("mainScalastyle")
+    lazy val testScalastyle = taskKey[Unit]("testScalastyle")
+    Seq(
+      scalastyleFailOnError := true,
+      (scalastyleConfig in Compile) := (baseDirectory in ThisBuild).value / "project" / "scalastyle-config.xml",
+      (scalastyleConfig in Test) := (baseDirectory in ThisBuild).value / "project" / "scalastyle-test-config.xml",
+      mainScalastyle := scalastyle.in(Compile).toTask("").value,
+      testScalastyle := scalastyle.in(Test).toTask("").value,
+      (test in Test) := ((test in Test) dependsOn mainScalastyle).value,
+      (test in Test) := ((test in Test) dependsOn testScalastyle).value,
+    )
+  }
+
+  /**
+   * Creates settings for integration tests.
+   *
+   * Use only when [[IntegrationTestPlugin]] is enabled.
+   */
+  def integrationTestSettings(): Seq[Setting[_]] = {
+    lazy val mainScalastyle = taskKey[Unit]("mainScalastyle")
+    lazy val itTestScalastyle = taskKey[Unit]("itTestScalastyle")
+    Seq(
+      (scalastyleConfig in IntegrationTest) := (scalastyleConfig in Test).value,
+      (scalastyleSources in IntegrationTest) := Seq((scalaSource in IntegrationTest).value),
+      mainScalastyle := scalastyle.in(Compile).toTask("").value,
+      itTestScalastyle := scalastyle.in(IntegrationTest).toTask("").value,
+      (test in IntegrationTest) := ((test in IntegrationTest) dependsOn mainScalastyle).value,
+      (test in IntegrationTest) := ((test in IntegrationTest) dependsOn itTestScalastyle).value
+    )
+  }
+
   def assemblySettings(): Seq[Setting[_]] = Seq(
     test in assembly := {},
     logLevel in assembly := Level.Info,
@@ -74,27 +94,5 @@ object Settings {
       }
     }
   )
-
-  def scalaStyleSettings(): Seq[Setting[_]] = {
-    // Creates a Scalastyle task that runs with tests
-    lazy val mainScalastyle = taskKey[Unit]("mainScalastyle")
-    lazy val testScalastyle = taskKey[Unit]("testScalastyle")
-    lazy val itTestScalastyle = taskKey[Unit]("itTestScalastyle")
-
-    Seq(
-      scalastyleFailOnError := true,
-      (scalastyleConfig in Compile) := baseDirectory.value / "project" / "scalastyle-config.xml",
-      (scalastyleConfig in Test) := baseDirectory.value / "project" / "scalastyle-test-config.xml",
-      (scalastyleConfig in IntegrationTest) := (scalastyleConfig in Test).value,
-      (scalastyleSources in IntegrationTest) := Seq((scalaSource in IntegrationTest).value),
-      mainScalastyle := scalastyle.in(Compile).toTask("").value,
-      testScalastyle := scalastyle.in(Test).toTask("").value,
-      itTestScalastyle := scalastyle.in(IntegrationTest).toTask("").value,
-      (test in Test) := ((test in Test) dependsOn mainScalastyle).value,
-      (test in Test) := ((test in Test) dependsOn testScalastyle).value,
-      (test in IntegrationTest) := ((test in IntegrationTest) dependsOn mainScalastyle).value,
-      (test in IntegrationTest) := ((test in IntegrationTest) dependsOn itTestScalastyle).value
-    )
-  }
 
 }
