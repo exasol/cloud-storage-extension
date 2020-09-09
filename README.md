@@ -1,6 +1,6 @@
 # Exasol Public Cloud Storage ETL UDFs
 
-<img alt="cloud-storage-etl-udfs logo" src="docs/images/cloud-storage-etl-udfs_128x128.png" style="float:left; padding:0px 10px 10px 10px;"/>
+<img alt="cloud-storage-etl-udfs logo" src="doc/images/cloud-storage-etl-udfs_128x128.png" style="float:left; padding:0px 10px 10px 10px;"/>
 
 [![Build Status][travis-badge]][travis-link]
 [![Codecov][codecov-badge]][codecov-link]
@@ -41,13 +41,13 @@ Kafka][apache-kafka] clusters and [AWS Kinesis Streams][aws-kinesis].
 
 For more information please check out the following guides.
 
-* [User Guide](docs/user_guide.md)
-  - [Cloud Storage Systems](docs/storage/cloud_storages.md)
-  - [Delta Format Import](docs/storage/delta_format.md)
-  - [Apache Kafka Import](docs/kafka/import.md)
-  - [AWS Kinesis Streams Import](docs/kinesis/kinesis_connector.md)
-* [Deployment Guide](docs/deployment_guide.md)
-* [Developer Guide](docs/developer_guide.md)
+* [User Guide](doc/user_guide.md)
+  - [Cloud Storage Systems](doc/storage/cloud_storages.md)
+  - [Delta Format Import](doc/storage/delta_format.md)
+  - [Apache Kafka Import](doc/kafka/import.md)
+  - [AWS Kinesis Streams Import](doc/kinesis/kinesis_connector.md)
+* [Deployment Guide](doc/deployment_guide.md)
+* [Developer Guide](doc/developer_guide.md)
 
 ## Contributing
 
