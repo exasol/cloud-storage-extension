@@ -24,7 +24,6 @@ class DeltaFormatBucketTest extends AbstractBucketTest with DummyRecordsTest {
       .appName("DeltaFormatTest")
       .master("local[2]")
       .getOrCreate()
-    spark.sparkContext.setLogLevel("WARN")
   }
 
   override final def afterEach(): Unit = {

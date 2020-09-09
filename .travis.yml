@@ -16,15 +16,15 @@ env:
 before_install:
   - git fetch --tags
   - docker pull exasol/docker-db:latest
-  - docker pull exasol/docker-db:6.2.2-d1
+  - docker pull exasol/docker-db:6.2.7-d1
 
 matrix:
   include:
     - jdk: openjdk11
-      scala: 2.12.10
+      scala: 2.12.12
 
     - jdk: oraclejdk11
-      scala: 2.12.10
+      scala: 2.12.12
       env: RELEASE=true
 
 script:
