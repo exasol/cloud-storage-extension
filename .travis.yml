@@ -62,7 +62,9 @@ deploy:
       shq9MLKBeFQBahsH7T5sWaW/m2MeAbVBCG+r9qyN17dlDnQiD8KDjVQeu73lvwTUMdFZzDMfoiGrV31tTddSMfYa/CX
       9p2j0tcPrxJW/fgX10YLJ44Zgy/26CVGYLJ1NYAZed3D7U=
   file:
-    - artifacts/*-${JAR_VERSION}.jar
+    - artifacts/exasol-cloud-storage-extension-${JAR_VERSION}.jar
+    - artifacts/exasol-kafka-connector-extension-${JAR_VERSION}.jar
+    - artifacts/exasol-kinesis-connector-extension-${JAR_VERSION}.jar
     - artifacts/checksums.sha256.txt
   skip_cleanup: true
   on:
