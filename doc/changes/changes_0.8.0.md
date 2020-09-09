@@ -1,8 +1,8 @@
-# Cloud Storage ETL UDFs v0.8.0, released 2020-09-XX
+# Cloud Storage ETL UDFs v0.8.0, released 2020-09-09
 
 ## Summary
 
-This is *major* release step in separating the different modules into separate
+This is **major** release step in separating the different modules into separate
 repositories. After this release,
 [`kafka-connector-extension`](https://github.com/exasol/kafka-connector-extension)
 and
