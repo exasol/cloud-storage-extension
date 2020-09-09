@@ -68,7 +68,7 @@ lazy val storage =
 lazy val streamingkafka =
   project
     .in(file("streaming-kafka"))
-    .settings(moduleName := "exasol-kafka-consumer-extension")
+    .settings(moduleName := "exasol-kafka-connector-extension")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.commonSettings(scalaVersion))
@@ -86,7 +86,7 @@ lazy val streamingkafka =
 lazy val streamingkinesis =
   project
     .in(file("streaming-kinesis"))
-    .settings(moduleName := "exasol-kinesis-consumer-extension")
+    .settings(moduleName := "exasol-kinesis-connector-extension")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.commonSettings(scalaVersion))

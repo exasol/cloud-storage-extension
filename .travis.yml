@@ -35,11 +35,19 @@ after_success:
   - ./sbtx coveralls
 
 before_deploy:
-  - echo "Ensure assembly jar file is created for a $TRAVIS_TAG"
-  - ./sbtx assembly
-  - ls -lh ./target/scala-2.12/
+  - echo "Ensure assembly jar file(s) is created for a $TRAVIS_TAG"
+  - ./sbtx clean assembly
   - export JAR_VERSION=${TRAVIS_TAG#v}
   - echo "Jar artifact version $JAR_VERSION"
+  - mkdir -p artifacts
+  - cp storage/target/scala-2.12/exasol-cloud-storage-*.jar artifacts/
+  - cp streaming-kafka/target/scala-2.12/exasol-kafka-connector-*.jar artifacts/
+  - cp streaming-kinesis/target/scala-2.12/exasol-kinesis-connector-*.jar artifacts/
+  - echo "Create SHA256 Checksum(s)"
+  - cd artifacts
+  - sha256sum *-${JAR_VERSION}.jar > checksums.sha256.txt
+  - cd ../
+  - ls -lh artifacts/
 
 deploy:
   provider: releases
@@ -53,7 +61,9 @@ deploy:
       D5t7yvmwxGT3ARvNS7vOlgl7IQ3dRn4hcrMjqPQmwet6nmo1vv9RtUrY6vTJeh8blkPRjExbC/lCfKkT6AOr1OUuR3f
       shq9MLKBeFQBahsH7T5sWaW/m2MeAbVBCG+r9qyN17dlDnQiD8KDjVQeu73lvwTUMdFZzDMfoiGrV31tTddSMfYa/CX
       9p2j0tcPrxJW/fgX10YLJ44Zgy/26CVGYLJ1NYAZed3D7U=
-  file: ./target/scala-2.12/cloud-storage-etl-udfs-${JAR_VERSION}.jar
+  file:
+    - artifacts/*-${JAR_VERSION}.jar
+    - artifacts/checksums.sha256.txt
   skip_cleanup: true
   on:
     repo: exasol/cloud-storage-etl-udfs

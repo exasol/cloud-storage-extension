@@ -1,19 +1,27 @@
-## Cloud Storage ETL UDFs v0.8.0, released 2020-09-XX
+# Cloud Storage ETL UDFs v0.8.0, released 2020-09-XX
 
-Summary
+## Summary
+
+This is *major* release step in separating the different modules into separate
+repositories. After this release,
+[`kafka-connector-extension`](https://github.com/exasol/kafka-connector-extension)
+and
+[`kinesis-connector-extension`](https://github.com/exasol/kinesis-connector-extension)
+will have their own separate repositories. And this repository will be renamed
+to `cloud-storage-extension`.
+
+This allows quick release cycle and better visibility of integration connectors
+for our users and customers.
+
+In this release we have added support for nested data structures in Kinesis
+connector, added support for connection object in Kafka connector.
 
 ## Features
 
-* [#84](https://github.com/exasol/cloud-storage-etl-udfs/issues/84): Change to
-  multi module setup before splitting the repository (PR
-  [#85](https://github.com/exasol/cloud-storage-etl-udfs/pull/85)).
-* [#87](https://github.com/exasol/cloud-storage-etl-udfs/issues/87): Nested data
-  support for Kinesis connector (PR
-  [#88](https://github.com/exasol/cloud-storage-etl-udfs/pull/88)).
-* Add support for connection object with Kafka connector (PR
-  [#90](https://github.com/exasol/cloud-storage-etl-udfs/pull/90)).
-* Add checks for keystore and truststore files with Kafka connector (PR
-  [#92](https://github.com/exasol/cloud-storage-etl-udfs/pull/92)).
+* [#84](https://github.com/exasol/cloud-storage-etl-udfs/issues/84): Changed to multi module setup repository (PR [#85](https://github.com/exasol/cloud-storage-etl-udfs/pull/85)).
+* [#87](https://github.com/exasol/cloud-storage-etl-udfs/issues/87): Added nested data support for Kinesis connector (PR [#88](https://github.com/exasol/cloud-storage-etl-udfs/pull/88)).
+* Added support for connection object in Kafka connector (PR [#90](https://github.com/exasol/cloud-storage-etl-udfs/pull/90)).
+* Added checks for keystore and truststore files in Kafka connector (PR [#92](https://github.com/exasol/cloud-storage-etl-udfs/pull/92)).
 
 ## Dependency Updates
 
