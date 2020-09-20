@@ -6,10 +6,9 @@ import com.exasol.common.{AbstractProperties, CommonProperties}
 import org.apache.hadoop.fs.Path
 
 /**
- * A specific implementation of
- * [[com.exasol.cloudetl.common.AbstractProperties]] that handles user
- * provided key-value parameters for storage import and export
- * user-defined-functions (udfs).
+ * A specific implementation of [[com.exasol.common.AbstractProperties]]
+ * that handles user provided key-value parameters for storage import
+ * and export user-defined-functions (UDFs).
  */
 class StorageProperties(
   private val properties: Map[String, String],

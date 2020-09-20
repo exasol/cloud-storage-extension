@@ -21,7 +21,7 @@ import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
 
 /**
  * A Parquet [[org.apache.parquet.hadoop.api.WriteSupport]]
- * implementation that writes [[com.exasol.cloudetl.data.Row]] as a
+ * implementation that writes [[com.exasol.common.data.Row]] as a
  * Parquet data.
  *
  * This is mostly adapted from Spark codebase:

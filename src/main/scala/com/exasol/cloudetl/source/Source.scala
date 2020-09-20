@@ -28,7 +28,7 @@ abstract class Source {
   def conf: Configuration
 
   /**
-   * Returns sequence of internal [[com.exasol.cloudetl.data.Row]] row
+   * Returns sequence of internal [[com.exasol.common.data.Row]] row
    * iterators per each paths file.
    */
   def stream(): Iterator[Row]
