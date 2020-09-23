@@ -21,7 +21,7 @@ Exasol Cloud Storage Extension provides [Exasol][exasol] user-defined functions
 * Following cloud storage systems are supported: [Amazon S3][s3], [Google Cloud
   Storage][gcs], [Azure Blob Storage][azure-blob], [Azure Data Lake (Gen1)
   Storage][azure-data-lake] and [Azure Data Lake (Gen2)
-  Storage][azure-data-lake-gen2]u
+  Storage][azure-data-lake-gen2].
 
 ## Information for Users
 
