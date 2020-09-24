@@ -85,7 +85,7 @@ system: BucketFS. This allows you to reference the extension jar file in UDF
 scripts.
 
 For more information on how to create a bucket in BucketFS, please check out the
-Exasol [`Database Concepts: BucketFS`][bucketfs-docs] documentation.
+Exasol [Database Concepts: BucketFS][bucketfs-docs] documentation.
 
 [bucketfs-docs]: https://docs.exasol.com/database_concepts/bucketfs/bucketfs.htm
 
