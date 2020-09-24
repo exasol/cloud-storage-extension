@@ -38,7 +38,7 @@ Storage.
 ## Deployment
 
 To use the exasol-cloud-storage-extension, you should first deploy the jar file
-to Exasol BucketFS bucket and create user-defined function (UDF) scripts.
+to an Exasol BucketFS bucket and create user-defined function (UDF) scripts.
 
 ### Download the JAR File
 
@@ -58,8 +58,8 @@ sha256sum exasol-cloud-storage-extension-<VERSION>.jar
 
 ### Building From Source
 
-Additionally, you can build the jar from the source. This allows you to use
-latest commits that may not be released yet.
+Additionally, you can build a jar from the source. This allows you to use
+the latest commits that may not be released yet.
 
 Clone the repository:
 
@@ -69,7 +69,7 @@ git clone https://github.com/exasol/cloud-storage-extension
 cd cloud-storage-extension/
 ```
 
-To create assembled jar file, run the command:
+To create an assembled jar file, run the command:
 
 ```sh
 ./sbtx assembly
@@ -84,7 +84,7 @@ Next, you need to upload the jar file to a bucket in the Exasol bucket file
 system: BucketFS. This allows you to reference the extension jar file in UDF
 scripts.
 
-For more information on how to create a bucket in BucketFS, please checkout the
+For more information on how to create a bucket in BucketFS, please check out the
 Exasol manual. Read the section `"The synchronous cluster file system BucketFS"`
 for more details about BucketFS.
 
@@ -101,7 +101,7 @@ curl -X PUT -T exasol-cloud-storage-extension-<VERSION>.jar \
   http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar
 ```
 
-You can also check out Exasol [BucketFS Explorer][bucketfs-explorer] as an
+You can also check out the Exasol [BucketFS Explorer][bucketfs-explorer] as an
 alternative option to upload jar files to buckets in BucketFS.
 
 [bucketfs-explorer]: https://github.com/exasol/bucketfs-explorer
@@ -148,7 +148,7 @@ CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
 
 Please do not change the UDF script names. The first script, `IMPORT_PATH` will
 be used as an entry point when running the import UDF. It will execute the
-`IMPORT_METADATA` script to calculate the number of files in the user provided
+`IMPORT_METADATA` script to calculate the number of files in the user-provided
 cloud storage path. Then each file will be imported by `IMPORT_FILES` UDF
 script.
 
@@ -211,13 +211,13 @@ Please note that the parameter values are provided as string literals,
 ### Required Parameters
 
 * ``BUCKET_PATH`` - It specifies a path to the cloud storage filesystem. It
-  should start with a storage specific schema, such as `s3a` or `adl`.
+  should start with a storage-specific schema, such as `s3a` or `adl`.
 
 * ``DATA_FORMAT`` - It defines the data file format in the provided path. We
   support importing data from **Avro**, **Orc** and **Parquet** file formats and
   exporting to **Parquet** format.
 
-* Additional storage specific properties that enable accessing storage
+* Additional storage-specific properties that enable accessing storage
   filesystems.
 
 ### Optional Parameters
@@ -275,7 +275,7 @@ FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
 In the example above, `PARALLELISM` property value is set to `nproc()` which
 returns the number of physical data nodes in the cluster. Thus, the storage
 extension starts `nproc()` many parallel importer processes. The total number of
-files are distributed among these processes in a round-robin fashion and each
+files is distributed among these processes in a round-robin fashion and each
 process imports data from their own set of files.
 
 However, you can increase the parallelism by multiplying it with a number. For
@@ -310,7 +310,7 @@ group by clause.
 
 The default value for parallelism for export is `iproc()` (notice that it is
 different from `nproc()`). It returns the data node id numbers. Therefore,
-by default, it creates exporter processes as many as the number of datanodes.
+by default, it creates as many exporter processes as the number of datanodes.
 
 ```sql
 EXPORT <schema>.<table>
@@ -322,8 +322,8 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   PARALLELISM     = 'iproc()';
 ```
 
-Like in import, you can increase the number exporter processes. Since we need a
-dynamic number that Exasol database can understand, you can combine the
+Like in import, you can increase the number of exporter processes. Since we need a
+dynamic number that the Exasol database can understand, you can combine the
 `iproc()` statement with `random()` and `floor()` operations.
 
 For example, to increase the exporter processes four times, set it as below:
@@ -364,8 +364,8 @@ Frankfurt region.
 
 ### Create Exasol Connection Object
 
-Create a named connection object and encode credentials a key-value pairs
-separated by semicolon (`;`).
+Create a named connection object and encode credentials key-value pairs
+separated by a semicolon (`;`).
 
 Using AWS access and secret keys:
 
@@ -376,7 +376,7 @@ USER ''
 IDENTIFIED BY 'S3_ACCESS_KEY=<AWS_ACCESS_KEY>;S3_SECRET_KEY=<AWS_SECRET_KEY>';
 ```
 
-Or together with session token:
+Or together with a session token:
 
 ```sql
 CREATE OR REPLACE CONNECTION S3_CONNECTION
@@ -422,7 +422,7 @@ GCS_KEYFILE_PATH
 ```
 
 The **GCS_PROJECT_ID** is a Google Cloud Platform (GCP) project identifier. It
-is unique string for you project which is composed of the project name and a
+is a unique string for your project which is composed of the project name and a
 randomly assigned number. Please check out the GCP [creating and managing
 projects][gcp-projects] page for more information.
 
@@ -431,7 +431,7 @@ location. It is usually stored in the JSON format.
 
 A Google Cloud Platform service account is an identity that an application can
 use to authenticate and perform authorized tasks on Google cloud resources. It
-is special type of Google account intended to represent a non-human user that
+is a special type of Google account intended to represent a non-human user that
 needs to access Google APIs. Please check out the GCP [introduction to service
 accounts][gcp-auth-intro], [understanding service accounts][gcp-auth-under] and
 generating [service account private key][gcp-auth-keys] documentation pages.
@@ -444,7 +444,7 @@ generating [service account private key][gcp-auth-keys] documentation pages.
 Once the service account is generated, give enough permissions to it to access
 the Google Cloud Storage objects and download its private key as a JSON file.
 
-Upload GCP service account key file to BucketFS bucket:
+Upload a GCP service account key file to a BucketFS bucket:
 
 ```bash
 curl -X PUT -T gcp-<PROJECT_ID>-service-keyfile.json \
@@ -484,7 +484,7 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
 ## Azure Blob Storage
 
 You can access Azure Blob Storage containers using two possible authorization
-mechanisms.
+mechanisms:
 
 ```
 AZURE_SECRET_KEY
@@ -496,7 +496,7 @@ after creating a storage account. It is used to authorize access to the storage
 accounts.
 
 The **AZURE_SAS_TOKEN** is a Shared Access Signature (SAS) that provides secure
-access to storage account with granular control over how the clients can access
+access to storage accounts with granular control over how the clients can access
 the data.
 
 Please refer to Azure documentation on [creating storage
@@ -513,7 +513,7 @@ exasol-cloud-storage-extension to access the Azure Blob Storage containers.
 
 ### Using Azure Secret Key Authentication
 
-Create a named connection containing Azure secret key:
+Create a named connection containing an Azure secret key:
 
 ```sql
 CREATE OR REPLACE CONNECTION AZURE_BLOB_SECRET_CONNECTION
@@ -522,7 +522,7 @@ USER ''
 IDENTIFIED BY 'AZURE_SECRET_KEY=<AZURE_SECRET_KEY>';
 ```
 
-Run import statement:
+Run an import statement:
 
 ```sql
 IMPORT INTO <schema>.<table>
@@ -533,7 +533,7 @@ FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   PARALLELISM      = 'nproc()*<MULTIPLIER>';
 ```
 
-Run export statement:
+Run an export statement:
 
 ```sql
 EXPORT <schema>.<table>
@@ -546,7 +546,7 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
 
 ### Using Azure SAS Token Authentication
 
-Create a named connection containing Azure SAS token:
+Create a named connection containing an Azure SAS token:
 
 ```sql
 CREATE OR REPLACE CONNECTION AZURE_BLOB_SAS_CONNECTION
@@ -555,7 +555,7 @@ USER ''
 IDENTIFIED BY 'AZURE_SAS_TOKEN=<AZURE_SAS_TOKEN>';
 ```
 
-Run import statement:
+Run an import statement:
 
 ```sql
 IMPORT INTO <schema>.<table>
@@ -566,7 +566,7 @@ FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   PARALLELISM     = 'nproc()*<MULTIPLIER>';
 ```
 
-Run export statement:
+Run an export statement:
 
 ```sql
 EXPORT <schema>.<table>
@@ -605,7 +605,7 @@ documentation pages should show how to obtain required configuration settings.
 [azure-adl-s2s-auth]: https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-service-to-service-authenticate-using-active-directory
 [azure-adl-srv-prin]: https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal
 
-Finally, make sure that the client id has an access permissions to the Gen1
+Finally, make sure that the client id has access permissions to the Gen1
 storage container or its child directories.
 
 ### Create Exasol Connection Object
@@ -644,20 +644,20 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
 
 ## Azure Data Lake Gen2 Storage
 
-Likewise, the Azure Data Lake Gen2 Storage requires secret key of storage
+Likewise, the Azure Data Lake Gen2 Storage requires a secret key of the storage
 account for authentication.
 
 ```
 AZURE_SECRET_KEY
 ```
 
-Please refer to Azure documentation on [creating storage
+Please refer to the Azure documentation on [creating storage
 account][azure-blob-account] and managing [storage access
 keys][azure-blob-keys].
 
 ### Create Exasol Connection Object
 
-Create a named connection object that includes secret key for Azure Data Lake
+Create a named connection object that includes a secret key for the Azure Data Lake
 Gen2 Storage in the identification field:
 
 ```sql
