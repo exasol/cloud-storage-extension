@@ -11,7 +11,7 @@ object Dependencies {
   private val ImportExportUDFVersion = "0.1.0"
   private val HadoopVersion = "3.3.0"
   private val DeltaVersion = "0.7.0"
-  private val OrcVersion = "1.6.3"
+  private val OrcVersion = "1.6.4"
   private val ParquetVersion = "1.10.1"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.0"
@@ -21,7 +21,7 @@ object Dependencies {
   // Test dependencies versions
   private val ScalaTestVersion = "3.2.2"
   private val ScalaTestPlusVersion = "1.0.0-M2"
-  private val MockitoCoreVersion = "3.5.10"
+  private val MockitoCoreVersion = "3.5.11"
 
   val Resolvers: Seq[Resolver] = Seq(
     "Exasol Releases" at "https://maven.exasol.com/artifactory/exasol-releases"

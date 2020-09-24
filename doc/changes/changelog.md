@@ -1,6 +1,7 @@
 # Releases
 
-* [v0.8.0](changes_0.8.0.md)
+* [0.9.0](changes_0.9.0.md)
+* [0.8.0](changes_0.8.0.md)
 
 ## v0.7.1
 
