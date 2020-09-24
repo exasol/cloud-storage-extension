@@ -3,10 +3,10 @@
 [Delta format][delta-io] is an open-source storage layer that brings ACID
 transaction properties to Apache Spark and other blob storage systems.
 
-Using the cloud-storage-etl-udfs, it is now possible to import data from the
-Delta format.
+Using the Exasol Cloud Storage Extension, it is now possible to import data from
+the Delta format.
 
-## Import Delta formatted data
+## Import Delta Formatted Data
 
 Like other cloud storage systems, you can run the Exasol IMPORT SQL statement to
 import the data from the Delta format.
@@ -19,19 +19,19 @@ TO ''
 USER ''
 IDENTIFIED BY 'S3_ACCESS_KEY=<AWS_ACCESS_KEY>;S3_SECRET_KEY=<AWS_SECRET_KEY>';
 
-IMPORT INTO RETAIL.SALES_POSITIONS
-FROM SCRIPT ETL.IMPORT_PATH WITH
-  BUCKET_PATH     = 's3a://<BUCKET>/import/delta/sales_positions/*'
+IMPORT INTO <schema>.<table>
+FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
+  BUCKET_PATH     = 's3a://<S3_PATH>/import/delta/data/*'
   DATA_FORMAT     = 'DELTA'
   S3_ENDPOINT     = 's3.<REGION>.amazonaws.com'
   CONNECTION_NAME = 'S3_CONNECTION'
-  PARALLELISM     = 'nproc()*2';
+  PARALLELISM     = 'nproc()*<MULTIPLIER>';
 ```
 
 ## Supported Cloud Storage Systems
 
 Currently, only Amazon S3, Azure Blob Storage and Azure Data Lake Storage Gen1
-cloud storage systems are supported.
+storage systems are supported.
 
 You can read more about the supported storage requirements and configuration on
 the [delta.io/delta-storage.html][delta-storage] page.
@@ -40,8 +40,8 @@ the [delta.io/delta-storage.html][delta-storage] page.
 
 When running the import SQL statement, we first query the [latest
 snapshot][delta-history] of the Delta format and only import the data from the
-latest snapshot version. Thus, each import from the Delta format will import
-data to the Exasol table.
+latest snapshot version. Thus, each import from the Delta format will import the
+snapshot data to the Exasol table.
 
 ## Schema Evolution
 

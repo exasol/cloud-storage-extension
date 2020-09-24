@@ -9,31 +9,33 @@
 ## Overview
 
 Exasol Cloud Storage Extension provides [Exasol][exasol] user-defined functions
-(UDFs) for reading and writing formatted data to public cloud storage systems.
+(UDFs) for accessing formatted data stored in public cloud storage systems.
 
 ## Features
 
-* Import formatted data from public cloud storage systems.
-* Following data formats are supported as source file format when importing:
-  [Apache Avro][avro], [Apache Orc][orc] and [Apache Parquet][parquet].
-* Export Exasol table data as Apache Parquet format to public cloud storage
+* Imports formatted data from public cloud storage systems.
+* Supports the following data formats for importing: [Apache Avro][avro],
+  [Apache Orc][orc] and [Apache Parquet][parquet].
+* Allows data import from [Delta Lake](https://delta.io/).
+* Supports table export as Apache Parquet format to public cloud storage
   systems.
-* Following cloud storage systems are supported: [Amazon S3][s3], [Google Cloud
+* Supports the following cloud storage systems: [Amazon S3][s3], [Google Cloud
   Storage][gcs], [Azure Blob Storage][azure-blob], [Azure Data Lake (Gen1)
   Storage][azure-data-lake] and [Azure Data Lake (Gen2)
-  Storage][azure-data-lake-gen2]u
+  Storage][azure-data-lake-gen2].
+* Allows configuration of parallel importer or exporter processes.
 
 ## Information for Users
 
 For more information please check out the following guides.
 
 * [User Guide](doc/user_guide/user_guide.md)
-* [Deployment Guide](doc/deployment_guide.md)
+* [Delta Format Import](doc/user_guide/delta_format.md)
 * [Changelog](doc/changes/changelog.md)
 
 ## Information for Contributors
 
-* [Developer Guide](doc/developer_guide.md)
+* [Developer Guide][developer-guide]
 
 ## Dependencies
 
@@ -126,3 +128,4 @@ These plugins help with project development.
 [sbt-depgraph-link]: https://github.com/jrudolph/sbt-dependency-graph
 [sbt-git-link]: https://github.com/sbt/sbt-git
 [sbt-expdep-link]: https://github.com/cb372/sbt-explicit-dependencies
+[developer-guide]: https://github.com/exasol/import-export-udf-common-scala/blob/master/doc/development/developer_guide.md
