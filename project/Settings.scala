@@ -16,8 +16,8 @@ import com.lucidchart.sbt.scalafmt.ScalafmtCorePlugin.autoImport._
 /** A list of (boilerplate) settings for build process */
 object Settings {
 
-  def commonSettings(scalaVersion: SettingKey[String]): Seq[Setting[_]] =
-    buildSettings(scalaVersion) ++ miscSettings ++ scalaStyleSettings
+  def projectSettings(scalaVersion: SettingKey[String]): Seq[Setting[_]] =
+    buildSettings(scalaVersion) ++ miscSettings ++ scalaStyleSettings ++ assemblySettings
 
   def buildSettings(scalaVersion: SettingKey[String]): Seq[Setting[_]] = Seq(
     // Compiler settings

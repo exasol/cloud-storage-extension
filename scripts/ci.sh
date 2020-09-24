@@ -58,7 +58,7 @@ run_coverage_report () {
   echo "#        Coverage report                   #"
   echo "#                                          #"
   echo "############################################"
-  ./sbtx ++$TRAVIS_SCALA_VERSION coverageReport coverageAggregate
+  ./sbtx ++$TRAVIS_SCALA_VERSION coverageReport
 }
 
 run_api_doc () {
