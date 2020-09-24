@@ -102,7 +102,7 @@ curl -X PUT -T exasol-cloud-storage-extension-<VERSION>.jar \
 ```
 
 You can also check out Exasol [BucketFS Explorer][bucketfs-explorer] as an
-alternative option to upload jar file to buckets in BucketFS.
+alternative option to upload jar files to buckets in BucketFS.
 
 [bucketfs-explorer]: https://github.com/exasol/bucketfs-explorer
 
@@ -147,7 +147,7 @@ CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
 ```
 
 Please do not change the UDF script names. The first script, `IMPORT_PATH` will
-be used as entry point when running the import UDF. It will execute the
+be used as an entry point when running the import UDF. It will execute the
 `IMPORT_METADATA` script to calculate the number of files in the user provided
 cloud storage path. Then each file will be imported by `IMPORT_FILES` UDF
 script.
@@ -210,8 +210,8 @@ Please note that the parameter values are provided as string literals,
 
 ### Required Parameters
 
-* ``BUCKET_PATH`` - It specifies a path to the cloud storage filesystem.
-  It should start with storage specific schema, such as `s3a` or `adl`.
+* ``BUCKET_PATH`` - It specifies a path to the cloud storage filesystem. It
+  should start with a storage specific schema, such as `s3a` or `adl`.
 
 * ``DATA_FORMAT`` - It defines the data file format in the provided path. We
   support importing data from **Avro**, **Orc** and **Parquet** file formats and
@@ -278,7 +278,7 @@ extension starts `nproc()` many parallel importer processes. The total number of
 files are distributed among these processes in a round-robin fashion and each
 process imports data from their own set of files.
 
-However, you can increase the parallelism by multiplygin it with a number. For
+However, you can increase the parallelism by multiplying it with a number. For
 example, in order to start four times more processes, set it:
 
 ```sql
@@ -297,7 +297,7 @@ of each file.
 In the export, the parallelism works differently compared to the import SQL
 statement.
 
-In import statement, we are importing data from have many files. Using the user
+In the import statement, we are importing data from many files. Using the user
 provider parallelism number, we distribute these files into that many importer
 processes. For example, simply by taking modulo of file hash by parallelism
 number.
@@ -309,7 +309,7 @@ should be something dynamic that Exasol database can understand and use in the
 group by clause.
 
 The default value for parallelism for export is `iproc()` (notice that it is
-different than `nproc()`). It returns the data node id numbers. Therefore,
+different from `nproc()`). It returns the data node id numbers. Therefore,
 by default, it creates exporter processes as many as the number of datanodes.
 
 ```sql
@@ -595,12 +595,12 @@ Application ID.
 
 The **AZURE_CLIENT_SECRET** is the secret key generated for the Application ID.
 
-The **AZURE_DIRECTORY_ID** is ht Active Directory (AD) Directory (Tenant) ID.
+The **AZURE_DIRECTORY_ID** is the Active Directory (AD) Directory (Tenant) ID.
 
 Please check out the Azure documentation on how to create [service to service
 authentication using Active Directory][azure-adl-s2s-auth] and [Azure AD
 application and service principal][azure-adl-srv-prin]. These Azure
-documentation pages should show how obtain required configuration settings.
+documentation pages should show how to obtain required configuration settings.
 
 [azure-adl-s2s-auth]: https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-service-to-service-authenticate-using-active-directory
 [azure-adl-srv-prin]: https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal
@@ -689,4 +689,4 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   PARALLELISM     = 'iproc(), floor(random()*<MULTIPLIER>)';
 ```
 
-The bucket path should start with `abfs` or `abfss` URI scheme.
+The bucket path should start with an `abfs` or `abfss` URI scheme.

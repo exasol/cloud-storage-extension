@@ -44,7 +44,7 @@ compiling, testing and running the project.
 
 We compile and build the `exasol-cloud-storage-extension` releases using Java 8;
 however, it should be safe to run it on the newer JVM versions. This is also
-[recommendend way][jdk-compatibility] to build the Scala code.
+[recommended way][jdk-compatibility] to build the Scala code.
 
 ### Runtime Dependencies
 
