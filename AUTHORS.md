@@ -15,4 +15,4 @@ These are the people whose contributions have made the project possible:
 
 * Hari Nair (CommScope)
 
-[contributors]: https://github.com/exasol/cloud-storage-etl-udfs/graphs/contributors
+[contributors]: https://github.com/exasol/cloud-storage-extension/graphs/contributors
