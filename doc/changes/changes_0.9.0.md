@@ -9,6 +9,7 @@
 ## Documentation
 
 * [#97](https://github.com/exasol/cloud-storage-extension/issues/97): Updated Documentation (PR [#101](https://github.com/exasol/cloud-storage-extension/pull/101)).
+* [#100](https://github.com/exasol/cloud-storage-extension/issues/100): Updated Documentation (PR [#102](https://github.com/exasol/cloud-storage-extension/pull/102)).
 
 ## Dependency Updates
 
