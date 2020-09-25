@@ -89,12 +89,12 @@ These plugins help with project development.
 | [SBT Explicit Dependencies][sbt-expdep-link]| Checks which direct libraries required to compile your code     | Apache License 2.0   |
 | [SBT Git][sbt-git-link]                     | A plugin for Git integration, used to version the release jars  | BSD 2-Clause License |
 
-[travis-badge]: https://img.shields.io/travis/exasol/cloud-storage-etl-udfs/master.svg?logo=travis
-[travis-link]: https://travis-ci.com/exasol/cloud-storage-etl-udfs
-[coveralls-badge]: https://img.shields.io/coveralls/exasol/cloud-storage-etl-udfs.svg
-[coveralls-link]: https://coveralls.io/github/exasol/cloud-storage-etl-udfs
-[gh-release-badge]: https://img.shields.io/github/release/exasol/cloud-storage-etl-udfs.svg?logo=github
-[gh-release-link]: https://github.com/exasol/cloud-storage-etl-udfs/releases/latest
+[travis-badge]: https://img.shields.io/travis/exasol/cloud-storage-extension/master.svg?logo=travis
+[travis-link]: https://travis-ci.com/exasol/cloud-storage-extension
+[coveralls-badge]: https://img.shields.io/coveralls/exasol/cloud-storage-extension.svg
+[coveralls-link]: https://coveralls.io/github/exasol/cloud-storage-extension
+[gh-release-badge]: https://img.shields.io/github/release/exasol/cloud-storage-extension.svg?logo=github
+[gh-release-link]: https://github.com/exasol/cloud-storage-extension/releases/latest
 [exasol]: https://www.exasol.com/en/
 [avro]: https://avro.apache.org/
 [orc]: https://orc.apache.org/

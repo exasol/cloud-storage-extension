@@ -18,10 +18,10 @@ connector, added support for connection object in Kafka connector.
 
 ## Features
 
-* [#84](https://github.com/exasol/cloud-storage-etl-udfs/issues/84): Changed to multi module setup repository (PR [#85](https://github.com/exasol/cloud-storage-etl-udfs/pull/85)).
-* [#87](https://github.com/exasol/cloud-storage-etl-udfs/issues/87): Added nested data support for Kinesis connector (PR [#88](https://github.com/exasol/cloud-storage-etl-udfs/pull/88)).
-* Added support for connection object in Kafka connector (PR [#90](https://github.com/exasol/cloud-storage-etl-udfs/pull/90)).
-* Added checks for keystore and truststore files in Kafka connector (PR [#92](https://github.com/exasol/cloud-storage-etl-udfs/pull/92)).
+* [#84](https://github.com/exasol/cloud-storage-extension/issues/84): Changed to multi module setup repository (PR [#85](https://github.com/exasol/cloud-storage-extension/pull/85)).
+* [#87](https://github.com/exasol/cloud-storage-extension/issues/87): Added nested data support for Kinesis connector (PR [#88](https://github.com/exasol/cloud-storage-extension/pull/88)).
+* Added support for connection object in Kafka connector (PR [#90](https://github.com/exasol/cloud-storage-extension/pull/90)).
+* Added checks for keystore and truststore files in Kafka connector (PR [#92](https://github.com/exasol/cloud-storage-extension/pull/92)).
 
 ## Dependency Updates
 

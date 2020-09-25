@@ -4,11 +4,11 @@
 
 ## Features
 
-* [#98](https://github.com/exasol/cloud-storage-etl-udfs/issues/98): Removed Kafka and Kinesis modules (PR [#99](https://github.com/exasol/cloud-storage-etl-udfs/pull/99)).
+* [#98](https://github.com/exasol/cloud-storage-extension/issues/98): Removed Kafka and Kinesis modules (PR [#99](https://github.com/exasol/cloud-storage-extension/pull/99)).
 
 ## Documentation
 
-* [#97](https://github.com/exasol/cloud-storage-etl-udfs/issues/97): Updated Documentation (PR [#101](https://github.com/exasol/cloud-storage-etl-udfs/pull/101)).
+* [#97](https://github.com/exasol/cloud-storage-extension/issues/97): Updated Documentation (PR [#101](https://github.com/exasol/cloud-storage-extension/pull/101)).
 
 ## Dependency Updates
 
