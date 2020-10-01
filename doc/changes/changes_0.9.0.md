@@ -1,6 +1,12 @@
-# Cloud Storage Extension 0.9.0, released 2020-MM-DD
+# Cloud Storage Extension 0.9.0, released 2020-10-01
 
 ## Summary
+
+In this release, we moved the Kafka and Kinesis modules into their reparate
+repositories. In addition, we disabled using access credentials as user provided
+parameters.
+
+Please check out the user guide for more information.
 
 ## Features
 
