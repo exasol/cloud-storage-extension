@@ -34,24 +34,18 @@ class AzureAdlsBucketTest extends AbstractBucketTest {
     }
   }
 
-  test("apply throws if no connection name or credentials is provided") {
+  test("apply throws if no connection name is provided") {
     properties = defaultProperties
-    val thrown = intercept[IllegalArgumentException] {
-      assertAzureAdlsBucket(getBucket(properties), Map.empty[String, String])
-    }
-    val expected = "Please provide either CONNECTION_NAME property or secure access " +
-      "credentials parameters, but not the both!"
-    assert(thrown.getMessage === expected)
+    assertNoConnectionName { getBucket(properties).validate() }
   }
 
-  test("apply returns AzureAdlsBucket with client id, client secret and directory id") {
+  test("apply throws if client id, client secret or directory id is provided as parameter") {
     properties = defaultProperties ++ Map(
       "AZURE_CLIENT_ID" -> clientID,
       "AZURE_CLIENT_SECRET" -> clientSecret,
       "AZURE_DIRECTORY_ID" -> directoryID
     )
-    val bucket = getBucket(properties)
-    assertAzureAdlsBucket(bucket, configMappings)
+    assertForbiddenProperty { getBucket(properties).validate() }
   }
 
   test("apply returns with credentails from username and password of connection object") {

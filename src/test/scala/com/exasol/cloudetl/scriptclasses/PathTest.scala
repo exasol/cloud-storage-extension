@@ -19,8 +19,7 @@ trait PathTest extends AnyFunSuite with BeforeAndAfterEach with MockitoSugar {
     "BUCKET_PATH" -> "s3a://my_bucket/folder1/*",
     "DATA_FORMAT" -> "PARQUET",
     "S3_ENDPOINT" -> "s3.eu-central-1.com",
-    "S3_ACCESS_KEY" -> "s3_access_key",
-    "S3_SECRET_KEY" -> "s3_secret_key"
+    "CONNECTION_NAME" -> "S3_CONNECTION"
   )
 
   private[scriptclasses] var metadata: ExaMetadata = _

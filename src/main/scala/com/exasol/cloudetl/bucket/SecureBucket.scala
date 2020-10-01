@@ -22,22 +22,16 @@ trait SecureBucket extends LazyLogging { self: Bucket =>
    */
   protected[this] final def validateConnectionProperties(): Unit = {
     if (hasSecureProperties()) {
-      logger.info(
-        "Using secure credential parameters is deprecated. " +
-          "Please use an Exasol named connection object via CONNECTION_NAME property."
+      throw new BucketValidationException(
+        "Using credentials as parameters is forbidded. Please use an Exasol " +
+          "named connection object via CONNECTION_NAME property."
       )
     }
-    val connectionExceptionMessage =
-      "Please provide either CONNECTION_NAME property or secure access " +
-        "credentials parameters, but not the both!"
-    if (properties.hasNamedConnection()) {
-      if (hasSecureProperties()) {
-        throw new IllegalArgumentException(connectionExceptionMessage)
-      }
-    } else {
-      if (!hasSecureProperties()) {
-        throw new IllegalArgumentException(connectionExceptionMessage)
-      }
+    if (!properties.hasNamedConnection()) {
+      throw new BucketValidationException(
+        "No CONNECTION_NAME property is defined. Please use connection object " +
+          "to provide access credentials."
+      )
     }
   }
 

@@ -88,7 +88,7 @@ final case class AzureBlobBucket(path: String, params: StorageProperties)
   private[this] def regexParsePath(path: String): AccountAndContainer = path match {
     case AZURE_BLOB_PATH_REGEX(containerName, accountName, _) =>
       AccountAndContainer(accountName, containerName)
-    case _ => throw new IllegalArgumentException(s"Invalid Azure blob wasb(s) path: $path!")
+    case _ => throw new BucketValidationException(s"Invalid Azure blob wasb(s) path: $path!")
   }
 
   private[this] case class AccountAndContainer(accountName: String, containerName: String)
