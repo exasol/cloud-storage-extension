@@ -39,26 +39,14 @@ class S3BucketTest extends AbstractBucketTest {
     }
   }
 
-  test("apply throws when no secrets nor connection name is provided") {
+  test("apply throws when no connection name is provided") {
     properties = defaultProperties
-    val thrown = intercept[IllegalArgumentException] {
-      assertS3Bucket(getBucket(properties), Map.empty[String, String])
-    }
-    val expected = "Please provide either CONNECTION_NAME property or secure access " +
-      "credentials parameters, but not the both!"
-    assert(thrown.getMessage === expected)
+    assertNoConnectionName { getBucket(properties).validate() }
   }
 
-  test("apply returns S3Bucket with access and secret parameters") {
-    properties = accessProperties - "S3_SESSION_TOKEN"
-    val bucket = getBucket(properties)
-    assertS3Bucket(bucket, configMappings - "fs.s3a.session.token")
-  }
-
-  test("apply returns S3Bucket with access, secret and session token parameters") {
+  test("apply throws with access, secret or session token parameters") {
     properties = accessProperties
-    val bucket = getBucket(properties)
-    assertS3Bucket(bucket, configMappings)
+    assertForbiddenProperty { getBucket(properties).validate() }
   }
 
   test("apply returns S3Bucket with secret from connection") {

@@ -45,4 +45,25 @@ class AbstractBucketTest extends AnyFunSuite with BeforeAndAfterEach with Mockit
     when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
     metadata
   }
+
+  final def assertNoConnectionName(fn: => Unit): Unit = {
+    val thrown = intercept[BucketValidationException] {
+      fn
+    }
+    val message = thrown.getMessage()
+    assert(message.contains("No CONNECTION_NAME property is defined"))
+    assert(message.contains("Please use connection object to provide access credentials"))
+    ()
+  }
+
+  final def assertForbiddenProperty(fn: => Unit): Unit = {
+    val thrown = intercept[BucketValidationException] {
+      fn
+    }
+    val message = thrown.getMessage()
+    assert(message.contains("Using credentials as parameters is forbidded"))
+    assert(message.contains("Please use an Exasol named connection object"))
+    ()
+  }
+
 }

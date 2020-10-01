@@ -7,24 +7,16 @@ import org.apache.hadoop.conf.Configuration
 
 class SecureBucketTest extends AbstractBucketTest {
 
-  test("validate throws if no access credentials are provided") {
-    val thrown = intercept[IllegalArgumentException] {
-      BaseSecureBucket(properties).validate()
-    }
-    assert(thrown.getMessage.contains("Please provide either CONNECTION_NAME property or"))
+  test("validate throws if no connection name is provided") {
+    assertNoConnectionName { BaseSecureBucket(properties).validate() }
   }
 
-  test("validate throws if both connection name and access properties are provided") {
+  test("validate throws if access properties are provided") {
     properties = Map(
-      "CONNECTION_NAME" -> "named_connection",
       "accountNameProperty" -> "user",
       "accountSecretProperty" -> "secret"
     )
-    val thrown = intercept[IllegalArgumentException] {
-      BaseSecureBucket(properties).validate()
-    }
-    assert(thrown.getMessage.contains("Please provide either CONNECTION_NAME property or"))
-    assert(thrown.getMessage.contains("secure access credentials parameters, but not the both!"))
+    assertForbiddenProperty { BaseSecureBucket(properties).validate() }
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
