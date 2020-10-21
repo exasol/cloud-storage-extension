@@ -136,7 +136,7 @@ CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...)
-EMITS (filename VARCHAR(200), partition_index VARCHAR(100)) AS
+EMITS (filename VARCHAR(2000), partition_index VARCHAR(100)) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.ImportMetadata;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
@@ -323,8 +323,8 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   PARALLELISM     = 'iproc()';
 ```
 
-Like in import, you can increase the number of exporter processes. Since we need a
-dynamic number that the Exasol database can understand, you can combine the
+Like in import, you can increase the number of exporter processes. Since we need
+a dynamic number that the Exasol database can understand, you can combine the
 `iproc()` statement with `random()` and `floor()` operations.
 
 For example, to increase the exporter processes four times, set it as below:
@@ -336,7 +336,7 @@ PARALLELISM = 'iproc(), floor(random()*4)'
 Please change this parameter according to your setup.
 
 Each exporter process creates a single file. This can be a problem if the table
-has many records. You can change this behaviour by adapting the
+has many records. You can change this behavior by adapting the
 `EXPORT_BATCH_SIZE` parameter. This value is used to further split the number of
 records per process and create several files instead of a single file.
 
@@ -658,8 +658,8 @@ keys][azure-blob-keys].
 
 ### Create Exasol Connection Object
 
-Create a named connection object that includes a secret key for the Azure Data Lake
-Gen2 Storage in the identification field:
+Create a named connection object that includes a secret key for the Azure Data
+Lake Gen2 Storage in the identification field:
 
 ```sql
 CREATE OR REPLACE CONNECTION AZURE_ABFS_CONNECTION
