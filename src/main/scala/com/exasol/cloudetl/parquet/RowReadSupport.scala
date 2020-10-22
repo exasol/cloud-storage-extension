@@ -14,6 +14,7 @@ import org.apache.parquet.io.api.GroupConverter
 import org.apache.parquet.io.api.PrimitiveConverter
 import org.apache.parquet.io.api.RecordMaterializer
 import org.apache.parquet.schema.GroupType
+import org.apache.parquet.schema.LogicalTypeAnnotation.DecimalLogicalTypeAnnotation
 import org.apache.parquet.schema.MessageType
 import org.apache.parquet.schema.OriginalType
 import org.apache.parquet.schema.PrimitiveType
@@ -88,16 +89,9 @@ class RowRootConverter(schema: GroupType) extends GroupConverter {
     typeName match {
       case PrimitiveTypeName.INT32 =>
         originalType match {
-          case OriginalType.DATE => new RowDateConverter(this, idx)
-          case OriginalType.DECIMAL =>
-            val decimalMetadata = primitiveType.getDecimalMetadata
-            new RowDecimalConverter(
-              this,
-              idx,
-              decimalMetadata.getPrecision,
-              decimalMetadata.getScale
-            )
-          case _ => new RowPrimitiveConverter(this, idx)
+          case OriginalType.DATE    => new RowDateConverter(this, idx)
+          case OriginalType.DECIMAL => createDecimalConverter(this, primitiveType, idx)
+          case _                    => new RowPrimitiveConverter(this, idx)
         }
       case PrimitiveTypeName.BOOLEAN => new RowPrimitiveConverter(this, idx)
       case PrimitiveTypeName.DOUBLE  => new RowPrimitiveConverter(this, idx)
@@ -110,35 +104,31 @@ class RowRootConverter(schema: GroupType) extends GroupConverter {
         }
       case PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY =>
         originalType match {
-          case OriginalType.DECIMAL =>
-            val decimalMetadata = primitiveType.getDecimalMetadata
-            new RowDecimalConverter(
-              this,
-              idx,
-              decimalMetadata.getPrecision,
-              decimalMetadata.getScale
-            )
-          case _ => new RowPrimitiveConverter(this, idx)
+          case OriginalType.DECIMAL => createDecimalConverter(this, primitiveType, idx)
+          case _                    => new RowPrimitiveConverter(this, idx)
         }
       case PrimitiveTypeName.INT64 =>
         originalType match {
           case OriginalType.TIMESTAMP_MILLIS => new RowTimestampMillisConverter(this, idx)
-          case OriginalType.DECIMAL =>
-            val decimalMetadata = primitiveType.getDecimalMetadata
-            new RowDecimalConverter(
-              this,
-              idx,
-              decimalMetadata.getPrecision,
-              decimalMetadata.getScale
-            )
-          case _ => new RowPrimitiveConverter(this, idx)
+          case OriginalType.DECIMAL          => createDecimalConverter(this, primitiveType, idx)
+          case _                             => new RowPrimitiveConverter(this, idx)
         }
 
       case PrimitiveTypeName.INT96 => new RowTimestampInt96Converter(this, idx)
     }
   }
 
-  private final class RowPrimitiveConverter(val parent: RowRootConverter, val index: Int)
+  private[this] def createDecimalConverter(
+    parent: RowRootConverter,
+    primitiveType: PrimitiveType,
+    index: Int
+  ): RowDecimalConverter = {
+    val decimalType =
+      primitiveType.getLogicalTypeAnnotation().asInstanceOf[DecimalLogicalTypeAnnotation]
+    new RowDecimalConverter(parent, index, decimalType.getPrecision(), decimalType.getScale())
+  }
+
+  private[this] final class RowPrimitiveConverter(val parent: RowRootConverter, val index: Int)
       extends PrimitiveConverter {
 
     override def addBinary(value: Binary): Unit =

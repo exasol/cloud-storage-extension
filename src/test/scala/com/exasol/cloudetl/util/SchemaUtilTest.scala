@@ -4,6 +4,7 @@ import com.exasol.ExaIterator
 import com.exasol.cloudetl.data.ExaColumnInfo
 
 import org.apache.parquet.schema._
+import org.apache.parquet.schema.LogicalTypeAnnotation._
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
 import org.apache.parquet.schema.Type.Repetition
 import org.mockito.Mockito._
@@ -49,55 +50,41 @@ class SchemaUtilTest extends AnyFunSuite with MockitoSugar {
       new PrimitiveType(Repetition.OPTIONAL, PrimitiveType.PrimitiveTypeName.INT32, "c_int"),
       Types
         .primitive(PrimitiveTypeName.INT32, Repetition.OPTIONAL)
-        .precision(1)
-        .scale(0)
-        .as(OriginalType.DECIMAL)
+        .as(decimalType(0, 1))
         .named("c_int"),
       Types
         .primitive(PrimitiveTypeName.INT32, Repetition.OPTIONAL)
-        .precision(9)
-        .scale(0)
-        .as(OriginalType.DECIMAL)
+        .as(decimalType(0, 9))
         .named("c_int"),
       new PrimitiveType(Repetition.REQUIRED, PrimitiveType.PrimitiveTypeName.INT64, "c_long"),
       Types
         .primitive(PrimitiveTypeName.INT64, Repetition.OPTIONAL)
-        .precision(18)
-        .scale(0)
-        .as(OriginalType.DECIMAL)
+        .as(decimalType(0, 18))
         .named("c_long"),
       Types
         .primitive(PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY, Repetition.REQUIRED)
-        .precision(9)
-        .scale(0)
         .length(4)
-        .as(OriginalType.DECIMAL)
+        .as(decimalType(0, 9))
         .named("c_decimal_int"),
       Types
         .primitive(PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY, Repetition.REQUIRED)
-        .precision(17)
-        .scale(0)
         .length(8)
-        .as(OriginalType.DECIMAL)
+        .as(decimalType(0, 17))
         .named("c_decimal_long"),
       Types
         .primitive(PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY, Repetition.REQUIRED)
-        .precision(38)
-        .scale(10)
         .length(16)
-        .as(OriginalType.DECIMAL)
+        .as(decimalType(10, 38))
         .named("c_decimal"),
       new PrimitiveType(Repetition.OPTIONAL, PrimitiveType.PrimitiveTypeName.DOUBLE, "c_double"),
-      new PrimitiveType(
-        Repetition.REQUIRED,
-        PrimitiveType.PrimitiveTypeName.BINARY,
-        "c_string",
-        OriginalType.UTF8
-      ),
+      Types
+        .primitive(PrimitiveTypeName.BINARY, Repetition.REQUIRED)
+        .as(stringType())
+        .named("c_string"),
       Types
         .primitive(PrimitiveTypeName.BINARY, Repetition.REQUIRED)
         .length(20)
-        .as(OriginalType.UTF8)
+        .as(stringType())
         .named("c_string"),
       new PrimitiveType(
         Repetition.REQUIRED,
@@ -106,7 +93,7 @@ class SchemaUtilTest extends AnyFunSuite with MockitoSugar {
       ),
       Types
         .primitive(PrimitiveTypeName.INT32, Repetition.REQUIRED)
-        .as(OriginalType.DATE)
+        .as(dateType())
         .named("c_date"),
       new PrimitiveType(Repetition.REQUIRED, PrimitiveType.PrimitiveTypeName.INT96, "c_timestamp")
     )
