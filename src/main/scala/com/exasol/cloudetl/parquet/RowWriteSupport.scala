@@ -14,6 +14,7 @@ import org.apache.parquet.hadoop.api.WriteSupport
 import org.apache.parquet.hadoop.api.WriteSupport.FinalizedWriteContext
 import org.apache.parquet.io.api.Binary
 import org.apache.parquet.io.api.RecordConsumer
+import org.apache.parquet.schema.LogicalTypeAnnotation.DecimalLogicalTypeAnnotation
 import org.apache.parquet.schema.MessageType
 import org.apache.parquet.schema.OriginalType
 import org.apache.parquet.schema.PrimitiveType
@@ -141,8 +142,9 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
         makeTimestampWriter()
 
       case PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY if originalType == OriginalType.DECIMAL =>
-        val decimalMetadata = primitiveType.getDecimalMetadata
-        makeDecimalWriter(decimalMetadata.getPrecision, decimalMetadata.getScale)
+        val decimal =
+          primitiveType.getLogicalTypeAnnotation().asInstanceOf[DecimalLogicalTypeAnnotation]
+        makeDecimalWriter(decimal.getPrecision(), decimal.getScale())
 
       case _ => throw new UnsupportedOperationException(s"Unsupported parquet type '$typeName'.")
     }

@@ -3,8 +3,8 @@ package com.exasol.cloudetl.util
 import com.exasol.ExaIterator
 import com.exasol.cloudetl.data.ExaColumnInfo
 
+import org.apache.parquet.schema.LogicalTypeAnnotation._
 import org.apache.parquet.schema.MessageType
-import org.apache.parquet.schema.OriginalType
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
 import org.apache.parquet.schema.Type
 import org.apache.parquet.schema.Type.Repetition
@@ -32,14 +32,14 @@ object SchemaUtil {
    * [[org.apache.parquet.schema.MessageType]].
    */
   def createParquetMessageType(columns: Seq[ExaColumnInfo], schemaName: String): MessageType = {
-    val types = columns.map(exaColumnToParquetType(_))
+    val types = columns.map(columnToParquetType(_))
     new MessageType(schemaName, types: _*)
   }
 
   // In below several lines, I try to pattern match on Class[X] of Java
   // types. Please also read:
   // https://stackoverflow.com/questions/7519140/pattern-matching-on-class-type
-  object JTypes {
+  private[this] object JTypes {
     val jInteger: Class[java.lang.Integer] = classOf[java.lang.Integer]
     val jLong: Class[java.lang.Long] = classOf[java.lang.Long]
     val jBigDecimal: Class[java.math.BigDecimal] = classOf[java.math.BigDecimal]
@@ -54,7 +54,7 @@ object SchemaUtil {
    * Given Exasol column [[com.exasol.cloudetl.data.ExaColumnInfo]]
    * information convert it into Parquet schema type.
    */
-  def exaColumnToParquetType(colInfo: ExaColumnInfo): Type = {
+  private[this] def columnToParquetType(colInfo: ExaColumnInfo): Type = {
     val colName = colInfo.name
     val colType = colInfo.`type`
     val repetition = if (colInfo.isNullable) Repetition.OPTIONAL else Repetition.REQUIRED
@@ -74,9 +74,7 @@ object SchemaUtil {
           )
           Types
             .primitive(PrimitiveTypeName.INT32, repetition)
-            .precision(colInfo.precision)
-            .scale(colInfo.scale)
-            .as(OriginalType.DECIMAL)
+            .as(decimalType(colInfo.scale, colInfo.precision))
             .named(colName)
         }
 
@@ -92,19 +90,15 @@ object SchemaUtil {
           )
           Types
             .primitive(PrimitiveTypeName.INT64, repetition)
-            .precision(colInfo.precision)
-            .scale(colInfo.scale)
-            .as(OriginalType.DECIMAL)
+            .as(decimalType(colInfo.scale, colInfo.precision))
             .named(colName)
         }
 
       case `jBigDecimal` =>
         Types
           .primitive(PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY, repetition)
-          .precision(colInfo.precision)
-          .scale(colInfo.scale)
           .length(PRECISION_TO_BYTE_SIZE(colInfo.precision - 1))
-          .as(OriginalType.DECIMAL)
+          .as(decimalType(colInfo.scale, colInfo.precision))
           .named(colName)
 
       case `jDouble` =>
@@ -116,13 +110,13 @@ object SchemaUtil {
         if (colInfo.length > 0) {
           Types
             .primitive(PrimitiveTypeName.BINARY, repetition)
-            .as(OriginalType.UTF8)
             .length(colInfo.length)
+            .as(stringType())
             .named(colName)
         } else {
           Types
             .primitive(PrimitiveTypeName.BINARY, repetition)
-            .as(OriginalType.UTF8)
+            .as(stringType())
             .named(colName)
         }
 
@@ -134,7 +128,7 @@ object SchemaUtil {
       case `jSqlDate` =>
         Types
           .primitive(PrimitiveTypeName.INT32, repetition)
-          .as(OriginalType.DATE)
+          .as(dateType())
           .named(colName)
 
       case `jSqlTimestamp` =>
