@@ -113,7 +113,6 @@ class RowRootConverter(schema: GroupType) extends GroupConverter {
           case OriginalType.DECIMAL          => createDecimalConverter(this, primitiveType, idx)
           case _                             => new RowPrimitiveConverter(this, idx)
         }
-
       case PrimitiveTypeName.INT96 => new RowTimestampInt96Converter(this, idx)
     }
   }
