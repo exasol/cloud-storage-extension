@@ -83,10 +83,8 @@ class RowRootConverter(schema: GroupType) extends GroupConverter {
   override def end(): Unit = {}
 
   private def makeReader(primitiveType: PrimitiveType, idx: Int): Converter = {
-    val typeName = primitiveType.getPrimitiveTypeName
     val originalType = primitiveType.getOriginalType
-
-    typeName match {
+    primitiveType.getPrimitiveTypeName() match {
       case PrimitiveTypeName.INT32 =>
         originalType match {
           case OriginalType.DATE    => new RowDateConverter(this, idx)
@@ -96,7 +94,6 @@ class RowRootConverter(schema: GroupType) extends GroupConverter {
       case PrimitiveTypeName.BOOLEAN => new RowPrimitiveConverter(this, idx)
       case PrimitiveTypeName.DOUBLE  => new RowPrimitiveConverter(this, idx)
       case PrimitiveTypeName.FLOAT   => new RowPrimitiveConverter(this, idx)
-
       case PrimitiveTypeName.BINARY =>
         originalType match {
           case OriginalType.UTF8 => new RowStringConverter(this, idx)
