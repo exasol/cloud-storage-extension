@@ -7,42 +7,25 @@ import sbt.librarymanagement.InclExclRule
 object Dependencies {
 
   // Runtime dependencies versions
-  private val ExasolVersion = "6.1.7"
-  private val ImportExportUDFVersion = "0.1.0"
+  private val ImportExportUDFVersion = "0.2.0"
   private val HadoopVersion = "3.3.0"
   private val DeltaVersion = "0.7.0"
   private val OrcVersion = "1.6.5"
   private val ParquetVersion = "1.11.1"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.0"
-  private val TypesafeLoggingVersion = "3.9.2"
-  private val JacksonVersion = "2.11.3"
 
   // Test dependencies versions
-  private val ScalaTestVersion = "3.2.2"
+  private val ScalaTestVersion = "3.2.3"
   private val ScalaTestPlusVersion = "1.0.0-M2"
-  private val MockitoCoreVersion = "3.5.15"
+  private val MockitoCoreVersion = "3.6.0"
 
   val Resolvers: Seq[Resolver] = Seq(
     "Exasol Releases" at "https://maven.exasol.com/artifactory/exasol-releases"
   )
 
-  lazy val JacksonDependencies: Seq[ModuleID] = Seq(
-    "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
-    "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion
-      exclude ("com.fasterxml.jackson.core", "jackson-annotations"),
-    "com.fasterxml.jackson.core" % "jackson-annotations" % JacksonVersion,
-    "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
-      exclude ("com.fasterxml.jackson.core", "jackson-databind")
-  )
-
   lazy val StorageDependencies: Seq[ModuleID] = Seq(
-    "com.exasol" % "exasol-script-api" % ExasolVersion,
     "com.exasol" %% "import-export-udf-common-scala" % ImportExportUDFVersion,
-    "com.typesafe.scala-logging" %% "scala-logging" % TypesafeLoggingVersion
-      exclude ("org.slf4j", "slf4j-api")
-      exclude ("org.scala-lang", "scala-library")
-      exclude ("org.scala-lang", "scala-reflect"),
     "org.apache.hadoop" % "hadoop-aws" % HadoopVersion,
     "org.apache.hadoop" % "hadoop-azure" % HadoopVersion
       exclude ("org.slf4j", "slf4j-api")

@@ -24,9 +24,7 @@ lazy val root =
     .settings(
       resolvers ++= Dependencies.Resolvers,
       libraryDependencies ++= Dependencies.StorageDependencies,
-      libraryDependencies ++= Dependencies.JacksonDependencies,
       libraryDependencies ++= Dependencies.TestDependencies,
-      dependencyOverrides ++= Dependencies.JacksonDependencies,
       excludeDependencies ++= Dependencies.ExcludedDependencies
     )
     .enablePlugins(IntegrationTestPlugin, GitVersioning)
