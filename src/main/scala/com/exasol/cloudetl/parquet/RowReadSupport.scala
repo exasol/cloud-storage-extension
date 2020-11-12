@@ -1,6 +1,6 @@
 package com.exasol.cloudetl.parquet
 
-import com.exasol.cloudetl.parquet.converter.RowRootConverter
+import com.exasol.cloudetl.parquet.converter.ParquetRootConverter
 import com.exasol.common.data.Row
 
 import org.apache.hadoop.conf.Configuration
@@ -10,7 +10,7 @@ import org.apache.parquet.io.api.RecordMaterializer
 import org.apache.parquet.schema.MessageType
 
 /**
- * A concrete implementation of [[org.apache.paruet.hadoop.api.ReadSupport]]
+ * A concrete implementation of [[org.apache.parquet.hadoop.api.ReadSupport]]
  * that materializes Parquet records into internal [[com.exasol.common.data.Row]]
  * structure.
  */
@@ -37,8 +37,8 @@ final class RowReadSupport extends ReadSupport[Row] {
     messageType: MessageType,
     readContext: ReadContext
   ) extends RecordMaterializer[Row] {
-    override val getRootConverter: RowRootConverter = new RowRootConverter(messageType)
+    override val getRootConverter: ParquetRootConverter = ParquetRootConverter(messageType)
     override def skipCurrentRecord(): Unit = getRootConverter.start()
-    override def getCurrentRecord(): Row = Row(getRootConverter.currentResult.toSeq)
+    override def getCurrentRecord(): Row = Row(getRootConverter.getResult())
   }
 }
