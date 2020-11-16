@@ -2,7 +2,8 @@
 
 ## Features / Enhancements
 
-* #106: Update parquet-hadoop version that includes api changes (PR #107).
+* #106: Updated parquet-hadoop version that includes api changes (PR #107).
+* #108: Added dictionary aware Parquet decoders (PR #109).
 
 ## Documentation
 
