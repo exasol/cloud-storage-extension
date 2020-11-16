@@ -1,7 +1,6 @@
 package com.exasol.cloudetl.parquet.converter
 
 import org.apache.parquet.io.api.Converter
-import org.apache.parquet.schema.LogicalTypeAnnotation.DecimalLogicalTypeAnnotation
 import org.apache.parquet.schema.OriginalType
 import org.apache.parquet.schema.PrimitiveType
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName._
@@ -38,9 +37,9 @@ object ConverterFactory {
       case DOUBLE  => ParquetPrimitiveConverter(fieldIndex, parentDataHolder)
       case FLOAT   => ParquetPrimitiveConverter(fieldIndex, parentDataHolder)
       case BINARY  => createBinaryConverter(fieldIndex, parentDataHolder, primitiveType)
-      case INT32   => createIntegerConverter(fieldIndex, parentDataHolder, primitiveType)
       case FIXED_LEN_BYTE_ARRAY =>
         createFixedByteArrayConverter(fieldIndex, parentDataHolder, primitiveType)
+      case INT32 => createIntegerConverter(fieldIndex, parentDataHolder, primitiveType)
       case INT64 => createLongConverter(fieldIndex, parentDataHolder, primitiveType)
       case INT96 => ParquetTimestampInt96Converter(fieldIndex, parentDataHolder)
     }
@@ -51,17 +50,8 @@ object ConverterFactory {
     holder: ValueHolder,
     primitiveType: PrimitiveType
   ): Converter = primitiveType.getOriginalType() match {
-    case OriginalType.UTF8 => ParquetStringConverter(index, holder)
-    case _                 => ParquetPrimitiveConverter(index, holder)
-  }
-
-  private[this] def createIntegerConverter(
-    index: Int,
-    holder: ValueHolder,
-    primitiveType: PrimitiveType
-  ): Converter = primitiveType.getOriginalType() match {
-    case OriginalType.DATE    => ParquetDateConverter(index, holder)
-    case OriginalType.DECIMAL => createDecimalConverter(index, holder, primitiveType)
+    case OriginalType.UTF8    => ParquetStringConverter(index, holder)
+    case OriginalType.DECIMAL => ParquetDecimalConverter(index, holder, primitiveType)
     case _                    => ParquetPrimitiveConverter(index, holder)
   }
 
@@ -70,7 +60,17 @@ object ConverterFactory {
     holder: ValueHolder,
     primitiveType: PrimitiveType
   ): Converter = primitiveType.getOriginalType() match {
-    case OriginalType.DECIMAL => createDecimalConverter(index, holder, primitiveType)
+    case OriginalType.DECIMAL => ParquetDecimalConverter(index, holder, primitiveType)
+    case _                    => ParquetPrimitiveConverter(index, holder)
+  }
+
+  private[this] def createIntegerConverter(
+    index: Int,
+    holder: ValueHolder,
+    primitiveType: PrimitiveType
+  ): Converter = primitiveType.getOriginalType() match {
+    case OriginalType.DATE    => ParquetDateConverter(index, holder)
+    case OriginalType.DECIMAL => ParquetDecimalConverter(index, holder, primitiveType)
     case _                    => ParquetPrimitiveConverter(index, holder)
   }
 
@@ -80,18 +80,8 @@ object ConverterFactory {
     primitiveType: PrimitiveType
   ): Converter = primitiveType.getOriginalType() match {
     case OriginalType.TIMESTAMP_MILLIS => ParquetTimestampMillisConverter(index, holder)
-    case OriginalType.DECIMAL          => createDecimalConverter(index, holder, primitiveType)
+    case OriginalType.DECIMAL          => ParquetDecimalConverter(index, holder, primitiveType)
     case _                             => ParquetPrimitiveConverter(index, holder)
-  }
-
-  private[this] def createDecimalConverter(
-    index: Int,
-    holder: ValueHolder,
-    primitiveType: PrimitiveType
-  ): Converter = {
-    val decimalType =
-      primitiveType.getLogicalTypeAnnotation().asInstanceOf[DecimalLogicalTypeAnnotation]
-    ParquetDecimalConverter(index, holder, decimalType.getPrecision(), decimalType.getScale())
   }
 
 }
