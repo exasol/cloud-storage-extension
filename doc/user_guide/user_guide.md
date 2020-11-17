@@ -377,16 +377,16 @@ column types when preparing the table.
 | Orc Data Type        | Orc Logical Type  | Recommended Exasol Column Types |
 |:---------------------|:------------------|:--------------------------------|
 | boolean              |                   | BOOLEAN                         |
-| char                 |                   | VARCHAR(n), CHAR(n)             |
-| string               |                   | VARCHAR(n), CHAR(n)             |
-| varchar              |                   | VARCHAR(n), CHAR(n)             |
 | short                |                   | INT, INTEGER, DECIMAL(18, 0)    |
 | int                  |                   | INT, INTEGER, DECIMAL(18, 0)    |
 | byte                 |                   | BIGINT, DECIMAL(36, 0)          |
 | long                 |                   | BIGINT, DECIMAL(36, 0)          |
-| decimal              |                   | DECIMAL(p, s)                   |
 | float                |                   | FLOAT                           |
 | double               |                   | DOUBLE, DOUBLE PRECISION        |
+| char                 |                   | VARCHAR(n), CHAR(n)             |
+| string               |                   | VARCHAR(n), CHAR(n)             |
+| varchar              |                   | VARCHAR(n), CHAR(n)             |
+| decimal              |                   | DECIMAL(p, s)                   |
 | date                 |                   | DATE                            |
 | timestamp            |                   | TIMESTAMP                       |
 
