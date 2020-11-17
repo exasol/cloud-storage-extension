@@ -13,6 +13,7 @@ Parquet, Avro or Orc.
 - [Prepare Exasol Table](#prepare-an-exasol-table-for-import)
 - [UDF Parameters](#parameters)
 - [Parallelism](#parallelism)
+- [Data Mapping](#data-mapping)
 - [Amazon S3](#amazon-s3)
 - [Google Cloud Storage](#google-cloud-storage)
 - [Azure Blob Storage](#azure-blob-storage)
@@ -339,6 +340,75 @@ Each exporter process creates a single file. This can be a problem if the table
 has many records. You can change this behavior by adapting the
 `EXPORT_BATCH_SIZE` parameter. This value is used to further split the number of
 records per process and create several files instead of a single file.
+
+## Data Mapping
+
+This section shows how data types from each format is mapped to the
+[Exasol types][exasol-types]. We suggest to use the recommended Exasol
+column types when preparing the table.
+
+[exasol-types]: https://docs.exasol.com/sql_references/data_types/datatypesoverview.htm
+
+### Avro Data Mapping
+
+| Avro Data Type | Avro Logical Attribute | Recommended Exasol Column Types |
+|:---------------|:-----------------------|:--------------------------------|
+| boolean        |                        | BOOLEAN                         |
+| int            |                        | INT, INTEGER, DECIMAL(18, 0)    |
+| int            | date                   | DATE                            |
+| long           |                        | BIGINT, DECIMAL(36, 0)          |
+| long           | timestamp-millis       | TIMESTAMP                       |
+| long           | timestamp-micros       | TIMESTAMP                       |
+| float          |                        | FLOAT                           |
+| double         |                        | DOUBLE, DOUBLE PRECISION        |
+| bytes          |                        | VARCHAR(n), CHAR(n)             |
+| bytes          | decimal(p, s)          | DECIMAL(p, s)                   |
+| fixed          |                        | VARCHAR(n), CHAR(n)             |
+| fixed          | decimal(p, s)          | DECIMAL(p, s)                   |
+| string         |                        | VARCHAR(n), CHAR(n)             |
+| enum           |                        | VARCHAR(n), CHAR(n)             |
+| union          |                        | Corresponding Non Null Type     |
+| array          |                        | VARCHAR(n), CHAR(n)             |
+| map            |                        | VARCHAR(n), CHAR(n)             |
+| record         |                        | VARCHAR(n), CHAR(n)             |
+
+### Orc Data Mapping
+
+| Orc Data Type        | Orc Logical Type  | Recommended Exasol Column Types |
+|:---------------------|:------------------|:--------------------------------|
+| boolean              |                   | BOOLEAN                         |
+| short                |                   | INT, INTEGER, DECIMAL(18, 0)    |
+| int                  |                   | INT, INTEGER, DECIMAL(18, 0)    |
+| byte                 |                   | BIGINT, DECIMAL(36, 0)          |
+| long                 |                   | BIGINT, DECIMAL(36, 0)          |
+| float                |                   | FLOAT                           |
+| double               |                   | DOUBLE, DOUBLE PRECISION        |
+| char                 |                   | VARCHAR(n), CHAR(n)             |
+| string               |                   | VARCHAR(n), CHAR(n)             |
+| varchar              |                   | VARCHAR(n), CHAR(n)             |
+| decimal              |                   | DECIMAL(p, s)                   |
+| date                 |                   | DATE                            |
+| timestamp            |                   | TIMESTAMP                       |
+
+### Parquet Data Mapping
+
+| Parquet Data Type    | Parquet Logical Type  | Recommended Exasol Column Types |
+|:---------------------|:----------------------|:--------------------------------|
+| boolean              |                       | BOOLEAN                         |
+| int32                |                       | INT, INTEGER, DECIMAL(18, 0)    |
+| int32                | date                  | DATE                            |
+| int32                | decimal(p, s)         | DECIMAL(p, s)                   |
+| int64                |                       | BIGINT, DECIMAL(36, 0)          |
+| int64                | timestamp_millis      | TIMESTAMP                       |
+| int64                | decimal(p, s)         | DECIMAL(p, s)                   |
+| float                |                       | FLOAT                           |
+| double               |                       | DOUBLE, DOUBLE PRECISION        |
+| binary               |                       | VARCHAR(n), CHAR(n)             |
+| binary               | utf8                  | VARCHAR(n), CHAR(n)             |
+| binary               | decimal(p, s)         | DECIMAL(p, s)                   |
+| fixed_len_byte_array |                       | VARCHAR(n), CHAR(n)             |
+| fixed_len_byte_array | decimal(p, s)         | DECIMAL(p, s)                   |
+| int96                |                       | TIMESTAMP                       |
 
 ## Amazon S3
 

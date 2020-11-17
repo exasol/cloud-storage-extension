@@ -114,6 +114,7 @@ object Compilation {
     Wart.Null,
     Wart.MutableDataStructures,
     Wart.Overloading,
+    Wart.PlatformDefault,
     Wart.Throw,
     Wart.Var,
     Wart.While
@@ -122,9 +123,10 @@ object Compilation {
   val WartremoverTestFlags: Seq[Wart] = ExtraWartremoverFlags ++ Warts.allBut(
     Wart.Any,
     Wart.IsInstanceOf,
-    Wart.Overloading,
     Wart.NonUnitStatements,
     Wart.Null,
+    Wart.Overloading,
+    Wart.PlatformDefault,
     Wart.Var
   )
 

@@ -1,10 +1,10 @@
 // Adds a `wartremover` a flexible Scala code linting tool
 // http://github.com/puffnfresh/wartremover
-addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.4.10")
+addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.4.13")
 
 // Adds Contrib Warts
 // http://github.com/wartremover/wartremover-contrib/
-addSbtPlugin("org.wartremover" % "sbt-wartremover-contrib" % "1.3.8")
+addSbtPlugin("org.wartremover" % "sbt-wartremover-contrib" % "1.3.11")
 
 // Adds a `assembly` task to create a fat JAR with all of its
 // dependencies
@@ -47,7 +47,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 
 // Adds a `sbt-explicit-dependencies` plugin
 // https://github.com/cb372/sbt-explicit-dependencies
-addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.13")
+addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.15")
 
 // Setup this and project/project/plugins.sbt for formatting
 // project/*.scala files with scalafmt

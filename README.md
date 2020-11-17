@@ -50,8 +50,7 @@ however, it should be safe to run it on the newer JVM versions. This is also
 
 | Dependency                                  | Purpose                                                         | License            |
 |---------------------------------------------|-----------------------------------------------------------------|--------------------|
-| [Exasol Script API][exasol-script-api-link] | Accessing Exasol Import and Export UDF API                      | MIT License        |
-| [Apache Avro][avro]                         | Integration support for Avro format                             | Apache License 2.0 |
+| [Exasol Import Export UDF Common][ieudf]    | Common Import Export Library for Scala UDFs                     | MIT License        |
 | [Apache Orc][orc]                           | Integration support for Orc format                              | Apache License 2.0 |
 | [Apache Parquet][parquet]                   | Integration support for Parquet format                          | Apache License 2.0 |
 | [Hadoop AWS][hadoop-aws-link]               | Access for Amazon S3 object store and compatible implementations| Apache License 2.0 |
@@ -59,7 +58,8 @@ however, it should be safe to run it on the newer JVM versions. This is also
 | [Hadoop Azure Datalake][hadoop-azrlake-link]| Access support for Azure Data Lake Store                        | Apache License 2.0 |
 | [Hadoop Client][hadoop-client-link]         | Apache Hadoop common dependencies as configuration or filesystem| Apache License 2.0 |
 | [Google Cloud Storage][gcs-connectors-link] | Access support for Google Cloud Storage                         | Apache License 2.0 |
-| [Scala Logging Library][scala-logging-link] | Scala logging library wrapping SLF4J                            | Apache License 2.0 |
+| [Delta Lake Core][delta-io]                 | Integration support for Delta Lake format                       | Apache License 2.0 |
+| [Apache Spark SQL][spark-sql]               | Access support for Delta Lake formatted files                   | Apache License 2.0 |
 
 ### Test Dependencies
 
@@ -96,9 +96,11 @@ These plugins help with project development.
 [gh-release-badge]: https://img.shields.io/github/release/exasol/cloud-storage-extension.svg?logo=github
 [gh-release-link]: https://github.com/exasol/cloud-storage-extension/releases/latest
 [exasol]: https://www.exasol.com/en/
-[avro]: https://avro.apache.org/
+[ieudf]: https://github.com/exasol/import-export-udf-common-scala
 [orc]: https://orc.apache.org/
 [parquet]: https://parquet.apache.org/
+[delta-io]: https://delta.io/
+[spark-sql]: https://spark.apache.org/sql/
 [s3]: https://aws.amazon.com/s3/
 [gcs]: https://cloud.google.com/storage/
 [azure-blob]: https://azure.microsoft.com/en-us/services/storage/blobs/
@@ -109,9 +111,7 @@ These plugins help with project development.
 [hadoop-azrlake-link]: https://hadoop.apache.org/docs/current/hadoop-azure-datalake/index.html
 [hadoop-client-link]: https://github.com/apache/hadoop/tree/trunk/hadoop-client-modules
 [gcs-connectors-link]: https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage
-[scala-logging-link]: https://github.com/lightbend/scala-logging
 [jdk-compatibility]: https://docs.scala-lang.org/overviews/jdk-compatibility/overview.html#running-versus-compiling
-[exasol-script-api-link]: https://docs.exasol.com/database_concepts/udf_scripts.htm
 [scalatest-link]: http://www.scalatest.org/
 [scalatestplus-link]: https://github.com/scalatest/scalatestplus-mockito
 [mockitocore-link]: https://site.mockito.org/
