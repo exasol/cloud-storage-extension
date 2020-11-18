@@ -240,7 +240,7 @@ class ParquetRowReaderTest extends AnyFunSuite with BeforeAndAfterEach with Dumm
       .as(decimalType(0, 9))
       .named("bytes")
     val thrown = intercept[UnsupportedOperationException] {
-      ParquetDecimalConverter(0, null, parquetType).setDictionary(DictionaryEncoding())
+      ParquetDecimalConverter(parquetType, 0, null).setDictionary(DictionaryEncoding())
     }
     assert(thrown.getMessage.contains("Cannot convert parquet type to decimal type"))
   }
