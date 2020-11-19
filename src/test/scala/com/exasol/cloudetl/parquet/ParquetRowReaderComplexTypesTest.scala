@@ -1,64 +1,11 @@
 package com.exasol.cloudetl.parquet
 
-import java.io.Closeable
-import java.nio.file.Path
-
-import com.exasol.cloudetl.DummyRecordsTest
-import com.exasol.cloudetl.source.ParquetSource
 import com.exasol.common.data.Row
 
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.{Path => HPath}
-import org.apache.hadoop.fs.FileSystem
-import org.apache.parquet.example.data.Group
-import org.apache.parquet.example.data.GroupWriter
 import org.apache.parquet.example.data.simple.SimpleGroup
-import org.apache.parquet.hadoop.ParquetWriter
-import org.apache.parquet.hadoop.api.WriteSupport
-import org.apache.parquet.io.api.RecordConsumer
-import org.apache.parquet.schema._
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.funsuite.AnyFunSuite
+import org.apache.parquet.schema.MessageTypeParser
 
-class ParquetRowReaderComplexTypesTest
-    extends AnyFunSuite
-    with BeforeAndAfterEach
-    with DummyRecordsTest {
-
-  private[this] var conf: Configuration = _
-  private[this] var fileSystem: FileSystem = _
-  private[this] var outputDirectory: Path = _
-  private[this] var path: HPath = _
-
-  override final def beforeEach(): Unit = {
-    conf = new Configuration
-    fileSystem = FileSystem.get(conf)
-    outputDirectory = createTemporaryFolder("parquetRowReaderTest")
-    path = new HPath(outputDirectory.toUri.toString, "part-00000.parquet")
-    ()
-  }
-
-  override final def afterEach(): Unit = {
-    deleteFiles(outputDirectory)
-    ()
-  }
-
-  test("reads INT64 (TIMESTAMP_MILLIS) as timestamp value") {
-    val schema = MessageTypeParser.parseMessageType(
-      """|message test {
-         |  required int64 col_long;
-         |  required int64 col_timestamp (TIMESTAMP_MILLIS);
-         |}
-         |""".stripMargin
-    )
-    withResource(getParquetWriter(schema, false)) { writer =>
-      val record = new SimpleGroup(schema)
-      record.append("col_long", 153L)
-      record.append("col_timestamp", TIMESTAMP_VALUE1.getTime())
-      writer.write(record)
-    }
-    assert(getRecords()(0) === Row(Seq(153L, TIMESTAMP_VALUE1)))
-  }
+class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
 
   test("reads array of strings as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
@@ -84,7 +31,7 @@ class ParquetRowReaderComplexTypesTest
   test("reads array of ints as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
-         |  optional group names (LIST) {
+         |  optional group ages (LIST) {
          |    repeated group list {
          |      required int32 age;
          |    }
@@ -123,11 +70,11 @@ class ParquetRowReaderComplexTypesTest
     assert(getRecords()(0) === Row(Seq("[3.14,2.71]")))
   }
 
-  test("reads non-standard array as JSON string") {
+  ignore("reads non-standard array as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
-         |  optional group prices (LIST) {
-         |    repeated int32 price;
+         |  optional group heights (LIST) {
+         |    repeated int32 height;
          |  }
          |}
          |""".stripMargin
@@ -135,11 +82,32 @@ class ParquetRowReaderComplexTypesTest
     withResource(getParquetWriter(schema, true)) { writer =>
       val record = new SimpleGroup(schema)
       val prices = record.addGroup(0)
-      prices.append("price", 314)
-      prices.append("price", 271)
+      prices.append("height", 314)
+      prices.append("height", 271)
       writer.write(record)
     }
-    getRecords().foreach(println(_))
+    assert(getRecords()(0) === Row(Seq("[314,271]")))
+  }
+
+  ignore("reads repeated group array as JSON string") {
+    val schema = MessageTypeParser.parseMessageType(
+      """|message test {
+         |  repeated group person {
+         |    required binary name (UTF8);
+         |    optional int32 age;
+         |  }
+         |}
+         |""".stripMargin
+    )
+    withResource(getParquetWriter(schema, true)) { writer =>
+      val record = new SimpleGroup(schema)
+      var person = record.addGroup(0)
+      person.append("name", "John").append("age", 24)
+      person = record.addGroup(0)
+      person.append("name", "Jane").append("age", 22)
+      writer.write(record)
+    }
+    assert(getRecords()(0) === Row(Seq("""[{"name":"John","age":24},{"name":"Jane"}]""")))
   }
 
   test("reads arrays of arrays as JSON string") {
@@ -165,10 +133,9 @@ class ParquetRowReaderComplexTypesTest
       inner.addGroup(0).append("element", 2)
       inner = arrays.addGroup("inner")
       inner.addGroup(0).append("element", 3)
-      println(s"RECORD: $record")
       writer.write(record)
     }
-    getRecords().foreach(println(_))
+    assert(getRecords()(0) === Row(Seq("[[1,2],[3]]")))
   }
 
   test("reads arrays of maps as JSON string") {
@@ -192,11 +159,9 @@ class ParquetRowReaderComplexTypesTest
       val maps = record.addGroup(0).addGroup(0).addGroup("map")
       maps.addGroup("key_value").append("key", "key1").append("price", 3.14)
       maps.addGroup("key_value").append("key", "key2").append("price", 2.71)
-      // map.addGroup("key_value").append("key", "key2").append("value", 271L)
-      println(s"RECORD: $record")
       writer.write(record)
     }
-    getRecords().foreach(println(_))
+    assert(getRecords()(0) === Row(Seq("""[{"key1":3.14,"key2":2.71}]""")))
   }
 
   test("reads map as key value JSON string") {
@@ -221,7 +186,7 @@ class ParquetRowReaderComplexTypesTest
     assert(getRecords()(0) === Row(Seq("""{"key1":314,"key2":271}""")))
   }
 
-  test("reads map of arrays as JSON string") {
+  test("reads map with values array as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
          |  optional group map (MAP) {
@@ -243,38 +208,9 @@ class ParquetRowReaderComplexTypesTest
       val prices = map.append("key", "key1").addGroup("prices")
       prices.addGroup(0).append("price", 3.14)
       prices.addGroup(0).append("price", 2.71)
-      // map.addGroup("key_value").append("key", "key2").append("value", 271L)
-      println(s"RECORD: $record")
       writer.write(record)
     }
-    getRecords().foreach(println(_))
-  }
-
-  test("reads map with group key as JSON string") {
-    val schema = MessageTypeParser.parseMessageType(
-      """|message test {
-         |  optional group maps (MAP) {
-         |    repeated group key_value {
-         |      required group key {
-         |        optional binary name;
-         |        optional binary surname;
-         |      }
-         |      optional double price;
-         |    }
-         |  }
-         |}
-         |""".stripMargin
-    )
-    withResource(getParquetWriter(schema, true)) { writer =>
-      val record = new SimpleGroup(schema)
-      val maps = record.addGroup(0).addGroup("key_value")
-      maps.addGroup("key").append("name", "John").append("surname", "Doe")
-      maps.append("price", 2.71)
-      // map.addGroup("key_value").append("key", "key2").append("value", 271L)
-      println(s"RECORD: $record")
-      writer.write(record)
-    }
-    getRecords().foreach(println(_))
+    assert(getRecords()(0) === Row(Seq("""{"key1":[3.14,2.71]}""")))
   }
 
   test("reads struct record as JSON string") {
@@ -282,10 +218,33 @@ class ParquetRowReaderComplexTypesTest
       """|message test {
          |  required binary name (UTF8);
          |  optional group contacts {
-         |    repeated group array {
+         |    required binary name (UTF8);
+         |    optional binary phoneNumber (UTF8);
+         |  }
+         |}
+         |""".stripMargin
+    )
+    withResource(getParquetWriter(schema, false)) { writer =>
+      val record = new SimpleGroup(schema)
+      record.add(0, "John")
+      val contacts = record.addGroup(1)
+      contacts.append("name", "Jane").append("phoneNumber", "1337")
+      writer.write(record)
+    }
+    val expected = Row(Seq("John", """{"name":"Jane","phoneNumber":"1337"}"""))
+    assert(getRecords()(0) === expected)
+  }
+
+  ignore("reads struct with repeated group as JSON string") {
+    val schema = MessageTypeParser.parseMessageType(
+      """|message test {
+         |  required binary name (UTF8);
+         |  optional group contacts {
+         |    repeated group person {
          |      required binary name (UTF8);
          |      optional binary phoneNumber (UTF8);
          |    }
+         |    optional int32 count;
          |  }
          |}
          |""".stripMargin
@@ -296,9 +255,16 @@ class ParquetRowReaderComplexTypesTest
       val contacts = record.addGroup(1)
       contacts.addGroup(0).append("name", "Jane").append("phoneNumber", "1337")
       contacts.addGroup(0).append("name", "Jake")
+      contacts.append("count", 2)
       writer.write(record)
     }
-    getRecords().foreach(println(_))
+    val expected = Row(
+      Seq(
+        "John",
+        """{"person":[{"name":"Jane","phoneNumber":"1337"},{"name":"Jake"}],"count":2}"""
+      )
+    )
+    assert(getRecords()(0) === expected)
   }
 
   test("reads nested struct record as JSON string") {
@@ -326,67 +292,7 @@ class ParquetRowReaderComplexTypesTest
       phoneNumbers.addGroup(0).append("phoneNumber", "1337")
       writer.write(record)
     }
-    getRecords().foreach(println(_))
-  }
-
-  /*
-  private[this] def writeValues[T](schema: MessageType, values: Seq[Any]): Unit =
-    values.foreach {
-      case value =>
-        val v = getValue(value)
-        withResource(getParquetWriter(schema, true)) { writer =>
-          val record = new SimpleGroup(schema)
-          val names = record.addGroup(0)
-          names.addGroup(0).append("name", value.asInstanceOf[T])
-          names.addGroup(0).append("name", v)
-          writer.write(record)
-        }
-    }
-
-  private[this] def getValue[T](value: T): Any = value match {
-    case value: String => value.asInstanceOf[String]
-    case value: Int => value.asInstanceOf[Int]
-    case value: Long => value.asInstanceOf[Long]
-  }
-   */
-
-  private[this] def withResource[T <: Closeable](writer: T)(block: T => Unit): Unit = {
-    block(writer)
-    writer.close()
-  }
-
-  private[this] def getRecords(): Seq[Row] =
-    ParquetSource(path, conf, fileSystem)
-      .stream()
-      .toSeq
-
-  private[this] def getParquetWriter(
-    schema: MessageType,
-    dictionaryEncoding: Boolean
-  ): ParquetWriter[Group] =
-    BaseGroupWriterBuilder(path, schema)
-      .withDictionaryEncoding(dictionaryEncoding)
-      .build()
-
-  private[this] case class BaseGroupWriteSupport(schema: MessageType)
-      extends WriteSupport[Group] {
-    var writer: GroupWriter = null
-
-    override def prepareForWrite(recordConsumer: RecordConsumer): Unit =
-      writer = new GroupWriter(recordConsumer, schema)
-
-    override def init(configuration: Configuration): WriteSupport.WriteContext =
-      new WriteSupport.WriteContext(schema, new java.util.HashMap[String, String]())
-
-    override def write(record: Group): Unit =
-      writer.write(record)
-  }
-
-  private[this] case class BaseGroupWriterBuilder(path: HPath, schema: MessageType)
-      extends ParquetWriter.Builder[Group, BaseGroupWriterBuilder](path) {
-    override def getWriteSupport(conf: Configuration): WriteSupport[Group] =
-      BaseGroupWriteSupport(schema)
-    override def self(): BaseGroupWriterBuilder = this
+    assert(getRecords()(0) === Row(Seq("John", """{"Jane":["1337"]}""")))
   }
 
 }

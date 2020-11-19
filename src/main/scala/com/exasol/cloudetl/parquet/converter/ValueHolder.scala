@@ -48,7 +48,7 @@ final case class AppendedValueHolder() extends ValueHolder {
   private[this] var array = ArrayBuffer.empty[Any]
 
   override def reset(): Unit = array.clear()
-  override def getValues(): Seq[Any] = array.toSeq
+  override def getValues(): Seq[Any] = array.clone().toSeq
   override def put(index: Int, value: Any): Unit = {
     val _ = array += value
   }

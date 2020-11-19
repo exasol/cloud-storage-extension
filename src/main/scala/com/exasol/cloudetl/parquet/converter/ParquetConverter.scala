@@ -139,24 +139,10 @@ final case class ParquetDateConverter(index: Int, holder: ValueHolder)
   }
 }
 
-/**
- *
- * LIST is used to annotate types that should be interpreted as lists.
- *
- * LIST must always annotate a 3-level structure:
- * {{{
- * <list-repetition> group <name> (LIST) {
- *    repeated group list {
- *      <element-repetition> <element-type> element;
- *    }
- * }
- * }}}
- */
-final case class ArrayConverter(groupType: GroupType, index: Int, parentDataHolder: ValueHolder)
+final case class ArrayConverter(elementType: Type, index: Int, parentDataHolder: ValueHolder)
     extends GroupConverter
     with ParquetConverter {
   private[this] val dataHolder = new AppendedValueHolder()
-  private[this] val elementType = getElementType()
   private[this] val elementConverter = createArrayElementConverter()
 
   override def getConverter(fieldIndex: Int): Converter = {
@@ -166,12 +152,9 @@ final case class ArrayConverter(groupType: GroupType, index: Int, parentDataHold
   override def start(): Unit = dataHolder.reset()
   override def end(): Unit = parentDataHolder.put(index, dataHolder.getValues())
 
-  private[this] def getElementType(): Type =
-    groupType.getFields().get(0).asGroupType().getFields().get(0)
-
   private[this] def createArrayElementConverter(): Converter = new GroupConverter {
-    override def getConverter(index: Int): Converter =
-      ConverterFactory(elementType, index, dataHolder)
+    val innerConverter = ConverterFactory(elementType, index, dataHolder)
+    override def getConverter(index: Int): Converter = innerConverter
     override def start(): Unit = {}
     override def end(): Unit = {}
   }
@@ -204,12 +187,14 @@ final case class MapConverter(groupType: GroupType, index: Int, parentDataHolder
     val mapType = groupType.getFields().get(0).asGroupType()
     val mapKeyType = mapType.getFields().get(0)
     val mapValueType = mapType.getFields().get(1)
+    val keysConverter = ConverterFactory(mapKeyType, index, keysDataHolder)
+    val valuesConverter = ConverterFactory(mapValueType, index, valuesDataHolder)
 
     override def getConverter(index: Int): Converter =
-      if (index == 0) { // keys
-        ConverterFactory(mapKeyType, index, keysDataHolder)
+      if (index == 0) {
+        keysConverter
       } else {
-        ConverterFactory(mapValueType, index, valuesDataHolder)
+        valuesConverter
       }
     override def start(): Unit = {}
     override def end(): Unit = {}
@@ -225,7 +210,16 @@ final case class StructConverter(groupType: GroupType, index: Int, parentDataHol
 
   override def getConverter(fieldIndex: Int): Converter = converters(fieldIndex)
   override def start(): Unit = dataHolder.reset()
-  override def end(): Unit = parentDataHolder.put(index, dataHolder.getValues())
+  override def end(): Unit = {
+    val map = dataHolder
+      .getValues()
+      .zipWithIndex
+      .map {
+        case (value, i) => (groupType.getFieldName(i), value)
+      }
+      .toMap
+    parentDataHolder.put(index, map)
+  }
 
   private[this] def getFieldConverters(): Array[Converter] = {
     val converters = Array.ofDim[Converter](size)

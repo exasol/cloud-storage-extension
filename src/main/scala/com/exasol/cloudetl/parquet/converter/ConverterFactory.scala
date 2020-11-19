@@ -55,19 +55,22 @@ object ConverterFactory {
     parquetType: Type,
     index: Int,
     parentHolder: ValueHolder
-  ): Converter =
+  ): Converter = {
+    val groupType = parquetType.asGroupType()
     parquetType.getOriginalType() match {
-      case OriginalType.LIST => ArrayConverter(parquetType.asGroupType(), index, parentHolder)
-      case OriginalType.MAP  => MapConverter(parquetType.asGroupType(), index, parentHolder)
+      case OriginalType.LIST =>
+        val repeatedType = groupType.getType(0)
+        val elementType = repeatedType.asGroupType().getType(0)
+        ArrayConverter(elementType, index, parentHolder)
+      case OriginalType.MAP => MapConverter(parquetType.asGroupType(), index, parentHolder)
       case _ =>
-        val groupType = parquetType.asGroupType()
         if (groupType.isRepetition(Repetition.REPEATED)) {
           ArrayConverter(groupType, index, parentHolder)
         } else {
           StructConverter(groupType, index, parentHolder)
-          // throw new UnsupportedOperationException("Currently only primitive types are supported")
         }
     }
+  }
 
   private[this] def createBinaryConverter(
     primitiveType: PrimitiveType,
