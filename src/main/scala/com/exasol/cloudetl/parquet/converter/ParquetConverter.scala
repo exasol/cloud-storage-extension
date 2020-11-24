@@ -4,6 +4,9 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.ByteOrder
 
+import scala.collection.mutable.{Map => MMap}
+import scala.collection.mutable.ArrayBuffer
+
 import com.exasol.cloudetl.util.DateTimeUtil
 
 import org.apache.parquet.column.Dictionary
@@ -68,7 +71,6 @@ final case class ParquetDecimalConverter(
     primitiveType.getLogicalTypeAnnotation().asInstanceOf[DecimalLogicalTypeAnnotation]
   private[this] val precision = decimalType.getPrecision()
   private[this] val scale = decimalType.getScale()
-
   private[this] var decodedDictionary: Array[BigDecimal] = null
 
   override def hasDictionarySupport(): Boolean = true
@@ -139,20 +141,126 @@ final case class ParquetDateConverter(index: Int, holder: ValueHolder)
   }
 }
 
-final case class ArrayConverter(elementType: Type, index: Int, parentDataHolder: ValueHolder)
-    extends GroupConverter
+final case class RepeatedGroupConverter(
+  groupType: GroupType,
+  index: Int,
+  parentDataHolder: ValueHolder
+) extends GroupConverter
     with ParquetConverter {
-  private[this] val dataHolder = new AppendedValueHolder()
-  private[this] val elementConverter = createArrayElementConverter()
+  private[this] val size = groupType.getFieldCount()
+  private[this] val converters = createFieldConverters()
+  private[this] val dataHolder = Array.ofDim[Any](size)
+  private[this] var currentIndex: Int = 0
+  private[this] var currentValues: MMap[String, Any] = null
+
+  override def getConverter(fieldIndex: Int): Converter = converters(fieldIndex)
+
+  override def start(): Unit = {
+    if (currentValues == null) {
+      parentDataHolder.put(index, dataHolder)
+    }
+    currentValues = MMap.empty[String, Any]
+  }
+
+  override def end(): Unit = {
+    dataHolder(currentIndex) = currentValues
+    currentIndex += 1
+  }
+
+  private[this] def createFieldConverters(): Array[Converter] = {
+    val converters = Array.ofDim[Converter](size)
+    for { i <- 0 until size } {
+      converters(i) = ConverterFactory(
+        groupType.getType(i),
+        i,
+        new ValueHolder {
+          override def put(index: Int, value: Any): Unit = {
+            val _ = currentValues.put(groupType.getFieldName(i), value)
+          }
+          override def reset(): Unit = {}
+          override def getValues(): Seq[Any] = Seq.empty[Any]
+        }
+      )
+    }
+    converters
+  }
+
+}
+
+final case class RepeatedPrimitiveConverter(
+  elementType: Type,
+  index: Int,
+  parentDataHolder: ValueHolder
+) extends GroupConverter
+    with ParquetConverter {
+  private[this] val elementConverter = createPrimitiveElementConverter()
+  private[this] val values = ArrayBuffer.empty[Any]
+  private[this] var currentValue: Any = null
 
   override def getConverter(fieldIndex: Int): Converter = {
     require(fieldIndex == 0)
     elementConverter
   }
-  override def start(): Unit = dataHolder.reset()
-  override def end(): Unit = parentDataHolder.put(index, dataHolder.getValues())
+  override def start(): Unit = {
+    if (currentValue == null) {
+      parentDataHolder.put(index, values)
+    }
+    currentValue = null
+  }
+  override def end(): Unit = {
+    val _ = values += currentValue
+  }
 
-  private[this] def createArrayElementConverter(): Converter = new GroupConverter {
+  private[this] def createPrimitiveElementConverter(): Converter =
+    ConverterFactory(
+      elementType,
+      index,
+      new ValueHolder {
+        override def put(index: Int, value: Any): Unit =
+          currentValue = value
+        override def reset(): Unit = {}
+        override def getValues(): Seq[Any] = Seq.empty[Any]
+      }
+    )
+}
+
+sealed trait ArrayConverter {
+  val index: Int
+  val parentDataHolder: ValueHolder
+  val dataHolder = new AppendedValueHolder()
+  val elementConverter = createElementConverter()
+
+  def getConverter(fieldIndex: Int): Converter = {
+    require(fieldIndex == 0)
+    elementConverter
+  }
+  def start(): Unit = dataHolder.reset()
+  def end(): Unit = parentDataHolder.put(index, dataHolder.getValues())
+
+  def createElementConverter(): Converter
+}
+
+final case class ArrayPrimitiveConverter(
+  elementType: PrimitiveType,
+  val index: Int,
+  val parentDataHolder: ValueHolder
+) extends GroupConverter
+    with ParquetConverter
+    with ArrayConverter {
+
+  override def createElementConverter(): Converter =
+    ConverterFactory(elementType, index, dataHolder)
+}
+
+final case class ArrayGroupConverter(
+  elementType: Type,
+  val index: Int,
+  val parentDataHolder: ValueHolder
+) extends GroupConverter
+    with ParquetConverter
+    with ArrayConverter {
+
+  override def createElementConverter(): Converter = new GroupConverter {
     val innerConverter = ConverterFactory(elementType, index, dataHolder)
     override def getConverter(index: Int): Converter = innerConverter
     override def start(): Unit = {}
@@ -206,7 +314,7 @@ final case class StructConverter(groupType: GroupType, index: Int, parentDataHol
     with ParquetConverter {
   private[this] val size = groupType.getFieldCount()
   private[this] val dataHolder = IndexedValueHolder(size)
-  private[this] val converters = getFieldConverters()
+  private[this] val converters = createFieldConverters()
 
   override def getConverter(fieldIndex: Int): Converter = converters(fieldIndex)
   override def start(): Unit = dataHolder.reset()
@@ -221,7 +329,7 @@ final case class StructConverter(groupType: GroupType, index: Int, parentDataHol
     parentDataHolder.put(index, map)
   }
 
-  private[this] def getFieldConverters(): Array[Converter] = {
+  private[this] def createFieldConverters(): Array[Converter] = {
     val converters = Array.ofDim[Converter](size)
     for { i <- 0 until size } {
       converters(i) = ConverterFactory(groupType.getType(i), i, dataHolder)

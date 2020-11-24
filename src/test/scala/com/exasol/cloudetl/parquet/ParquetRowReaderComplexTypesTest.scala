@@ -70,7 +70,7 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     assert(getRecords()(0) === Row(Seq("[3.14,2.71]")))
   }
 
-  ignore("reads non-standard array as JSON string") {
+  test("reads non-standard array as JSON array string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
          |  optional group heights (LIST) {
@@ -89,7 +89,27 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     assert(getRecords()(0) === Row(Seq("[314,271]")))
   }
 
-  ignore("reads repeated group array as JSON string") {
+  test("reads repeated group with single element as JSON array string") {
+    val schema = MessageTypeParser.parseMessageType(
+      """|message test {
+         |  repeated group person {
+         |    required binary name (UTF8);
+         |  }
+         |}
+         |""".stripMargin
+    )
+    withResource(getParquetWriter(schema, true)) { writer =>
+      val record = new SimpleGroup(schema)
+      var person = record.addGroup(0)
+      person.append("name", "John")
+      person = record.addGroup(0)
+      person.append("name", "Jane")
+      writer.write(record)
+    }
+    assert(getRecords()(0) === Row(Seq("""["John","Jane"]""")))
+  }
+
+  test("reads repeated group many elements as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
          |  repeated group person {
@@ -107,10 +127,11 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
       person.append("name", "Jane").append("age", 22)
       writer.write(record)
     }
-    assert(getRecords()(0) === Row(Seq("""[{"name":"John","age":24},{"name":"Jane"}]""")))
+    val expected = Row(Seq("""[{"age":24,"name":"John"},{"age":22,"name":"Jane"}]"""))
+    assert(getRecords()(0) === expected)
   }
 
-  test("reads arrays of arrays as JSON string") {
+  test("reads array of arrays as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
          |  optional group arrays (LIST) {
@@ -138,7 +159,7 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     assert(getRecords()(0) === Row(Seq("[[1,2],[3]]")))
   }
 
-  test("reads arrays of maps as JSON string") {
+  test("reads array of maps as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
          |  optional group maps (LIST) {
@@ -164,7 +185,7 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     assert(getRecords()(0) === Row(Seq("""[{"key1":3.14,"key2":2.71}]""")))
   }
 
-  test("reads map as key value JSON string") {
+  test("reads map as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
          |  optional group map (MAP) {
@@ -186,7 +207,7 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     assert(getRecords()(0) === Row(Seq("""{"key1":314,"key2":271}""")))
   }
 
-  test("reads map with values array as JSON string") {
+  test("reads map with array values as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
          |  optional group map (MAP) {
@@ -213,7 +234,32 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     assert(getRecords()(0) === Row(Seq("""{"key1":[3.14,2.71]}""")))
   }
 
-  test("reads struct record as JSON string") {
+  ignore("reads map with group key as JSON string") {
+    val schema = MessageTypeParser.parseMessageType(
+      """|message test {
+         |  optional group maps (MAP) {
+         |    repeated group key_value {
+         |      required group key {
+         |        optional binary name;
+         |        optional binary surname;
+         |      }
+         |      optional double price;
+         |    }
+         |  }
+         |}
+         |""".stripMargin
+    )
+    withResource(getParquetWriter(schema, true)) { writer =>
+      val record = new SimpleGroup(schema)
+      val maps = record.addGroup(0).addGroup("key_value")
+      maps.addGroup("key").append("name", "John").append("surname", "Doe")
+      maps.append("price", 2.71)
+      writer.write(record)
+    }
+    assert(getRecords()(0) === Row(Seq("""{{"name":"John","surname":"Doe"}:2.71}""")))
+  }
+
+  test("reads group as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
          |  required binary name (UTF8);
@@ -235,7 +281,7 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     assert(getRecords()(0) === expected)
   }
 
-  ignore("reads struct with repeated group as JSON string") {
+  test("reads group with repeated group as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
          |  required binary name (UTF8);
@@ -261,13 +307,13 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     val expected = Row(
       Seq(
         "John",
-        """{"person":[{"name":"Jane","phoneNumber":"1337"},{"name":"Jake"}],"count":2}"""
+        """{"person":[{"phoneNumber":"1337","name":"Jane"},{"name":"Jake"}],"count":2}"""
       )
     )
     assert(getRecords()(0) === expected)
   }
 
-  test("reads nested struct record as JSON string") {
+  test("reads nested groups as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
          |  required binary name (UTF8);

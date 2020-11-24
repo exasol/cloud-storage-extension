@@ -1,6 +1,7 @@
 package com.exasol.cloudetl.parquet.converter
 
 import org.apache.parquet.io.api.Converter
+import org.apache.parquet.schema.GroupType
 import org.apache.parquet.schema.OriginalType
 import org.apache.parquet.schema.PrimitiveType
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName._
@@ -58,19 +59,42 @@ object ConverterFactory {
   ): Converter = {
     val groupType = parquetType.asGroupType()
     parquetType.getOriginalType() match {
-      case OriginalType.LIST =>
-        val repeatedType = groupType.getType(0)
-        val elementType = repeatedType.asGroupType().getType(0)
-        ArrayConverter(elementType, index, parentHolder)
-      case OriginalType.MAP => MapConverter(parquetType.asGroupType(), index, parentHolder)
+      case OriginalType.LIST => createArrayConverter(groupType.getType(0), index, parentHolder)
+      case OriginalType.MAP  => MapConverter(parquetType.asGroupType(), index, parentHolder)
       case _ =>
         if (groupType.isRepetition(Repetition.REPEATED)) {
-          ArrayConverter(groupType, index, parentHolder)
+          createRepeatedConverter(groupType, index, parentHolder)
         } else {
           StructConverter(groupType, index, parentHolder)
         }
     }
   }
+
+  private[this] def createArrayConverter(
+    repeatedType: Type,
+    index: Int,
+    holder: ValueHolder
+  ): Converter =
+    if (repeatedType.isPrimitive()) {
+      ArrayPrimitiveConverter(repeatedType.asPrimitiveType(), index, holder)
+    } else if (repeatedType.asGroupType().getFieldCount() > 1) {
+      ArrayGroupConverter(repeatedType, index, holder)
+    } else {
+      val innerElementType = repeatedType.asGroupType().getType(0)
+      ArrayGroupConverter(innerElementType, index, holder)
+    }
+
+  private[this] def createRepeatedConverter(
+    groupType: GroupType,
+    index: Int,
+    holder: ValueHolder
+  ): Converter =
+    if (groupType.getFieldCount() > 1) {
+      RepeatedGroupConverter(groupType, index, holder)
+    } else {
+      val innerPrimitiveType = groupType.getType(0).asPrimitiveType()
+      RepeatedPrimitiveConverter(innerPrimitiveType, index, holder)
+    }
 
   private[this] def createBinaryConverter(
     primitiveType: PrimitiveType,

@@ -28,14 +28,15 @@ final case class ParquetRootConverter(schema: GroupType) extends GroupConverter 
    *
    * It converts the non-primitive field types to JSON string.
    */
-  def getResult(): Seq[Any] = dataHolder.getValues().zipWithIndex.map {
-    case (value, i) =>
-      if (schema.getType(i).isPrimitive()) {
-        value
-      } else {
-        JsonMapper.toJson(value)
-      }
-  }
+  def getResult(): Seq[Any] =
+    dataHolder.getValues().zipWithIndex.map {
+      case (value, i) =>
+        if (schema.getType(i).isPrimitive()) {
+          value
+        } else {
+          JsonMapper.toJson(value)
+        }
+    }
 
   private[this] def getFieldConverters(): Array[Converter] = {
     val converters = Array.ofDim[Converter](size)

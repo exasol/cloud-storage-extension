@@ -8,7 +8,7 @@ import scala.collection.mutable.ArrayBuffer
  * Implementations of this interface choose internal structure depending
  * on the value converter.
  */
-sealed trait ValueHolder {
+trait ValueHolder {
 
   /**
    * Reset the internal value holder data structure.
