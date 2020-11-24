@@ -271,7 +271,6 @@ final case class ArrayGroupConverter(
 final case class MapConverter(groupType: GroupType, index: Int, parentDataHolder: ValueHolder)
     extends GroupConverter
     with ParquetConverter {
-
   private[this] val keysDataHolder = new AppendedValueHolder()
   private[this] val valuesDataHolder = new AppendedValueHolder()
   private[this] val converter = createMapConverter()
@@ -309,15 +308,30 @@ final case class MapConverter(groupType: GroupType, index: Int, parentDataHolder
   }
 }
 
-final case class StructConverter(groupType: GroupType, index: Int, parentDataHolder: ValueHolder)
-    extends GroupConverter
-    with ParquetConverter {
+@SuppressWarnings(Array("org.wartremover.contrib.warts.UnsafeInheritance"))
+class AbstractStructConverter(groupType: GroupType, index: Int, parentDataHolder: ValueHolder)
+    extends GroupConverter {
   private[this] val size = groupType.getFieldCount()
-  private[this] val dataHolder = IndexedValueHolder(size)
+  protected[this] val dataHolder = IndexedValueHolder(size)
   private[this] val converters = createFieldConverters()
 
   override def getConverter(fieldIndex: Int): Converter = converters(fieldIndex)
   override def start(): Unit = dataHolder.reset()
+  override def end(): Unit = parentDataHolder.put(index, dataHolder.getValues())
+
+  private[this] def createFieldConverters(): Array[Converter] = {
+    val converters = Array.ofDim[Converter](size)
+    for { i <- 0 until size } {
+      converters(i) = ConverterFactory(groupType.getType(i), i, dataHolder)
+    }
+    converters
+  }
+}
+
+final case class StructConverter(groupType: GroupType, index: Int, parentDataHolder: ValueHolder)
+    extends AbstractStructConverter(groupType, index, parentDataHolder)
+    with ParquetConverter {
+
   override def end(): Unit = {
     val map = dataHolder
       .getValues()
@@ -327,13 +341,5 @@ final case class StructConverter(groupType: GroupType, index: Int, parentDataHol
       }
       .toMap
     parentDataHolder.put(index, map)
-  }
-
-  private[this] def createFieldConverters(): Array[Converter] = {
-    val converters = Array.ofDim[Converter](size)
-    for { i <- 0 until size } {
-      converters(i) = ConverterFactory(groupType.getType(i), i, dataHolder)
-    }
-    converters
   }
 }

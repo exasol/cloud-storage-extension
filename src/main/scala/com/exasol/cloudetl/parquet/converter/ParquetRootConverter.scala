@@ -2,8 +2,6 @@ package com.exasol.cloudetl.parquet.converter
 
 import com.exasol.common.json.JsonMapper
 
-import org.apache.parquet.io.api.Converter
-import org.apache.parquet.io.api.GroupConverter
 import org.apache.parquet.schema.GroupType
 
 /**
@@ -14,14 +12,8 @@ import org.apache.parquet.schema.GroupType
  *
  * @param schema the main schema for the Parquet file
  */
-final case class ParquetRootConverter(schema: GroupType) extends GroupConverter {
-  private[this] val size = schema.getFieldCount()
-  private[this] val dataHolder = IndexedValueHolder(size)
-  private[this] val converters = getFieldConverters()
-
-  override def getConverter(fieldIndex: Int): Converter = converters(fieldIndex)
-  override def start(): Unit = dataHolder.reset()
-  override def end(): Unit = {}
+final case class ParquetRootConverter(schema: GroupType)
+    extends AbstractStructConverter(schema, -1, EmptyValueHolder) {
 
   /**
    * Returns deserialized Parquet field values for this schema.
@@ -38,11 +30,4 @@ final case class ParquetRootConverter(schema: GroupType) extends GroupConverter 
         }
     }
 
-  private[this] def getFieldConverters(): Array[Converter] = {
-    val converters = Array.ofDim[Converter](size)
-    for { i <- 0 until size } {
-      converters(i) = ConverterFactory(schema.getType(i), i, dataHolder)
-    }
-    converters
-  }
 }
