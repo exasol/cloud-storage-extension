@@ -177,12 +177,15 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     )
     withResource(getParquetWriter(schema, true)) { writer =>
       val record = new SimpleGroup(schema)
-      val maps = record.addGroup(0).addGroup(0).addGroup("map")
-      maps.addGroup("key_value").append("key", "key1").append("price", 3.14)
-      maps.addGroup("key_value").append("key", "key2").append("price", 2.71)
+      val array = record.addGroup(0).addGroup(0)
+      var map = array.addGroup("map")
+      map.addGroup("key_value").append("key", "key1").append("price", 3.14)
+      map.addGroup("key_value").append("key", "key2").append("price", 2.71)
+      map = array.addGroup("map")
+      map.addGroup("key_value").append("key", "a").append("price", 100.0)
       writer.write(record)
     }
-    assert(getRecords()(0) === Row(Seq("""[{"key1":3.14,"key2":2.71}]""")))
+    assert(getRecords()(0) === Row(Seq("""[{"key1":3.14,"key2":2.71},{"a":100.0}]""")))
   }
 
   test("reads map as JSON string") {
@@ -234,16 +237,16 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     assert(getRecords()(0) === Row(Seq("""{"key1":[3.14,2.71]}""")))
   }
 
-  ignore("reads map with group key as JSON string") {
+  test("reads map with group values as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
          |  optional group maps (MAP) {
          |    repeated group key_value {
-         |      required group key {
-         |        optional binary name;
-         |        optional binary surname;
+         |      required binary name (UTF8);
+         |      required group values {
+         |        optional int32 height;
+         |        optional int32 weight;
          |      }
-         |      optional double price;
          |    }
          |  }
          |}
@@ -251,12 +254,16 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     )
     withResource(getParquetWriter(schema, true)) { writer =>
       val record = new SimpleGroup(schema)
-      val maps = record.addGroup(0).addGroup("key_value")
-      maps.addGroup("key").append("name", "John").append("surname", "Doe")
-      maps.append("price", 2.71)
+      val maps = record.addGroup(0)
+      var map = maps.addGroup("key_value")
+      map.append("name", "John").addGroup("values").append("height", 170).append("weight", 70)
+      map = maps.addGroup("key_value")
+      map.append("name", "Jane").addGroup("values").append("height", 160).append("weight", 60)
       writer.write(record)
     }
-    assert(getRecords()(0) === Row(Seq("""{{"name":"John","surname":"Doe"}:2.71}""")))
+    val expected =
+      Row(Seq("""{"John":{"height":170,"weight":70},"Jane":{"height":160,"weight":60}}"""))
+    assert(getRecords()(0) === expected)
   }
 
   test("reads group as JSON string") {

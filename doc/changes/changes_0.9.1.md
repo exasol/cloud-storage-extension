@@ -28,7 +28,7 @@
 ### Test Dependency Updates
 
 * Updates `org.scalatest:scalatest` from `3.2.2` to `3.2.3`.
-* Updated `org.mockito:mockito-core` from `3.5.13` to `3.6.0`.
+* Updated `org.mockito:mockito-core` from `3.5.13` to `3.6.28`.
 
 ### Plugin Updates
 
