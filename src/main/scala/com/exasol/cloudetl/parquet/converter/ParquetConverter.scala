@@ -198,7 +198,11 @@ final case class RepeatedPrimitiveConverter(
   private[this] var currentValue: Any = null
 
   override def getConverter(fieldIndex: Int): Converter = {
-    require(fieldIndex == 0)
+    if (fieldIndex != 0) {
+      throw new IllegalArgumentException(
+        s"Illegal index '$fieldIndex' to repeated primitive converter. It should be only '0'."
+      )
+    }
     elementConverter
   }
   override def start(): Unit = {
@@ -231,7 +235,11 @@ sealed trait ArrayConverter {
   val elementConverter = createElementConverter()
 
   def getConverter(fieldIndex: Int): Converter = {
-    require(fieldIndex == 0)
+    if (fieldIndex != 0) {
+      throw new IllegalArgumentException(
+        s"Illegal index '$fieldIndex' to array converter. It should be only '0'."
+      )
+    }
     elementConverter
   }
   def start(): Unit = dataHolder.reset()
@@ -276,7 +284,12 @@ final case class MapConverter(groupType: GroupType, index: Int, parentDataHolder
   private[this] val converter = createMapConverter()
 
   override def getConverter(fieldIndex: Int): Converter = {
-    require(fieldIndex < 2)
+    if (fieldIndex < 0 || fieldIndex > 1) {
+      throw new IllegalArgumentException(
+        s"Illegal index '$fieldIndex' to map converter. It should be " +
+          "either '0' for keys converter or '1' for values converter."
+      )
+    }
     converter
   }
   override def start(): Unit = {

@@ -4,6 +4,7 @@
 
 * #106: Updated parquet-hadoop version that includes api changes (PR #107).
 * #108: Added dictionary aware Parquet decoders (PR #109).
+* #11: Added support for importing Parquet complex (LIST, MAP) types (PR #111).
 
 ## Documentation
 
