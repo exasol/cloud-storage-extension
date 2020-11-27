@@ -23,11 +23,31 @@ import org.apache.parquet.schema.Type
 /**
  * An interface for the Parquet data type converters.
  *
+ * The Parquet reader calls the [[ParquetRootConverter]] for the top
+ * level Parquet schema. The root converter then generates subsequent
+ * converters using [[ConverterFactory]] for each type.
+ *
  * The sealed trait ensures that all the implementations should be in
  * this file.
  */
 sealed trait ParquetConverter
 
+/**
+ * A default converter for Parquet primitive types.
+ *
+ * The Parquet schema as below would be converted with this converter:
+ *
+ * {{{
+ * message parquet_file_schema {
+ *   required boolean column_boolean;
+ *   required int32 column_int;
+ *   required int64 column_long;
+ *   required float column_float;
+ *   required double column_double;
+ *   required binary column_string;
+ * }
+ * }}}
+ */
 final case class ParquetPrimitiveConverter(index: Int, holder: ValueHolder)
     extends PrimitiveConverter
     with ParquetConverter {
@@ -39,6 +59,21 @@ final case class ParquetPrimitiveConverter(index: Int, holder: ValueHolder)
   override def addLong(value: Long): Unit = holder.put(index, value)
 }
 
+/**
+ * A converter for Parquet binary type with {@code STRING} or {@code
+ * UTF8} annotation.
+ *
+ * Since string types are stored using the dictiony encoding, the
+ * converter uses the dictionary metadata when decoding.
+ *
+ * The following schema fits this converter:
+ * {{{
+ * message parquet_file_schema {
+ *   required binary name (UTF8);
+ *   required binary surname (STRING);
+ * }
+ * }}}
+ */
 final case class ParquetStringConverter(index: Int, holder: ValueHolder)
     extends PrimitiveConverter
     with ParquetConverter {
@@ -60,6 +95,23 @@ final case class ParquetStringConverter(index: Int, holder: ValueHolder)
     holder.put(index, decodedDictionary(dictionaryId))
 }
 
+/**
+ * A converter for {@code DECIMAL} annotated Parquet types.
+ *
+ * The decimal annotation can be used for the following Parquet types:
+ * {@code INT32}, {@code INT64}, {@code FIXED_LEN_BYTE_ARRAY} and {@code
+ * BINARY}.
+ *
+ * The following schema fits this converter:
+ * {{{
+ * message parquet_file_schema {
+ *   required int32 decimal_int (DECIMAL(9,2));
+ *   required int64 decimal_long (DECIMAL(18,2));
+ *   required fixed_len_byte_array(20) decimal_fixed (DECIMAL(20,2));
+ *   required binary decimal_binary (DECIMAL(30,2));
+ * }
+ * }}}
+ */
 final case class ParquetDecimalConverter(
   primitiveType: PrimitiveType,
   index: Int,
@@ -112,6 +164,17 @@ final case class ParquetDecimalConverter(
     holder.put(index, decodedDictionary(dictionaryId))
 }
 
+/**
+ * A converter for Parquet {@code INT64} with {@code TIMESTAMP_MILLIS}
+ * annotation.
+ *
+ * The following schema fits this converter:
+ * {{{
+ * message parquet_file_schema {
+ *   required int64 timestamp (TIMESTAMP_MILLIS);
+ * }
+ * }}}
+ */
 final case class ParquetTimestampMillisConverter(index: Int, holder: ValueHolder)
     extends PrimitiveConverter
     with ParquetConverter {
@@ -119,6 +182,18 @@ final case class ParquetTimestampMillisConverter(index: Int, holder: ValueHolder
     holder.put(index, DateTimeUtil.getTimestampFromMillis(value))
 }
 
+/**
+ * A converter for Parquet {@code INT96} type.
+ *
+ * It is converted into a timestamp with nanosecond precision.
+ *
+ * The following schema fits this converter:
+ * {{{
+ * message parquet_file_schema {
+ *   required int96 timestamp_nanos;
+ * }
+ * }}}
+ */
 final case class ParquetTimestampInt96Converter(index: Int, holder: ValueHolder)
     extends PrimitiveConverter
     with ParquetConverter {
@@ -132,6 +207,18 @@ final case class ParquetTimestampInt96Converter(index: Int, holder: ValueHolder)
   }
 }
 
+/**
+ * A converter for Parquet {@code INT32} with {@code DATE} annotation.
+ *
+ * The integer value represents the number of days since the epoch.
+ *
+ * The following schema fits this converter:
+ * {{{
+ * message parquet_file_schema {
+ *   required int32 date (DATE);
+ * }
+ * }}}
+ */
 final case class ParquetDateConverter(index: Int, holder: ValueHolder)
     extends PrimitiveConverter
     with ParquetConverter {
@@ -141,6 +228,22 @@ final case class ParquetDateConverter(index: Int, holder: ValueHolder)
   }
 }
 
+/**
+ * A Parquet converter for the
+ * [[org.apache.parquet.schema.Type.Repetition.REPEATED]] group type.
+ *
+ * It is converted into an array of key value maps.
+ *
+ * The following schema is converted with this converter:
+ * {{{
+ * message parquet_file_schema {
+ *   repeated group person {
+ *     required binary name (UTF8);
+ *     optional int32 age;
+ *   }
+ * }
+ * }}}
+ */
 final case class RepeatedGroupConverter(
   groupType: GroupType,
   index: Int,
@@ -187,6 +290,22 @@ final case class RepeatedGroupConverter(
 
 }
 
+/**
+ * A Parquet converter for the
+ * [[org.apache.parquet.schema.Type.Repetition.REPEATED]] group with a
+ * single type.
+ *
+ * It is converted into an array of values.
+ *
+ * The following schema is converted with this converter:
+ * {{{
+ * message parquet_file_schema {
+ *   repeated group person {
+ *     required binary name (UTF8);
+ *   }
+ * }
+ * }}}
+ */
 final case class RepeatedPrimitiveConverter(
   elementType: Type,
   index: Int,
@@ -228,6 +347,9 @@ final case class RepeatedPrimitiveConverter(
     )
 }
 
+/**
+ * A Parquet converter for the {@code LIST} annotated types.
+ */
 sealed trait ArrayConverter {
   val index: Int
   val parentDataHolder: ValueHolder
@@ -248,6 +370,19 @@ sealed trait ArrayConverter {
   def createElementConverter(): Converter
 }
 
+/**
+ * A converter for the non standard Parquet list annotated group with a
+ * single repeated type.
+ *
+ * The following schema fits this converter:
+ * {{{
+ * message parquet_file_schema {
+ *   optional group heights (LIST) {
+ *     repeated int32 height;
+ *   }
+ * }
+ * }}}
+ */
 final case class ArrayPrimitiveConverter(
   elementType: PrimitiveType,
   val index: Int,
@@ -260,6 +395,21 @@ final case class ArrayPrimitiveConverter(
     ConverterFactory(elementType, index, dataHolder)
 }
 
+/**
+ * A converter for the standard 3-level Parquet list annotated group
+ * type.
+ *
+ * The following schema fits this converter:
+ * {{{
+ * message parquet_file_schema {
+ *   optional group prices (LIST) {
+ *     repeated group list {
+ *       required double price;
+ *     }
+ *   }
+ * }
+ * }}}
+ */
 final case class ArrayGroupConverter(
   elementType: Type,
   val index: Int,
@@ -276,6 +426,21 @@ final case class ArrayGroupConverter(
   }
 }
 
+/**
+ * A Parquet converter for the {@code MAP} annotated type.
+ *
+ * The following schema fits this converter:
+ * {{{
+ * message parquet_file_schema {
+ *   optional group map (MAP) {
+ *     repeated group key_value {
+ *       required binary key (UTF8);
+ *       required int64 value;
+ *     }
+ *   }
+ * }
+ * }}}
+ */
 final case class MapConverter(groupType: GroupType, index: Int, parentDataHolder: ValueHolder)
     extends GroupConverter
     with ParquetConverter {
@@ -321,16 +486,23 @@ final case class MapConverter(groupType: GroupType, index: Int, parentDataHolder
   }
 }
 
-@SuppressWarnings(Array("org.wartremover.contrib.warts.UnsafeInheritance"))
-class AbstractStructConverter(groupType: GroupType, index: Int, parentDataHolder: ValueHolder)
-    extends GroupConverter {
+/**
+ * An abstract base class for Parquet struct converters.
+ */
+abstract class AbstractStructConverter(
+  groupType: GroupType,
+  index: Int,
+  parentDataHolder: ValueHolder
+) extends GroupConverter {
   private[this] val size = groupType.getFieldCount()
   protected[this] val dataHolder = IndexedValueHolder(size)
   private[this] val converters = createFieldConverters()
 
-  override def getConverter(fieldIndex: Int): Converter = converters(fieldIndex)
-  override def start(): Unit = dataHolder.reset()
-  override def end(): Unit = parentDataHolder.put(index, dataHolder.getValues())
+  override final def getConverter(fieldIndex: Int): Converter = converters(fieldIndex)
+  override final def start(): Unit = dataHolder.reset()
+  override final def end(): Unit = endOperation()
+
+  def endOperation(): Unit
 
   private[this] def createFieldConverters(): Array[Converter] = {
     val converters = Array.ofDim[Converter](size)
@@ -341,11 +513,25 @@ class AbstractStructConverter(groupType: GroupType, index: Int, parentDataHolder
   }
 }
 
+/**
+ * A converter for the Parquet nested group.
+ *
+ * The following schema fits this converter:
+ * {{{
+ * message parquet_file_schema {
+ *   required binary name (UTF8);
+ *   required group values {
+ *     optional int32 height;
+ *     optional int32 weight;
+ *   }
+ * }
+ * }}}
+ */
 final case class StructConverter(groupType: GroupType, index: Int, parentDataHolder: ValueHolder)
     extends AbstractStructConverter(groupType, index, parentDataHolder)
     with ParquetConverter {
 
-  override def end(): Unit = {
+  override def endOperation(): Unit = {
     val map = dataHolder
       .getValues()
       .zipWithIndex

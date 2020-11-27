@@ -70,32 +70,6 @@ object ConverterFactory {
     }
   }
 
-  private[this] def createArrayConverter(
-    repeatedType: Type,
-    index: Int,
-    holder: ValueHolder
-  ): Converter =
-    if (repeatedType.isPrimitive()) {
-      ArrayPrimitiveConverter(repeatedType.asPrimitiveType(), index, holder)
-    } else if (repeatedType.asGroupType().getFieldCount() > 1) {
-      ArrayGroupConverter(repeatedType, index, holder)
-    } else {
-      val innerElementType = repeatedType.asGroupType().getType(0)
-      ArrayGroupConverter(innerElementType, index, holder)
-    }
-
-  private[this] def createRepeatedConverter(
-    groupType: GroupType,
-    index: Int,
-    holder: ValueHolder
-  ): Converter =
-    if (groupType.getFieldCount() > 1) {
-      RepeatedGroupConverter(groupType, index, holder)
-    } else {
-      val innerPrimitiveType = groupType.getType(0).asPrimitiveType()
-      RepeatedPrimitiveConverter(innerPrimitiveType, index, holder)
-    }
-
   private[this] def createBinaryConverter(
     primitiveType: PrimitiveType,
     index: Int,
@@ -135,4 +109,29 @@ object ConverterFactory {
     case _                             => ParquetPrimitiveConverter(index, holder)
   }
 
+  private[this] def createArrayConverter(
+    repeatedType: Type,
+    index: Int,
+    holder: ValueHolder
+  ): Converter =
+    if (repeatedType.isPrimitive()) {
+      ArrayPrimitiveConverter(repeatedType.asPrimitiveType(), index, holder)
+    } else if (repeatedType.asGroupType().getFieldCount() > 1) {
+      ArrayGroupConverter(repeatedType, index, holder)
+    } else {
+      val innerElementType = repeatedType.asGroupType().getType(0)
+      ArrayGroupConverter(innerElementType, index, holder)
+    }
+
+  private[this] def createRepeatedConverter(
+    groupType: GroupType,
+    index: Int,
+    holder: ValueHolder
+  ): Converter =
+    if (groupType.getFieldCount() > 1) {
+      RepeatedGroupConverter(groupType, index, holder)
+    } else {
+      val innerPrimitiveType = groupType.getType(0).asPrimitiveType()
+      RepeatedPrimitiveConverter(innerPrimitiveType, index, holder)
+    }
 }

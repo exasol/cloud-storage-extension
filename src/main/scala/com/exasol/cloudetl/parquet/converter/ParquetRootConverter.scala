@@ -30,4 +30,6 @@ final case class ParquetRootConverter(schema: GroupType)
         }
     }
 
+  override def endOperation(): Unit = {}
+
 }
