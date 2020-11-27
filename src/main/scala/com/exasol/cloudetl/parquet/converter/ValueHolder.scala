@@ -3,7 +3,7 @@ package com.exasol.cloudetl.parquet.converter
 import scala.collection.mutable.ArrayBuffer
 
 /**
- * An interface for the storing converted Parquet values.
+ * An interface for storing the converted Parquet values.
  *
  * Implementations of this interface choose internal structure depending
  * on the value converter.
