@@ -1,81 +1,22 @@
 package com.exasol.cloudetl.parquet
 
-import java.io.Closeable
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.math.MathContext
-import java.nio.file.Path
 
-import com.exasol.cloudetl.DummyRecordsTest
 import com.exasol.cloudetl.parquet.converter.ParquetDecimalConverter
-import com.exasol.cloudetl.source.ParquetSource
 import com.exasol.common.data.Row
 
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.{Path => HPath}
-import org.apache.hadoop.fs.FileSystem
 import org.apache.parquet.column.Dictionary
-import org.apache.parquet.example.data.Group
-import org.apache.parquet.example.data.GroupWriter
 import org.apache.parquet.example.data.simple.SimpleGroup
-import org.apache.parquet.hadoop.ParquetWriter
-import org.apache.parquet.hadoop.api.WriteSupport
 import org.apache.parquet.io.api.Binary
-import org.apache.parquet.io.api.RecordConsumer
-import org.apache.parquet.schema._
 import org.apache.parquet.schema.LogicalTypeAnnotation.decimalType
+import org.apache.parquet.schema.MessageTypeParser
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
 import org.apache.parquet.schema.Type.Repetition
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.funsuite.AnyFunSuite
+import org.apache.parquet.schema.Types
 
-class ParquetRowReaderTest extends AnyFunSuite with BeforeAndAfterEach with DummyRecordsTest {
-
-  private[this] var conf: Configuration = _
-  private[this] var fileSystem: FileSystem = _
-  private[this] var outputDirectory: Path = _
-  private[this] var path: HPath = _
-
-  override final def beforeEach(): Unit = {
-    conf = new Configuration
-    fileSystem = FileSystem.get(conf)
-    outputDirectory = createTemporaryFolder("parquetRowReaderTest")
-    path = new HPath(outputDirectory.toUri.toString, "part-00000.parquet")
-    ()
-  }
-
-  override final def afterEach(): Unit = {
-    deleteFiles(outputDirectory)
-    ()
-  }
-
-  test("read throws if parquet record has complex types") {
-    val schema = MessageTypeParser.parseMessageType(
-      """|message user {
-         |  required binary name (UTF8);
-         |  optional group contacts {
-         |    repeated group array {
-         |      required binary name (UTF8);
-         |      optional binary phoneNumber (UTF8);
-         |    }
-         |  }
-         |}
-         |""".stripMargin
-    )
-    withResource(getParquetWriter(schema, false)) { writer =>
-      val record = new SimpleGroup(schema)
-      record.add(0, "A. Name")
-      val contacts = record.addGroup(1)
-      contacts.addGroup(0).append("name", "A. Contact").append("phoneNumber", "1337")
-      contacts.addGroup(0).append("name", "Second Contact")
-      writer.write(record)
-    }
-
-    val thrown = intercept[UnsupportedOperationException] {
-      getRecords()
-    }
-    assert(thrown.getMessage === "Currently only primitive types are supported")
-  }
+class ParquetRowReaderPrimitiveTypesTest extends BaseParquetReaderTest {
 
   test("reads INT64 (TIMESTAMP_MILLIS) as timestamp value") {
     val schema = MessageTypeParser.parseMessageType(
@@ -240,48 +181,9 @@ class ParquetRowReaderTest extends AnyFunSuite with BeforeAndAfterEach with Dumm
       .as(decimalType(0, 9))
       .named("bytes")
     val thrown = intercept[UnsupportedOperationException] {
-      ParquetDecimalConverter(0, null, parquetType).setDictionary(DictionaryEncoding())
+      ParquetDecimalConverter(parquetType, 0, null).setDictionary(DictionaryEncoding())
     }
     assert(thrown.getMessage.contains("Cannot convert parquet type to decimal type"))
-  }
-
-  private[this] def withResource[T <: Closeable](writer: T)(block: T => Unit): Unit = {
-    block(writer)
-    writer.close()
-  }
-
-  private[this] def getRecords(): Seq[Row] =
-    ParquetSource(path, conf, fileSystem)
-      .stream()
-      .toSeq
-
-  private[this] def getParquetWriter(
-    schema: MessageType,
-    dictionaryEncoding: Boolean
-  ): ParquetWriter[Group] =
-    BaseGroupWriterBuilder(path, schema)
-      .withDictionaryEncoding(dictionaryEncoding)
-      .build()
-
-  private[this] case class BaseGroupWriteSupport(schema: MessageType)
-      extends WriteSupport[Group] {
-    var writer: GroupWriter = null
-
-    override def prepareForWrite(recordConsumer: RecordConsumer): Unit =
-      writer = new GroupWriter(recordConsumer, schema)
-
-    override def init(configuration: Configuration): WriteSupport.WriteContext =
-      new WriteSupport.WriteContext(schema, new java.util.HashMap[String, String]())
-
-    override def write(record: Group): Unit =
-      writer.write(record)
-  }
-
-  private[this] case class BaseGroupWriterBuilder(path: HPath, schema: MessageType)
-      extends ParquetWriter.Builder[Group, BaseGroupWriterBuilder](path) {
-    override def getWriteSupport(conf: Configuration): WriteSupport[Group] =
-      BaseGroupWriteSupport(schema)
-    override def self(): BaseGroupWriterBuilder = this
   }
 
 }

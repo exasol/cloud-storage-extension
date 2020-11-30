@@ -409,6 +409,10 @@ column types when preparing the table.
 | fixed_len_byte_array |                       | VARCHAR(n), CHAR(n)             |
 | fixed_len_byte_array | decimal(p, s)         | DECIMAL(p, s)                   |
 | int96                |                       | TIMESTAMP                       |
+| group                |                       | VARCHAR(n)                      |
+| group                | LIST                  | VARCHAR(n)                      |
+| group                | MAP                   | VARCHAR(n)                      |
+| group                | REPEATED              | VARCHAR(n)                      |
 
 ## Amazon S3
 
