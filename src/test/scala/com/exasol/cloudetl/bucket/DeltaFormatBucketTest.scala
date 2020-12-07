@@ -1,6 +1,6 @@
 package com.exasol.cloudetl.bucket
 
-import com.exasol.cloudetl.DummyRecordsTest
+import com.exasol.cloudetl.FileManager
 import com.exasol.cloudetl.source.Source
 import com.exasol.cloudetl.storage.FileFormat
 
@@ -8,7 +8,7 @@ import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.SparkSession
 
 @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
-class DeltaFormatBucketTest extends AbstractBucketTest with DummyRecordsTest {
+class DeltaFormatBucketTest extends AbstractBucketTest with FileManager {
 
   private[this] var path: String = _
   private[this] var tmpDir: java.nio.file.Path = _
@@ -27,7 +27,7 @@ class DeltaFormatBucketTest extends AbstractBucketTest with DummyRecordsTest {
   }
 
   override final def afterEach(): Unit = {
-    deleteFiles(tmpDir)
+    deletePathFiles(tmpDir)
     spark.stop()
   }
 

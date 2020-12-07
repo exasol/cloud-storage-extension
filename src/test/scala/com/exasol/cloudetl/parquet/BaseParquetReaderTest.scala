@@ -3,7 +3,7 @@ package com.exasol.cloudetl.parquet
 import java.io.Closeable
 import java.nio.file.Path
 
-import com.exasol.cloudetl.DummyRecordsTest
+import com.exasol.cloudetl.FileManager
 import com.exasol.cloudetl.source.ParquetSource
 import com.exasol.common.data.Row
 
@@ -19,7 +19,7 @@ import org.apache.parquet.schema._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
 
-trait BaseParquetReaderTest extends AnyFunSuite with BeforeAndAfterEach with DummyRecordsTest {
+trait BaseParquetReaderTest extends AnyFunSuite with BeforeAndAfterEach with FileManager {
 
   private[this] var conf: Configuration = _
   private[this] var fileSystem: FileSystem = _
@@ -35,7 +35,7 @@ trait BaseParquetReaderTest extends AnyFunSuite with BeforeAndAfterEach with Dum
   }
 
   override final def afterEach(): Unit = {
-    deleteFiles(outputDirectory)
+    deletePathFiles(outputDirectory)
     ()
   }
 

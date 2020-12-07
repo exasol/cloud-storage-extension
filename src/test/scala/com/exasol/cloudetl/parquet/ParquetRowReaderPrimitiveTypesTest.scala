@@ -3,6 +3,7 @@ package com.exasol.cloudetl.parquet
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.math.MathContext
+import java.sql.Timestamp
 
 import com.exasol.cloudetl.parquet.converter.ParquetDecimalConverter
 import com.exasol.common.data.Row
@@ -26,13 +27,14 @@ class ParquetRowReaderPrimitiveTypesTest extends BaseParquetReaderTest {
          |}
          |""".stripMargin
     )
+    val timestamp = new Timestamp(System.currentTimeMillis())
     withResource(getParquetWriter(schema, false)) { writer =>
       val record = new SimpleGroup(schema)
       record.append("col_long", 153L)
-      record.append("col_timestamp", TIMESTAMP_VALUE1.getTime())
+      record.append("col_timestamp", timestamp.getTime())
       writer.write(record)
     }
-    assert(getRecords()(0) === Row(Seq(153L, TIMESTAMP_VALUE1)))
+    assert(getRecords()(0) === Row(Seq(153L, timestamp)))
   }
 
   test("reads FIXED_LEN_BYTE_ARRAY as string value") {

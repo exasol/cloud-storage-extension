@@ -2,7 +2,7 @@ package com.exasol.cloudetl.orc
 
 import java.nio.file.Path
 
-import com.exasol.cloudetl.DummyRecordsTest
+import com.exasol.cloudetl.FileManager
 import com.exasol.cloudetl.source.OrcSource
 
 import org.apache.hadoop.conf.Configuration
@@ -16,7 +16,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
 
 @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
-class OrcConverterTest extends AnyFunSuite with BeforeAndAfterEach with DummyRecordsTest {
+class OrcConverterTest extends AnyFunSuite with BeforeAndAfterEach with FileManager {
 
   private[this] var conf: Configuration = _
   private[this] var fileSystem: FileSystem = _
@@ -32,7 +32,7 @@ class OrcConverterTest extends AnyFunSuite with BeforeAndAfterEach with DummyRec
   }
 
   override final def afterEach(): Unit = {
-    deleteFiles(outputDirectory)
+    deletePathFiles(outputDirectory)
     ()
   }
 

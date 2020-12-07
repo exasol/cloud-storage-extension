@@ -1,13 +1,13 @@
 package com.exasol.cloudetl
 
-import java.io.IOException
 import java.math.BigDecimal
-import java.nio.file._
-import java.nio.file.attribute.BasicFileAttributes
 import java.sql.Date
 import java.sql.Timestamp
 
-trait DummyRecordsTest {
+/**
+ * A mixin trait with predefined helper data types.
+ */
+trait DataRecords {
 
   val BIG_DECIMAL_VALUE1: BigDecimal = new BigDecimal("5555555555555555555555555555555.55555")
   val BIG_DECIMAL_VALUE2: BigDecimal = new BigDecimal("5555555555555555555555555555555.55555")
@@ -21,26 +21,6 @@ trait DummyRecordsTest {
     Seq(2, 4L, BIG_DECIMAL_VALUE2, 0.13d, "abc", false, DATE_VALUE2, TIMESTAMP_VALUE2)
   ).map { seq =>
     seq.map(_.asInstanceOf[AnyRef])
-  }
-
-  final def createTemporaryFolder(name: String): Path =
-    Files.createTempDirectory(name)
-
-  final def deleteFiles(dir: Path): Unit = {
-    Files.walkFileTree(
-      dir,
-      new SimpleFileVisitor[Path] {
-        override def visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult = {
-          Files.delete(file)
-          FileVisitResult.CONTINUE
-        }
-        override def postVisitDirectory(dir: Path, exc: IOException): FileVisitResult = {
-          Files.delete(dir)
-          FileVisitResult.CONTINUE
-        }
-      }
-    )
-    ()
   }
 
 }
