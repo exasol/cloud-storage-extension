@@ -12,7 +12,7 @@ import org.apache.orc.TypeDescription.Category
 /**
  * An interface for all type deserializers.
  */
-sealed trait OrcDeserializer[T <: ColumnVector] {
+sealed trait OrcConverter[T <: ColumnVector] {
 
   /**
    * Reads the row at provided index from the vector.
@@ -25,29 +25,29 @@ sealed trait OrcDeserializer[T <: ColumnVector] {
 }
 
 /**
- * A companion object for [[OrcDeserializer]] interface.
+ * A companion object for [[OrcConverter]] interface.
  */
-object OrcDeserializer {
+object OrcConverter {
 
   /**
    * Given the Orc [[org.apache.orc.TypeDescription$]] types creates a
    * deserializer that reads the type value into Java objects.
    */
-  def apply(orcType: TypeDescription): OrcDeserializer[_ <: ColumnVector] =
+  def apply(orcType: TypeDescription): OrcConverter[_ <: ColumnVector] =
     orcType.getCategory match {
-      case Category.BOOLEAN   => BooleanDeserializer
-      case Category.BYTE      => LongDeserializer
-      case Category.CHAR      => StringDeserializer
-      case Category.STRING    => StringDeserializer
-      case Category.VARCHAR   => StringDeserializer
-      case Category.SHORT     => IntDeserializer
-      case Category.INT       => IntDeserializer
-      case Category.LONG      => LongDeserializer
-      case Category.DECIMAL   => DecimalDeserializer
-      case Category.FLOAT     => FloatDeserializer
-      case Category.DOUBLE    => DoubleDeserializer
-      case Category.DATE      => DateDeserializer
-      case Category.TIMESTAMP => TimestampDeserializer
+      case Category.BOOLEAN   => BooleanConverter
+      case Category.BYTE      => LongConverter
+      case Category.CHAR      => StringConverter
+      case Category.STRING    => StringConverter
+      case Category.VARCHAR   => StringConverter
+      case Category.SHORT     => IntConverter
+      case Category.INT       => IntConverter
+      case Category.LONG      => LongConverter
+      case Category.DECIMAL   => DecimalConverter
+      case Category.FLOAT     => FloatConverter
+      case Category.DOUBLE    => DoubleConverter
+      case Category.DATE      => DateConverter
+      case Category.TIMESTAMP => TimestampConverter
       case Category.LIST =>
         throw new IllegalArgumentException("Orc list type is not supported.")
       case Category.MAP =>
@@ -62,15 +62,15 @@ object OrcDeserializer {
 
 }
 
-final class StructDeserializer(fieldTypes: Seq[TypeDescription])
-    extends OrcDeserializer[StructColumnVector] {
+final class StructConverter(fieldTypes: Seq[TypeDescription])
+    extends OrcConverter[StructColumnVector] {
 
   def readFromColumn[T <: ColumnVector](
     struct: StructColumnVector,
     rowIndex: Int,
     columnIndex: Int
   ): Any = {
-    val deserializer = OrcDeserializer(fieldTypes(columnIndex)).asInstanceOf[OrcDeserializer[T]]
+    val deserializer = OrcConverter(fieldTypes(columnIndex)).asInstanceOf[OrcConverter[T]]
     val vector = struct.fields(columnIndex).asInstanceOf[T]
     val newRowIndex = if (vector.isRepeating) 0 else rowIndex
     deserializer.readAt(vector, newRowIndex)
@@ -88,12 +88,12 @@ final class StructDeserializer(fieldTypes: Seq[TypeDescription])
 
 }
 
-object BooleanDeserializer extends OrcDeserializer[LongColumnVector] {
+object BooleanConverter extends OrcConverter[LongColumnVector] {
   override def readAt(vector: LongColumnVector, index: Int): Boolean =
     vector.vector(index) == 1
 }
 
-object IntDeserializer extends OrcDeserializer[LongColumnVector] {
+object IntConverter extends OrcConverter[LongColumnVector] {
   override def readAt(vector: LongColumnVector, index: Int): Any =
     if (vector.isNull(index)) {
       null
@@ -102,7 +102,7 @@ object IntDeserializer extends OrcDeserializer[LongColumnVector] {
     }
 }
 
-object LongDeserializer extends OrcDeserializer[LongColumnVector] {
+object LongConverter extends OrcConverter[LongColumnVector] {
   override def readAt(vector: LongColumnVector, index: Int): Any =
     if (vector.isNull(index)) {
       null
@@ -111,7 +111,7 @@ object LongDeserializer extends OrcDeserializer[LongColumnVector] {
     }
 }
 
-object DoubleDeserializer extends OrcDeserializer[DoubleColumnVector] {
+object DoubleConverter extends OrcConverter[DoubleColumnVector] {
   override def readAt(vector: DoubleColumnVector, index: Int): Any =
     if (vector.isNull(index)) {
       null
@@ -120,7 +120,7 @@ object DoubleDeserializer extends OrcDeserializer[DoubleColumnVector] {
     }
 }
 
-object FloatDeserializer extends OrcDeserializer[DoubleColumnVector] {
+object FloatConverter extends OrcConverter[DoubleColumnVector] {
   override def readAt(vector: DoubleColumnVector, index: Int): Any =
     if (vector.isNull(index)) {
       null
@@ -129,7 +129,7 @@ object FloatDeserializer extends OrcDeserializer[DoubleColumnVector] {
     }
 }
 
-object DateDeserializer extends OrcDeserializer[LongColumnVector] {
+object DateConverter extends OrcConverter[LongColumnVector] {
   override def readAt(vector: LongColumnVector, index: Int): java.sql.Date =
     if (vector.isNull(index)) {
       null
@@ -139,7 +139,7 @@ object DateDeserializer extends OrcDeserializer[LongColumnVector] {
     }
 }
 
-object TimestampDeserializer extends OrcDeserializer[TimestampColumnVector] {
+object TimestampConverter extends OrcConverter[TimestampColumnVector] {
   override def readAt(vector: TimestampColumnVector, index: Int): java.sql.Timestamp =
     if (vector.isNull(index)) {
       null
@@ -148,7 +148,7 @@ object TimestampDeserializer extends OrcDeserializer[TimestampColumnVector] {
     }
 }
 
-object DecimalDeserializer extends OrcDeserializer[DecimalColumnVector] {
+object DecimalConverter extends OrcConverter[DecimalColumnVector] {
   override def readAt(vector: DecimalColumnVector, index: Int): java.math.BigDecimal =
     if (vector.isNull(index)) {
       null
@@ -157,7 +157,7 @@ object DecimalDeserializer extends OrcDeserializer[DecimalColumnVector] {
     }
 }
 
-object StringDeserializer extends OrcDeserializer[BytesColumnVector] with LazyLogging {
+object StringConverter extends OrcConverter[BytesColumnVector] with LazyLogging {
   override def readAt(vector: BytesColumnVector, index: Int): String =
     if (vector.isNull(index)) {
       null

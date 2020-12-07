@@ -3,7 +3,7 @@ package com.exasol.cloudetl.source
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
-import com.exasol.cloudetl.orc.StructDeserializer
+import com.exasol.cloudetl.orc.StructConverter
 import com.exasol.common.data.Row
 
 import com.typesafe.scalalogging.LazyLogging
@@ -67,7 +67,7 @@ final case class OrcSource(
   private[this] final class BatchIterator(batch: VectorizedRowBatch) extends Iterator[Row] {
     var offset = 0
     val vector = new StructColumnVector(batch.numCols, batch.cols: _*)
-    val deserializer = new StructDeserializer(reader.getSchema.getChildren.asScala)
+    val deserializer = new StructConverter(reader.getSchema.getChildren.asScala)
 
     override def hasNext: Boolean = offset < batch.size
 

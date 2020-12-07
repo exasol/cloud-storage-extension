@@ -16,7 +16,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
 
 @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
-class OrcDeserializerTest extends AnyFunSuite with BeforeAndAfterEach with DummyRecordsTest {
+class OrcConverterTest extends AnyFunSuite with BeforeAndAfterEach with DummyRecordsTest {
 
   private[this] var conf: Configuration = _
   private[this] var fileSystem: FileSystem = _
@@ -26,7 +26,7 @@ class OrcDeserializerTest extends AnyFunSuite with BeforeAndAfterEach with Dummy
   override final def beforeEach(): Unit = {
     conf = new Configuration
     fileSystem = FileSystem.get(conf)
-    outputDirectory = createTemporaryFolder("orcRowDeserializerTest")
+    outputDirectory = createTemporaryFolder("orcRowConverterTest")
     path = new HPath(outputDirectory.toUri.toString, "part-00000.orc")
     ()
   }
@@ -39,7 +39,7 @@ class OrcDeserializerTest extends AnyFunSuite with BeforeAndAfterEach with Dummy
   test("apply throws if orc type is a list") {
     val orcList = TypeDescription.createList(TypeDescription.createString)
     val thrown = intercept[IllegalArgumentException] {
-      OrcDeserializer(orcList)
+      OrcConverter(orcList)
     }
     assert(thrown.getMessage === "Orc list type is not supported.")
   }
@@ -48,7 +48,7 @@ class OrcDeserializerTest extends AnyFunSuite with BeforeAndAfterEach with Dummy
     val orcMap =
       TypeDescription.createMap(TypeDescription.createString, TypeDescription.createString)
     val thrown = intercept[IllegalArgumentException] {
-      OrcDeserializer(orcMap)
+      OrcConverter(orcMap)
     }
     assert(thrown.getMessage === "Orc map type is not supported.")
   }
@@ -57,7 +57,7 @@ class OrcDeserializerTest extends AnyFunSuite with BeforeAndAfterEach with Dummy
     val orcStruct =
       TypeDescription.createStruct().addField("col_int", TypeDescription.createInt())
     val thrown = intercept[IllegalArgumentException] {
-      OrcDeserializer(orcStruct)
+      OrcConverter(orcStruct)
     }
     assert(thrown.getMessage === "Orc nested struct type is not supported.")
   }
@@ -65,14 +65,15 @@ class OrcDeserializerTest extends AnyFunSuite with BeforeAndAfterEach with Dummy
   test("apply throws if orc type is unsupported") {
     val orcUnion = TypeDescription.createUnion()
     val thrown = intercept[IllegalArgumentException] {
-      OrcDeserializer(orcUnion)
+      OrcConverter(orcUnion)
     }
     assert(thrown.getMessage === "Found orc unsupported type, 'UNION'.")
   }
 
   test("reads Decimal value as java.math.decimal") {
-    val schema =
-      TypeDescription.createStruct().addField("col_decimal", TypeDescription.createDecimal())
+    val schema = TypeDescription
+      .createStruct()
+      .addField("col_decimal", TypeDescription.createDecimal())
     val writer = OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(schema))
     val batch = schema.createRowBatch()
     batch.size = 2
