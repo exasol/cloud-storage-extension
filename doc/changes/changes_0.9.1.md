@@ -5,6 +5,7 @@
 * #106: Updated parquet-hadoop version that includes api changes (PR #107).
 * #108: Added dictionary aware Parquet decoders (PR #109).
 * #11: Added support for importing Parquet complex (LIST, MAP) types (PR #111).
+* #115: Added support for importing Orc complex (LIST, STRUCT) types (PR #116).
 
 ## Documentation
 
@@ -14,7 +15,7 @@
 
 ### Runtime Dependency Updates
 
-* Updated to `org.apache.orc:orc-core:1.6.5` (was `1.6.4`)
+* Updated to `org.apache.orc:orc-core:1.6.6` (was `1.6.4`)
 * Updated to `org.apache.parquet:parquet-hadoop:1.11.1` (was `1.10.1`)
 * Updated to `com.exasol:import-export-udf-common-scala:0.2.0` (was `0.1.0`)
 * Updated to `org.apache.spark:spark-sql:3.0.1` (was `3.0.0`)

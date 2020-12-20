@@ -1,7 +1,6 @@
 package com.exasol.cloudetl.orc
 
 import scala.collection.mutable.{Map => MMap}
-import scala.util.control.NonFatal
 
 import com.exasol.cloudetl.util.DateTimeUtil
 
@@ -16,11 +15,11 @@ import org.apache.orc.TypeDescription.Category
 sealed trait OrcConverter[T <: ColumnVector] {
 
   /**
-   * Reads the row at provided index from the vector.
+   * Reads the record at provided index from the underlying vector.
    *
-   * @param vector The Orc
+   * @param vector the Orc
    *        [[org.apache.hadoop.hive.ql.exec.vector.ColumnVector]] vector
-   * @param index The index to read at
+   * @param index the index to read at
    */
   def readAt(vector: T, index: Int): Any
 }
@@ -82,9 +81,13 @@ object OrcConverterFactory {
           s"Found orc unsupported type, '${orcType.getCategory}'."
         )
     }
-
 }
 
+/**
+ * A converter for the Orc {@code LIST} type.
+ *
+ * @param elementConverter a converter for the list internal type
+ */
 final case class ListConverter[T <: ColumnVector](elementConverter: OrcConverter[T])
     extends OrcConverter[ListColumnVector] {
 
@@ -97,7 +100,7 @@ final case class ListConverter[T <: ColumnVector](elementConverter: OrcConverter
    * The pointer iterates from {@code offset} till {@code offset + length} end value. We also keep
    * another index ({@code [0 ..  length)})for the values array that indexes read objects.
    *
-   * @param list the ORC list column vector
+   * @param list the Orc list column vector
    * @param rowIndex the index into the offsets and lengths array of the list column vector
    * @return the values object
    */
@@ -123,11 +126,23 @@ final case class ListConverter[T <: ColumnVector](elementConverter: OrcConverter
   }
 }
 
+/**
+ * A converter for the Orc {@code MAP} type.
+ *
+ * @param keyConverter a converter for the map key type
+ * @param valueConverter a converter for the map value type
+ */
 final case class MapConverter[T <: ColumnVector, U <: ColumnVector](
   keyConverter: OrcConverter[T],
   valueConverter: OrcConverter[U]
 ) extends OrcConverter[MapColumnVector] {
 
+  /**
+   * Reads from a map column vector.
+   *
+   * Similar to reading from list, the offsets and lengths array provide
+   * pointers into keys and values vectors of the map.
+   */
   override def readAt(vector: MapColumnVector, rowIndex: Int): Map[Any, Any] = {
     val offset = vector.offsets(rowIndex).toInt
     val length = vector.lengths(rowIndex).toInt
@@ -144,6 +159,11 @@ final case class MapConverter[T <: ColumnVector, U <: ColumnVector](
   }
 }
 
+/**
+ * A converter for the Orc {@code STRUCT} type.
+ *
+ * @param schema the schema with field names and types
+ */
 final class StructConverter(schema: TypeDescription) extends OrcConverter[StructColumnVector] {
 
   private[this] val fields = schema.getChildren()
@@ -174,11 +194,17 @@ final class StructConverter(schema: TypeDescription) extends OrcConverter[Struct
 
 }
 
+/**
+ * A converter for the Orc {@code BOOLEAN} type.
+ */
 object BooleanConverter extends OrcConverter[LongColumnVector] {
   override def readAt(vector: LongColumnVector, index: Int): Boolean =
     vector.vector(index) == 1
 }
 
+/**
+ * A converter for the Orc {@code INTEGER} type.
+ */
 object IntConverter extends OrcConverter[LongColumnVector] {
   override def readAt(vector: LongColumnVector, index: Int): Any =
     if (vector.isNull(index)) {
@@ -188,6 +214,9 @@ object IntConverter extends OrcConverter[LongColumnVector] {
     }
 }
 
+/**
+ * A converter for the Orc {@code LONG} type.
+ */
 object LongConverter extends OrcConverter[LongColumnVector] {
   override def readAt(vector: LongColumnVector, index: Int): Any =
     if (vector.isNull(index)) {
@@ -197,6 +226,9 @@ object LongConverter extends OrcConverter[LongColumnVector] {
     }
 }
 
+/**
+ * A converter for the Orc {@code DOUBLE} type.
+ */
 object DoubleConverter extends OrcConverter[DoubleColumnVector] {
   override def readAt(vector: DoubleColumnVector, index: Int): Any =
     if (vector.isNull(index)) {
@@ -206,6 +238,9 @@ object DoubleConverter extends OrcConverter[DoubleColumnVector] {
     }
 }
 
+/**
+ * A converter for the Orc {@code FLOAT} type.
+ */
 object FloatConverter extends OrcConverter[DoubleColumnVector] {
   override def readAt(vector: DoubleColumnVector, index: Int): Any =
     if (vector.isNull(index)) {
@@ -215,6 +250,11 @@ object FloatConverter extends OrcConverter[DoubleColumnVector] {
     }
 }
 
+/**
+ * A converter for the Orc {@code DATE} type.
+ *
+ * It reads the values as days sine the epoch.
+ */
 object DateConverter extends OrcConverter[LongColumnVector] {
   override def readAt(vector: LongColumnVector, index: Int): java.sql.Date =
     if (vector.isNull(index)) {
@@ -225,6 +265,9 @@ object DateConverter extends OrcConverter[LongColumnVector] {
     }
 }
 
+/**
+ * A converter for the Orc {@code TIMESTAMP} type.
+ */
 object TimestampConverter extends OrcConverter[TimestampColumnVector] {
   override def readAt(vector: TimestampColumnVector, index: Int): java.sql.Timestamp =
     if (vector.isNull(index)) {
@@ -234,6 +277,9 @@ object TimestampConverter extends OrcConverter[TimestampColumnVector] {
     }
 }
 
+/**
+ * A converter for the Orc {@code DECIMAL} type.
+ */
 object DecimalConverter extends OrcConverter[DecimalColumnVector] {
   override def readAt(vector: DecimalColumnVector, index: Int): java.math.BigDecimal =
     if (vector.isNull(index)) {
@@ -243,20 +289,17 @@ object DecimalConverter extends OrcConverter[DecimalColumnVector] {
     }
 }
 
+/**
+ * A converter for the Orc {@code STRING} type.
+ */
 object StringConverter extends OrcConverter[BytesColumnVector] with LazyLogging {
   override def readAt(vector: BytesColumnVector, index: Int): String =
     if (vector.isNull(index)) {
       null
     } else {
-      try {
-        val bytes = vector.vector.headOption.fold(Array.empty[Byte])(
-          _.slice(vector.start(index), vector.start(index) + vector.length(index))
-        )
-        new String(bytes, "UTF8")
-      } catch {
-        case NonFatal(exception) =>
-          logger.error(s"Could not read string bytes from orc vector.", exception)
-          throw exception
-      }
+      val bytes = vector.vector.headOption.fold(Array.empty[Byte])(
+        _.slice(vector.start(index), vector.start(index) + vector.length(index))
+      )
+      new String(bytes, "UTF8")
     }
 }

@@ -10,7 +10,7 @@ object Dependencies {
   private val ImportExportUDFVersion = "0.2.0"
   private val HadoopVersion = "3.3.0"
   private val DeltaVersion = "0.7.0"
-  private val OrcVersion = "1.6.5"
+  private val OrcVersion = "1.6.6"
   private val ParquetVersion = "1.11.1"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.1"

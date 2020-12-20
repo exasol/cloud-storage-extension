@@ -389,6 +389,9 @@ column types when preparing the table.
 | decimal              |                   | DECIMAL(p, s)                   |
 | date                 |                   | DATE                            |
 | timestamp            |                   | TIMESTAMP                       |
+| list                 |                   | VARCHAR(n), CHAR(n)             |
+| map                  |                   | VARCHAR(n), CHAR(n)             |
+| struct               |                   | VARCHAR(n), CHAR(n)             |
 
 ### Parquet Data Mapping
 
