@@ -1,5 +1,6 @@
 package com.exasol.cloudetl.orc
 
+import scala.collection.mutable.{Map => MMap}
 import scala.util.control.NonFatal
 
 import com.exasol.cloudetl.util.DateTimeUtil
@@ -10,7 +11,7 @@ import org.apache.orc.TypeDescription
 import org.apache.orc.TypeDescription.Category
 
 /**
- * An interface for all type deserializers.
+ * An interface for all type converters.
  */
 sealed trait OrcConverter[T <: ColumnVector] {
 
@@ -27,14 +28,23 @@ sealed trait OrcConverter[T <: ColumnVector] {
 /**
  * A companion object for [[OrcConverter]] interface.
  */
-object OrcConverter {
+object OrcConverterFactory {
 
   /**
    * Given the Orc [[org.apache.orc.TypeDescription$]] types creates a
-   * deserializer that reads the type value into Java objects.
+   * converter that reads the type value into Java objects.
    */
   def apply(orcType: TypeDescription): OrcConverter[_ <: ColumnVector] =
-    orcType.getCategory match {
+    if (orcType.getCategory().isPrimitive()) {
+      createPrimitiveConverter(orcType)
+    } else {
+      createComplexConverter(orcType)
+    }
+
+  private[this] def createPrimitiveConverter(
+    orcType: TypeDescription
+  ): OrcConverter[_ <: ColumnVector] =
+    orcType.getCategory() match {
       case Category.BOOLEAN   => BooleanConverter
       case Category.BYTE      => LongConverter
       case Category.CHAR      => StringConverter
@@ -48,12 +58,25 @@ object OrcConverter {
       case Category.DOUBLE    => DoubleConverter
       case Category.DATE      => DateConverter
       case Category.TIMESTAMP => TimestampConverter
+      case _ =>
+        throw new IllegalArgumentException(
+          s"Found orc unsupported type, '${orcType.getCategory}'."
+        )
+    }
+
+  private[this] def createComplexConverter(
+    orcType: TypeDescription
+  ): OrcConverter[_ <: ColumnVector] =
+    orcType.getCategory() match {
       case Category.LIST =>
-        throw new IllegalArgumentException("Orc list type is not supported.")
+        val listChildType = orcType.getChildren().get(0)
+        ListConverter(apply(listChildType))
       case Category.MAP =>
-        throw new IllegalArgumentException("Orc map type is not supported.")
+        val mapKeyType = orcType.getChildren().get(0)
+        val mapValueType = orcType.getChildren().get(1)
+        MapConverter(apply(mapKeyType), apply(mapValueType))
       case Category.STRUCT =>
-        throw new IllegalArgumentException("Orc nested struct type is not supported.")
+        new StructConverter(orcType)
       case _ =>
         throw new IllegalArgumentException(
           s"Found orc unsupported type, '${orcType.getCategory}'."
@@ -62,28 +85,91 @@ object OrcConverter {
 
 }
 
-final class StructConverter(fieldTypes: Seq[TypeDescription])
-    extends OrcConverter[StructColumnVector] {
+final case class ListConverter[T <: ColumnVector](elementConverter: OrcConverter[T])
+    extends OrcConverter[ListColumnVector] {
 
-  def readFromColumn[T <: ColumnVector](
+  /**
+   * Reads from a list column vector.
+   *
+   * The row index is an index in the list column vector offsets and lengths array. The length
+   * indicates how many records to read from the offset value.
+   *
+   * The pointer iterates from {@code offset} till {@code offset + length} end value. We also keep
+   * another index ({@code [0 ..  length)})for the values array that indexes read objects.
+   *
+   * @param list the ORC list column vector
+   * @param rowIndex the index into the offsets and lengths array of the list column vector
+   * @return the values object
+   */
+  override def readAt(list: ListColumnVector, rowIndex: Int): Any = {
+    val offset = list.offsets(rowIndex).toInt
+    val length = list.lengths(rowIndex).toInt
+    val values = Array.ofDim[Any](length)
+    val pointerEnd = offset + length
+    var pointer = offset
+    var idx = 0
+    while (pointer < pointerEnd) {
+      if (!list.noNulls && list.isNull(pointer)) {
+        values(idx) = null
+      } else if (!list.noNulls && list.isRepeating && list.isNull(0)) {
+        values(idx) = null
+      } else {
+        values(idx) = elementConverter.readAt(list.child.asInstanceOf[T], pointer)
+      }
+      pointer += 1
+      idx += 1
+    }
+    values.toSeq
+  }
+}
+
+final case class MapConverter[T <: ColumnVector, U <: ColumnVector](
+  keyConverter: OrcConverter[T],
+  valueConverter: OrcConverter[U]
+) extends OrcConverter[MapColumnVector] {
+
+  override def readAt(vector: MapColumnVector, rowIndex: Int): Map[Any, Any] = {
+    val offset = vector.offsets(rowIndex).toInt
+    val length = vector.lengths(rowIndex).toInt
+    var pointer = offset
+    val pointerEnd = offset + length
+    val values = MMap.empty[Any, Any]
+    while (pointer < pointerEnd) {
+      val key = keyConverter.readAt(vector.keys.asInstanceOf[T], pointer)
+      val value = valueConverter.readAt(vector.values.asInstanceOf[U], pointer)
+      val _ = values.put(key, value)
+      pointer += 1
+    }
+    values.toMap
+  }
+}
+
+final class StructConverter(schema: TypeDescription) extends OrcConverter[StructColumnVector] {
+
+  private[this] val fields = schema.getChildren()
+  private[this] val fieldNames = schema.getFieldNames()
+
+  final def getColumnName(index: Int): String = fieldNames.get(index)
+
+  final def readFromColumn[T <: ColumnVector](
     struct: StructColumnVector,
     rowIndex: Int,
     columnIndex: Int
   ): Any = {
-    val deserializer = OrcConverter(fieldTypes(columnIndex)).asInstanceOf[OrcConverter[T]]
+    val converter = OrcConverterFactory(fields.get(columnIndex)).asInstanceOf[OrcConverter[T]]
     val vector = struct.fields(columnIndex).asInstanceOf[T]
     val newRowIndex = if (vector.isRepeating) 0 else rowIndex
-    deserializer.readAt(vector, newRowIndex)
+    converter.readAt(vector, newRowIndex)
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.Nothing"))
-  override final def readAt(vector: StructColumnVector, rowIndex: Int): Seq[Any] = {
-    val size = fieldTypes.size
-    val values = Array.ofDim[Any](size)
+  override final def readAt(vector: StructColumnVector, rowIndex: Int): Map[String, Any] = {
+    val size = fields.size()
+    val values = MMap.empty[String, Any]
     for { columnIndex <- 0 until size } {
-      values.update(columnIndex, readFromColumn(vector, rowIndex, columnIndex))
+      values.put(getColumnName(columnIndex), readFromColumn(vector, rowIndex, columnIndex))
     }
-    values.toSeq
+    values.toMap
   }
 
 }

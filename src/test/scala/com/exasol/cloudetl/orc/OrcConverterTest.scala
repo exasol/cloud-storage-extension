@@ -36,44 +36,17 @@ class OrcConverterTest extends AnyFunSuite with BeforeAndAfterEach with FileMana
     ()
   }
 
-  test("apply throws if orc type is a list") {
-    val orcList = TypeDescription.createList(TypeDescription.createString)
-    val thrown = intercept[IllegalArgumentException] {
-      OrcConverter(orcList)
-    }
-    assert(thrown.getMessage === "Orc list type is not supported.")
-  }
-
-  test("apply throws if orc type is a map") {
-    val orcMap =
-      TypeDescription.createMap(TypeDescription.createString, TypeDescription.createString)
-    val thrown = intercept[IllegalArgumentException] {
-      OrcConverter(orcMap)
-    }
-    assert(thrown.getMessage === "Orc map type is not supported.")
-  }
-
-  test("apply throws if orc type is a nested struct") {
-    val orcStruct =
-      TypeDescription.createStruct().addField("col_int", TypeDescription.createInt())
-    val thrown = intercept[IllegalArgumentException] {
-      OrcConverter(orcStruct)
-    }
-    assert(thrown.getMessage === "Orc nested struct type is not supported.")
-  }
-
   test("apply throws if orc type is unsupported") {
     val orcUnion = TypeDescription.createUnion()
     val thrown = intercept[IllegalArgumentException] {
-      OrcConverter(orcUnion)
+      OrcConverterFactory(orcUnion)
     }
     assert(thrown.getMessage === "Found orc unsupported type, 'UNION'.")
   }
 
   test("reads Decimal value as java.math.decimal") {
-    val schema = TypeDescription
-      .createStruct()
-      .addField("col_decimal", TypeDescription.createDecimal())
+    val schema =
+      TypeDescription.createStruct().addField("col_decimal", TypeDescription.createDecimal())
     val writer = OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(schema))
     val batch = schema.createRowBatch()
     batch.size = 2
