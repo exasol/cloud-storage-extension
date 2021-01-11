@@ -8,7 +8,7 @@ import scala.collection.JavaConverters._
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.DataRecords
-import com.exasol.cloudetl.FileManager
+import com.exasol.cloudetl.TestFileManager
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ExtraMockito
@@ -19,7 +19,7 @@ class ExportTableTest
     extends StorageTest
     with BeforeAndAfterEach
     with DataRecords
-    with FileManager {
+    with TestFileManager {
 
   private[this] var outputPath: Path = _
   private[this] val srcColumns: Seq[String] = Seq(

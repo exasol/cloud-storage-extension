@@ -383,6 +383,7 @@ column types when preparing the table.
 | long                 |                   | BIGINT, DECIMAL(36, 0)          |
 | float                |                   | FLOAT                           |
 | double               |                   | DOUBLE, DOUBLE PRECISION        |
+| binary               |                   | VARCHAR(n), CHAR(n)             |
 | char                 |                   | VARCHAR(n), CHAR(n)             |
 | string               |                   | VARCHAR(n), CHAR(n)             |
 | varchar              |                   | VARCHAR(n), CHAR(n)             |
@@ -392,6 +393,33 @@ column types when preparing the table.
 | list                 |                   | VARCHAR(n), CHAR(n)             |
 | map                  |                   | VARCHAR(n), CHAR(n)             |
 | struct               |                   | VARCHAR(n), CHAR(n)             |
+| union                |                   | VARCHAR(n), CHAR(n)             |
+
+#### Orc Union Type
+
+Unlike `struct` type, `union` type holds a tagged field values. Therefore, there
+are no fields names in the union type.
+
+```java
+unionSchema = TypeDescription.fromString("struct<column:uniontype<i:int,s:string>>");
+unionValue = new OrcUnion(unionSchema);
+unionValue.set(0, new IntWritable(13));
+unionValue.set(1, new Text("abc"));
+```
+
+In the above example union type, we can only read the values using the
+positional tag index. For example, to read the integer `unionValue.0`.
+
+When converting this type into an Exasol `VARCHAR` we decided to use the
+category name of inner types as field names.
+
+The above union value will be converted to a JSON string as following:
+
+```
+{"INT":13,"STRING":"abc"}
+```
+
+If either of the tags are not set, then it is read as a `null` value.
 
 ### Parquet Data Mapping
 

@@ -3,7 +3,7 @@ package com.exasol.cloudetl.parquet
 import java.io.Closeable
 import java.nio.file.Path
 
-import com.exasol.cloudetl.FileManager
+import com.exasol.cloudetl.TestFileManager
 import com.exasol.cloudetl.source.ParquetSource
 import com.exasol.common.data.Row
 
@@ -19,7 +19,7 @@ import org.apache.parquet.schema._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
 
-trait BaseParquetReaderTest extends AnyFunSuite with BeforeAndAfterEach with FileManager {
+trait BaseParquetReaderTest extends AnyFunSuite with BeforeAndAfterEach with TestFileManager {
 
   private[this] var conf: Configuration = _
   private[this] var fileSystem: FileSystem = _

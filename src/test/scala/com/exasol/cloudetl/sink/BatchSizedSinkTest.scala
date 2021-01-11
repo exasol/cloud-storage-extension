@@ -3,7 +3,7 @@ package com.exasol.cloudetl.sink
 import java.nio.file.Path
 
 import com.exasol.cloudetl.DataRecords
-import com.exasol.cloudetl.FileManager
+import com.exasol.cloudetl.TestFileManager
 import com.exasol.cloudetl.bucket.LocalBucket
 import com.exasol.cloudetl.data.ExaColumnInfo
 import com.exasol.cloudetl.storage.StorageProperties
@@ -16,7 +16,7 @@ class BatchSizedSinkTest
     extends AnyFunSuite
     with BeforeAndAfterEach
     with DataRecords
-    with FileManager {
+    with TestFileManager {
 
   private var outputPath: Path = _
   private val properties = Map("BUCKET_PATH" -> "a/path", "DATA_FORMAT" -> "avro")

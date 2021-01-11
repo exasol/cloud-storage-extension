@@ -7,7 +7,6 @@ import com.exasol.cloudetl.util.DateTimeUtil
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.hive.ql.exec.vector._
 import org.apache.orc.TypeDescription
-import org.apache.orc.TypeDescription.Category
 
 /**
  * An interface for all type converters.
@@ -25,61 +24,154 @@ sealed trait OrcConverter[T <: ColumnVector] {
 }
 
 /**
- * A companion object for [[OrcConverter]] interface.
+ * A converter for the Orc {@code BOOLEAN} type.
  */
-object OrcConverterFactory {
-
-  /**
-   * Given the Orc [[org.apache.orc.TypeDescription$]] types creates a
-   * converter that reads the type value into Java objects.
-   */
-  def apply(orcType: TypeDescription): OrcConverter[_ <: ColumnVector] =
-    if (orcType.getCategory().isPrimitive()) {
-      createPrimitiveConverter(orcType)
+object BooleanConverter extends OrcConverter[LongColumnVector] {
+  override def readAt(vector: LongColumnVector, index: Int): Any =
+    if (vector.isNull(index)) {
+      null
     } else {
-      createComplexConverter(orcType)
+      vector.vector(index) == 1L
     }
+}
 
-  private[this] def createPrimitiveConverter(
-    orcType: TypeDescription
-  ): OrcConverter[_ <: ColumnVector] =
-    orcType.getCategory() match {
-      case Category.BOOLEAN   => BooleanConverter
-      case Category.BYTE      => LongConverter
-      case Category.CHAR      => StringConverter
-      case Category.STRING    => StringConverter
-      case Category.VARCHAR   => StringConverter
-      case Category.SHORT     => IntConverter
-      case Category.INT       => IntConverter
-      case Category.LONG      => LongConverter
-      case Category.DECIMAL   => DecimalConverter
-      case Category.FLOAT     => FloatConverter
-      case Category.DOUBLE    => DoubleConverter
-      case Category.DATE      => DateConverter
-      case Category.TIMESTAMP => TimestampConverter
-      case _ =>
-        throw new IllegalArgumentException(
-          s"Found orc unsupported type, '${orcType.getCategory}'."
-        )
+/**
+ * A converter for the Orc {@code BYTE} type.
+ */
+object ByteConverter extends OrcConverter[LongColumnVector] {
+  override def readAt(vector: LongColumnVector, index: Int): Any =
+    if (vector.isNull(index)) {
+      null
+    } else {
+      vector.vector(index).toByte
     }
+}
 
-  private[this] def createComplexConverter(
-    orcType: TypeDescription
-  ): OrcConverter[_ <: ColumnVector] =
-    orcType.getCategory() match {
-      case Category.LIST =>
-        val listChildType = orcType.getChildren().get(0)
-        ListConverter(apply(listChildType))
-      case Category.MAP =>
-        val mapKeyType = orcType.getChildren().get(0)
-        val mapValueType = orcType.getChildren().get(1)
-        MapConverter(apply(mapKeyType), apply(mapValueType))
-      case Category.STRUCT =>
-        new StructConverter(orcType)
-      case _ =>
-        throw new IllegalArgumentException(
-          s"Found orc unsupported type, '${orcType.getCategory}'."
-        )
+/**
+ * A converter for the Orc {@code SHORT} type.
+ */
+object ShortConverter extends OrcConverter[LongColumnVector] {
+  override def readAt(vector: LongColumnVector, index: Int): Any =
+    if (vector.isNull(index)) {
+      null
+    } else {
+      vector.vector(index).toShort
+    }
+}
+
+/**
+ * A converter for the Orc {@code INTEGER} type.
+ */
+object IntConverter extends OrcConverter[LongColumnVector] {
+  override def readAt(vector: LongColumnVector, index: Int): Any =
+    if (vector.isNull(index)) {
+      null
+    } else {
+      vector.vector(index).toInt
+    }
+}
+
+/**
+ * A converter for the Orc {@code LONG} type.
+ */
+object LongConverter extends OrcConverter[LongColumnVector] {
+  override def readAt(vector: LongColumnVector, index: Int): Any =
+    if (vector.isNull(index)) {
+      null
+    } else {
+      vector.vector(index)
+    }
+}
+
+/**
+ * A converter for the Orc {@code DOUBLE} type.
+ */
+object DoubleConverter extends OrcConverter[DoubleColumnVector] {
+  override def readAt(vector: DoubleColumnVector, index: Int): Any =
+    if (vector.isNull(index)) {
+      null
+    } else {
+      vector.vector(index)
+    }
+}
+
+/**
+ * A converter for the Orc {@code FLOAT} type.
+ */
+object FloatConverter extends OrcConverter[DoubleColumnVector] {
+  override def readAt(vector: DoubleColumnVector, index: Int): Any =
+    if (vector.isNull(index)) {
+      null
+    } else {
+      vector.vector(index).toFloat
+    }
+}
+
+/**
+ * A converter for the Orc {@code DATE} type.
+ *
+ * It reads the values as days sine the epoch.
+ */
+object DateConverter extends OrcConverter[LongColumnVector] {
+  override def readAt(vector: LongColumnVector, index: Int): java.sql.Date =
+    if (vector.isNull(index)) {
+      null
+    } else {
+      val daysSinceEpoch = vector.vector(index)
+      DateTimeUtil.daysToDate(daysSinceEpoch)
+    }
+}
+
+/**
+ * A converter for the Orc {@code TIMESTAMP} type.
+ */
+object TimestampConverter extends OrcConverter[TimestampColumnVector] {
+  override def readAt(vector: TimestampColumnVector, index: Int): java.sql.Timestamp =
+    if (vector.isNull(index)) {
+      null
+    } else {
+      val timestamp = new java.sql.Timestamp(vector.getTime(index))
+      timestamp.setNanos(vector.getNanos(index))
+      timestamp
+    }
+}
+
+/**
+ * A converter for the Orc {@code DECIMAL} type.
+ */
+object DecimalConverter extends OrcConverter[DecimalColumnVector] {
+  override def readAt(vector: DecimalColumnVector, index: Int): java.math.BigDecimal =
+    if (vector.isNull(index)) {
+      null
+    } else {
+      vector.vector(index).getHiveDecimal.bigDecimalValue()
+    }
+}
+
+/**
+ * A converter for the Orc {@code CHAR, STRING and VARCHAR} types.
+ */
+object StringConverter extends OrcConverter[BytesColumnVector] with LazyLogging {
+  override def readAt(vector: BytesColumnVector, index: Int): String =
+    if (vector.isNull(index)) {
+      null
+    } else {
+      vector.toString(index)
+    }
+}
+
+/**
+ * A converter for the Orc {@code BINARY} type.
+ */
+object BinaryConverter extends OrcConverter[BytesColumnVector] {
+  override def readAt(vector: BytesColumnVector, index: Int): String =
+    if (vector.isNull(index)) {
+      null
+    } else {
+      val startOffset = vector.start(index)
+      val endOffset = startOffset + vector.length(index)
+      val bytesSlice = vector.vector(index).slice(startOffset, endOffset)
+      new String(bytesSlice, "UTF8")
     }
 }
 
@@ -160,34 +252,47 @@ final case class MapConverter[T <: ColumnVector, U <: ColumnVector](
 }
 
 /**
- * A converter for the Orc {@code STRUCT} type.
+ * An abstract class for Orc {@code STRUCT} or {@code UNION} converters.
  *
  * @param schema the schema with field names and types
  */
-final class StructConverter(schema: TypeDescription) extends OrcConverter[StructColumnVector] {
+sealed abstract class AbstractStructLikeConverter(schema: TypeDescription) {
 
-  private[this] val fields = schema.getChildren()
-  private[this] val fieldNames = schema.getFieldNames()
+  protected val fields = schema.getChildren()
+  protected val size = fields.size()
 
-  final def getColumnName(index: Int): String = fieldNames.get(index)
+  /**
+   * Returns the name of the field given the position in the Orc schema.
+   *
+   * In the {@code STRUCT} schema, the field names are defined. So it is
+   * easy to name for given field index. However, {@code UNION} schema
+   * does not define field names, they are indexed from {@code 0 ..
+   * fieldSize}. In this case, we use the field category name, for
+   * example, "INT" for integer types or "STRING" for string (VARCHAR,
+   * BINARY, CHAR) types.
+   *
+   * @param fieldIndex the positional index of the field
+   * @return name of the field
+   */
+  def getFieldName(fieldIndex: Int): String
 
-  final def readFromColumn[T <: ColumnVector](
-    struct: StructColumnVector,
+  final def readFromFieldColumn[T <: ColumnVector](
+    fieldVector: ColumnVector,
     rowIndex: Int,
-    columnIndex: Int
+    fieldIndex: Int
   ): Any = {
-    val converter = OrcConverterFactory(fields.get(columnIndex)).asInstanceOf[OrcConverter[T]]
-    val vector = struct.fields(columnIndex).asInstanceOf[T]
-    val newRowIndex = if (vector.isRepeating) 0 else rowIndex
-    converter.readAt(vector, newRowIndex)
+    val converter = OrcConverterFactory(fields.get(fieldIndex)).asInstanceOf[OrcConverter[T]]
+    val newRowIndex = if (fieldVector.isRepeating) 0 else rowIndex
+    converter.readAt(fieldVector.asInstanceOf[T], newRowIndex)
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.Nothing"))
-  override final def readAt(vector: StructColumnVector, rowIndex: Int): Map[String, Any] = {
-    val size = fields.size()
+  final def readFields(fieldVectors: Array[ColumnVector], rowIndex: Int): Map[String, Any] = {
     val values = MMap.empty[String, Any]
-    for { columnIndex <- 0 until size } {
-      values.put(getColumnName(columnIndex), readFromColumn(vector, rowIndex, columnIndex))
+    for { fieldIndex <- 0 until size } {
+      val key = getFieldName(fieldIndex)
+      val value = readFromFieldColumn(fieldVectors(fieldIndex), rowIndex, fieldIndex)
+      values.put(key, value)
     }
     values.toMap
   }
@@ -195,111 +300,31 @@ final class StructConverter(schema: TypeDescription) extends OrcConverter[Struct
 }
 
 /**
- * A converter for the Orc {@code BOOLEAN} type.
+ * A converter for the Orc {@code STRUCT} type.
  */
-object BooleanConverter extends OrcConverter[LongColumnVector] {
-  override def readAt(vector: LongColumnVector, index: Int): Boolean =
-    vector.vector(index) == 1
+final case class StructConverter(schema: TypeDescription)
+    extends AbstractStructLikeConverter(schema)
+    with OrcConverter[StructColumnVector] {
+
+  private[this] val fieldNames = schema.getFieldNames()
+
+  override final def getFieldName(fieldIndex: Int): String = fieldNames.get(fieldIndex)
+
+  override final def readAt(struct: StructColumnVector, rowIndex: Int): Map[String, Any] =
+    readFields(struct.fields, rowIndex)
+
 }
 
 /**
- * A converter for the Orc {@code INTEGER} type.
+ * A converter for the Orc {@code UNION} type.
  */
-object IntConverter extends OrcConverter[LongColumnVector] {
-  override def readAt(vector: LongColumnVector, index: Int): Any =
-    if (vector.isNull(index)) {
-      null
-    } else {
-      vector.vector(index).toInt
-    }
-}
+final case class UnionConverter(schema: TypeDescription)
+    extends AbstractStructLikeConverter(schema)
+    with OrcConverter[UnionColumnVector] {
 
-/**
- * A converter for the Orc {@code LONG} type.
- */
-object LongConverter extends OrcConverter[LongColumnVector] {
-  override def readAt(vector: LongColumnVector, index: Int): Any =
-    if (vector.isNull(index)) {
-      null
-    } else {
-      vector.vector(index)
-    }
-}
+  override final def getFieldName(index: Int): String = fields.get(index).getCategory().name
 
-/**
- * A converter for the Orc {@code DOUBLE} type.
- */
-object DoubleConverter extends OrcConverter[DoubleColumnVector] {
-  override def readAt(vector: DoubleColumnVector, index: Int): Any =
-    if (vector.isNull(index)) {
-      null
-    } else {
-      vector.vector(index)
-    }
-}
+  override final def readAt(union: UnionColumnVector, rowIndex: Int): Map[String, Any] =
+    readFields(union.fields, rowIndex)
 
-/**
- * A converter for the Orc {@code FLOAT} type.
- */
-object FloatConverter extends OrcConverter[DoubleColumnVector] {
-  override def readAt(vector: DoubleColumnVector, index: Int): Any =
-    if (vector.isNull(index)) {
-      null
-    } else {
-      vector.vector(index).toFloat
-    }
-}
-
-/**
- * A converter for the Orc {@code DATE} type.
- *
- * It reads the values as days sine the epoch.
- */
-object DateConverter extends OrcConverter[LongColumnVector] {
-  override def readAt(vector: LongColumnVector, index: Int): java.sql.Date =
-    if (vector.isNull(index)) {
-      null
-    } else {
-      val daysSinceEpoch = vector.vector(index)
-      DateTimeUtil.daysToDate(daysSinceEpoch)
-    }
-}
-
-/**
- * A converter for the Orc {@code TIMESTAMP} type.
- */
-object TimestampConverter extends OrcConverter[TimestampColumnVector] {
-  override def readAt(vector: TimestampColumnVector, index: Int): java.sql.Timestamp =
-    if (vector.isNull(index)) {
-      null
-    } else {
-      new java.sql.Timestamp(vector.getTime(index))
-    }
-}
-
-/**
- * A converter for the Orc {@code DECIMAL} type.
- */
-object DecimalConverter extends OrcConverter[DecimalColumnVector] {
-  override def readAt(vector: DecimalColumnVector, index: Int): java.math.BigDecimal =
-    if (vector.isNull(index)) {
-      null
-    } else {
-      vector.vector(index).getHiveDecimal.bigDecimalValue()
-    }
-}
-
-/**
- * A converter for the Orc {@code STRING} type.
- */
-object StringConverter extends OrcConverter[BytesColumnVector] with LazyLogging {
-  override def readAt(vector: BytesColumnVector, index: Int): String =
-    if (vector.isNull(index)) {
-      null
-    } else {
-      val bytes = vector.vector.headOption.fold(Array.empty[Byte])(
-        _.slice(vector.start(index), vector.start(index) + vector.length(index))
-      )
-      new String(bytes, "UTF8")
-    }
 }

@@ -34,8 +34,8 @@
 
 set -o pipefail
 
-declare -r sbt_release_version="1.4.4"
-declare -r sbt_unreleased_version="1.4.4"
+declare -r sbt_release_version="1.4.6"
+declare -r sbt_unreleased_version="1.4.6"
 
 declare -r latest_213="2.13.4"
 declare -r latest_212="2.12.12"
@@ -247,11 +247,18 @@ java_version() {
   echo "$version"
 }
 
+is_apple_silicon() { [[ "$(uname -s)" == "Darwin" && "$(uname -m)" == "arm64" ]]; }
+
 # MaxPermSize critical on pre-8 JVMs but incurs noisy warning on 8+
 default_jvm_opts() {
   local -r v="$(java_version)"
   if [[ $v -ge 10 ]]; then
-    echo "$default_jvm_opts_common -XX:+UnlockExperimentalVMOptions -XX:+UseJVMCICompiler"
+    if is_apple_silicon; then
+      # As of Dec 2020, JVM for Apple Silicon (M1) doesn't support JVMCI
+      echo "$default_jvm_opts_common"
+    else
+      echo "$default_jvm_opts_common -XX:+UnlockExperimentalVMOptions -XX:+UseJVMCICompiler"
+    fi
   elif [[ $v -ge 8 ]]; then
     echo "$default_jvm_opts_common"
   else

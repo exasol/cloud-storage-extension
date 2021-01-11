@@ -1,6 +1,6 @@
 package com.exasol.cloudetl.bucket
 
-import com.exasol.cloudetl.FileManager
+import com.exasol.cloudetl.TestFileManager
 import com.exasol.cloudetl.source.Source
 import com.exasol.cloudetl.storage.FileFormat
 
@@ -8,7 +8,7 @@ import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.SparkSession
 
 @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
-class DeltaFormatBucketTest extends AbstractBucketTest with FileManager {
+class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager {
 
   private[this] var path: String = _
   private[this] var tmpDir: java.nio.file.Path = _
