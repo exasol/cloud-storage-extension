@@ -1,8 +1,9 @@
-package com.exasol.cloudetl.orc
+package com.exasol.cloudetl.orc.converter
 
 import java.nio.file.Path
 
 import com.exasol.cloudetl.TestFileManager
+import com.exasol.cloudetl.orc.OrcTestDataWriter
 import com.exasol.cloudetl.source.OrcSource
 import com.exasol.common.data.Row
 

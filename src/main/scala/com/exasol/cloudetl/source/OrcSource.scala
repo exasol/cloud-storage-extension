@@ -2,7 +2,7 @@ package com.exasol.cloudetl.source
 
 import scala.util.control.NonFatal
 
-import com.exasol.cloudetl.orc.StructConverter
+import com.exasol.cloudetl.orc.converter.StructConverter
 import com.exasol.common.data.Row
 import com.exasol.common.json.JsonMapper
 

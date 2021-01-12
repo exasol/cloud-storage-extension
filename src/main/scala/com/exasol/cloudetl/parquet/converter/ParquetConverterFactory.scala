@@ -11,7 +11,7 @@ import org.apache.parquet.schema.Type.Repetition
 /**
  * Parquet field data type converter factory class.
  */
-object ConverterFactory {
+object ParquetConverterFactory {
 
   /**
    * Creates Parquet converters that convert schema field value type

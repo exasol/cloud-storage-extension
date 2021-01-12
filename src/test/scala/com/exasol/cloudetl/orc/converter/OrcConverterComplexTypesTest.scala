@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.orc
+package com.exasol.cloudetl.orc.converter
 
 import com.exasol.common.data.Row
 

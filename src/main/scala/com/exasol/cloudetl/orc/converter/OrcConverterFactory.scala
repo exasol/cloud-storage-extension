@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.orc
+package com.exasol.cloudetl.orc.converter
 
 import org.apache.hadoop.hive.ql.exec.vector.ColumnVector
 import org.apache.orc.TypeDescription

@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.orc
+package com.exasol.cloudetl.orc.converter
 
 import scala.collection.mutable.{Map => MMap}
 

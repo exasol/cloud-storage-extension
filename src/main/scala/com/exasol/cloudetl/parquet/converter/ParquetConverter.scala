@@ -25,7 +25,7 @@ import org.apache.parquet.schema.Type
  *
  * The Parquet reader calls the [[ParquetRootConverter]] for the top
  * level Parquet schema. The root converter then generates subsequent
- * converters using [[ConverterFactory]] for each type.
+ * converters using [[ParquetConverterFactory]] for each type.
  *
  * The sealed trait ensures that all the implementations should be in
  * this file.
@@ -273,7 +273,7 @@ final case class RepeatedGroupConverter(
   private[this] def createFieldConverters(): Array[Converter] = {
     val converters = Array.ofDim[Converter](size)
     for { i <- 0 until size } {
-      converters(i) = ConverterFactory(
+      converters(i) = ParquetConverterFactory(
         groupType.getType(i),
         i,
         new ValueHolder {
@@ -335,7 +335,7 @@ final case class RepeatedPrimitiveConverter(
   }
 
   private[this] def createPrimitiveElementConverter(): Converter =
-    ConverterFactory(
+    ParquetConverterFactory(
       elementType,
       index,
       new ValueHolder {
@@ -392,7 +392,7 @@ final case class ArrayPrimitiveConverter(
     with ArrayConverter {
 
   override def createElementConverter(): Converter =
-    ConverterFactory(elementType, index, dataHolder)
+    ParquetConverterFactory(elementType, index, dataHolder)
 }
 
 /**
@@ -419,7 +419,7 @@ final case class ArrayGroupConverter(
     with ArrayConverter {
 
   override def createElementConverter(): Converter = new GroupConverter {
-    val innerConverter = ConverterFactory(elementType, index, dataHolder)
+    val innerConverter = ParquetConverterFactory(elementType, index, dataHolder)
     override def getConverter(index: Int): Converter = innerConverter
     override def start(): Unit = {}
     override def end(): Unit = {}
@@ -472,8 +472,8 @@ final case class MapConverter(groupType: GroupType, index: Int, parentDataHolder
     val mapType = groupType.getFields().get(0).asGroupType()
     val mapKeyType = mapType.getFields().get(0)
     val mapValueType = mapType.getFields().get(1)
-    val keysConverter = ConverterFactory(mapKeyType, index, keysDataHolder)
-    val valuesConverter = ConverterFactory(mapValueType, index, valuesDataHolder)
+    val keysConverter = ParquetConverterFactory(mapKeyType, index, keysDataHolder)
+    val valuesConverter = ParquetConverterFactory(mapValueType, index, valuesDataHolder)
 
     override def getConverter(index: Int): Converter =
       if (index == 0) {
@@ -507,7 +507,7 @@ abstract class AbstractStructConverter(
   private[this] def createFieldConverters(): Array[Converter] = {
     val converters = Array.ofDim[Converter](size)
     for { i <- 0 until size } {
-      converters(i) = ConverterFactory(groupType.getType(i), i, dataHolder)
+      converters(i) = ParquetConverterFactory(groupType.getType(i), i, dataHolder)
     }
     converters
   }
