@@ -1,10 +1,10 @@
 package com.exasol.cloudetl.source
 
-import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
-import com.exasol.cloudetl.orc.StructDeserializer
+import com.exasol.cloudetl.orc.converter.StructConverter
 import com.exasol.common.data.Row
+import com.exasol.common.json.JsonMapper
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
@@ -65,16 +65,29 @@ final case class OrcSource(
   }
 
   private[this] final class BatchIterator(batch: VectorizedRowBatch) extends Iterator[Row] {
-    var offset = 0
+    val schema = reader.getSchema()
+    val fields = schema.getChildren()
+    val fieldNames = schema.getFieldNames()
     val vector = new StructColumnVector(batch.numCols, batch.cols: _*)
-    val deserializer = new StructDeserializer(reader.getSchema.getChildren.asScala)
+    val converter = new StructConverter(schema)
+    var offset = 0
 
     override def hasNext: Boolean = offset < batch.size
 
     override def next(): Row = {
-      val values = deserializer.readAt(vector, offset)
+      val valuesMap = converter.readAt(vector, offset)
+      val array = Array.ofDim[Any](fields.size)
+      for { index <- 0 until fields.size() } {
+        val columnName = fieldNames.get(index)
+        val columnValue = valuesMap.getOrElse(columnName, null)
+        if (fields.get(index).getCategory().isPrimitive()) {
+          array.update(index, columnValue)
+        } else {
+          array.update(index, JsonMapper.toJson(columnValue))
+        }
+      }
       offset = offset + 1
-      Row(values.toSeq)
+      Row(array.toSeq)
     }
   }
 

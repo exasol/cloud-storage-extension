@@ -7,14 +7,19 @@ import scala.collection.JavaConverters._
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
-import com.exasol.cloudetl.DummyRecordsTest
+import com.exasol.cloudetl.DataRecords
+import com.exasol.cloudetl.TestFileManager
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ExtraMockito
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 
-class ExportTableTest extends StorageTest with DummyRecordsTest with BeforeAndAfterEach {
+class ExportTableTest
+    extends StorageTest
+    with BeforeAndAfterEach
+    with DataRecords
+    with TestFileManager {
 
   private[this] var outputPath: Path = _
   private[this] val srcColumns: Seq[String] = Seq(
@@ -88,7 +93,7 @@ class ExportTableTest extends StorageTest with DummyRecordsTest with BeforeAndAf
   }
 
   override final def afterEach(): Unit = {
-    deleteFiles(outputPath)
+    deletePathFiles(outputPath)
     ()
   }
 

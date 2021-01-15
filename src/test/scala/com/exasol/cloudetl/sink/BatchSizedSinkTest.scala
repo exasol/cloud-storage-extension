@@ -2,7 +2,8 @@ package com.exasol.cloudetl.sink
 
 import java.nio.file.Path
 
-import com.exasol.cloudetl.DummyRecordsTest
+import com.exasol.cloudetl.DataRecords
+import com.exasol.cloudetl.TestFileManager
 import com.exasol.cloudetl.bucket.LocalBucket
 import com.exasol.cloudetl.data.ExaColumnInfo
 import com.exasol.cloudetl.storage.StorageProperties
@@ -11,7 +12,11 @@ import com.exasol.common.data.Row
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
 
-class BatchSizedSinkTest extends AnyFunSuite with BeforeAndAfterEach with DummyRecordsTest {
+class BatchSizedSinkTest
+    extends AnyFunSuite
+    with BeforeAndAfterEach
+    with DataRecords
+    with TestFileManager {
 
   private var outputPath: Path = _
   private val properties = Map("BUCKET_PATH" -> "a/path", "DATA_FORMAT" -> "avro")
@@ -35,7 +40,7 @@ class BatchSizedSinkTest extends AnyFunSuite with BeforeAndAfterEach with DummyR
   }
 
   override final def afterEach(): Unit = {
-    deleteFiles(outputPath)
+    deletePathFiles(outputPath)
     ()
   }
 

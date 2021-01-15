@@ -1,25 +1,19 @@
 package com.exasol.cloudetl.source
 
-import java.nio.file.Paths
+import com.exasol.cloudetl.storage.FileFormat
 
-class OrcSourceTest extends AbstractSourceTest {
+import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.fs.FileSystem
+import org.apache.hadoop.fs.Path
+import org.scalatest.funsuite.AnyFunSuite
 
-  override val format: String = "orc"
-
-  test("stream returns count of records from single ORC file") {
-    val filePath = Paths.get(s"$resourceDir/sales*.orc")
-    assert(getRecordsCount(filePath) === 1998)
-  }
-
-  test("stream returns count of records from ORC files") {
-    val filePath = Paths.get(s"$resourceDir/employee*.orc")
-    assert(getRecordsCount(filePath) === 438304)
-  }
+class OrcSourceTest extends AnyFunSuite {
 
   test("stream throws if it cannot create ORC reader") {
-    val nonPath = new org.apache.hadoop.fs.Path(s"$resourceDir/notFile.orc")
+    val nonPath = new Path("/tmp/notFile.orc")
     val thrown = intercept[java.io.FileNotFoundException] {
-      getSource(nonPath).stream().size
+      val conf = new Configuration()
+      Source(FileFormat("orc"), nonPath, conf, FileSystem.get(conf))
     }
     assert(thrown.getMessage === s"File $nonPath does not exist")
   }
