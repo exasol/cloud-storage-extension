@@ -9,16 +9,7 @@ class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
 
   test("reads BOOLEAN as long value") {
     val schema = createStruct().addField("boolean", createBoolean())
-    val batch = schema.createRowBatch()
-    batch.size = 3
-    withWriter(schema) { writer =>
-      val boolVector = batch.cols(0).asInstanceOf[LongColumnVector]
-      boolVector.noNulls = false
-      boolVector.vector(0) = 1L
-      boolVector.vector(1) = 0L
-      boolVector.isNull(2) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List(true, false, null))
     val records = getRecords()
     assert(records(0).get(0) === true)
     assert(records(1).get(0) === false)
@@ -27,16 +18,7 @@ class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
 
   test("reads BYTE as byte value") {
     val schema = createStruct().addField("byte", createByte())
-    val batch = schema.createRowBatch()
-    batch.size = 2
-    withWriter(schema) { writer =>
-      val byte = java.lang.Byte.valueOf("13")
-      val byteVector = batch.cols(0).asInstanceOf[LongColumnVector]
-      byteVector.noNulls = false
-      byteVector.vector(0) = byte.byteValue().toLong
-      byteVector.isNull(1) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List(13, null))
     val records = getRecords()
     assert(records(0).get(0) === 13)
     assert(records(1).isNullAt(0) === true)
@@ -44,15 +26,7 @@ class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
 
   test("reads SHORT as short value") {
     val schema = createStruct().addField("short", createShort())
-    val batch = schema.createRowBatch()
-    batch.size = 2
-    withWriter(schema) { writer =>
-      val shortVector = batch.cols(0).asInstanceOf[LongColumnVector]
-      shortVector.noNulls = false
-      shortVector.vector(0) = 314
-      shortVector.isNull(1) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List(314, null))
     val records = getRecords()
     assert(records(0).get(0) === 314)
     assert(records(1).isNullAt(0) === true)
@@ -60,15 +34,7 @@ class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
 
   test("reads INT as integer value") {
     val schema = createStruct().addField("int", createInt())
-    val batch = schema.createRowBatch()
-    batch.size = 2
-    withWriter(schema) { writer =>
-      val intVector = batch.cols(0).asInstanceOf[LongColumnVector]
-      intVector.noNulls = false
-      intVector.vector(0) = 314
-      intVector.isNull(1) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List(314, null))
     val records = getRecords()
     assert(records(0).get(0) === 314)
     assert(records(1).isNullAt(0) === true)
@@ -76,15 +42,7 @@ class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
 
   test("reads LONG as long value") {
     val schema = createStruct().addField("long", createLong())
-    val batch = schema.createRowBatch()
-    batch.size = 2
-    withWriter(schema) { writer =>
-      val longVector = batch.cols(0).asInstanceOf[LongColumnVector]
-      longVector.noNulls = false
-      longVector.vector(0) = 3L
-      longVector.isNull(1) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List(3L, null))
     val records = getRecords()
     assert(records(0).get(0) === 3L)
     assert(records(1).isNullAt(0) === true)
@@ -92,15 +50,7 @@ class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
 
   test("reads FLOAT as float value") {
     val schema = createStruct().addField("float", createFloat())
-    val batch = schema.createRowBatch()
-    batch.size = 2
-    withWriter(schema) { writer =>
-      val floatVector = batch.cols(0).asInstanceOf[DoubleColumnVector]
-      floatVector.noNulls = false
-      floatVector.vector(0) = 3.14F
-      floatVector.isNull(1) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List(3.14F, null))
     val records = getRecords()
     assert(records(0).get(0) === 3.14f)
     assert(records(1).isNullAt(0) === true)
@@ -108,15 +58,7 @@ class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
 
   test("reads DOUBLE as double value") {
     val schema = createStruct().addField("double", createDouble())
-    val batch = schema.createRowBatch()
-    batch.size = 2
-    withWriter(schema) { writer =>
-      val floatVector = batch.cols(0).asInstanceOf[DoubleColumnVector]
-      floatVector.noNulls = false
-      floatVector.vector(0) = 2.71
-      floatVector.isNull(1) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List(2.71, null))
     val records = getRecords()
     assert(records(0).get(0) === 2.71)
     assert(records(1).isNullAt(0) === true)
@@ -141,16 +83,7 @@ class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
 
   test("reads DATE as java.sql.date value") {
     val schema = createStruct().addField("date", createDate())
-    val batch = schema.createRowBatch()
-    batch.size = 3
-    withWriter(schema) { writer =>
-      val dateVector = batch.cols(0).asInstanceOf[LongColumnVector]
-      dateVector.noNulls = false
-      dateVector.vector(0) = 0
-      dateVector.vector(1) = 1
-      dateVector.isNull(2) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List(0, 1, null))
     val records = getRecords()
     assert(records(0).get(0) === java.sql.Date.valueOf("1970-01-01"))
     assert(records(1).get(0) === java.sql.Date.valueOf("1970-01-02"))
@@ -158,19 +91,10 @@ class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
   }
 
   test("reads TIMESTAMP as java.sql.timestamp value") {
-    val schema = createStruct().addField("timestamp", createTimestamp())
-    val batch = schema.createRowBatch()
-    batch.size = 3
     val timestamp1 = java.sql.Timestamp.from(java.time.Instant.EPOCH)
     val timestamp2 = new java.sql.Timestamp(System.currentTimeMillis())
-    withWriter(schema) { writer =>
-      val timestampVector = batch.cols(0).asInstanceOf[TimestampColumnVector]
-      timestampVector.noNulls = false
-      timestampVector.set(0, timestamp1)
-      timestampVector.set(1, timestamp2)
-      timestampVector.isNull(2) = true
-      writer.addRowBatch(batch)
-    }
+    val schema = createStruct().addField("timestamp", createTimestamp())
+    orcWriter.write[Any](schema, List(timestamp1, timestamp2, null))
     val records = getRecords()
     assert(records(0).get(0) === timestamp1)
     assert(records(1).get(0) === timestamp2)
@@ -179,65 +103,35 @@ class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
 
   test("reads CHAR as string value") {
     val schema = createStruct().addField("string", createChar())
-    val batch = schema.createRowBatch()
-    batch.size = 2
-    withWriter(schema) { writer =>
-      val charVector = batch.cols(0).asInstanceOf[BytesColumnVector]
-      charVector.noNulls = false
-      charVector.setVal(0, "value".getBytes("UTF-8"))
-      charVector.isNull(1) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List("value", null))
     val records = getRecords()
     assert(records(0).get(0) === "value")
     assert(records(1).isNullAt(0) === true)
   }
 
+  // scalastyle:off nonascii
   test("reads STRING as string value") {
     val schema = createStruct().addField("string", createString())
-    val batch = schema.createRowBatch()
-    batch.size = 2
-    withWriter(schema) { writer =>
-      val stringVector = batch.cols(0).asInstanceOf[BytesColumnVector]
-      stringVector.noNulls = false
-      stringVector.setVal(0, "value".getBytes("UTF-8"))
-      stringVector.isNull(1) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List("välue", null))
     val records = getRecords()
-    assert(records(0).get(0) === "value")
+    assert(records(0).get(0) === "välue")
     assert(records(1).isNullAt(0) === true)
   }
 
   test("reads VARCHAR as string value") {
     val schema = createStruct().addField("string", createVarchar())
-    val batch = schema.createRowBatch()
-    batch.size = 2
-    withWriter(schema) { writer =>
-      val varcharVector = batch.cols(0).asInstanceOf[BytesColumnVector]
-      varcharVector.noNulls = false
-      varcharVector.setVal(0, "value".getBytes("UTF-8"))
-      varcharVector.isNull(1) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List("smiley ☺", null))
     val records = getRecords()
-    assert(records(0).get(0) === "value")
+    assert(records(0).get(0) === "smiley ☺")
     assert(records(1).isNullAt(0) === true)
   }
+  // scalastyle:on nonascii
 
   test("reads BINARY as string value") {
     val schema = createStruct().addField("string", createBinary())
-    val batch = schema.createRowBatch()
-    batch.size = 2
-    withWriter(schema) { writer =>
-      val binaryVector = batch.cols(0).asInstanceOf[BytesColumnVector]
-      binaryVector.noNulls = false
-      binaryVector.setVal(0, "value".getBytes("UTF-8"))
-      binaryVector.isNull(1) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List("str", null))
     val records = getRecords()
-    assert(records(0).get(0) === "value")
+    assert(records(0).get(0) === "str")
     assert(records(1).isNullAt(0) === true)
   }
 

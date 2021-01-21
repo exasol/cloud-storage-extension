@@ -13,7 +13,7 @@ import org.apache.orc.TypeDescription.Category
 @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
 class OrcTestDataWriter(path: Path, conf: Configuration) {
 
-  final def write[T <: AnyRef](
+  final def write[T](
     schema: TypeDescription,
     values: List[T]
   ): Unit = {
@@ -40,13 +40,22 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
     column: ColumnVector
   ): (Any, Int) => Unit =
     orcType.getCategory() match {
-      case Category.INT    => longWriter(column.asInstanceOf[LongColumnVector])
-      case Category.LONG   => longWriter(column.asInstanceOf[LongColumnVector])
-      case Category.DOUBLE => doubleWriter(column.asInstanceOf[DoubleColumnVector])
-      case Category.STRING => stringWriter(column.asInstanceOf[BytesColumnVector])
-      case Category.LIST   => listWriter(column.asInstanceOf[ListColumnVector], orcType)
-      case Category.MAP    => mapWriter(column.asInstanceOf[MapColumnVector], orcType)
-      case Category.STRUCT => structWriter(column.asInstanceOf[StructColumnVector], orcType)
+      case Category.BOOLEAN   => longWriter(column.asInstanceOf[LongColumnVector])
+      case Category.BYTE      => longWriter(column.asInstanceOf[LongColumnVector])
+      case Category.SHORT     => longWriter(column.asInstanceOf[LongColumnVector])
+      case Category.INT       => longWriter(column.asInstanceOf[LongColumnVector])
+      case Category.LONG      => longWriter(column.asInstanceOf[LongColumnVector])
+      case Category.DATE      => longWriter(column.asInstanceOf[LongColumnVector])
+      case Category.FLOAT     => doubleWriter(column.asInstanceOf[DoubleColumnVector])
+      case Category.DOUBLE    => doubleWriter(column.asInstanceOf[DoubleColumnVector])
+      case Category.CHAR      => stringWriter(column.asInstanceOf[BytesColumnVector])
+      case Category.VARCHAR   => stringWriter(column.asInstanceOf[BytesColumnVector])
+      case Category.BINARY    => stringWriter(column.asInstanceOf[BytesColumnVector])
+      case Category.STRING    => stringWriter(column.asInstanceOf[BytesColumnVector])
+      case Category.TIMESTAMP => timestampWriter(column.asInstanceOf[TimestampColumnVector])
+      case Category.LIST      => listWriter(column.asInstanceOf[ListColumnVector], orcType)
+      case Category.MAP       => mapWriter(column.asInstanceOf[MapColumnVector], orcType)
+      case Category.STRUCT    => structWriter(column.asInstanceOf[StructColumnVector], orcType)
       case _ =>
         throw new UnsupportedOperationException(s"Unknown writer type '$orcType'")
     }
@@ -54,10 +63,14 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
   private[this] def longWriter(column: LongColumnVector): (Any, Int) => Unit =
     (value: Any, index: Int) =>
       value match {
-        case x: Int   => column.vector(index) = x.toLong
-        case x: Long  => column.vector(index) = x
-        case x: Short => column.vector(index) = x.toLong
-        case x: Byte  => column.vector(index) = x.toLong
+        case x if isNull(x) =>
+          column.noNulls = false
+          column.isNull(index) = true
+        case x: Boolean => column.vector(index) = if (x) 1L else 0L
+        case x: Byte    => column.vector(index) = x.toLong
+        case x: Short   => column.vector(index) = x.toLong
+        case x: Int     => column.vector(index) = x.toLong
+        case x: Long    => column.vector(index) = x
         case _ =>
           column.noNulls = false
           column.isNull(index) = true
@@ -76,6 +89,13 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
       value match {
         case str: String => column.setVal(index, str.getBytes("UTF-8"))
         case _           => setNull(column, index)
+    }
+
+  private[this] def timestampWriter(column: TimestampColumnVector): (Any, Int) => Unit =
+    (value: Any, index: Int) =>
+      value match {
+        case ts: java.sql.Timestamp => column.set(index, ts)
+        case _                      => setNull(column, index)
     }
 
   @SuppressWarnings(Array("org.wartremover.warts.Equals"))
@@ -149,6 +169,8 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
         case _ => setNull(column, index)
       }
   }
+
+  private[this] def isNull(obj: Any): Boolean = !Option(obj).isDefined
 
   private[this] def setNull(column: ColumnVector, index: Int): Unit = {
     if (column.isInstanceOf[ListColumnVector]) {

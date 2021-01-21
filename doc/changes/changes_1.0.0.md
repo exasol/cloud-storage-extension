@@ -1,4 +1,4 @@
-# Cloud Storage Extension 0.9.1, released 2020-MM-DD
+# Cloud Storage Extension 1.0.0, released 2021-MM-DD
 
 ## Features / Enhancements
 
@@ -29,8 +29,13 @@
 
 ### Test Dependency Updates
 
+* Added `org.hamcrest:hamcrest:2.2`
+* Added `com.exasol:hamcrest-resultset-matcher:1.3.0`
+* Added `com.exasol:test-db-builder-java:3.0.0`
+* Added `com.exasol:exasol-testcontainers:3.4.1`
+* Added `org.testcontainers:localstack:1.15.1`
 * Updates `org.scalatest:scalatest:3.2.2` to `3.2.3`
-* Updated `org.mockito:mockito-core:3.5.13` to `3.6.28`
+* Updated `org.mockito:mockito-core:3.5.13` to `3.7.7`
 
 ### Plugin Updates
 
