@@ -45,6 +45,10 @@ final case class S3Bucket(path: String, params: StorageProperties)
     conf.set("fs.file.impl", classOf[org.apache.hadoop.fs.LocalFileSystem].getName)
     conf.set("fs.s3a.impl", classOf[org.apache.hadoop.fs.s3a.S3AFileSystem].getName)
     conf.set("fs.s3a.endpoint", properties.getString(S3_ENDPOINT))
+    conf.set("fs.s3a.path.style.access", "true")
+    conf.set("fs.s3a.change.detection.mode", "none")
+    conf.set("fs.s3a.change.detection.version.required", "false")
+    conf.set("fs.s3a.connection.ssl.enabled", "false")
 
     val mergedProperties = if (properties.hasNamedConnection()) {
       properties.merge(S3_ACCESS_KEY)
