@@ -72,7 +72,7 @@ class ParquetDataImporterIT
 
   test("imports boolean") {
     ParquetChecker("optional boolean column;", "BOOLEAN")
-      .withInputValues(true, false, null)
+      .withInputValues[Any](List(true, false, null))
       .assertResultSet(
         table()
           .row(java.lang.Boolean.TRUE)
@@ -84,7 +84,7 @@ class ParquetDataImporterIT
 
   test("imports int32") {
     ParquetChecker("optional int32 column;", "DECIMAL(9,0)")
-      .withInputValues(1, 666, null)
+      .withInputValues[Any](List(1, 666, null))
       .assertResultSet(
         table()
           .row(java.lang.Integer.valueOf(1))
@@ -96,7 +96,7 @@ class ParquetDataImporterIT
 
   test("imports int32 (date)") {
     ParquetChecker("required int32 column (DATE);", "DATE")
-      .withInputValues(0, 1, 54, 567, 1234)
+      .withInputValues[Any](List(0, 1, 54, 567, 1234))
       .assertResultSet(
         table()
           .row(DateTimeUtil.daysToDate(0))
@@ -110,7 +110,7 @@ class ParquetDataImporterIT
 
   test("imports int32 (decimal)") {
     ParquetChecker("required int32 column (DECIMAL(8,3));", "DECIMAL(18,3)")
-      .withInputValues(1, 34, 567, 1234)
+      .withInputValues[Any](List(1, 34, 567, 1234))
       .assertResultSet(
         table()
           .row(java.lang.Double.valueOf(0.001))
@@ -123,7 +123,7 @@ class ParquetDataImporterIT
 
   test("imports int64") {
     ParquetChecker("optional int64 column;", "DECIMAL(18,0)")
-      .withInputValues(999L, null)
+      .withInputValues[Any](List(999L, null))
       .assertResultSet(
         table()
           .row(java.lang.Long.valueOf(999))
@@ -134,7 +134,7 @@ class ParquetDataImporterIT
 
   test("imports int64 (decimal)") {
     ParquetChecker("optional int64 column (DECIMAL(12,2));", "DECIMAL(27,2)")
-      .withInputValues(271717171717L, 314141414141L, null)
+      .withInputValues[Any](List(271717171717L, 314141414141L, null))
       .assertResultSet(
         table()
           .row(java.lang.Double.valueOf(2717171717.17))
@@ -145,16 +145,23 @@ class ParquetDataImporterIT
   }
 
   test("imports int64 (timestamp millis)") {
-    val timestamp = new Timestamp(System.currentTimeMillis())
+    val millis1 = java.time.Instant.EPOCH.toEpochMilli()
+    val millis2 = System.currentTimeMillis()
     ParquetChecker("optional int64 column (TIMESTAMP_MILLIS);", "TIMESTAMP")
-      .withInputValues(timestamp.getTime(), null)
-      .assertResultSet(table().row(timestamp).row(null).matches())
+      .withInputValues[Any](List(millis1, millis2, null))
+      .assertResultSet(
+        table()
+          .row(new Timestamp(millis1))
+          .row(new Timestamp(millis2))
+          .row(null)
+          .matches()
+      )
   }
 
   test("imports float") {
     val EPS = java.math.BigDecimal.valueOf(0.0001)
     ParquetChecker("optional float column;", "FLOAT")
-      .withInputValues(2.71f, 3.14F, null)
+      .withInputValues[Any](List(2.71f, 3.14F, null))
       .assertResultSet(
         table()
           .row(CellMatcherFactory.cellMatcher(2.71, STRICT, EPS))
@@ -166,7 +173,7 @@ class ParquetDataImporterIT
 
   test("imports double") {
     ParquetChecker("optional double column;", "DOUBLE")
-      .withInputValues(20.21, 1.13, null)
+      .withInputValues[Any](List(20.21, 1.13, null))
       .assertResultSet(
         table()
           .row(java.lang.Double.valueOf(20.21))
@@ -178,14 +185,26 @@ class ParquetDataImporterIT
 
   test("imports binary") {
     ParquetChecker("optional binary column;", "VARCHAR(20)")
-      .withInputValues("hello", "world", null)
-      .assertResultSet(table().row("hello").row("world").row(null).matches())
+      .withInputValues[Any](List("hello", "world", null))
+      .assertResultSet(
+        table()
+          .row("hello")
+          .row("world")
+          .row(null)
+          .matches()
+      )
   }
 
   test("imports binary (utf8)") {
     ParquetChecker("required binary column (UTF8);", "VARCHAR(20)")
-      .withInputValues("ÄäÖöÜüß / ☺", "world", "")
-      .assertResultSet(table().row("ÄäÖöÜüß / ☺").row("world").row(null).matches())
+      .withInputValues[String](List("ÄäÖöÜüß / ☺", "world", ""))
+      .assertResultSet(
+        table()
+          .row("ÄäÖöÜüß / ☺")
+          .row("world")
+          .row(null)
+          .matches()
+      )
   }
 
   test("imports binary (decimal)") {
@@ -194,7 +213,7 @@ class ParquetDataImporterIT
     val decimal2 = Binary
       .fromConstantByteArray(new BigDecimal("123456").unscaledValue().toByteArray())
     ParquetChecker("required binary column (DECIMAL(8,3));", "DECIMAL(18,3)")
-      .withInputValues(decimal1, decimal2)
+      .withInputValues[Binary](List(decimal1, decimal2))
       .assertResultSet(
         table()
           .row(java.lang.Double.valueOf(12.345))
@@ -205,8 +224,14 @@ class ParquetDataImporterIT
 
   test("imports fixed_len_byte_array") {
     ParquetChecker("required fixed_len_byte_array(5) column;", "VARCHAR(5)")
-      .withInputValues("abcde", "world", "     ")
-      .assertResultSet(table().row("abcde").row("world").row("     ").matches())
+      .withInputValues[String](List("abcde", "world", "     "))
+      .assertResultSet(
+        table()
+          .row("abcde")
+          .row("world")
+          .row("     ")
+          .matches()
+      )
   }
 
   test("imports fixed_len_byte_array (decimal)") {
@@ -216,7 +241,7 @@ class ParquetDataImporterIT
       .fromConstantByteArray(new BigDecimal(decimalValueString).unscaledValue().toByteArray())
     val decimal2 = Binary.fromConstantByteArray(Array.fill[Byte](9)(0x0), 0, 9)
     ParquetChecker("required fixed_len_byte_array(9) column (DECIMAL(20,5));", "DECIMAL(20,5)")
-      .withInputValues(decimal1, decimal2)
+      .withInputValues[Binary](List(decimal1, decimal2))
       .assertResultSet(
         table()
           .row(new BigDecimal(new BigInteger(decimalValueString), 5, new MathContext(20)))
@@ -226,15 +251,20 @@ class ParquetDataImporterIT
   }
 
   test("imports int96 (timestamp nanos)") {
-    val timestamp = new Timestamp(System.currentTimeMillis())
+    val millis = System.currentTimeMillis()
+    val timestamp = new Timestamp(millis)
     val buffer = ByteBuffer.allocate(12).order(ByteOrder.LITTLE_ENDIAN)
     val micros = DateTimeUtil.getMicrosFromTimestamp(timestamp)
     val (days, nanos) = DateTimeUtil.getJulianDayAndNanos(micros)
     buffer.putLong(nanos).putInt(days)
 
     ParquetChecker("required int96 column;", "TIMESTAMP")
-      .withInputValues(Binary.fromConstantByteArray(buffer.array()))
-      .assertResultSet(table().row(timestamp).matches())
+      .withInputValues[Binary](List(Binary.fromConstantByteArray(buffer.array())))
+      .assertResultSet(
+        table()
+          .row(new Timestamp(millis))
+          .matches()
+      )
   }
 
   test("imports list of strings") {
@@ -414,14 +444,15 @@ class ParquetDataImporterIT
       this
     }
 
-    def withInputValues(values: Any*): ParquetChecker = withParquetWriter { (writer, schema) =>
-      values.foreach { value =>
-        val record = new SimpleGroup(schema)
-        if (!isNull(value)) {
-          appendValue(value, record)
+    def withInputValues[T](values: List[T]): ParquetChecker = withParquetWriter {
+      (writer, schema) =>
+        values.foreach { value =>
+          val record = new SimpleGroup(schema)
+          if (!isNull(value)) {
+            appendValue(value, record)
+          }
+          writer.write(record)
         }
-        writer.write(record)
-      }
     }
 
     def withResultSet(block: ResultSet => Unit): ParquetChecker = {
