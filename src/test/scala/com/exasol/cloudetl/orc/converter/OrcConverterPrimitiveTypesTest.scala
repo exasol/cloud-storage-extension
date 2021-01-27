@@ -1,7 +1,5 @@
 package com.exasol.cloudetl.orc.converter
 
-import org.apache.hadoop.hive.common.`type`.HiveDecimal
-import org.apache.hadoop.hive.ql.exec.vector._
 import org.apache.orc.TypeDescription._
 
 @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
@@ -66,15 +64,7 @@ class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
 
   test("reads Decimal value as java.math.decimal") {
     val schema = createStruct().addField("decimal", createDecimal())
-    val batch = schema.createRowBatch()
-    batch.size = 2
-    withWriter(schema) { writer =>
-      val decimalVector = batch.cols(0).asInstanceOf[DecimalColumnVector]
-      decimalVector.noNulls = false
-      decimalVector.vector(0).set(HiveDecimal.create("173.433"))
-      decimalVector.isNull(1) = true
-      writer.addRowBatch(batch)
-    }
+    orcWriter.write[Any](schema, List("173.433", null))
     val records = getRecords()
     assert(records(0).get(0).isInstanceOf[java.math.BigDecimal])
     assert(records(0).getAs[java.math.BigDecimal](0).doubleValue() === 173.433)

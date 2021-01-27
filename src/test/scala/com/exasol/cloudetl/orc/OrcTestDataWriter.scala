@@ -2,6 +2,7 @@ package com.exasol.cloudetl.orc
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
+import org.apache.hadoop.hive.common.`type`.HiveDecimal
 import org.apache.hadoop.hive.ql.exec.vector._
 import org.apache.orc.OrcFile
 import org.apache.orc.TypeDescription
@@ -48,6 +49,7 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
       case Category.DATE      => longWriter(column.asInstanceOf[LongColumnVector])
       case Category.FLOAT     => doubleWriter(column.asInstanceOf[DoubleColumnVector])
       case Category.DOUBLE    => doubleWriter(column.asInstanceOf[DoubleColumnVector])
+      case Category.DECIMAL   => decimalWriter(column.asInstanceOf[DecimalColumnVector], orcType)
       case Category.CHAR      => stringWriter(column.asInstanceOf[BytesColumnVector])
       case Category.VARCHAR   => stringWriter(column.asInstanceOf[BytesColumnVector])
       case Category.BINARY    => stringWriter(column.asInstanceOf[BytesColumnVector])
@@ -82,6 +84,16 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
         case d: Double => column.vector(index) = d
         case f: Float  => column.vector(index) = f.toDouble
         case _         => setNull(column, index)
+    }
+
+  private[this] def decimalWriter(
+    column: DecimalColumnVector,
+    orcType: TypeDescription
+  ): (Any, Int) => Unit =
+    (value: Any, index: Int) =>
+      value match {
+        case dec: String => column.set(index, HiveDecimal.create(dec))
+        case _           => setNull(column, index)
     }
 
   private[this] def stringWriter(column: BytesColumnVector): (Any, Int) => Unit =

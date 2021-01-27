@@ -14,7 +14,9 @@ import com.amazonaws.services.s3.model._
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.hive.ql.exec.vector._
 import org.apache.hadoop.fs.{Path => HPath}
+import org.apache.orc.OrcFile
 import org.apache.orc.TypeDescription
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
@@ -46,7 +48,7 @@ class OrcDataImporterIT extends BaseIntegrationTest with BeforeAndAfterEach with
 
   override final def beforeEach(): Unit = {
     outputDirectory = createTemporaryFolder("orc-tests-")
-    path = new HPath(outputDirectory.toUri.toString, "orc-00000.parquet")
+    path = new HPath(outputDirectory.toUri.toString, "orc-00000.orc")
     ()
   }
 
@@ -140,7 +142,15 @@ class OrcDataImporterIT extends BaseIntegrationTest with BeforeAndAfterEach with
   }
 
   test("imports decimal") {
-    //
+    OrcChecker("struct<f:decimal(6,3)>", "DECIMAL(6,3)")
+      .withInputValues(List("333.333", "0.666", null))
+      .assertResultSet(
+        table()
+          .row(java.lang.Double.valueOf(333.333))
+          .row(java.lang.Double.valueOf(0.666))
+          .row(null)
+          .matches(NO_JAVA_TYPE_CHECK)
+      )
   }
 
   test("imports date") {
@@ -225,7 +235,32 @@ class OrcDataImporterIT extends BaseIntegrationTest with BeforeAndAfterEach with
   }
 
   test("imports union") {
-    //
+    val orcType = "struct<f:uniontype<int,string>>"
+    val orcSchema = TypeDescription.fromString(orcType)
+    val writer = OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(orcSchema))
+    val batch = orcSchema.createRowBatch()
+    batch.size = 3
+    val unionVector = batch.cols(0).asInstanceOf[UnionColumnVector]
+    unionVector.noNulls = false
+    // Set string type for the first row
+    unionVector.tags(1) = 0
+    unionVector.fields(1).asInstanceOf[BytesColumnVector].setVal(0, "str".getBytes("UTF-8"))
+    // Set int type for the second row
+    unionVector.tags(0) = 1
+    unionVector.fields(0).asInstanceOf[LongColumnVector].vector(1) = 23
+    // Set null for the third row
+    unionVector.isNull(2) = true
+    writer.addRowBatch(batch)
+    writer.close()
+
+    OrcChecker(orcType, "VARCHAR(30)")
+      .assertResultSet(
+        table()
+          .row("""{"INT":null,"STRING":"str"}""")
+          .row("""{"INT":23,"STRING":null}""")
+          .row("""{"INT":null,"STRING":null}""")
+          .matches()
+      )
   }
 
   case class OrcChecker(orcColumnType: String, exasolColumnType: String) {
@@ -254,8 +289,6 @@ class OrcDataImporterIT extends BaseIntegrationTest with BeforeAndAfterEach with
       withResultSet(assertThat(_, matcher))
       ()
     }
-
-    // private[this] def isNull(obj: Any): Boolean = !Option(obj).isDefined
 
     private[this] def uploadDataFile(): Unit = {
       s3.createBucket(new CreateBucketRequest(bucketName))
