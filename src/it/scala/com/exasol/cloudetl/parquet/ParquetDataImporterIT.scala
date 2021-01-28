@@ -7,6 +7,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.sql.ResultSet
 import java.sql.Timestamp
+import java.time._
 
 import com.exasol.cloudetl.BaseIntegrationTest
 import com.exasol.cloudetl.TestFileManager
@@ -145,14 +146,19 @@ class ParquetDataImporterIT
   }
 
   test("imports int64 (timestamp millis)") {
-    val millis1 = java.time.Instant.EPOCH.toEpochMilli()
+    val millis1 = Instant.EPOCH.toEpochMilli()
     val millis2 = System.currentTimeMillis()
+    val zdt1 = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis1), ZoneId.of("Europe/Berlin"))
+    val zdt2 = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis2), ZoneId.of("Europe/Berlin"))
+    val expectedTimestamp1 = Timestamp.valueOf(zdt1.toLocalDateTime())
+    val expectedTimestamp2 = Timestamp.valueOf(zdt2.toLocalDateTime())
+
     ParquetChecker("optional int64 column (TIMESTAMP_MILLIS);", "TIMESTAMP")
       .withInputValues[Any](List(millis1, millis2, null))
       .assertResultSet(
         table()
-          .row(new Timestamp(millis1))
-          .row(new Timestamp(millis2))
+          .row(expectedTimestamp1)
+          .row(expectedTimestamp2)
           .row(null)
           .matches()
       )
@@ -257,12 +263,14 @@ class ParquetDataImporterIT
     val micros = DateTimeUtil.getMicrosFromTimestamp(timestamp)
     val (days, nanos) = DateTimeUtil.getJulianDayAndNanos(micros)
     buffer.putLong(nanos).putInt(days)
+    val zdt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.of("Europe/Berlin"))
+    val expectedTimestamp = Timestamp.valueOf(zdt.toLocalDateTime())
 
     ParquetChecker("required int96 column;", "TIMESTAMP")
       .withInputValues[Binary](List(Binary.fromConstantByteArray(buffer.array())))
       .assertResultSet(
         table()
-          .row(new Timestamp(millis))
+          .row(expectedTimestamp)
           .matches()
       )
   }

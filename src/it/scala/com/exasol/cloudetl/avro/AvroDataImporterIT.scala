@@ -6,6 +6,7 @@ import java.nio.file.Path
 import java.math.BigDecimal
 import java.sql.ResultSet
 import java.sql.Timestamp
+import java.time._
 
 import com.exasol.cloudetl.BaseIntegrationTest
 import com.exasol.cloudetl.TestFileManager
@@ -131,12 +132,17 @@ class AvroDataImporterIT
   test("imports long (timestamp-millis)") {
     val schema = getBasicSchema("""{"type":"long","logicalType":"timestamp-millis"}""")
     val millis = System.currentTimeMillis()
+    val zdt1 = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.of("Europe/Berlin"))
+    val zdt2 = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0), ZoneId.of("Europe/Berlin"))
+    val expectedTimestamp1 = Timestamp.valueOf(zdt1.toLocalDateTime())
+    val expectedTimestamp2 = Timestamp.valueOf(zdt2.toLocalDateTime())
+
     AvroChecker(schema, "TIMESTAMP")
       .withInputValues(List(millis, 0L))
       .assertResultSet(
         table()
-          .row(new Timestamp(millis))
-          .row(new Timestamp(0L))
+          .row(expectedTimestamp1)
+          .row(expectedTimestamp2)
           .matches()
       )
   }

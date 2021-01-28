@@ -3,6 +3,7 @@ package com.exasol.cloudetl.orc
 import java.io.File
 import java.nio.file.Path
 import java.sql.ResultSet
+import java.sql.Timestamp
 
 import com.exasol.cloudetl.BaseIntegrationTest
 import com.exasol.cloudetl.TestFileManager
@@ -166,11 +167,17 @@ class OrcDataImporterIT extends BaseIntegrationTest with BeforeAndAfterEach with
   }
 
   test("imports timestamp") {
-    val timestamp1 = java.sql.Timestamp.from(java.time.Instant.EPOCH)
-    val timestamp2 = new java.sql.Timestamp(System.currentTimeMillis())
+    val timestamp1 = Timestamp.from(java.time.Instant.EPOCH)
+    val timestamp2 = new Timestamp(System.currentTimeMillis())
     OrcChecker("struct<f:timestamp>", "TIMESTAMP")
       .withInputValues(List(timestamp1, timestamp2, null))
-      .assertResultSet(table().row(timestamp1).row(timestamp2).row(null).matches())
+      .assertResultSet(
+        table()
+          .row(timestamp1)
+          .row(timestamp2)
+          .row(null)
+          .matches()
+      )
   }
 
   test("imports list of strings") {
