@@ -154,6 +154,34 @@ be used as an entry point when running the import UDF. It will execute the
 cloud storage path. Then each file will be imported by `IMPORT_FILES` UDF
 script.
 
+#### Setup Import UDF Scripts in Docker
+
+If you are using Exasol Docker installation, the UDF scripts require slightly
+different deployment.
+
+```sql
+OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
+
+CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
+  %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesQueryGenerator;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+/
+
+CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...)
+EMITS (filename VARCHAR(2000), partition_index VARCHAR(100)) AS
+  %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesMetadataReader;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+/
+
+CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
+  %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesDataImporter;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+/
+```
+
+Please notice that we use different class names for the `%scriptclasses`
+parameter.
+
 #### Setup Export UDF Scripts
 
 Run these statements to create export UDF scripts:

@@ -68,7 +68,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
       .language(UdfScript.Language.JAVA)
       .inputType(UdfScript.InputType.SET)
       .emits()
-      .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerImportQueryGenerator", jarPath)
+      .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerFilesQueryGenerator", jarPath)
       .build()
     schema
       .createUdfBuilder("IMPORT_METADATA")
@@ -78,7 +78,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
         new Column("filename", "VARCHAR(2000)"),
         new Column("partition_index", "VARCHAR(100)")
       )
-      .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerImportMetadataReader", jarPath)
+      .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerFilesMetadataReader", jarPath)
       .build()
     schema
       .createUdfBuilder("IMPORT_FILES")
