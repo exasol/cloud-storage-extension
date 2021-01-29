@@ -1017,11 +1017,12 @@ class DataImporterIT extends BaseIntegrationTest {
         executeStmt(
           s"""|IMPORT INTO ${table.getFullyQualifiedName()}
               |FROM SCRIPT $schemaName.IMPORT_PATH WITH
-              |BUCKET_PATH     = 's3a://$bucketName/${path.getName()}'
-              |DATA_FORMAT     = '$dataFormat'
-              |S3_ENDPOINT     = '$s3Endpoint'
-              |CONNECTION_NAME = 'S3_CONNECTION'
-              |PARALLELISM     = 'nproc()';
+              |BUCKET_PATH              = 's3a://$bucketName/${path.getName()}'
+              |DATA_FORMAT              = '$dataFormat'
+              |S3_ENDPOINT              = '$s3Endpoint'
+              |S3_CHANGE_DETECTION_MODE = 'none'
+              |CONNECTION_NAME          = 'S3_CONNECTION'
+              |PARALLELISM              = 'nproc()';
         """.stripMargin
         )
       }
