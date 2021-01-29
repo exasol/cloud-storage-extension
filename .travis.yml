@@ -29,7 +29,7 @@ matrix:
       env: RELEASE=true
 
 script:
-  - travis_wait 30 ./scripts/ci.sh
+  - ./scripts/ci.sh
 
 after_success:
   - ./sbtx coveralls
