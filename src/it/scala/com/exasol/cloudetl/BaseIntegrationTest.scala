@@ -37,7 +37,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   def prepareExasolDatabase(schemaName: String): Unit = {
-    execute(s"DROP SCHEMA IF EXISTS $schemaName CASCADE;")
+    executeStmt(s"DROP SCHEMA IF EXISTS $schemaName CASCADE;")
     factory = new ExasolObjectFactory(getConnection())
     schema = factory.createSchema(schemaName)
     createDeploymentScripts()
@@ -45,7 +45,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
     uploadJarToBucket()
   }
 
-  def execute(sql: String): Unit = {
+  def executeStmt(sql: String): Unit = {
     getConnection().createStatement().execute(sql)
     ()
   }
