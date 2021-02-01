@@ -10,7 +10,7 @@ object Dependencies {
   private val ImportExportUDFVersion = "0.2.0"
   private val HadoopVersion = "3.3.0"
   private val DeltaVersion = "0.7.0"
-  private val OrcVersion = "1.6.6"
+  private val OrcVersion = "1.6.7"
   private val ParquetVersion = "1.11.1"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.1"
@@ -20,9 +20,9 @@ object Dependencies {
   private val ScalaTestPlusVersion = "1.0.0-M2"
   private val MockitoCoreVersion = "3.7.7"
   private val HamcrestVersion = "2.2"
-  private val ExasolTestContainersVersion = "3.4.1"
-  private val ExasolTestDBBuilderVersion = "3.0.0"
   private val ExasolHamcrestMatcherVersion = "1.3.0"
+  private val ExasolTestDBBuilderVersion = "3.0.0"
+  private val ExasolTestContainersVersion = "3.4.1"
   private val TestContainersLocalstackVersion = "1.15.1"
 
   val Resolvers: Seq[Resolver] = Seq(
