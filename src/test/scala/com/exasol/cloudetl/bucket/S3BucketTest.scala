@@ -87,4 +87,16 @@ class S3BucketTest extends AbstractBucketTest {
     assertS3Bucket(bucket, configMappings)
   }
 
+  test("apply returns S3Bucket with change change detection mode") {
+    properties = defaultProperties ++ Map(
+      "S3_CHANGE_DETECTION_MODE" -> "none",
+      "CONNECTION_NAME" -> "connection_info"
+    )
+    val exaMetadata =
+      mockConnectionInfo("", "S3_ACCESS_KEY=access;S3_SECRET_KEY=secret;S3_SESSION_TOKEN=token")
+    val bucket = getBucket(properties, exaMetadata)
+    val extraConfigs = configMappings ++ Map("fs.s3a.change.detection.mode" -> "none")
+    assertS3Bucket(bucket, extraConfigs)
+  }
+
 }

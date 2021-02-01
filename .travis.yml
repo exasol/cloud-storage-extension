@@ -16,7 +16,8 @@ env:
 before_install:
   - git fetch --tags
   - docker pull exasol/docker-db:latest
-  - docker pull exasol/docker-db:6.2.7-d1
+  - docker pull exasol/docker-db:7.0.6
+  - docker pull localstack/localstack:0.12.5
 
 matrix:
   include:
@@ -28,7 +29,7 @@ matrix:
       env: RELEASE=true
 
 script:
-  - travis_wait 30 ./scripts/ci.sh
+  - ./scripts/ci.sh
 
 after_success:
   - ./sbtx coveralls

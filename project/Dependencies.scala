@@ -10,7 +10,7 @@ object Dependencies {
   private val ImportExportUDFVersion = "0.2.0"
   private val HadoopVersion = "3.3.0"
   private val DeltaVersion = "0.7.0"
-  private val OrcVersion = "1.6.6"
+  private val OrcVersion = "1.6.7"
   private val ParquetVersion = "1.11.1"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.1"
@@ -18,7 +18,12 @@ object Dependencies {
   // Test dependencies versions
   private val ScalaTestVersion = "3.2.3"
   private val ScalaTestPlusVersion = "1.0.0-M2"
-  private val MockitoCoreVersion = "3.6.28"
+  private val MockitoCoreVersion = "3.7.7"
+  private val HamcrestVersion = "2.2"
+  private val ExasolHamcrestMatcherVersion = "1.3.0"
+  private val ExasolTestDBBuilderVersion = "3.0.0"
+  private val ExasolTestContainersVersion = "3.4.1"
+  private val TestContainersLocalstackVersion = "1.15.1"
 
   val Resolvers: Seq[Resolver] = Seq(
     "Exasol Releases" at "https://maven.exasol.com/artifactory/exasol-releases"
@@ -80,7 +85,12 @@ object Dependencies {
   lazy val TestDependencies: Seq[ModuleID] = Seq(
     "org.scalatest" %% "scalatest" % ScalaTestVersion,
     "org.scalatestplus" %% "scalatestplus-mockito" % ScalaTestPlusVersion,
-    "org.mockito" % "mockito-core" % MockitoCoreVersion
+    "org.mockito" % "mockito-core" % MockitoCoreVersion,
+    "com.exasol" % "exasol-testcontainers" % ExasolTestContainersVersion,
+    "com.exasol" % "test-db-builder-java" % ExasolTestDBBuilderVersion,
+    "com.exasol" % "hamcrest-resultset-matcher" % ExasolHamcrestMatcherVersion,
+    "org.hamcrest" % "hamcrest" % HamcrestVersion,
+    "org.testcontainers" % "localstack" % TestContainersLocalstackVersion
   ).map(_ % Test)
 
   lazy val ExcludedDependencies: Seq[InclExclRule] = Seq(

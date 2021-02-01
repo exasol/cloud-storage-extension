@@ -68,6 +68,11 @@ however, it should be safe to run it on the newer JVM versions. This is also
 | [Scalatest][scalatest-link]                 | A testing tool for Scala and Java developers                    | Apache License 2.0 |
 | [Scalatest Plus][scalatestplus-link]        | An integration support between Scalatest and Mockito            | Apache License 2.0 |
 | [Mockito Core][mockitocore-link]            | A mocking framework for unit tests                              | MIT License        |
+| [Java Hamcrest][hamcrest-link]              | Matchers to create the flexible expressions of intent           | BSD License        |
+| [Hamcrest Resultset Matcher][exars-link]    | Matchers for JDBC ResultSet objects                             | MIT License        |
+| [Exasol Test Database Builder][tddb-link]   | Library to create and clean up database for integration tests   | MIT License        |
+| [Exasol Testcontainers][exacontainers-link] | Test container for Exasol on Docker                             | MIT License        |
+| [Localstack Testcontainers][localstack-link]| A local docker AWS cloud containers                             | MIT License        |
 
 ### Compiler Plugin Dependencies
 
@@ -115,6 +120,11 @@ These plugins help with project development.
 [scalatest-link]: http://www.scalatest.org/
 [scalatestplus-link]: https://github.com/scalatest/scalatestplus-mockito
 [mockitocore-link]: https://site.mockito.org/
+[hamcrest-link]: http://hamcrest.org/JavaHamcrest/
+[exars-link]: https://github.com/exasol/hamcrest-resultset-matcher
+[tddb-link]: https://github.com/exasol/test-db-builder-java
+[exacontainers-link]: https://github.com/exasol/exasol-testcontainers
+[localstack-link]: https://www.testcontainers.org/modules/localstack
 [sbt-coursier-link]: https://github.com/coursier/coursier
 [sbt-wartremover-link]: http://github.com/puffnfresh/wartremover
 [sbt-wcontrib-link]: http://github.com/wartremover/wartremover-contrib
