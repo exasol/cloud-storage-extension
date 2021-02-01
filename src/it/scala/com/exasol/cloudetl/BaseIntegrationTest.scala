@@ -29,7 +29,6 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
   val assembledJarName = getAssembledJarName()
 
   var schema: ExasolSchema = _
-  var factory: ExasolObjectFactory = _
 
   def startContainers(): Unit = {
     exasolContainer.start()
@@ -38,10 +37,10 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
 
   def prepareExasolDatabase(schemaName: String): Unit = {
     executeStmt(s"DROP SCHEMA IF EXISTS $schemaName CASCADE;")
-    factory = new ExasolObjectFactory(getConnection())
+    val factory = new ExasolObjectFactory(getConnection())
     schema = factory.createSchema(schemaName)
     createDeploymentScripts()
-    createConnectionObject()
+    createConnectionObject(factory)
     uploadJarToBucket()
   }
 
@@ -90,7 +89,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
     ()
   }
 
-  private[this] def createConnectionObject(): Unit = {
+  private[this] def createConnectionObject(factory: ExasolObjectFactory): Unit = {
     val credentials = s3Container.getDefaultCredentialsProvider().getCredentials()
     val awsAccessKey = credentials.getAWSAccessKeyId()
     val awsSecretKey = credentials.getAWSSecretKey()

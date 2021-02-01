@@ -41,6 +41,10 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class DataImporterIT extends BaseIntegrationTest {
 
+  val INT_MIN = -2147483648
+  val INT_MAX = 2147483647
+  val LONG_MIN = -9223372036854775808L
+  val LONG_MAX = 9223372036854775807L
   val schemaName = "DATA_SCHEMA"
   val bucketName: String = "databucket"
   var conf: Configuration = _
@@ -92,13 +96,13 @@ class DataImporterIT extends BaseIntegrationTest {
     }
 
     test("imports int") {
-      AvroChecker(getBasicSchema("\"int\""), "DECIMAL(9,0)")
-        .withInputValues(List(1, 13, 5))
+      AvroChecker(getBasicSchema("\"int\""), "DECIMAL(10,0)")
+        .withInputValues(List(INT_MIN, 13, INT_MAX))
         .assertResultSet(
           table()
-            .row(java.lang.Integer.valueOf(1))
+            .row(java.lang.Integer.valueOf(INT_MIN))
             .row(java.lang.Integer.valueOf(13))
-            .row(java.lang.Integer.valueOf(5))
+            .row(java.lang.Integer.valueOf(INT_MAX))
             .matches(NO_JAVA_TYPE_CHECK)
         )
     }
@@ -116,12 +120,13 @@ class DataImporterIT extends BaseIntegrationTest {
     }
 
     test("imports long") {
-      AvroChecker(getBasicSchema("\"long\""), "DECIMAL(18,0)")
-        .withInputValues(List(7L, 77L))
+      AvroChecker(getBasicSchema("\"long\""), "DECIMAL(19,0)")
+        .withInputValues(List(LONG_MIN, 77L, LONG_MAX))
         .assertResultSet(
           table()
-            .row(java.lang.Long.valueOf(7))
+            .row(java.lang.Long.valueOf(LONG_MIN))
             .row(java.lang.Long.valueOf(77))
+            .row(java.lang.Long.valueOf(LONG_MAX))
             .matches(NO_JAVA_TYPE_CHECK)
         )
     }
@@ -404,15 +409,29 @@ class DataImporterIT extends BaseIntegrationTest {
     }
 
     test("imports int") {
-      OrcChecker("struct<f:int>", "DECIMAL(9,0)")
-        .withInputValues(List(999, null))
-        .assertResultSet(table().row(java.lang.Integer.valueOf(999)).row(null).matches())
+      OrcChecker("struct<f:int>", "DECIMAL(10,0)")
+        .withInputValues(List(INT_MIN, 999, null, INT_MAX))
+        .assertResultSet(
+          table()
+            .row(java.lang.Integer.valueOf(INT_MIN))
+            .row(java.lang.Integer.valueOf(999))
+            .row(null)
+            .row(java.lang.Integer.valueOf(INT_MAX))
+            .matches(NO_JAVA_TYPE_CHECK)
+        )
     }
 
     test("imports long") {
-      OrcChecker("struct<f:bigint>", "DECIMAL(18,0)")
-        .withInputValues(List(1234L, null))
-        .assertResultSet(table().row(java.lang.Long.valueOf(1234)).row(null).matches())
+      OrcChecker("struct<f:bigint>", "DECIMAL(19,0)")
+        .withInputValues(List(LONG_MIN, 1234L, null, LONG_MAX))
+        .assertResultSet(
+          table()
+            .row(java.lang.Long.valueOf(LONG_MIN))
+            .row(java.lang.Long.valueOf(1234))
+            .row(null)
+            .row(java.lang.Long.valueOf(LONG_MAX))
+            .matches(NO_JAVA_TYPE_CHECK)
+        )
     }
 
     test("imports float") {
@@ -604,14 +623,15 @@ class DataImporterIT extends BaseIntegrationTest {
     }
 
     test("imports int32") {
-      ParquetChecker("optional int32 column;", "DECIMAL(9,0)")
-        .withInputValues[Any](List(1, 666, null))
+      ParquetChecker("optional int32 column;", "DECIMAL(10,0)")
+        .withInputValues[Any](List(INT_MIN, 666, null, INT_MAX))
         .assertResultSet(
           table()
-            .row(java.lang.Integer.valueOf(1))
+            .row(java.lang.Integer.valueOf(INT_MIN))
             .row(java.lang.Integer.valueOf(666))
             .row(null)
-            .matches()
+            .row(java.lang.Integer.valueOf(INT_MAX))
+            .matches(NO_JAVA_TYPE_CHECK)
         )
     }
 
@@ -643,12 +663,14 @@ class DataImporterIT extends BaseIntegrationTest {
     }
 
     test("imports int64") {
-      ParquetChecker("optional int64 column;", "DECIMAL(18,0)")
-        .withInputValues[Any](List(999L, null))
+      ParquetChecker("optional int64 column;", "DECIMAL(19,0)")
+        .withInputValues[Any](List(LONG_MIN, 999L, null, LONG_MAX))
         .assertResultSet(
           table()
+            .row(java.lang.Long.valueOf(LONG_MIN))
             .row(java.lang.Long.valueOf(999))
             .row(null)
+            .row(java.lang.Long.valueOf(LONG_MAX))
             .matches(NO_JAVA_TYPE_CHECK)
         )
     }
