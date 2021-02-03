@@ -543,6 +543,30 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   PARALLELISM     = 'iproc(), floor(random()*<MULTIPLIER>)';
 ```
 
+### S3 Path Style Access
+
+Amazon S3 [deprecated the path style access][s3-path-style-deprecation] to the
+buckets at the end of the 2020. This breaks the access to the bucket that
+contain dot (`.`) in their names.
+
+[s3-path-style-deprecation]: https://forums.aws.amazon.com/ann.jspa?annID=6776
+
+To enable the path style access to the bucket, you can set the
+`S3_PATH_STYLE_ACCESS` parameter to `true`.
+
+For example:
+
+```
+IMPORT INTO <schema>.<table>
+FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
+  BUCKET_PATH          = 's3a://<S3_PATH>.data.domain/import/data/*.parquet'
+  DATA_FORMAT          = 'PARQUET'
+  S3_PATH_STYLE_ACCESS = 'true'
+  S3_ENDPOINT          = 's3.<REGION>.amazonaws.com'
+  CONNECTION_NAME      = 'S3_CONNECTION'
+  PARALLELISM          = 'nproc()';
+```
+
 ## Google Cloud Storage
 
 Similar to Amazon S3, you need to have security credentials to access the Google

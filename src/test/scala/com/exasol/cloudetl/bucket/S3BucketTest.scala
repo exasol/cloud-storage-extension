@@ -77,26 +77,35 @@ class S3BucketTest extends AbstractBucketTest {
     assertS3Bucket(bucket, configMappings - "fs.s3a.session.token")
   }
 
+  private[this] def bucketWithDefaultConnectionString(properties: Map[String, String]): Bucket = {
+    val identifier = "S3_ACCESS_KEY=access;S3_SECRET_KEY=secret;S3_SESSION_TOKEN=token"
+    val exaMetadata = mockConnectionInfo("", identifier)
+    getBucket(properties, exaMetadata)
+  }
+
   test("apply returns S3Bucket with access, secret and session token from connection") {
     properties = defaultProperties ++ Map(
       "CONNECTION_NAME" -> "connection_info"
     )
-    val exaMetadata =
-      mockConnectionInfo("", "S3_ACCESS_KEY=access;S3_SECRET_KEY=secret;S3_SESSION_TOKEN=token")
-    val bucket = getBucket(properties, exaMetadata)
-    assertS3Bucket(bucket, configMappings)
+    assertS3Bucket(bucketWithDefaultConnectionString(properties), configMappings)
   }
 
-  test("apply returns S3Bucket with change change detection mode") {
+  test("apply returns S3Bucket with change detection mode") {
     properties = defaultProperties ++ Map(
       "S3_CHANGE_DETECTION_MODE" -> "none",
       "CONNECTION_NAME" -> "connection_info"
     )
-    val exaMetadata =
-      mockConnectionInfo("", "S3_ACCESS_KEY=access;S3_SECRET_KEY=secret;S3_SESSION_TOKEN=token")
-    val bucket = getBucket(properties, exaMetadata)
     val extraConfigs = configMappings ++ Map("fs.s3a.change.detection.mode" -> "none")
-    assertS3Bucket(bucket, extraConfigs)
+    assertS3Bucket(bucketWithDefaultConnectionString(properties), extraConfigs)
+  }
+
+  test("apply returns S3Bucket with path style access") {
+    properties = defaultProperties ++ Map(
+      "S3_PATH_STYLE_ACCESS" -> "true",
+      "CONNECTION_NAME" -> "connection_info"
+    )
+    val extraConfigs = configMappings ++ Map("fs.s3a.path.style.access" -> "true")
+    assertS3Bucket(bucketWithDefaultConnectionString(properties), extraConfigs)
   }
 
 }
