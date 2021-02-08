@@ -16,9 +16,6 @@ import com.exasol.matcher.CellMatcherFactory
 import com.exasol.matcher.ResultSetStructureMatcher.table
 import com.exasol.matcher.TypeMatchMode._
 
-import com.amazonaws.services.s3.model._
-import com.amazonaws.services.s3.AmazonS3
-import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import org.apache.avro.file.DataFileWriter
 import org.apache.avro._
 import org.apache.avro.generic._
@@ -35,7 +32,6 @@ import org.apache.parquet.io.api.Binary
 import org.apache.parquet.schema._
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
-import org.testcontainers.containers.localstack.LocalStackContainer.Service.S3
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -48,18 +44,11 @@ class DataImporterIT extends BaseIntegrationTest {
   val schemaName = "DATA_SCHEMA"
   val bucketName: String = "databucket"
   var conf: Configuration = _
-  var s3: AmazonS3 = _
 
   override final def beforeAll(): Unit = {
     startContainers()
     prepareExasolDatabase(schemaName)
-    s3 = AmazonS3ClientBuilder
-      .standard()
-      .withPathStyleAccessEnabled(true)
-      .withEndpointConfiguration(s3Container.getEndpointConfiguration(S3))
-      .withCredentials(s3Container.getDefaultCredentialsProvider())
-      .disableChunkedEncoding()
-      .build()
+    prepareS3Client()
     conf = new Configuration
   }
 
@@ -1009,9 +998,13 @@ class DataImporterIT extends BaseIntegrationTest {
     abstract class AbstractChecker(exaColumnType: String) {
 
       def withResultSet(block: ResultSet => Unit): this.type = {
-        uploadParquetFile()
-        importIntoExasol()
-        val rs = query(s"SELECT * FROM ${getTableName()}")
+        uploadFileToS3(bucketName, path)
+        val table = schema
+          .createTableBuilder(tableName)
+          .column("COLUMN", exaColumnType)
+          .build()
+        importIntoExasol(schemaName, table, bucketName, path.getName(), dataFormat)
+        val rs = executeQuery(s"SELECT * FROM ${getTableName()}")
         block(rs)
         rs.close()
         this
@@ -1020,33 +1013,6 @@ class DataImporterIT extends BaseIntegrationTest {
       def assertResultSet(matcher: Matcher[ResultSet]): Unit = {
         withResultSet(assertThat(_, matcher))
         ()
-      }
-
-      private[this] def uploadParquetFile(): Unit = {
-        s3.createBucket(new CreateBucketRequest(bucketName))
-        val request = new PutObjectRequest(bucketName, path.getName(), new File(path.toUri()))
-        s3.putObject(request)
-        Thread.sleep(1 * 1000)
-        ()
-      }
-
-      private[this] def importIntoExasol(): Unit = {
-        val table = schema.createTableBuilder(tableName).column("COLUMN", exaColumnType).build()
-        val s3Endpoint = s3Container
-          .getEndpointConfiguration(S3)
-          .getServiceEndpoint()
-          .replaceAll("127.0.0.1", "172.17.0.1")
-        executeStmt(
-          s"""|IMPORT INTO ${table.getFullyQualifiedName()}
-              |FROM SCRIPT $schemaName.IMPORT_PATH WITH
-              |BUCKET_PATH              = 's3a://$bucketName/${path.getName()}'
-              |DATA_FORMAT              = '$dataFormat'
-              |S3_ENDPOINT              = '$s3Endpoint'
-              |S3_CHANGE_DETECTION_MODE = 'none'
-              |CONNECTION_NAME          = 'S3_CONNECTION'
-              |PARALLELISM              = 'nproc()';
-        """.stripMargin
-        )
       }
     }
 

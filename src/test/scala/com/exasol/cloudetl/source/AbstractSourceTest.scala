@@ -3,8 +3,8 @@ package com.exasol.cloudetl.source
 import java.nio.file.Path
 import java.nio.file.Paths
 
+import com.exasol.cloudetl.filesystem.FileSystemManager
 import com.exasol.cloudetl.storage.FileFormat
-import com.exasol.cloudetl.util.FileSystemUtil
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
@@ -37,7 +37,7 @@ class AbstractSourceTest extends AnyFunSuite with BeforeAndAfterEach {
     Source(FileFormat(fileFormat), filePath, conf, fileSystem)
 
   final def getRecordsCount(filePath: Path): Int = {
-    val globbedFilePath = FileSystemUtil.globWithLocal(filePath, fileSystem)
+    val globbedFilePath = FileSystemManager.globWithLocal(filePath, fileSystem)
     globbedFilePath.map { file =>
       val src = getSource(file)
       val cnt = src.stream().size
