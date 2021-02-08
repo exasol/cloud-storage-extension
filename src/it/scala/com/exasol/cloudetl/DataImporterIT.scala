@@ -1028,7 +1028,7 @@ class DataImporterIT extends BaseIntegrationTest {
            |}
       """.stripMargin
 
-      ParquetChecker(parquetType, "VARCHAR(20)")
+      ParquetChecker(parquetType, "VARCHAR(60)")
         .withWriter {
           case (writer, schema) =>
             val record = new SimpleGroup(schema)
