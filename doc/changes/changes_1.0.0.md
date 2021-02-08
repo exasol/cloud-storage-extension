@@ -8,6 +8,10 @@
 * #115: Added support for importing Orc complex (LIST, STRUCT) types (PR #116).
 * #118: Added support for docker based Exasol installations (PR #119).
 
+## Bug Fixes
+
+* #112: Fixed Parquet repeated converter bugs (PR #121)
+
 ## Refactoring
 
 * #117: Added Exasol docker containers for integration tests (PR #119).
