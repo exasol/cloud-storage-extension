@@ -985,6 +985,66 @@ class DataImporterIT extends BaseIntegrationTest {
         }
         .assertResultSet(table().row("""{"nike":[0.14,5.11]}""").matches())
     }
+
+    test("imports repeated field") {
+      val parquetType = "repeated binary name (UTF8);"
+
+      ParquetChecker(parquetType, "VARCHAR(20)")
+        .withWriter {
+          case (writer, schema) =>
+            val record = new SimpleGroup(schema)
+            record.add(0, "John")
+            record.add(0, "Jane")
+            writer.write(record)
+        }
+        .assertResultSet(table().row("""["John","Jane"]""").matches())
+    }
+
+    test("imports repeated group with single field") {
+      val parquetType =
+        """|repeated group person {
+           |  required binary name (UTF8);
+           |}
+      """.stripMargin
+
+      ParquetChecker(parquetType, "VARCHAR(20)")
+        .withWriter {
+          case (writer, schema) =>
+            val record = new SimpleGroup(schema)
+            var person = record.addGroup(0)
+            person.append("name", "John")
+            person = record.addGroup(0)
+            person.append("name", "Jane")
+            writer.write(record)
+        }
+        .assertResultSet(table().row("""["John","Jane"]""").matches())
+    }
+
+    test("imports repeated group with multips fields") {
+      val parquetType =
+        """|repeated group person {
+           |  required binary name (UTF8);
+           |  optional int32 age;
+           |}
+      """.stripMargin
+
+      ParquetChecker(parquetType, "VARCHAR(20)")
+        .withWriter {
+          case (writer, schema) =>
+            val record = new SimpleGroup(schema)
+            var person = record.addGroup(0)
+            person.append("name", "John").append("age", 24)
+            person = record.addGroup(0)
+            person.append("name", "Jane").append("age", 22)
+            writer.write(record)
+        }
+        .assertResultSet(
+          table()
+            .row("""[{"name":"John","age":24},{"name":"Jane","age":22}]""")
+            .matches()
+        )
+    }
+
   }
 
   trait BaseDataImporter extends AnyFunSuite with BeforeAndAfterEach with TestFileManager {

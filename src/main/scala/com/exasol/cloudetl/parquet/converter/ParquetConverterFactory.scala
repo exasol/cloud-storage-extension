@@ -1,7 +1,6 @@
 package com.exasol.cloudetl.parquet.converter
 
 import org.apache.parquet.io.api.Converter
-import org.apache.parquet.schema.GroupType
 import org.apache.parquet.schema.OriginalType
 import org.apache.parquet.schema.PrimitiveType
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName._
@@ -31,12 +30,16 @@ object ParquetConverterFactory {
     parentDataHolder: ValueHolder
   ): Converter =
     if (parquetType.isPrimitive()) {
-      createPrimitiveConverter(parquetType.asPrimitiveType(), fieldIndex, parentDataHolder)
+      if (parquetType.isRepetition(Repetition.REPEATED)) {
+        RepeatedPrimitiveConverter(parquetType.asPrimitiveType(), fieldIndex, parentDataHolder)
+      } else {
+        createPrimitiveConverter(parquetType.asPrimitiveType(), fieldIndex, parentDataHolder)
+      }
     } else {
-      createComplexConverter(parquetType, fieldIndex, parentDataHolder)
+      createGroupConverter(parquetType, fieldIndex, parentDataHolder)
     }
 
-  private[this] def createPrimitiveConverter(
+  private[converter] def createPrimitiveConverter(
     parquetType: PrimitiveType,
     index: Int,
     parentHolder: ValueHolder
@@ -52,7 +55,7 @@ object ParquetConverterFactory {
       case INT96                => ParquetTimestampInt96Converter(index, parentHolder)
     }
 
-  private[this] def createComplexConverter(
+  private[converter] def createGroupConverter(
     parquetType: Type,
     index: Int,
     parentHolder: ValueHolder
@@ -63,7 +66,7 @@ object ParquetConverterFactory {
       case OriginalType.MAP  => MapConverter(parquetType.asGroupType(), index, parentHolder)
       case _ =>
         if (groupType.isRepetition(Repetition.REPEATED)) {
-          createRepeatedConverter(groupType, index, parentHolder)
+          RepeatedGroupConverter(groupType, index, parentHolder)
         } else {
           StructConverter(groupType, index, parentHolder)
         }
@@ -123,15 +126,4 @@ object ParquetConverterFactory {
       ArrayGroupConverter(innerElementType, index, holder)
     }
 
-  private[this] def createRepeatedConverter(
-    groupType: GroupType,
-    index: Int,
-    holder: ValueHolder
-  ): Converter =
-    if (groupType.getFieldCount() > 1) {
-      RepeatedGroupConverter(groupType, index, holder)
-    } else {
-      val innerPrimitiveType = groupType.getType(0).asPrimitiveType()
-      RepeatedPrimitiveConverter(innerPrimitiveType, index, holder)
-    }
 }

@@ -4,9 +4,6 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.ByteOrder
 
-import scala.collection.mutable.{Map => MMap}
-import scala.collection.mutable.ArrayBuffer
-
 import com.exasol.cloudetl.util.DateTimeUtil
 
 import org.apache.parquet.column.Dictionary
@@ -229,125 +226,6 @@ final case class ParquetDateConverter(index: Int, holder: ValueHolder)
 }
 
 /**
- * A Parquet converter for the
- * [[org.apache.parquet.schema.Type.Repetition.REPEATED]] group type.
- *
- * It is converted into an array of key value maps.
- *
- * The following schema is converted with this converter:
- * {{{
- * message parquet_file_schema {
- *   repeated group person {
- *     required binary name (UTF8);
- *     optional int32 age;
- *   }
- * }
- * }}}
- */
-final case class RepeatedGroupConverter(
-  groupType: GroupType,
-  index: Int,
-  parentDataHolder: ValueHolder
-) extends GroupConverter
-    with ParquetConverter {
-  private[this] val size = groupType.getFieldCount()
-  private[this] val converters = createFieldConverters()
-  private[this] val dataHolder = Array.ofDim[Any](size)
-  private[this] var currentIndex: Int = 0
-  private[this] var currentValues: MMap[String, Any] = null
-
-  override def getConverter(fieldIndex: Int): Converter = converters(fieldIndex)
-
-  override def start(): Unit = {
-    if (currentValues == null) {
-      parentDataHolder.put(index, dataHolder)
-    }
-    currentValues = MMap.empty[String, Any]
-  }
-
-  override def end(): Unit = {
-    dataHolder(currentIndex) = currentValues
-    currentIndex += 1
-  }
-
-  private[this] def createFieldConverters(): Array[Converter] = {
-    val converters = Array.ofDim[Converter](size)
-    for { i <- 0 until size } {
-      converters(i) = ParquetConverterFactory(
-        groupType.getType(i),
-        i,
-        new ValueHolder {
-          override def put(index: Int, value: Any): Unit = {
-            val _ = currentValues.put(groupType.getFieldName(i), value)
-          }
-          override def reset(): Unit = {}
-          override def getValues(): Seq[Any] = Seq.empty[Any]
-        }
-      )
-    }
-    converters
-  }
-
-}
-
-/**
- * A Parquet converter for the
- * [[org.apache.parquet.schema.Type.Repetition.REPEATED]] group with a
- * single type.
- *
- * It is converted into an array of values.
- *
- * The following schema is converted with this converter:
- * {{{
- * message parquet_file_schema {
- *   repeated group person {
- *     required binary name (UTF8);
- *   }
- * }
- * }}}
- */
-final case class RepeatedPrimitiveConverter(
-  elementType: Type,
-  index: Int,
-  parentDataHolder: ValueHolder
-) extends GroupConverter
-    with ParquetConverter {
-  private[this] val elementConverter = createPrimitiveElementConverter()
-  private[this] val values = ArrayBuffer.empty[Any]
-  private[this] var currentValue: Any = null
-
-  override def getConverter(fieldIndex: Int): Converter = {
-    if (fieldIndex != 0) {
-      throw new IllegalArgumentException(
-        s"Illegal index '$fieldIndex' to repeated primitive converter. It should be only '0'."
-      )
-    }
-    elementConverter
-  }
-  override def start(): Unit = {
-    if (currentValue == null) {
-      parentDataHolder.put(index, values)
-    }
-    currentValue = null
-  }
-  override def end(): Unit = {
-    val _ = values += currentValue
-  }
-
-  private[this] def createPrimitiveElementConverter(): Converter =
-    ParquetConverterFactory(
-      elementType,
-      index,
-      new ValueHolder {
-        override def put(index: Int, value: Any): Unit =
-          currentValue = value
-        override def reset(): Unit = {}
-        override def getValues(): Seq[Any] = Seq.empty[Any]
-      }
-    )
-}
-
-/**
  * A Parquet converter for the {@code LIST} annotated types.
  */
 sealed trait ArrayConverter {
@@ -364,8 +242,20 @@ sealed trait ArrayConverter {
     }
     elementConverter
   }
-  def start(): Unit = dataHolder.reset()
-  def end(): Unit = parentDataHolder.put(index, dataHolder.getValues())
+
+  def start(): Unit = {
+    dataHolder.reset()
+    if (elementConverter.isInstanceOf[RepeatedConverter]) {
+      elementConverter.asInstanceOf[RepeatedConverter].parentStart()
+    }
+  }
+
+  def end(): Unit = {
+    if (elementConverter.isInstanceOf[RepeatedConverter]) {
+      elementConverter.asInstanceOf[RepeatedConverter].parentEnd()
+    }
+    parentDataHolder.put(index, dataHolder.getValues())
+  }
 
   def createElementConverter(): Converter
 }
@@ -392,7 +282,7 @@ final case class ArrayPrimitiveConverter(
     with ArrayConverter {
 
   override def createElementConverter(): Converter =
-    ParquetConverterFactory(elementType, index, dataHolder)
+    ParquetConverterFactory.createPrimitiveConverter(elementType, index, dataHolder)
 }
 
 /**
@@ -420,10 +310,20 @@ final case class ArrayGroupConverter(
 
   override def createElementConverter(): Converter = new GroupConverter {
     val innerConverter = ParquetConverterFactory(elementType, index, dataHolder)
+
     override def getConverter(index: Int): Converter = innerConverter
-    override def start(): Unit = {}
-    override def end(): Unit = {}
+
+    override def start(): Unit =
+      if (innerConverter.isInstanceOf[RepeatedConverter]) {
+        innerConverter.asInstanceOf[RepeatedConverter].parentStart()
+      }
+
+    override def end(): Unit =
+      if (innerConverter.isInstanceOf[RepeatedConverter]) {
+        innerConverter.asInstanceOf[RepeatedConverter].parentEnd()
+      }
   }
+
 }
 
 /**
@@ -481,13 +381,22 @@ final case class MapConverter(groupType: GroupType, index: Int, parentDataHolder
       } else {
         valuesConverter
       }
-    override def start(): Unit = {}
-    override def end(): Unit = {}
+
+    override def start(): Unit =
+      if (valuesConverter.isInstanceOf[RepeatedConverter]) {
+        valuesConverter.asInstanceOf[RepeatedConverter].parentStart()
+      }
+
+    override def end(): Unit =
+      if (valuesConverter.isInstanceOf[RepeatedConverter]) {
+        valuesConverter.asInstanceOf[RepeatedConverter].parentEnd()
+      }
   }
+
 }
 
 /**
- * An abstract base class for Parquet struct converters.
+ * An abstract base class for Parquet {@code STRUCT} converters.
  */
 abstract class AbstractStructConverter(
   groupType: GroupType,
@@ -499,8 +408,22 @@ abstract class AbstractStructConverter(
   private[this] val converters = createFieldConverters()
 
   override final def getConverter(fieldIndex: Int): Converter = converters(fieldIndex)
-  override final def start(): Unit = dataHolder.reset()
-  override final def end(): Unit = endOperation()
+  override final def start(): Unit = {
+    dataHolder.reset()
+    for { i <- 0 until size } {
+      if (converters(i).isInstanceOf[RepeatedConverter]) {
+        converters(i).asInstanceOf[RepeatedConverter].parentStart()
+      }
+    }
+  }
+  override final def end(): Unit = {
+    for { i <- 0 until size } {
+      if (converters(i).isInstanceOf[RepeatedConverter]) {
+        converters(i).asInstanceOf[RepeatedConverter].parentEnd()
+      }
+    }
+    endOperation()
+  }
 
   def endOperation(): Unit
 

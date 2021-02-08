@@ -473,6 +473,51 @@ If either of the tags are not set, then it is read as a `null` value.
 | group                | MAP                   | VARCHAR(n)                      |
 | group                | REPEATED              | VARCHAR(n)                      |
 
+#### Parquet Repeated Types
+
+Parquet data type can repeated on a single field or on the group of fields.
+Repeated fields and repeated groups with a single field are imported as JSON
+array string.
+
+For example, the following two schemas are imported as JSON array strings.
+
+```
+message parquet_schema {
+  repeated binary name (UTF8);
+}
+```
+
+```
+message parquet_schema {
+  repeated group person {
+    required binary name (UTF8);
+  }
+}
+```
+
+Both of these Parquet types are imported as a JSON array `["John","Jane"]`.
+
+On the other hand, a repeated group with multiple fields are imported as JSON
+array of structs.
+
+```
+message parquet_schema {
+  repeated group person {
+    required binary name (UTF8);
+    optional int32 age;
+  }
+}
+```
+
+The Parquet importer imports it as JSON array of person structs:
+
+```
+[
+  {"name": "John", "age": 24},
+  {"name": "Jane", "age": 22}
+]
+```
+
 ## Amazon S3
 
 To access the Amazon S3 bucket data, you need to provide AWS access credentials:
