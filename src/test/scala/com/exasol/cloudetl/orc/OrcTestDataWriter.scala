@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.orc
 
+import java.nio.charset.StandardCharsets.UTF_8
+
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.hive.common.`type`.HiveDecimal
@@ -99,7 +101,7 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
   private[this] def stringWriter(column: BytesColumnVector): (Any, Int) => Unit =
     (value: Any, index: Int) =>
       value match {
-        case str: String => column.setVal(index, str.getBytes("UTF-8"))
+        case str: String => column.setVal(index, str.getBytes(UTF_8))
         case _           => setNull(column, index)
     }
 

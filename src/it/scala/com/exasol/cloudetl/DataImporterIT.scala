@@ -5,6 +5,7 @@ import java.math._
 import java.nio.file.Path
 import java.nio.ByteOrder
 import java.nio.ByteBuffer
+import java.nio.charset.StandardCharsets.UTF_8
 import java.sql.ResultSet
 import java.sql.Timestamp
 import java.time._
@@ -163,7 +164,7 @@ class DataImporterIT extends BaseIntegrationTest {
 
     test("imports bytes") {
       AvroChecker(getBasicSchema("\"bytes\""), "VARCHAR(20)")
-        .withInputValues(List(ByteBuffer.wrap("hello".getBytes("UTF-8"))))
+        .withInputValues(List(ByteBuffer.wrap("hello".getBytes(UTF_8))))
         .assertResultSet(
           table()
             .row("hello")
@@ -189,7 +190,7 @@ class DataImporterIT extends BaseIntegrationTest {
       val schema = getBasicSchema("""{"type":"fixed","name":"fixed", "size":5}""")
       val fixedSchema = new Schema.Parser().parse(schema).getField("column").schema()
       val fixedData = new GenericData.Fixed(fixedSchema)
-      fixedData.bytes("fixed".getBytes("UTF-8"))
+      fixedData.bytes("fixed".getBytes(UTF_8))
       AvroChecker(schema, "VARCHAR(20)")
         .withInputValues(List(fixedData))
         .assertResultSet(
@@ -576,7 +577,7 @@ class DataImporterIT extends BaseIntegrationTest {
       unionVector.noNulls = false
       // Set string type for the first row
       unionVector.tags(1) = 0
-      unionVector.fields(1).asInstanceOf[BytesColumnVector].setVal(0, "str".getBytes("UTF-8"))
+      unionVector.fields(1).asInstanceOf[BytesColumnVector].setVal(0, "str".getBytes(UTF_8))
       // Set int type for the second row
       unionVector.tags(0) = 1
       unionVector.fields(0).asInstanceOf[LongColumnVector].vector(1) = 23

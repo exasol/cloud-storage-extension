@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.storage
 
+import java.util.Locale.ENGLISH
+
 /**
  * A companion object for [[FileFormat]] class.
  *
@@ -8,7 +10,7 @@ package com.exasol.cloudetl.storage
  */
 object FileFormat {
 
-  def apply(fileFormat: String): FileFormat = fileFormat.toUpperCase match {
+  def apply(fileFormat: String): FileFormat = fileFormat.toUpperCase(ENGLISH) match {
     case "AVRO"    => AVRO
     case "DELTA"   => DELTA
     case "FILE"    => FILE

@@ -2,6 +2,7 @@ package com.exasol.cloudetl.parquet
 
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.nio.charset.StandardCharsets.UTF_8
 
 import scala.collection.JavaConverters._
 
@@ -135,7 +136,7 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
       case PrimitiveTypeName.BINARY =>
         (row: Row, index: Int) =>
           recordConsumer.addBinary(
-            Binary.fromReusedByteArray(row.getAs[String](index).getBytes)
+            Binary.fromReusedByteArray(row.getAs[String](index).getBytes(UTF_8))
           )
 
       case PrimitiveTypeName.INT96 =>

@@ -114,7 +114,6 @@ object Compilation {
     Wart.Null,
     Wart.MutableDataStructures,
     Wart.Overloading,
-    Wart.PlatformDefault,
     Wart.Throw,
     Wart.Var,
     Wart.While
@@ -126,7 +125,6 @@ object Compilation {
     Wart.NonUnitStatements,
     Wart.Null,
     Wart.Overloading,
-    Wart.PlatformDefault,
     Wart.Var
   )
 
