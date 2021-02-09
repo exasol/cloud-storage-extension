@@ -11,6 +11,7 @@
 ## Bug Fixes
 
 * #112: Fixed Parquet repeated converter bugs (PR #121)
+* #35: Fixed the hidden and metadata files filter bug (PR #122).
 
 ## Refactoring
 
