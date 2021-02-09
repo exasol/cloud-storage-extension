@@ -2,9 +2,9 @@ package com.exasol.cloudetl.bucket
 
 import scala.collection.JavaConverters._
 
+import com.exasol.cloudetl.filesystem.FileSystemManager
 import com.exasol.cloudetl.storage.FileFormat
 import com.exasol.cloudetl.storage.StorageProperties
-import com.exasol.cloudetl.util.FileSystemUtil
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
@@ -72,7 +72,7 @@ abstract class Bucket extends LazyLogging {
    */
   final def getPaths(): Seq[Path] = properties.getFileFormat() match {
     case FileFormat.DELTA => getPathsFromDeltaLog()
-    case _                => FileSystemUtil.globWithPattern(bucketPath, fileSystem)
+    case _                => FileSystemManager.globWithPattern(bucketPath, fileSystem)
   }
 
   private[this] def getPathsFromDeltaLog(): Seq[Path] = {
