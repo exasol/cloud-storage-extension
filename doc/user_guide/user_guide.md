@@ -100,7 +100,7 @@ Here an overview of the supported features.
 
 ## Getting Started
 
-We assume you have an Exasol cluster running with a version `6.0` or above.
+The `cloud-storage-extension` works for all the supported Exasol versions.
 
 ### Supported Data Formats
 
