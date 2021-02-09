@@ -977,7 +977,6 @@ class DataImporterIT extends BaseIntegrationTest {
 
     test("imports repeated field") {
       val parquetType = "repeated binary name (UTF8);"
-
       ParquetChecker(parquetType, "VARCHAR(20)")
         .withWriter {
           case (writer, schema) =>
@@ -995,7 +994,6 @@ class DataImporterIT extends BaseIntegrationTest {
            |  required binary name (UTF8);
            |}
       """.stripMargin
-
       ParquetChecker(parquetType, "VARCHAR(20)")
         .withWriter {
           case (writer, schema) =>
@@ -1016,7 +1014,6 @@ class DataImporterIT extends BaseIntegrationTest {
            |  optional int32 age;
            |}
       """.stripMargin
-
       ParquetChecker(parquetType, "VARCHAR(60)")
         .withWriter {
           case (writer, schema) =>
