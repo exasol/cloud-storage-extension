@@ -67,6 +67,7 @@ Here an overview of the supported features.
   <tr>
     <td>Data Lake (Gen2) Storage</td>
   </tr>
+  <tr></tr>
   <tr>
     <th rowspan="2">Export</th>
     <th rowspan="2"></th>
