@@ -3,6 +3,7 @@ package com.exasol.cloudetl.parquet.converter
 import com.exasol.common.json.JsonMapper
 
 import org.apache.parquet.schema.GroupType
+import org.apache.parquet.schema.Type.Repetition
 
 /**
  * The main Parquet data types to [[com.exasol.common.data.Row]]
@@ -23,7 +24,8 @@ final case class ParquetRootConverter(schema: GroupType)
   def getResult(): Seq[Any] =
     dataHolder.getValues().zipWithIndex.map {
       case (value, i) =>
-        if (schema.getType(i).isPrimitive()) {
+        val fieldType = schema.getType(i)
+        if (fieldType.isPrimitive() && !fieldType.isRepetition(Repetition.REPEATED)) {
           value
         } else {
           JsonMapper.toJson(value)
