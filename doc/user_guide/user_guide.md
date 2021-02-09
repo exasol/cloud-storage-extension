@@ -40,20 +40,26 @@ Here an overview of the supported features.
   <tr>
     <td>AWS</td>
     <td>S3</td>
-    <td rowspan="6" align="center">&#10005;</td>
-    <td rowspan="6" align="center">&#10005;</td>
-    <td rowspan="6" align="center">&#10005;</td>
-    <td rowspan="6" align="center">&#10005;</td>
+    <td rowspan="1" align="center">&#10005;</td>
+    <td rowspan="1" align="center">&#10005;</td>
+    <td rowspan="1" align="center">&#10005;</td>
+    <td rowspan="1" align="center">&#10005;</td>
   </tr>
   <tr>
     <td>GCP</td>
     <td>Google Cloud Storage</td>
+    <td rowspan="1" align="center">&#10005;</td>
+    <td rowspan="1" align="center">&#10005;</td>
+    <td rowspan="1" align="center">&#10005;</td>
+    <td rowspan="1" align="center"></td>
   </tr>
   <tr>
-  	<td rowspan="4">Azure</td>
-  </tr>
-  <tr>
+    <td rowspan="3" align="center">Azure</td>
     <td>Blob Storage</td>
+    <td rowspan="3" align="center">&#10005;</td>
+    <td rowspan="3" align="center">&#10005;</td>
+    <td rowspan="3" align="center">&#10005;</td>
+    <td rowspan="3" align="center">&#10005;</td>
   </tr>
   <tr>
     <td>Data Lake (Gen1) Storage</td>
