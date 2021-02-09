@@ -2,7 +2,7 @@ package com.exasol.cloudetl.source
 
 import java.nio.file.Paths
 
-import com.exasol.cloudetl.util.FileSystemUtil
+import com.exasol.cloudetl.filesystem.FileSystemManager
 
 import org.apache.parquet.schema.MessageTypeParser
 
@@ -24,7 +24,7 @@ class ParquetSourceTest extends AbstractSourceTest {
       """.stripMargin)
 
     val filePattern = Paths.get(s"$resourceDir/sales_pos*.parquet")
-    val globbedFilePath = FileSystemUtil.globWithLocal(filePattern, getFileSystem())
+    val globbedFilePath = FileSystemManager.globWithLocal(filePattern, getFileSystem())
     globbedFilePath.foreach { file =>
       val schema = ParquetSource(file, getConf(), getFileSystem()).getSchema()
       assert(schema.isDefined)
