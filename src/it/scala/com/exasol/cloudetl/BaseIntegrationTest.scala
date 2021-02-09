@@ -5,12 +5,18 @@ import java.nio.file.Paths
 
 import com.exasol.containers.ExasolContainer
 import com.exasol.dbbuilder.dialects.Column
+import com.exasol.dbbuilder.dialects.Table
 import com.exasol.dbbuilder.dialects.exasol.ExasolObjectFactory
 import com.exasol.dbbuilder.dialects.exasol.ExasolSchema
 import com.exasol.dbbuilder.dialects.exasol.udf.UdfScript
 
+import org.apache.hadoop.fs.{Path => HPath}
+import com.amazonaws.services.s3.model._
+import com.amazonaws.services.s3.AmazonS3
+import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import org.testcontainers.utility.DockerImageName
 import org.testcontainers.containers.localstack.LocalStackContainer
+import org.testcontainers.containers.localstack.LocalStackContainer.Service.S3
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -24,11 +30,12 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
 
   val exasolContainer = new ExasolContainer(getExasolDockerImageVersion())
   val s3Container = new LocalStackContainer(DEFAULT_LOCALSTACK_DOCKER_IMAGE)
-    .withServices(LocalStackContainer.Service.S3)
+    .withServices(S3)
     .withReuse(true)
   val assembledJarName = getAssembledJarName()
 
   var schema: ExasolSchema = _
+  var s3: AmazonS3 = _
 
   def startContainers(): Unit = {
     exasolContainer.start()
@@ -44,13 +51,54 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
     uploadJarToBucket()
   }
 
+  def prepareS3Client(): Unit =
+    s3 = AmazonS3ClientBuilder
+      .standard()
+      .withPathStyleAccessEnabled(true)
+      .withEndpointConfiguration(s3Container.getEndpointConfiguration(S3))
+      .withCredentials(s3Container.getDefaultCredentialsProvider())
+      .disableChunkedEncoding()
+      .build()
+
   def executeStmt(sql: String): Unit = {
     getConnection().createStatement().execute(sql)
     ()
   }
 
-  def query(sql: String): java.sql.ResultSet =
+  def executeQuery(sql: String): java.sql.ResultSet =
     getConnection().createStatement().executeQuery(sql)
+
+  def importIntoExasol(
+    schemaName: String,
+    table: Table,
+    bucket: String,
+    file: String,
+    dataFormat: String
+  ): Unit = {
+    val s3Endpoint = s3Container
+      .getEndpointConfiguration(S3)
+      .getServiceEndpoint()
+      .replaceAll("127.0.0.1", "172.17.0.1")
+    executeStmt(
+      s"""|IMPORT INTO ${table.getFullyQualifiedName()}
+          |FROM SCRIPT $schemaName.IMPORT_PATH WITH
+          |BUCKET_PATH              = 's3a://$bucket/$file'
+          |DATA_FORMAT              = '$dataFormat'
+          |S3_ENDPOINT              = '$s3Endpoint'
+          |S3_CHANGE_DETECTION_MODE = 'none'
+          |CONNECTION_NAME          = 'S3_CONNECTION'
+          |PARALLELISM              = 'nproc()';
+        """.stripMargin
+    )
+  }
+
+  def uploadFileToS3(bucket: String, file: HPath): Unit = {
+    s3.createBucket(new CreateBucketRequest(bucket))
+    val request = new PutObjectRequest(bucket, file.getName(), new File(file.toUri()))
+    s3.putObject(request)
+    Thread.sleep(3 * 1000)
+    ()
+  }
 
   private[this] def getAssembledJarName(): String = {
     val jarDir = findFileOrDirectory("target", JAR_DIRECTORY_PATTERN)

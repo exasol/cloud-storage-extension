@@ -89,6 +89,22 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     assert(getRecords()(0) === Row(Seq("[314,271]")))
   }
 
+  test("reads repeated field as JSON array") {
+    val schema = MessageTypeParser.parseMessageType(
+      """|message test {
+         |  repeated binary name (UTF8);
+         |}
+         |""".stripMargin
+    )
+    withResource(getParquetWriter(schema, true)) { writer =>
+      val record = new SimpleGroup(schema)
+      record.add(0, "John")
+      record.add(0, "Jane")
+      writer.write(record)
+    }
+    assert(getRecords()(0) === Row(Seq("""["John","Jane"]""")))
+  }
+
   test("reads repeated group with single element as JSON array string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
@@ -127,7 +143,7 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
       person.append("name", "Jane").append("age", 22)
       writer.write(record)
     }
-    val expected = Row(Seq("""[{"age":24,"name":"John"},{"age":22,"name":"Jane"}]"""))
+    val expected = Row(Seq("""[{"name":"John","age":24},{"name":"Jane","age":22}]"""))
     assert(getRecords()(0) === expected)
   }
 
@@ -266,6 +282,77 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     assert(getRecords()(0) === expected)
   }
 
+  test("reads array of repeated group as JSON string") {
+    val schema = MessageTypeParser.parseMessageType(
+      """|message test {
+         |  optional group array (LIST) {
+         |    repeated group list {
+         |      repeated group values {
+         |        required binary key (UTF8);
+         |        optional double price;
+         |      }
+         |    }
+         |  }
+         |}
+         |""".stripMargin
+    )
+    withResource(getParquetWriter(schema, true)) { writer =>
+      val record = new SimpleGroup(schema)
+      val array = record.addGroup(0).addGroup(0)
+      array.addGroup("values").append("key", "key1").append("price", 3.14)
+      array.addGroup("values").append("key", "key2").append("price", 2.71)
+      array.addGroup("values").append("key", "a").append("price", 100.0)
+      writer.write(record)
+    }
+    val expected = Row(
+      Seq(
+        """[[{"key":"key1","price":3.14},{"key":"key2","price":2.71},{"key":"a","price":100.0}]]"""
+      )
+    )
+    assert(getRecords()(0) === expected)
+  }
+
+  test("reads map with repeated group values as JSON string") {
+    val schema = MessageTypeParser.parseMessageType(
+      """|message test {
+         |  optional group maps (MAP) {
+         |    repeated group key_value {
+         |      required binary name (UTF8);
+         |      repeated group values {
+         |        required int32 year;
+         |        optional int32 height;
+         |        optional int32 weight;
+         |      }
+         |    }
+         |  }
+         |}
+         |""".stripMargin
+    )
+    withResource(getParquetWriter(schema, true)) { writer =>
+      val record = new SimpleGroup(schema)
+      val maps = record.addGroup(0)
+      var map = maps.addGroup("key_value")
+      map.append("name", "John")
+      map.addGroup(1).append("year", 2019).append("height", 170).append("weight", 70)
+      map.addGroup(1).append("year", 2020).append("height", 170).append("weight", 80)
+
+      map = maps.addGroup("key_value")
+      map.append("name", "Jane")
+      map.addGroup(1).append("year", 2019).append("height", 160)
+      writer.write(record)
+    }
+    val expected = Row(
+      Seq(
+        """|{
+           |"John":[{"year":2019,"height":170,"weight":70},{"year":2020,"height":170,"weight":80}],
+           |"Jane":[{"year":2019,"height":160,"weight":null}]
+           |}
+           |""".stripMargin.replaceAll("\n", "")
+      )
+    )
+    assert(getRecords()(0) === expected)
+  }
+
   test("reads group as JSON string") {
     val schema = MessageTypeParser.parseMessageType(
       """|message test {
@@ -314,7 +401,14 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     val expected = Row(
       Seq(
         "John",
-        """{"person":[{"phoneNumber":"1337","name":"Jane"},{"name":"Jake"}],"count":2}"""
+        """|{"person":
+           |  [
+           |    {"name":"Jane","phoneNumber":"1337"},
+           |    {"name":"Jake","phoneNumber":null}
+           |  ],
+           |"count":2
+           |}
+           |""".stripMargin.replaceAll("\\s+", "")
       )
     )
     assert(getRecords()(0) === expected)

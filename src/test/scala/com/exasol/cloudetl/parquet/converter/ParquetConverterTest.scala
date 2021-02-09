@@ -25,26 +25,6 @@ class ParquetConverterTest extends AnyFunSuite {
     }
   }
 
-  test("repeated primitive converter throws for illegal index") {
-    val schema = MessageTypeParser.parseMessageType(
-      """|message parquet_repeated_primitive {
-         |  repeated group addresses {
-         |    required binary address (UTF8);
-         |  }
-         |}
-         |""".stripMargin
-    )
-    Seq(-1, 1, 3, 8).foreach {
-      case index =>
-        val thrown = intercept[IllegalArgumentException] {
-          RepeatedPrimitiveConverter(schema.getType(0), -1, EmptyValueHolder).getConverter(index)
-        }
-        assert(
-          thrown.getMessage().contains(s"Illegal index '$index' to repeated primitive converter")
-        )
-    }
-  }
-
   test("map converter throws for illegal index") {
     val schema = MessageTypeParser.parseMessageType(
       """|message parquet_group_map {

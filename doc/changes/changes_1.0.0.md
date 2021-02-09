@@ -9,6 +9,11 @@
 * #118: Added support for docker based Exasol installations (PR #119).
 * #120: Added support for S3 path style access (PR #124).
 
+## Bug Fixes
+
+* #112: Fixed Parquet repeated converter bugs (PR #121)
+* #35: Fixed the hidden and metadata files filter bug (PR #122).
+
 ## Refactoring
 
 * #117: Added Exasol docker containers for integration tests (PR #119).
