@@ -7,6 +7,7 @@
 * #11: Added support for importing Parquet complex (LIST, MAP) types (PR #111).
 * #115: Added support for importing Orc complex (LIST, STRUCT) types (PR #116).
 * #118: Added support for docker based Exasol installations (PR #119).
+* #120: Added support for S3 path style access (PR #124).
 
 ## Refactoring
 
