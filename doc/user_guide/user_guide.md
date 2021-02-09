@@ -20,6 +20,83 @@ Parquet, Avro or Orc.
 - [Azure DataLake Gen1 Storage](#azure-data-lake-gen1-storage)
 - [Azure DataLake Gen2 Storage](#azure-data-lake-gen2-storage)
 
+## Overview
+
+Here an overview of the supported features.
+
+<table>
+  <tr>
+    <th rowspan="2">Import</th>
+    <th rowspan="2"></th>
+    <th colspan="4"></th>
+  </tr>
+  <tr>
+    <th>Parquet</th>
+    <th>Avro</th>
+    <th>Orc</th>
+    <th>Delta</th>
+  </tr>
+  <tr>
+    <td>AWS</td>
+    <td>S3</td>
+    <td rowspan="6" align="center">&#10005;</td>
+    <td rowspan="6" align="center">&#10005;</td>
+    <td rowspan="6" align="center">&#10005;</td>
+    <td rowspan="6" align="center">&#10005;</td>
+  </tr>
+  <tr>
+    <td>GCP</td>
+    <td>Google Cloud Storage</td>
+  </tr>
+  <tr>
+  	<td rowspan="4">Azure</td>
+  </tr>
+  <tr>
+    <td>Blob Storage</td>
+  </tr>
+  <tr>
+    <td>Data Lake (Gen1) Storage</td>
+  </tr>
+  <tr>
+    <td>Data Lake (Gen2) Storage</td>
+  </tr>
+  <tr>
+    <th rowspan="2">Export</th>
+    <th rowspan="2"></th>
+    <th colspan="4"></th>
+  </tr>
+  <tr>
+    <th>Parquet</th>
+    <th>Avro</th>
+    <th>Orc</th>
+    <th>Delta</th>
+  </tr>
+  <tr>
+    <td>AWS</td>
+    <td>S3</td>
+    <td rowspan="6" align="center">&#10005;</td>
+    <td rowspan="6" align="center"></td>
+    <td rowspan="6" align="center"></td>
+    <td rowspan="6" align="center"></td>
+  </tr>
+  <tr>
+    <td>GCP</td>
+    <td>Google Cloud Storage</td>
+  </tr>
+  <tr>
+  	<td rowspan="4">Azure</td>
+  </tr>
+  <tr>
+    <td>Blob Storage</td>
+  </tr>
+  <tr>
+    <td>Data Lake (Gen1) Storage</td>
+  </tr>
+  <tr>
+    <td>Data Lake (Gen2) Storage</td>
+  </tr>
+</table>
+
 ## Getting Started
 
 We assume you have an Exasol cluster running with a version `6.0` or above.

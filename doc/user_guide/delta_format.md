@@ -31,7 +31,7 @@ FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
 ## Supported Cloud Storage Systems
 
 Currently, only Amazon S3, Azure Blob Storage and Azure Data Lake Storage Gen1
-storage systems are supported.
+and Gen2 storage systems are supported.
 
 You can read more about the supported storage requirements and configuration on
 the [delta.io/delta-storage.html][delta-storage] page.
