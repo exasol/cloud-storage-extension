@@ -1007,7 +1007,7 @@ class DataImporterIT extends BaseIntegrationTest {
         .assertResultSet(table().row("""["John","Jane"]""").matches())
     }
 
-    test("imports repeated group with multips fields") {
+    test("imports repeated group with multiple fields") {
       val parquetType =
         """|repeated group person {
            |  required binary name (UTF8);

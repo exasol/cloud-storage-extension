@@ -24,10 +24,20 @@ import org.apache.parquet.schema.Type
  * level Parquet schema. The root converter then generates subsequent
  * converters using [[ParquetConverterFactory]] for each type.
  *
- * The sealed trait ensures that all the implementations should be in
- * this file.
+ * Some converters (repeated converters) should know when the parent
+ * type starts or ends so that it can update its internal state.
  */
-sealed trait ParquetConverter
+// This is acceptable, since we only want to override them in repeated
+// converters.
+@SuppressWarnings(Array("org.wartremover.contrib.warts.UnsafeInheritance"))
+trait ParquetConverter extends Converter {
+  def parentStart(): Unit = {
+    //
+  }
+  def parentEnd(): Unit = {
+    //
+  }
+}
 
 /**
  * A default converter for Parquet primitive types.
@@ -245,19 +255,15 @@ sealed trait ArrayConverter {
 
   def start(): Unit = {
     dataHolder.reset()
-    if (elementConverter.isInstanceOf[RepeatedConverter]) {
-      elementConverter.asInstanceOf[RepeatedConverter].parentStart()
-    }
+    elementConverter.parentStart()
   }
 
   def end(): Unit = {
-    if (elementConverter.isInstanceOf[RepeatedConverter]) {
-      elementConverter.asInstanceOf[RepeatedConverter].parentEnd()
-    }
+    elementConverter.parentEnd()
     parentDataHolder.put(index, dataHolder.getValues())
   }
 
-  def createElementConverter(): Converter
+  def createElementConverter(): ParquetConverter
 }
 
 /**
@@ -281,7 +287,7 @@ final case class ArrayPrimitiveConverter(
     with ParquetConverter
     with ArrayConverter {
 
-  override def createElementConverter(): Converter =
+  override def createElementConverter(): ParquetConverter =
     ParquetConverterFactory.createPrimitiveConverter(elementType, index, dataHolder)
 }
 
@@ -308,21 +314,16 @@ final case class ArrayGroupConverter(
     with ParquetConverter
     with ArrayConverter {
 
-  override def createElementConverter(): Converter = new GroupConverter {
-    val innerConverter = ParquetConverterFactory(elementType, index, dataHolder)
+  override def createElementConverter(): ParquetConverter =
+    new GroupConverter with ParquetConverter {
+      val innerConverter = ParquetConverterFactory(elementType, index, dataHolder)
 
-    override def getConverter(index: Int): Converter = innerConverter
+      override def getConverter(index: Int): Converter = innerConverter
 
-    override def start(): Unit =
-      if (innerConverter.isInstanceOf[RepeatedConverter]) {
-        innerConverter.asInstanceOf[RepeatedConverter].parentStart()
-      }
+      override def start(): Unit = innerConverter.parentStart()
 
-    override def end(): Unit =
-      if (innerConverter.isInstanceOf[RepeatedConverter]) {
-        innerConverter.asInstanceOf[RepeatedConverter].parentEnd()
-      }
-  }
+      override def end(): Unit = innerConverter.parentEnd()
+    }
 
 }
 
@@ -382,15 +383,9 @@ final case class MapConverter(groupType: GroupType, index: Int, parentDataHolder
         valuesConverter
       }
 
-    override def start(): Unit =
-      if (valuesConverter.isInstanceOf[RepeatedConverter]) {
-        valuesConverter.asInstanceOf[RepeatedConverter].parentStart()
-      }
+    override def start(): Unit = valuesConverter.parentStart()
 
-    override def end(): Unit =
-      if (valuesConverter.isInstanceOf[RepeatedConverter]) {
-        valuesConverter.asInstanceOf[RepeatedConverter].parentEnd()
-      }
+    override def end(): Unit = valuesConverter.parentEnd()
   }
 
 }
@@ -407,28 +402,20 @@ abstract class AbstractStructConverter(
   protected[this] val dataHolder = IndexedValueHolder(size)
   private[this] val converters = createFieldConverters()
 
-  override final def getConverter(fieldIndex: Int): Converter = converters(fieldIndex)
+  override final def getConverter(fieldIndex: Int): ParquetConverter = converters(fieldIndex)
   override final def start(): Unit = {
     dataHolder.reset()
-    for { i <- 0 until size } {
-      if (converters(i).isInstanceOf[RepeatedConverter]) {
-        converters(i).asInstanceOf[RepeatedConverter].parentStart()
-      }
-    }
+    converters.foreach(_.parentStart())
   }
   override final def end(): Unit = {
-    for { i <- 0 until size } {
-      if (converters(i).isInstanceOf[RepeatedConverter]) {
-        converters(i).asInstanceOf[RepeatedConverter].parentEnd()
-      }
-    }
+    converters.foreach(_.parentEnd())
     endOperation()
   }
 
   def endOperation(): Unit
 
-  private[this] def createFieldConverters(): Array[Converter] = {
-    val converters = Array.ofDim[Converter](size)
+  private[this] def createFieldConverters(): Array[ParquetConverter] = {
+    val converters = Array.ofDim[ParquetConverter](size)
     for { i <- 0 until size } {
       converters(i) = ParquetConverterFactory(groupType.getType(i), i, dataHolder)
     }

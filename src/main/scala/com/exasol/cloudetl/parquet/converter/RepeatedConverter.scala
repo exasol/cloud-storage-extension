@@ -9,19 +9,6 @@ import org.apache.parquet.schema.GroupType
 import org.apache.parquet.schema.PrimitiveType
 
 /**
- * A converter interface for the Parquet repeated types.
- *
- * A repeated converter should know when the parent type starts or ends
- * so that it can update its internal state.
- */
-sealed trait RepeatedConverter {
-
-  def parentStart(): Unit
-
-  def parentEnd(): Unit
-}
-
-/**
  * A Parquet converter for the
  * [[org.apache.parquet.schema.Type.Repetition.REPEATED]] group with a
  * single type.
@@ -40,7 +27,7 @@ final case class RepeatedPrimitiveConverter(
   index: Int,
   parentDataHolder: ValueHolder
 ) extends PrimitiveConverter
-    with RepeatedConverter
+    with ParquetConverter
     with ValueHolder {
 
   private[this] val dataHolder = new AppendedValueHolder()
@@ -108,7 +95,7 @@ final case class RepeatedGroupConverter(
   index: Int,
   parentDataHolder: ValueHolder
 ) extends GroupConverter
-    with RepeatedConverter
+    with ParquetConverter
     with ValueHolder {
 
   private[this] val dataHolder = new AppendedValueHolder()

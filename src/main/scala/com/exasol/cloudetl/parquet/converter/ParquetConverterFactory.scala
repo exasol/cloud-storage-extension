@@ -1,6 +1,5 @@
 package com.exasol.cloudetl.parquet.converter
 
-import org.apache.parquet.io.api.Converter
 import org.apache.parquet.schema.OriginalType
 import org.apache.parquet.schema.PrimitiveType
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName._
@@ -28,7 +27,7 @@ object ParquetConverterFactory {
     parquetType: Type,
     fieldIndex: Int,
     parentDataHolder: ValueHolder
-  ): Converter =
+  ): ParquetConverter =
     if (parquetType.isPrimitive()) {
       if (parquetType.isRepetition(Repetition.REPEATED)) {
         RepeatedPrimitiveConverter(parquetType.asPrimitiveType(), fieldIndex, parentDataHolder)
@@ -43,7 +42,7 @@ object ParquetConverterFactory {
     parquetType: PrimitiveType,
     index: Int,
     parentHolder: ValueHolder
-  ): Converter =
+  ): ParquetConverter =
     parquetType.getPrimitiveTypeName() match {
       case BOOLEAN              => ParquetPrimitiveConverter(index, parentHolder)
       case DOUBLE               => ParquetPrimitiveConverter(index, parentHolder)
@@ -59,7 +58,7 @@ object ParquetConverterFactory {
     parquetType: Type,
     index: Int,
     parentHolder: ValueHolder
-  ): Converter = {
+  ): ParquetConverter = {
     val groupType = parquetType.asGroupType()
     parquetType.getOriginalType() match {
       case OriginalType.LIST => createArrayConverter(groupType.getType(0), index, parentHolder)
@@ -77,7 +76,7 @@ object ParquetConverterFactory {
     primitiveType: PrimitiveType,
     index: Int,
     holder: ValueHolder
-  ): Converter = primitiveType.getOriginalType() match {
+  ): ParquetConverter = primitiveType.getOriginalType() match {
     case OriginalType.UTF8    => ParquetStringConverter(index, holder)
     case OriginalType.DECIMAL => ParquetDecimalConverter(primitiveType, index, holder)
     case _                    => ParquetPrimitiveConverter(index, holder)
@@ -87,7 +86,7 @@ object ParquetConverterFactory {
     primitiveType: PrimitiveType,
     index: Int,
     holder: ValueHolder
-  ): Converter = primitiveType.getOriginalType() match {
+  ): ParquetConverter = primitiveType.getOriginalType() match {
     case OriginalType.DECIMAL => ParquetDecimalConverter(primitiveType, index, holder)
     case _                    => ParquetPrimitiveConverter(index, holder)
   }
@@ -96,7 +95,7 @@ object ParquetConverterFactory {
     primitiveType: PrimitiveType,
     index: Int,
     holder: ValueHolder
-  ): Converter = primitiveType.getOriginalType() match {
+  ): ParquetConverter = primitiveType.getOriginalType() match {
     case OriginalType.DATE    => ParquetDateConverter(index, holder)
     case OriginalType.DECIMAL => ParquetDecimalConverter(primitiveType, index, holder)
     case _                    => ParquetPrimitiveConverter(index, holder)
@@ -106,7 +105,7 @@ object ParquetConverterFactory {
     primitiveType: PrimitiveType,
     index: Int,
     holder: ValueHolder
-  ): Converter = primitiveType.getOriginalType() match {
+  ): ParquetConverter = primitiveType.getOriginalType() match {
     case OriginalType.TIMESTAMP_MILLIS => ParquetTimestampMillisConverter(index, holder)
     case OriginalType.DECIMAL          => ParquetDecimalConverter(primitiveType, index, holder)
     case _                             => ParquetPrimitiveConverter(index, holder)
@@ -116,7 +115,7 @@ object ParquetConverterFactory {
     repeatedType: Type,
     index: Int,
     holder: ValueHolder
-  ): Converter =
+  ): ParquetConverter =
     if (repeatedType.isPrimitive()) {
       ArrayPrimitiveConverter(repeatedType.asPrimitiveType(), index, holder)
     } else if (repeatedType.asGroupType().getFieldCount() > 1) {
