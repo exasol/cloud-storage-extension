@@ -475,7 +475,7 @@ If either of the tags are not set, then it is read as a `null` value.
 
 #### Parquet Repeated Types
 
-Parquet data type can repeated on a single field or on the group of fields.
+Parquet data type can repeat a single field or the group of fields.
 Repeated fields and repeated groups with a single field are imported as JSON
 array string.
 
@@ -495,7 +495,7 @@ message parquet_schema {
 }
 ```
 
-Both of these Parquet types are imported as a JSON array `["John","Jane"]`.
+The Parquet importer imports both of these Parquet as a JSON array `["John","Jane"]`.
 
 On the other hand, a repeated group with multiple fields are imported as JSON
 array of structs.
