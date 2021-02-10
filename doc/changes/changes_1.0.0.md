@@ -7,7 +7,7 @@
 * #11: Added support for importing Parquet complex (LIST, MAP) types (PR #111).
 * #115: Added support for importing Orc complex (LIST, STRUCT) types (PR #116).
 * #118: Added support for docker based Exasol installations (PR #119).
-* #120: Added support for S3 path style access (PR #124).
+* #120: Added support for S3 path style access (PR #126).
 
 ## Bug Fixes
 
@@ -17,6 +17,8 @@
 ## Refactoring
 
 * #117: Added Exasol docker containers for integration tests (PR #119).
+* #114: Enabled linter to check the platform charsets or locales (PR #126).
+* #123: Renamed the UDF script class names (PR #126).
 
 ## Documentation
 

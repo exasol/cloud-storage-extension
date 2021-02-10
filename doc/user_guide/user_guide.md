@@ -132,18 +132,18 @@ Run the following SQL statements to create importer UDF scripts.
 OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.ImportPath;
+  %scriptclass com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...)
 EMITS (filename VARCHAR(2000), partition_index VARCHAR(100)) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.ImportMetadata;
+  %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.ImportFiles;
+  %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 ```
@@ -163,7 +163,7 @@ different deployment.
 OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesQueryGenerator;
+  %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesImportQueryGenerator;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 

@@ -6,7 +6,7 @@ import com.exasol.ExaMetadata
 /**
  * A query generator class to run inside the Exasol docker container.
  */
-object DockerFilesQueryGenerator {
+object DockerFilesImportQueryGenerator {
 
   def generateSqlForImportSpec(
     metadata: ExaMetadata,

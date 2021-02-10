@@ -115,7 +115,10 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
       .language(UdfScript.Language.JAVA)
       .inputType(UdfScript.InputType.SET)
       .emits()
-      .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerFilesQueryGenerator", jarPath)
+      .bucketFsContent(
+        "com.exasol.cloudetl.scriptclasses.DockerFilesImportQueryGenerator",
+        jarPath
+      )
       .build()
     schema
       .createUdfBuilder("IMPORT_METADATA")
