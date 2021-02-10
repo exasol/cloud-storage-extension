@@ -1,5 +1,17 @@
 # Cloud Storage Extension 1.0.0, released 2021-MM-DD
 
+## Summary
+
+In this release, we have added several features and fixed several bugs.
+
+We have added support for importing complex data types as JSON string of
+different storage formats. Added support for S3 path style access and fixed bugs
+related to Parquet repeated types.
+
+We have also changed the UDF script class names, so please make sure to update
+your deployment scripts. You can check out the user guide for the updated
+deployment guide.
+
 ## Features / Enhancements
 
 * #106: Updated parquet-hadoop version that includes api changes (PR #107).
@@ -7,6 +19,7 @@
 * #11: Added support for importing Parquet complex (LIST, MAP) types (PR #111).
 * #115: Added support for importing Orc complex (LIST, STRUCT) types (PR #116).
 * #118: Added support for docker based Exasol installations (PR #119).
+* #120: Added support for S3 path style access (PR #126).
 
 ## Bug Fixes
 
@@ -16,6 +29,8 @@
 ## Refactoring
 
 * #117: Added Exasol docker containers for integration tests (PR #119).
+* #114: Enabled linter to check the platform charsets or locales (PR #126).
+* #123: Renamed the UDF script class names (PR #126).
 
 ## Documentation
 
@@ -41,9 +56,9 @@
 ### Test Dependency Updates
 
 * Added `org.hamcrest:hamcrest:2.2`
-* Added `com.exasol:hamcrest-resultset-matcher:1.3.0`
+* Added `com.exasol:hamcrest-resultset-matcher:1.4.0`
 * Added `com.exasol:test-db-builder-java:3.0.0`
-* Added `com.exasol:exasol-testcontainers:3.4.1`
+* Added `com.exasol:exasol-testcontainers:3.5.0`
 * Added `org.testcontainers:localstack:1.15.1`
 * Updates `org.scalatest:scalatest:3.2.2` to `3.2.3`
 * Updated `org.mockito:mockito-core:3.5.13` to `3.7.7`

@@ -12,8 +12,17 @@ import com.exasol.common.data.Row
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.fs.Path
 
-object ImportFiles extends LazyLogging {
+/**
+ * A importer class that reads and imports data into Exasol database.
+ */
+object FilesDataImporter extends LazyLogging {
 
+  /**
+   * Reads files and emits their data into Exasol iterator.
+   *
+   * @param metadata an Exasol metadata object
+   * @param iterator an Exasol iterator object
+   */
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
     val storageProperties = StorageProperties(iterator.getString(1), metadata)
     val fileFormat = storageProperties.getFileFormat()

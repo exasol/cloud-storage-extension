@@ -3,6 +3,7 @@ package com.exasol.cloudetl.parquet.converter
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.ByteOrder
+import java.nio.charset.StandardCharsets.UTF_8
 
 import com.exasol.cloudetl.util.DateTimeUtil
 
@@ -58,7 +59,8 @@ trait ParquetConverter extends Converter {
 final case class ParquetPrimitiveConverter(index: Int, holder: ValueHolder)
     extends PrimitiveConverter
     with ParquetConverter {
-  override def addBinary(value: Binary): Unit = holder.put(index, new String(value.getBytes()))
+  override def addBinary(value: Binary): Unit =
+    holder.put(index, new String(value.getBytes(), UTF_8))
   override def addBoolean(value: Boolean): Unit = holder.put(index, value)
   override def addDouble(value: Double): Unit = holder.put(index, value)
   override def addFloat(value: Float): Unit = holder.put(index, value)

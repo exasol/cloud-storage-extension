@@ -3,6 +3,7 @@ package com.exasol.cloudetl.parquet
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.math.MathContext
+import java.nio.charset.StandardCharsets.UTF_8
 import java.sql.Timestamp
 
 import com.exasol.cloudetl.parquet.converter.ParquetDecimalConverter
@@ -140,7 +141,8 @@ class ParquetRowReaderPrimitiveTypesTest extends BaseParquetReaderTest {
         writer.write(record)
       }
     }
-    val expected = new BigDecimal(new BigInteger(decimalValue.getBytes()), 2, new MathContext(30))
+    val expected =
+      new BigDecimal(new BigInteger(decimalValue.getBytes(UTF_8)), 2, new MathContext(30))
     val records = getRecords()
     assert(records.size === 2)
     assert(records(0) === Row(Seq(expected)))
@@ -167,7 +169,8 @@ class ParquetRowReaderPrimitiveTypesTest extends BaseParquetReaderTest {
         writer.write(record)
       }
     }
-    val expected = new BigDecimal(new BigInteger(decimalValue.getBytes()), 2, new MathContext(20))
+    val expected =
+      new BigDecimal(new BigInteger(decimalValue.getBytes(UTF_8)), 2, new MathContext(20))
     val records = getRecords()
     assert(records.size === 4)
     assert(records(0) === Row(Seq(expected)))

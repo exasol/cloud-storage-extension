@@ -5,7 +5,7 @@ import com.exasol.ExaMetadata
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito._
 
-class ImportMetadataTest extends StorageTest {
+class FilesMetadataReaderTest extends StorageTest {
 
   test("run returns the list of file names") {
     val properties = Map(
@@ -21,7 +21,7 @@ class ImportMetadataTest extends StorageTest {
     val iter = mockExasolIterator(properties)
     when(iter.getInteger(2)).thenReturn(2)
 
-    ImportMetadata.run(mock[ExaMetadata], iter)
+    FilesMetadataReader.run(mock[ExaMetadata], iter)
     verify(iter, times(3)).emit(anyString(), anyString())
     expectedParquetFiles.foreach {
       case (filename, partitionId) =>

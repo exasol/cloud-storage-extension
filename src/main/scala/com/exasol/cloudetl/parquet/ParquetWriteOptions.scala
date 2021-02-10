@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.parquet
 
+import java.util.Locale.ENGLISH
+
 import com.exasol.cloudetl.storage.StorageProperties
 
 import org.apache.parquet.hadoop.ParquetWriter
@@ -17,7 +19,7 @@ object ParquetWriteOptions {
 
   def apply(params: StorageProperties): ParquetWriteOptions = {
     val compressionCodec =
-      params.get("PARQUET_COMPRESSION_CODEC").getOrElse("").toUpperCase() match {
+      params.get("PARQUET_COMPRESSION_CODEC").getOrElse("").toUpperCase(ENGLISH) match {
         case "SNAPPY" => CompressionCodecName.SNAPPY
         case "GZIP"   => CompressionCodecName.GZIP
         case "LZO"    => CompressionCodecName.LZO

@@ -6,7 +6,7 @@ import com.exasol.ExaMetadata
 /**
  * A query generator class to run inside the Exasol docker container.
  */
-object DockerFilesQueryGenerator {
+object DockerFilesImportQueryGenerator {
 
   def generateSqlForImportSpec(
     metadata: ExaMetadata,
@@ -14,7 +14,7 @@ object DockerFilesQueryGenerator {
   ): String = {
     import org.apache.hadoop.security.UserGroupInformation
     UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exauser"))
-    ImportPath.generateSqlForImportSpec(metadata, importSpecification)
+    FilesImportQueryGenerator.generateSqlForImportSpec(metadata, importSpecification)
   }
 
 }

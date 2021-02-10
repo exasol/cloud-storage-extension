@@ -217,18 +217,18 @@ Run the following SQL statements to create importer UDF scripts.
 OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.ImportPath;
+  %scriptclass com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...)
 EMITS (filename VARCHAR(2000), partition_index VARCHAR(100)) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.ImportMetadata;
+  %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.ImportFiles;
+  %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 ```
@@ -248,7 +248,7 @@ different deployment.
 OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesQueryGenerator;
+  %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesImportQueryGenerator;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 
@@ -673,6 +673,31 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   S3_ENDPOINT     = 's3.<REGION>.amazonaws.com'
   CONNECTION_NAME = 'S3_CONNECTION'
   PARALLELISM     = 'iproc(), floor(random()*<MULTIPLIER>)';
+```
+
+### S3 Path Style Access
+
+Amazon S3 [deprecated the path][s3-path-style-deprecation1] [style
+access][s3-path-style-deprecation2] to the buckets at the end of the 2020. This
+breaks the access to the bucket that contain dot (`.`) in their names.
+
+[s3-path-style-deprecation1]: https://aws.amazon.com/blogs/aws/amazon-s3-path-deprecation-plan-the-rest-of-the-story/
+[s3-path-style-deprecation2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#path-style-access
+
+To enable the path style access to the bucket, you can set the
+`S3_PATH_STYLE_ACCESS` parameter to `true`.
+
+For example:
+
+```
+IMPORT INTO <schema>.<table>
+FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
+  BUCKET_PATH          = 's3a://<S3_PATH>.data.domain/import/data/*.parquet'
+  DATA_FORMAT          = 'PARQUET'
+  S3_PATH_STYLE_ACCESS = 'true'
+  S3_ENDPOINT          = 's3.<REGION>.amazonaws.com'
+  CONNECTION_NAME      = 'S3_CONNECTION'
+  PARALLELISM          = 'nproc()';
 ```
 
 ## Google Cloud Storage

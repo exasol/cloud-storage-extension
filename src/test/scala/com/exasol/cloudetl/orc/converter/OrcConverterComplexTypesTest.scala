@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.orc.converter
 
+import java.nio.charset.StandardCharsets.UTF_8
+
 import com.exasol.common.data.Row
 
 import org.apache.hadoop.hive.ql.exec.vector._
@@ -89,7 +91,7 @@ class OrcConverterComplexTypesTest extends BaseOrcConverterTest {
     unionVector.fields(0).asInstanceOf[LongColumnVector].vector(0) = 23
     // Set string type for the second row
     unionVector.tags(1) = 1
-    unionVector.fields(1).asInstanceOf[BytesColumnVector].setVal(1, "str".getBytes("UTF-8"))
+    unionVector.fields(1).asInstanceOf[BytesColumnVector].setVal(1, "str".getBytes(UTF_8))
     // Set null for the third row
     unionVector.isNull(2) = true
     writer.addRowBatch(batch)

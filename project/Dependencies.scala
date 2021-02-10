@@ -20,9 +20,9 @@ object Dependencies {
   private val ScalaTestPlusVersion = "1.0.0-M2"
   private val MockitoCoreVersion = "3.7.7"
   private val HamcrestVersion = "2.2"
-  private val ExasolHamcrestMatcherVersion = "1.3.0"
+  private val ExasolHamcrestMatcherVersion = "1.4.0"
   private val ExasolTestDBBuilderVersion = "3.0.0"
-  private val ExasolTestContainersVersion = "3.4.1"
+  private val ExasolTestContainersVersion = "3.5.0"
   private val TestContainersLocalstackVersion = "1.15.1"
 
   val Resolvers: Seq[Resolver] = Seq(

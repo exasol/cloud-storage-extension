@@ -6,7 +6,7 @@ import com.exasol.ExaMetadata
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 
-class ImportFilesTest extends StorageTest {
+class FilesDataImporterTest extends StorageTest {
 
   private[this] val properties = Map(
     "BUCKET_PATH" -> testResourceParquetPath,
@@ -18,7 +18,7 @@ class ImportFilesTest extends StorageTest {
     val iter = mockFileIterator("CSV", file)
 
     val thrown = intercept[IllegalArgumentException] {
-      ImportFiles.run(mock[ExaMetadata], iter)
+      FilesDataImporter.run(mock[ExaMetadata], iter)
     }
     assert(thrown.getMessage === "Unsupported file format CSV!")
   }
@@ -32,7 +32,7 @@ class ImportFilesTest extends StorageTest {
     when(iter.next()).thenReturn(true, false)
     when(iter.getString(2)).thenReturn(file1, file2)
 
-    ImportFiles.run(mock[ExaMetadata], iter)
+    FilesDataImporter.run(mock[ExaMetadata], iter)
     verify(iter, times(expectedNumberOfRecords)).emit(Seq(any[Object]): _*)
   }
 
@@ -52,14 +52,14 @@ class ImportFilesTest extends StorageTest {
   test("run emits correct sequence of records from PARQUET file") {
     val parquetFile = s"$testResourceDir/import/parquet/sales_positions_small.snappy.parquet"
     val iter = mockFileIterator("PARQUET", parquetFile)
-    ImportFiles.run(mock[ExaMetadata], iter)
+    FilesDataImporter.run(mock[ExaMetadata], iter)
     verifySmallFilesImport(iter)
   }
 
   test("run emits correct sequence of records from AVRO file") {
     val avroFile = s"$testResourceDir/import/avro/sales_positions_small.avro"
     val iter = mockFileIterator("AVRO", avroFile)
-    ImportFiles.run(mock[ExaMetadata], iter)
+    FilesDataImporter.run(mock[ExaMetadata], iter)
     verifySmallFilesImport(iter)
   }
 

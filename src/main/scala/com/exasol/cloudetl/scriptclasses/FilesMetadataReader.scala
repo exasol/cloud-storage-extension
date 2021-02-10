@@ -7,8 +7,18 @@ import com.exasol.cloudetl.storage.StorageProperties
 
 import com.typesafe.scalalogging.LazyLogging
 
-object ImportMetadata extends LazyLogging {
+/**
+ * A metadata reader for the storage filesystems.
+ */
+object FilesMetadataReader extends LazyLogging {
 
+  /**
+   * Emits the number of files available in the storage path into Exasol
+   * iterator.
+   *
+   * @param metadata an Exasol metadata object
+   * @param iterator an Exasol iterator object
+   */
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
     val bucketPath = iterator.getString(0)
     val parallelism = iterator.getInteger(2)
