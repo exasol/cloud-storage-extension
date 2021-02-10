@@ -20,6 +20,7 @@
 ## Documentation
 
 * #89: Increased the default number of characters for file path (PR #105).
+* #110: Added overview table with supported features (PR #124).
 
 ## Dependency Updates
 
