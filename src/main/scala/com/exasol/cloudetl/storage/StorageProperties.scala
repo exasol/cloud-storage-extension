@@ -44,11 +44,8 @@ class StorageProperties(
    * requirements.
    */
   final def getDeltaFormatLogStoreClassName(): String = getStoragePathScheme() match {
-    case "abfs" | "abfss" =>
-      throw new UnsupportedOperationException(
-        "Delta format LogStore API is not supported in Azure Data Lake Gen2 storage yet."
-      )
-    case "adl" => "org.apache.spark.sql.delta.storage.AzureLogStore"
+    case "abfs" | "abfss" => "org.apache.spark.sql.delta.storage.AzureLogStore"
+    case "adl"            => "org.apache.spark.sql.delta.storage.AzureLogStore"
     case "gs" =>
       throw new UnsupportedOperationException(
         "Delta format LogStore API is not supported in Google Cloud Storage yet."
@@ -123,9 +120,23 @@ object StorageProperties extends CommonProperties {
   def apply(params: Map[String, String], metadata: ExaMetadata): StorageProperties =
     new StorageProperties(params, Option(metadata))
 
-  /** Returns [[StorageProperties]] from only key-value pairs map. */
+  /**
+   * Returns [[StorageProperties]] from only key-value pairs map.
+   */
   def apply(params: Map[String, String]): StorageProperties =
     new StorageProperties(params, None)
+
+  /**
+   * Returns [[StorageProperties]] from [[java.util.Map]] key-value
+   * pairs map.
+   */
+  def apply(params: java.util.Map[String, String]): StorageProperties = {
+    val mmap = scala.collection.mutable.Map.empty[String, String]
+    params.forEach { (key, value) =>
+      mmap.update(key, value)
+    }
+    new StorageProperties(mmap.toMap, None)
+  }
 
   /**
    * Returns [[StorageProperties]] from properly separated string and

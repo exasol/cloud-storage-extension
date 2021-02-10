@@ -126,7 +126,7 @@ class ExportTableTest
     when(importIter.next()).thenReturn(false)
     when(importIter.getString(2)).thenReturn(outputPath.toUri.toString)
 
-    ImportFiles.run(mock[ExaMetadata], importIter)
+    FilesDataImporter.run(mock[ExaMetadata], importIter)
 
     val totalRecords = 2
     verify(importIter, times(totalRecords)).emit(Seq(any[Object]): _*)

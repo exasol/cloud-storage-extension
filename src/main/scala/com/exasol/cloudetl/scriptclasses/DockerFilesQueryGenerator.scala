@@ -14,7 +14,7 @@ object DockerFilesQueryGenerator {
   ): String = {
     import org.apache.hadoop.security.UserGroupInformation
     UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exauser"))
-    ImportPath.generateSqlForImportSpec(metadata, importSpecification)
+    FilesImportQueryGenerator.generateSqlForImportSpec(metadata, importSpecification)
   }
 
 }
