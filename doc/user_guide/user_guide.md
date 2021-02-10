@@ -40,26 +40,26 @@ Here an overview of the supported features.
   <tr>
     <td>AWS</td>
     <td>S3</td>
-    <td rowspan="1" align="center">&#10005;</td>
-    <td rowspan="1" align="center">&#10005;</td>
-    <td rowspan="1" align="center">&#10005;</td>
-    <td rowspan="1" align="center">&#10005;</td>
+    <td rowspan="1" align="center">&#10004;</td>
+    <td rowspan="1" align="center">&#10004;</td>
+    <td rowspan="1" align="center">&#10004;</td>
+    <td rowspan="1" align="center">&#10004;</td>
   </tr>
   <tr>
     <td>GCP</td>
     <td>Google Cloud Storage</td>
-    <td rowspan="1" align="center">&#10005;</td>
-    <td rowspan="1" align="center">&#10005;</td>
-    <td rowspan="1" align="center">&#10005;</td>
+    <td rowspan="1" align="center">&#10004;</td>
+    <td rowspan="1" align="center">&#10004;</td>
+    <td rowspan="1" align="center">&#10004;</td>
     <td rowspan="1" align="center"></td>
   </tr>
   <tr>
     <td rowspan="3" align="center">Azure</td>
     <td>Blob Storage</td>
-    <td rowspan="3" align="center">&#10005;</td>
-    <td rowspan="3" align="center">&#10005;</td>
-    <td rowspan="3" align="center">&#10005;</td>
-    <td rowspan="3" align="center">&#10005;</td>
+    <td rowspan="3" align="center">&#10004;</td>
+    <td rowspan="3" align="center">&#10004;</td>
+    <td rowspan="3" align="center">&#10004;</td>
+    <td rowspan="3" align="center">&#10004;</td>
   </tr>
   <tr>
     <td>Data Lake (Gen1) Storage</td>
@@ -82,7 +82,7 @@ Here an overview of the supported features.
   <tr>
     <td>AWS</td>
     <td>S3</td>
-    <td rowspan="6" align="center">&#10005;</td>
+    <td rowspan="6" align="center">&#10004;</td>
     <td rowspan="6" align="center"></td>
     <td rowspan="6" align="center"></td>
     <td rowspan="6" align="center"></td>
@@ -989,8 +989,9 @@ FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
 
 ### Supported Cloud Storage Systems
 
-Currently, only Amazon S3, Azure Blob Storage and Azure Data Lake Storage Gen1
-and Gen2 storage systems are supported.
+Currently, cloud-storage-extension supports importing delta formatted data from
+Amazon S3, Azure Blob Storage and Azure Data Lake Storage Gen1 and Gen2 storage
+systems.
 
 You can read more about the supported storage requirements and configuration on
 the [delta.io/delta-storage.html][delta-storage] page.
