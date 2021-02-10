@@ -30,7 +30,6 @@ Exasol Cloud Storage Extension provides [Exasol][exasol] user-defined functions
 For more information please check out the following guides.
 
 * [User Guide](doc/user_guide/user_guide.md)
-* [Delta Format Import](doc/user_guide/delta_format.md)
 * [Changelog](doc/changes/changelog.md)
 
 ## Information for Contributors
