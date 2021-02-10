@@ -44,9 +44,9 @@
 ### Test Dependency Updates
 
 * Added `org.hamcrest:hamcrest:2.2`
-* Added `com.exasol:hamcrest-resultset-matcher:1.3.0`
+* Added `com.exasol:hamcrest-resultset-matcher:1.4.0`
 * Added `com.exasol:test-db-builder-java:3.0.0`
-* Added `com.exasol:exasol-testcontainers:3.4.1`
+* Added `com.exasol:exasol-testcontainers:3.5.0`
 * Added `org.testcontainers:localstack:1.15.1`
 * Updates `org.scalatest:scalatest:3.2.2` to `3.2.3`
 * Updated `org.mockito:mockito-core:3.5.13` to `3.7.7`
