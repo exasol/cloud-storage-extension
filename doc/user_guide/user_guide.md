@@ -677,11 +677,12 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
 
 ### S3 Path Style Access
 
-Amazon S3 [deprecated the path style access][s3-path-style-deprecation] to the
-buckets at the end of the 2020. This breaks the access to the bucket that
-contain dot (`.`) in their names.
+Amazon S3 [deprecated the path][s3-path-style-deprecation1] [style
+access][s3-path-style-deprecation2] to the buckets at the end of the 2020. This
+breaks the access to the bucket that contain dot (`.`) in their names.
 
-[s3-path-style-deprecation]: https://forums.aws.amazon.com/ann.jspa?annID=6776
+[s3-path-style-deprecation1]: https://aws.amazon.com/blogs/aws/amazon-s3-path-deprecation-plan-the-rest-of-the-story/
+[s3-path-style-deprecation2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#path-style-access
 
 To enable the path style access to the bucket, you can set the
 `S3_PATH_STYLE_ACCESS` parameter to `true`.

@@ -131,11 +131,11 @@ object StorageProperties extends CommonProperties {
    * pairs map.
    */
   def apply(params: java.util.Map[String, String]): StorageProperties = {
-    val mmap = scala.collection.mutable.Map.empty[String, String]
+    val keyValueMap = scala.collection.mutable.Map.empty[String, String]
     params.forEach { (key, value) =>
-      mmap.update(key, value)
+      keyValueMap.update(key, value)
     }
-    new StorageProperties(mmap.toMap, None)
+    new StorageProperties(keyValueMap.toMap, None)
   }
 
   /**

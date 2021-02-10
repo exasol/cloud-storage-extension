@@ -1,5 +1,17 @@
 # Cloud Storage Extension 1.0.0, released 2021-MM-DD
 
+## Summary
+
+In this release, we have added several features and fixed several bugs.
+
+We have added support for importing complex data types as JSON string of
+different storage formats. Added support for S3 path style access and fixed bugs
+related to Parquet repeated types.
+
+We have also changed the UDF script class names, so please make sure to update
+your deployment scripts. You can check out the user guide for the updated
+deployment guide.
+
 ## Features / Enhancements
 
 * #106: Updated parquet-hadoop version that includes api changes (PR #107).
