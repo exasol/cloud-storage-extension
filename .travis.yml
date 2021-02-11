@@ -9,64 +9,26 @@ addons:
     packages:
       - shellcheck
 
+jdk:
+  - openjdk11
+
+scala:
+  - 2.12.12
+
 env:
-  matrix:
-    - RELEASE=false
+  - EXASOL_DOCKER_VERSION="6.2.12-d1"
+  - EXASOL_DOCKER_VERSION="7.0.6"
 
 before_install:
   - git fetch --tags
-  - docker pull exasol/docker-db:latest
-  - docker pull exasol/docker-db:7.0.6
+  - docker pull "exasol/docker-db:$EXASOL_DOCKER_VERSION"
   - docker pull localstack/localstack:0.12.5
-
-matrix:
-  include:
-    - jdk: openjdk11
-      scala: 2.12.12
-
-    - jdk: oraclejdk11
-      scala: 2.12.12
-      env: RELEASE=true
 
 script:
   - ./scripts/ci.sh
 
 after_success:
   - ./sbtx coveralls
-
-before_deploy:
-  - echo "Ensure assembly jar file(s) is created for a $TRAVIS_TAG"
-  - ./sbtx clean assembly
-  - export JAR_VERSION=${TRAVIS_TAG}
-  - echo "Jar artifact version $JAR_VERSION"
-  - mkdir -p artifacts
-  - cp target/scala-2.12/exasol-cloud-storage-extension-${JAR_VERSION}.jar artifacts/
-  - echo "Create SHA256 Checksum"
-  - cd artifacts
-  - sha256sum exasol-cloud-storage-extension-${JAR_VERSION}.jar > checksum.sha256.txt
-  - cd ../
-  - ls -lh artifacts/
-
-deploy:
-  provider: releases
-  api_key:
-    secure: |-
-      1Uktls+mY/4S14EJpL/T75Fe2WanXUH9n/ayNOlaX57aU6BWrgxdNDX5vwrKIZSpu7NvzFVR+5G0p4QM4K5zJ5X0udC
-      j3YDl5mWNJClTlLICD2SWhaHrhdU3zSAR1fKDV/3t7g13DPu6cDC65Y15wjOYW95rEqQFUNPdr69eofn+1mSc+pdBdU
-      +L+biQHKR8WsTylZYMl7kJzgRwSzt2iPk5bnGi2speuowXU/PD4rByAEyeJGV5qRgDwAzXUjoLVpPYocovUkaVmPJzQ
-      GKHv7M61Y9qzjr7f7i4Gwy9XLLt8KWn8jouax7lNhi5bCj4HqZc7zOaM9OmMX4XujgHT/hHxPvAPJtAidN6030M1ARI
-      YljO78baUKb5OCjCOY+sP8vewjyCjYMCJjZwz02tFLdxe4etFwijoGA5U8PWNvrzYxDR6XVNu6sr+OkkmBrk8pPSI+0
-      mB/pe1KSBCdwB7NaviHIe3YMgI3Uppm0U3jP+fFEowgMSbiCuDKeB5YRN4yTAlSl5y09pXUFK3XZeEgQg/eKg5FM17e
-      ILFIDI3uWsUC5LoDNmGXpx6LALVGbLWJLwNMnjZ67UudnRzd94YYj9wyD0InhnBIOR9UQr7ahuICK0sDIrnNl+7C6zQ
-      ZmxvROw6SHkHszcfbCWl78rBy7J6QnOGfYbreuBriOJoJg=
-  file:
-    - artifacts/exasol-cloud-storage-extension-${JAR_VERSION}.jar
-    - artifacts/checksum.sha256.txt
-  skip_cleanup: true
-  on:
-    repo: exasol/cloud-storage-extension
-    tags: true
-    condition: $RELEASE = true && $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$
 
 cache:
   directories:
