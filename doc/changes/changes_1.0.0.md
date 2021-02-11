@@ -1,4 +1,6 @@
-# Cloud Storage Extension 1.0.0, released 2021-MM-DD
+# Cloud Storage Extension 1.0.0, released 2021-02-11
+
+Code Name: v1.0.0 - Support complex types
 
 ## Summary
 
