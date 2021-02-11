@@ -17,7 +17,8 @@ lazy val buildSettings = Seq(
 lazy val root =
   project
     .in(file("."))
-    .settings(moduleName := "exasol-cloud-storage-extension")
+    .settings(moduleName := "cloud-storage-extension")
+    .settings(version := "1.0.0")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.projectSettings(scalaVersion))
