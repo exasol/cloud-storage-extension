@@ -650,6 +650,10 @@ TO ''
 USER ''
 IDENTIFIED BY 'S3_ACCESS_KEY=<AWS_ACCESS_KEY>;S3_SECRET_KEY=<AWS_SECRET_KEY>;S3_SESSION_TOKEN=<AWS_SESSION_TOKEN>';
 ```
+A user that will run IMPORT or EXPORT UDF will need ACCESS privilige on this connection directly or via role. See [Privileges][exa-docs-privileges] and [Details on Rights Management][exa-docs-privileges-det] sections in the Exasol documentation for more details.
+
+[exa-docs-privileges]: https://docs.exasol.com/database_concepts/privileges.htm
+[exa-docs-privileges-det]: https://docs.exasol.com/database_concepts/privileges/details_rights_management.htm
 
 ### Run Import Statement
 
@@ -910,6 +914,7 @@ TO ''
 USER ''
 IDENTIFIED BY 'AZURE_CLIENT_ID=<AZURE_CLIENT_ID>;AZURE_CLIENT_SECRET=<AZURE_CLIENT_SECRET>;AZURE_DIRECTORY_ID=<AZURE_DIRECTORY_ID>';
 ```
+A user that will run IMPORT or EXPORT UDF will need ACCESS privilige on this connection directly or via role. See [Privileges][exa-docs-privileges] and [Details on Rights Management][exa-docs-privileges-det] sections in the Exasol documentation for more details.
 
 ### Run Import Statement
 
@@ -957,6 +962,7 @@ TO ''
 USER ''
 IDENTIFIED BY 'AZURE_SECRET_KEY=<AZURE_SECRET_KEY>';
 ```
+A user that will run IMPORT or EXPORT UDF will need ACCESS privilige on this connection directly or via role. See [Privileges][exa-docs-privileges] and [Details on Rights Management][exa-docs-privileges-det] sections in the Exasol documentation for more details.
 
 ### Run Import Statement
 
