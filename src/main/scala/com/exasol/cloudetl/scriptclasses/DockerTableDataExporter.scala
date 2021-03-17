@@ -4,8 +4,7 @@ import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
 
 /**
- * A table data exporter class to run inside the Exasol docker
- * container.
+ * A table data exporter class to run inside the Exasol docker container.
  */
 object DockerTableDataExporter {
 

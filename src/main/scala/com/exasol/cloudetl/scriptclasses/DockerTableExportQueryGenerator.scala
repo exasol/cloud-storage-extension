@@ -4,8 +4,7 @@ import com.exasol.ExaExportSpecification
 import com.exasol.ExaMetadata
 
 /**
- * An export query generator class to run inside the Exasol docker
- * container.
+ * An export query generator class to run inside the Exasol docker container.
  */
 object DockerTableExportQueryGenerator {
 
