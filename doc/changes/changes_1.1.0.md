@@ -1,6 +1,6 @@
 # Cloud Storage Extension 1.1.0, released 2021-MM-DD
 
-Code Name:
+Code name:
 
 ## Features
 
