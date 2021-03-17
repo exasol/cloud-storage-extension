@@ -116,7 +116,7 @@ final case class ParquetStringConverter(index: Int, holder: ValueHolder)
  * message parquet_file_schema {
  *   required int32 decimal_int (DECIMAL(9,2));
  *   required int64 decimal_long (DECIMAL(18,2));
- *   required fixed_len_byte_array(20) decimal_fixed (DECIMAL(20,2));
+ *   required fixed_len_byte_array(9) decimal_fixed (DECIMAL(20,2));
  *   required binary decimal_binary (DECIMAL(30,2));
  * }
  * }}}
@@ -139,15 +139,16 @@ final case class ParquetDecimalConverter(
   override def setDictionary(dictionary: Dictionary): Unit = {
     decodedDictionary = new Array[BigDecimal](dictionary.getMaxId() + 1)
     for { i <- 0 to dictionary.getMaxId() } {
-      decodedDictionary(i) = getDecimalFromType(dictionary, index)
+      decodedDictionary(i) = getDecimalFromType(dictionary, i)
     }
   }
 
-  private[this] def getDecimalFromType(dictionary: Dictionary, index: Int): BigDecimal =
+  private[this] def getDecimalFromType(dictionary: Dictionary, i: Int): BigDecimal =
     primitiveType.getPrimitiveTypeName() match {
-      case INT32  => getDecimalFromLong(dictionary.decodeToInt(index).toLong)
-      case INT64  => getDecimalFromLong(dictionary.decodeToLong(index))
-      case BINARY => getDecimalFromBinary(dictionary.decodeToBinary(index))
+      case INT32                => getDecimalFromLong(dictionary.decodeToInt(i).toLong)
+      case INT64                => getDecimalFromLong(dictionary.decodeToLong(i))
+      case BINARY               => getDecimalFromBinary(dictionary.decodeToBinary(i))
+      case FIXED_LEN_BYTE_ARRAY => getDecimalFromBinary(dictionary.decodeToBinary(i))
       case _ =>
         throw new UnsupportedOperationException(
           "Cannot convert parquet type to decimal type. Please check that Parquet decimal " +
