@@ -16,14 +16,14 @@ object Dependencies {
   private val SparkSQLVersion = "3.0.1"
 
   // Test dependencies versions
-  private val ScalaTestVersion = "3.2.3"
+  private val ScalaTestVersion = "3.2.6"
   private val ScalaTestPlusVersion = "1.0.0-M2"
-  private val MockitoCoreVersion = "3.7.7"
+  private val MockitoCoreVersion = "3.8.0"
   private val HamcrestVersion = "2.2"
   private val ExasolHamcrestMatcherVersion = "1.4.0"
-  private val ExasolTestDBBuilderVersion = "3.0.0"
-  private val ExasolTestContainersVersion = "3.5.0"
-  private val TestContainersLocalstackVersion = "1.15.1"
+  private val ExasolTestDBBuilderVersion = "3.1.1"
+  private val ExasolTestContainersVersion = "3.5.1"
+  private val TestContainersLocalstackVersion = "1.15.2"
 
   val Resolvers: Seq[Resolver] = Seq(
     "Exasol Releases" at "https://maven.exasol.com/artifactory/exasol-releases"
@@ -57,6 +57,7 @@ object Dependencies {
         ExclusionRule(organization = "org.apache.curator"),
         ExclusionRule(organization = "org.apache.zookeeper")
     ),
+    "org.apache.hadoop" % "hadoop-hdfs" % HadoopVersion,
     "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion
       exclude ("com.google.guava", "guava")
       exclude ("org.apache.httpcomponents", "httpclient"),

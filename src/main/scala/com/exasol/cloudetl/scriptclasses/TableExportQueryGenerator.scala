@@ -9,8 +9,17 @@ import com.exasol.cloudetl.storage.StorageProperties
 
 import org.apache.hadoop.fs.Path
 
-object ExportPath {
+/**
+ * A SQL query generator that call the exporter classes.
+ */
+object TableExportQueryGenerator {
 
+  /**
+   * Generates an Exasol SQL for the data export query.
+   *
+   * @param metadata an Exasol metadata object
+   * @param exportSpecification an Exasol export specification object
+   */
   def generateSqlForExportSpec(
     metadata: ExaMetadata,
     exportSpec: ExaExportSpecification
@@ -24,7 +33,6 @@ object ExportPath {
     val parallelism = storageProperties.getParallelism("iproc()")
     val storagePropertiesStr = storageProperties.mkString()
     val scriptSchema = metadata.getScriptSchema
-
     val srcColumns = getSourceColumns(exportSpec)
     val srcColumnsStr = srcColumns.mkString(".")
 

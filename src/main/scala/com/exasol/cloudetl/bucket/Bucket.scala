@@ -142,6 +142,7 @@ object Bucket extends LazyLogging {
       case "abfs" | "abfss" => AzureAbfsBucket(path, storageProperties)
       case "adl"            => AzureAdlsBucket(path, storageProperties)
       case "wasb" | "wasbs" => AzureBlobBucket(path, storageProperties)
+      case "hdfs"           => HDFSBucket(path, storageProperties)
       case "file"           => LocalBucket(path, storageProperties)
       case _ =>
         throw new IllegalArgumentException(s"Unsupported path scheme $scheme!")

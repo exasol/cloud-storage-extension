@@ -8,7 +8,7 @@ import com.exasol.cloudetl.storage.StorageProperties
 
 import org.mockito.Mockito._
 
-class ExportPathTest extends PathTest {
+class TableExportQueryGeneratorTest extends PathTest {
 
   test("generateSqlForExportSpec returns SQL statement") {
     when(metadata.getScriptSchema()).thenReturn(schema)
@@ -31,7 +31,10 @@ class ExportPathTest extends PathTest {
          |  iproc();
          |""".stripMargin
 
-    assert(ExportPath.generateSqlForExportSpec(metadata, exportSpec) === expectedSQLStatement)
+    assert(
+      TableExportQueryGenerator
+        .generateSqlForExportSpec(metadata, exportSpec) === expectedSQLStatement
+    )
     verify(metadata, atLeastOnce).getScriptSchema
     verify(exportSpec, times(1)).getParameters
     verify(exportSpec, times(1)).getSourceColumnNames
@@ -43,7 +46,7 @@ class ExportPathTest extends PathTest {
     when(exportSpec.getParameters()).thenReturn(newProperties.asJava)
 
     val thrown = intercept[IllegalArgumentException] {
-      ExportPath.generateSqlForExportSpec(metadata, exportSpec)
+      TableExportQueryGenerator.generateSqlForExportSpec(metadata, exportSpec)
     }
     assert(thrown.getMessage === "Please provide a value for the S3_ENDPOINT property!")
     verify(exportSpec, times(1)).getParameters
@@ -57,7 +60,7 @@ class ExportPathTest extends PathTest {
     when(exportSpec.getSourceColumnNames).thenReturn(srcCols.asJava)
 
     val thrown = intercept[RuntimeException] {
-      ExportPath.generateSqlForExportSpec(metadata, exportSpec)
+      TableExportQueryGenerator.generateSqlForExportSpec(metadata, exportSpec)
     }
     assert(thrown.getMessage === "Could not parse the column name from 'tbl.c_int.integer'!")
     verify(metadata, atLeastOnce).getScriptSchema
@@ -79,7 +82,7 @@ class ExportPathTest extends PathTest {
     )
     when(metadata.getScriptSchema()).thenReturn(schema)
     when(exportSpec.getParameters()).thenReturn(newProperties.asJava)
-    ExportPath.generateSqlForExportSpec(metadata, exportSpec)
+    TableExportQueryGenerator.generateSqlForExportSpec(metadata, exportSpec)
     assert(Files.exists(bucketPath) === true)
     assert(Files.list(bucketPath).findAny().isPresent() === true)
     assert(Files.list(bucketPath).count() === 3)
@@ -97,7 +100,7 @@ class ExportPathTest extends PathTest {
     )
     when(metadata.getScriptSchema()).thenReturn(schema)
     when(exportSpec.getParameters()).thenReturn(newProperties.asJava)
-    ExportPath.generateSqlForExportSpec(metadata, exportSpec)
+    TableExportQueryGenerator.generateSqlForExportSpec(metadata, exportSpec)
     assert(Files.exists(bucketPath) === false)
   }
 

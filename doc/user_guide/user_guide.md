@@ -275,12 +275,12 @@ Run these statements to create export UDF scripts:
 OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.ExportPath;
+  %scriptclass com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.ExportTable;
+  %scriptclass com.exasol.cloudetl.scriptclasses.TableDataExporter;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 ```
@@ -290,6 +290,28 @@ UDF and it will call the `EXPORT_TABLE` script internally.
 
 Make sure you change the `<BUCKET>` name and jar version `<VERSION>`
 accordingly.
+
+#### Setup Export UDF Scripts in Docker
+
+Similar to import, the UDF scripts require slightly different deployment for
+Exasol Docker installations.
+
+```sql
+OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
+
+CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
+  %scriptclass com.exasol.cloudetl.scriptclasses.DockerTableExportQueryGenerator;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+/
+
+CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
+  %scriptclass com.exasol.cloudetl.scriptclasses.DockerTableDataExporter;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+/
+```
+
+Please notice that we use different class names for the `%scriptclasses`
+parameter.
 
 ## Prepare an Exasol Table for Import
 

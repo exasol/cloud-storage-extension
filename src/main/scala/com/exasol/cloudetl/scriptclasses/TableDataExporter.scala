@@ -13,8 +13,17 @@ import com.exasol.common.data.Row
 
 import com.typesafe.scalalogging.LazyLogging
 
-object ExportTable extends LazyLogging {
+/**
+ * A data exporter class that exports table data into a filesystem.
+ */
+object TableDataExporter extends LazyLogging {
 
+  /**
+   * Reads the table data and saves them to external filesystem.
+   *
+   * @param metadata an Exasol metadata object
+   * @param iterator an Exasol iterator object
+   */
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
     val storageProperties = StorageProperties(iterator.getString(1), metadata)
     val bucket = Bucket(storageProperties)
