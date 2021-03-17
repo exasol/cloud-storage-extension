@@ -18,7 +18,7 @@ lazy val root =
   project
     .in(file("."))
     .settings(moduleName := "cloud-storage-extension")
-    .settings(version := "1.0.0")
+    .settings(version := "1.1.0")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.projectSettings(scalaVersion))

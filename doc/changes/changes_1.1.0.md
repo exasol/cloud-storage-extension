@@ -1,4 +1,4 @@
-# Cloud Storage Extension 1.2.0, released 2021-MM-DD
+# Cloud Storage Extension 1.1.0, released 2021-MM-DD
 
 ## Features
 
