@@ -1,8 +1,14 @@
 # Cloud Storage Extension 1.1.0, released 2021-MM-DD
 
+Code name:
+
 ## Features
 
-* #134: Added support for Hadoop Distributed Filesystem (HDFS) (PR #136)
+* #134: Added support for Hadoop Distributed Filesystem (HDFS) (PR #136).
+
+## Bug Fixes
+
+* #137: Fixed Parquet dictionary encoded decimal converter bug (PR #138).
 
 ## Documentation
 
