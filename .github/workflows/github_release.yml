@@ -1,36 +1,26 @@
-name: GitHub Release
+name: Upload GitHub Release Assets
 
 on:
- workflow_dispatch:
+  workflow_dispatch:
     inputs:
       upload_url:
         description: 'Upload URL'
-        required: true
-      asset_name:
-        description: 'Asset file name'
-        required: true
-      asset_path:
-        description: 'Asset file path'
         required: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout the repository
+        uses: actions/checkout@v2
       - name: Setup Scala
         uses: olafurpg/setup-scala@v10
         with:
           java-version: adopt@1.11
-      - name: Assembly
+      - name: Assembly with SBT skipping tests
         run: sbt assembly
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload assets to the GitHub release draft
+        uses: shogo82148/actions-upload-release-asset@v1
         with:
           upload_url: ${{ github.event.inputs.upload_url }}
-          asset_path: ${{ github.event.inputs.asset_path }}
-          asset_name: ${{ github.event.inputs.asset_name }}
-          asset_content_type: application/java-archive
+          asset_path: target/scala*/stripped/*.jar

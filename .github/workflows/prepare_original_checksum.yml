@@ -1,0 +1,27 @@
+name: Prepare Original Checksum
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Setup Scala
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: adopt@1.11
+      - name: Assembly with SBT
+        run: sbt assembly
+      - name: Running tests
+        run: sbt test it:test
+      - name: Prepare checksum
+        run: find target/scala*/stripped -name *.jar -exec sha256sum "{}" + > original_checksum
+      - name: Upload checksum to the artifactory
+        uses: actions/upload-artifact@v2
+        with:
+          name: original_checksum
+          retention-days: 5
+          path: original_checksum
