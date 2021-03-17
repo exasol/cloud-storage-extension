@@ -15,7 +15,7 @@ import org.mockito.ExtraMockito
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 
-class ExportTableTest
+class TableDataExporterTest
     extends StorageTest
     with BeforeAndAfterEach
     with DataRecords
@@ -98,7 +98,7 @@ class ExportTableTest
   }
 
   test("run exports table rows") {
-    ExportTable.run(metadata, iterator)
+    TableDataExporter.run(metadata, iterator)
 
     verify(metadata, times(1)).getInputColumnCount
     for { idx <- 3 to 10 } {
@@ -119,7 +119,7 @@ class ExportTableTest
   }
 
   test("imports exported rows from a path") {
-    ExportTable.run(metadata, iterator)
+    TableDataExporter.run(metadata, iterator)
 
     val properties = Map("BUCKET_PATH" -> testResourceDir, "DATA_FORMAT" -> "PARQUET")
     val importIter = mockExasolIterator(properties)
@@ -133,7 +133,7 @@ class ExportTableTest
   }
 
   test("export creates file without compression extension if compression codec is not set") {
-    ExportTable.run(metadata, iterator)
+    TableDataExporter.run(metadata, iterator)
     assert(Files.exists(outputPath) === true)
     assert(Files.list(outputPath).count() === 2)
     checkExportFileExtensions(outputPath, "")
@@ -142,7 +142,7 @@ class ExportTableTest
   test("export creates file with compression extension if compression codec is set") {
     val properties = defaultProperties ++ Map("PARQUET_COMPRESSION_CODEC" -> "SNAPPY")
     iterator = createMockedIterator(outputPath.toUri.toString, properties)
-    ExportTable.run(metadata, iterator)
+    TableDataExporter.run(metadata, iterator)
     assert(Files.exists(outputPath) === true)
     assert(Files.list(outputPath).count() === 2)
     checkExportFileExtensions(outputPath, ".snappy")

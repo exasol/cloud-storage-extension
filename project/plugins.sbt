@@ -27,7 +27,7 @@ addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.2.7")
 // Adds a `dependencyUpdates` task to check Maven repositories for
 // dependency updates
 // http://github.com/rtimush/sbt-updates
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.5.1")
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.5.2")
 
 // Adds a `scalafmt` task for automatic source code formatting
 // https://github.com/lucidsoftware/neo-sbt-scalafmt

@@ -275,12 +275,12 @@ Run these statements to create export UDF scripts:
 OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.ExportPath;
+  %scriptclass com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.ExportTable;
+  %scriptclass com.exasol.cloudetl.scriptclasses.TableDataExporter;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 ```
@@ -290,6 +290,28 @@ UDF and it will call the `EXPORT_TABLE` script internally.
 
 Make sure you change the `<BUCKET>` name and jar version `<VERSION>`
 accordingly.
+
+#### Setup Export UDF Scripts in Docker
+
+Similar to import, the UDF scripts require slightly different deployment for
+Exasol Docker installations.
+
+```sql
+OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
+
+CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
+  %scriptclass com.exasol.cloudetl.scriptclasses.DockerTableExportQueryGenerator;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+/
+
+CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
+  %scriptclass com.exasol.cloudetl.scriptclasses.DockerTableDataExporter;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+/
+```
+
+Please notice that we use different class names for the `%scriptclasses`
+parameter.
 
 ## Prepare an Exasol Table for Import
 
@@ -650,6 +672,10 @@ TO ''
 USER ''
 IDENTIFIED BY 'S3_ACCESS_KEY=<AWS_ACCESS_KEY>;S3_SECRET_KEY=<AWS_SECRET_KEY>;S3_SESSION_TOKEN=<AWS_SESSION_TOKEN>';
 ```
+A user that will run IMPORT or EXPORT UDF will need ACCESS privilige on this connection directly or via role. See [Privileges][exa-docs-privileges] and [Details on Rights Management][exa-docs-privileges-det] sections in the Exasol documentation for more details.
+
+[exa-docs-privileges]: https://docs.exasol.com/database_concepts/privileges.htm
+[exa-docs-privileges-det]: https://docs.exasol.com/database_concepts/privileges/details_rights_management.htm
 
 ### Run Import Statement
 
@@ -910,6 +936,7 @@ TO ''
 USER ''
 IDENTIFIED BY 'AZURE_CLIENT_ID=<AZURE_CLIENT_ID>;AZURE_CLIENT_SECRET=<AZURE_CLIENT_SECRET>;AZURE_DIRECTORY_ID=<AZURE_DIRECTORY_ID>';
 ```
+A user that will run IMPORT or EXPORT UDF will need ACCESS privilige on this connection directly or via role. See [Privileges][exa-docs-privileges] and [Details on Rights Management][exa-docs-privileges-det] sections in the Exasol documentation for more details.
 
 ### Run Import Statement
 
@@ -957,6 +984,7 @@ TO ''
 USER ''
 IDENTIFIED BY 'AZURE_SECRET_KEY=<AZURE_SECRET_KEY>';
 ```
+A user that will run IMPORT or EXPORT UDF will need ACCESS privilige on this connection directly or via role. See [Privileges][exa-docs-privileges] and [Details on Rights Management][exa-docs-privileges-det] sections in the Exasol documentation for more details.
 
 ### Run Import Statement
 
