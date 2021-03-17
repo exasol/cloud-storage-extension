@@ -49,6 +49,10 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 // https://github.com/cb372/sbt-explicit-dependencies
 addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.16")
 
+// Adds a `sbt-reproducible-builds` plugin
+// https://github.com/raboof/sbt-reproducible-builds
+addSbtPlugin("net.bzzt" % "sbt-reproducible-builds" % "0.25")
+
 // Setup this and project/project/plugins.sbt for formatting
 // project/*.scala files with scalafmt
 inThisBuild(

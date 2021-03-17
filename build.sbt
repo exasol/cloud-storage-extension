@@ -17,7 +17,7 @@ lazy val buildSettings = Seq(
 lazy val root =
   project
     .in(file("."))
-    .settings(moduleName := "cloud-storage-extension")
+    .settings(moduleName := "exasol-cloud-storage-extension")
     .settings(version := "1.1.0")
     .settings(orgSettings)
     .settings(buildSettings)
@@ -28,6 +28,6 @@ lazy val root =
       libraryDependencies ++= Dependencies.TestDependencies,
       excludeDependencies ++= Dependencies.ExcludedDependencies
     )
-    .enablePlugins(IntegrationTestPlugin, GitVersioning)
+    .enablePlugins(IntegrationTestPlugin, GitVersioning, ReproducibleBuildsPlugin)
 
 addCommandAlias("pluginUpdates", ";reload plugins;dependencyUpdates;reload return")

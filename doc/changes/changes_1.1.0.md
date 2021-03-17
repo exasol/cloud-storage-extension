@@ -2,7 +2,11 @@
 
 ## Features
 
-* #134: Added support for Hadoop Distributed Filesystem (HDFS) (PR #136)
+* #134: Added support for Hadoop Distributed Filesystem (HDFS) (PR #136).
+
+## Bug Fixes
+
+* #137: Fixed Parquet dictionary encoded decimal converter bug (PR #138).
 
 ## Documentation
 
