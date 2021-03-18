@@ -5,6 +5,7 @@ Code name:
 ## Features
 
 * #134: Added support for Hadoop Distributed Filesystem (HDFS) (PR #136).
+* #135: Added support for Alluxio filesystem (PR #139).
 
 ## Bug Fixes
 
@@ -20,6 +21,8 @@ Code name:
 
 ### Test Dependency Updates
 
+* Added `org.apache.hadoop:hadoop-hdfs:3.3.0`
+* Added `org.alluxio:alluxio-core-client-hdfs:2.5.0`
 * Updated `org.scalatest:scalatest:3.2.3` to `3.2.6`
 * Updated `org.mockito:mockito-core:3.7.7` to `3.8.0`
 * Updated `org.testcontainers:localstack:1.15.1` to `1.15.2`

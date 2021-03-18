@@ -14,6 +14,7 @@ object Dependencies {
   private val ParquetVersion = "1.11.1"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.1"
+  private val AlluxioCoreHDFSVersion = "2.5.0"
 
   // Test dependencies versions
   private val ScalaTestVersion = "3.2.6"
@@ -58,6 +59,7 @@ object Dependencies {
         ExclusionRule(organization = "org.apache.zookeeper")
     ),
     "org.apache.hadoop" % "hadoop-hdfs" % HadoopVersion,
+    "org.alluxio" % "alluxio-core-client-hdfs" % AlluxioCoreHDFSVersion,
     "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion
       exclude ("com.google.guava", "guava")
       exclude ("org.apache.httpcomponents", "httpclient"),

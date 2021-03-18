@@ -141,6 +141,7 @@ object Bucket extends LazyLogging {
       case "gs"             => GCSBucket(path, storageProperties)
       case "abfs" | "abfss" => AzureAbfsBucket(path, storageProperties)
       case "adl"            => AzureAdlsBucket(path, storageProperties)
+      case "alluxio"        => AlluxioBucket(path, storageProperties)
       case "wasb" | "wasbs" => AzureBlobBucket(path, storageProperties)
       case "hdfs"           => HDFSBucket(path, storageProperties)
       case "file"           => LocalBucket(path, storageProperties)

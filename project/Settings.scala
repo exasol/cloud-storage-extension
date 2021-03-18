@@ -83,8 +83,10 @@ object Settings {
     logLevel in assembly := Level.Info,
     assemblyJarName in assembly := moduleName.value + "-" + version.value + ".jar",
     assemblyMergeStrategy in assembly := {
-      case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-      case x                             => MergeStrategy.first
+      case "META-INF/services/io.grpc.LoadBalancerProvider" => MergeStrategy.concat
+      case "META-INF/services/io.grpc.NameResolverProvider" => MergeStrategy.concat
+      case PathList("META-INF", xs @ _*)                    => MergeStrategy.discard
+      case x                                                => MergeStrategy.first
     },
     assemblyExcludedJars in assembly := {
       val cp = (fullClasspath in assembly).value
