@@ -1100,7 +1100,7 @@ create a connection object.
 
 ## Alluxio Filesystem
 
-[Alluxio](https://docs.alluxio.io/os/user/stable/en/Overview.html) is the open
+[Alluxio](https://docs.alluxio.io/os/user/stable/en/Overview.html) is an open
 source data orchestration technology for analytics and AI for the cloud. It
 provides filesystem API similar to the HDFS.
 
