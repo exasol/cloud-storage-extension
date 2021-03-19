@@ -1069,8 +1069,10 @@ changes.
 
 ## Hadoop Distributed Filesystem (HDFS)
 
-The [Hadoop distributed file system (HDFS)]() is a distributed, scalable, and
-portable file system written in Java for the Hadoop framework
+The [Hadoop distributed file system (HDFS)][hdfs-link] is a distributed,
+scalable, and portable file system written in Java for the Hadoop framework
+
+[hdfs-link]: https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html
 
 When the Hadoop datanodes and Exasol cluster are installed in the same (virtual)
 network, you can access the HDFS using `cloud-storage-extension`.
@@ -1080,7 +1082,7 @@ For import:
 ```sql
 IMPORT INTO <schema>.<table>
 FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
-  BUCKET_PATH     = 'alluxio://<ALLUXIO_PATH>/import/orc/data/*.orc'
+  BUCKET_PATH     = 'hdfs://<HDFS_PATH>/import/orc/data/*.orc'
   DATA_FORMAT     = 'ORC'
   PARALLELISM     = 'nproc()*<MULTIPLIER>';
 ```
@@ -1098,6 +1100,9 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
 Because we assume that they are in the same private network, you do not have to
 create a connection object.
 
+At the moment, it is not possible to access HDFS using `cloud-storage-extension`
+if the clusters are not located in the same private network.
+
 ## Alluxio Filesystem
 
 [Alluxio](https://docs.alluxio.io/os/user/stable/en/Overview.html) is an open
@@ -1109,10 +1114,11 @@ You can import formatted data from Alluxio using the cloud-storage-extension.
 ```sql
 IMPORT INTO <schema>.<table>
 FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
-  BUCKET_PATH     = 'alluxio://<ALLUXIO_PATH>/import/orc/data/*'
-  DATA_FORMAT     = 'ORC'
+  BUCKET_PATH     = 'alluxio://<ALLUXIO_PATH>/import/parquet/data/*'
+  DATA_FORMAT     = 'PARQUET'
   PARALLELISM     = 'nproc()*<MULTIPLIER>';
 ```
 
 For this to work, the Alluxio and Exasol clusters should be located in a same
-(virtual) network.
+(virtual) network. It is not possible to import if they are not within the same
+private network.
