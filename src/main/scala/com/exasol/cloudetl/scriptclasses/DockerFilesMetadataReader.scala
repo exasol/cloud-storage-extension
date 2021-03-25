@@ -10,7 +10,7 @@ object DockerFilesMetadataReader {
 
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
     import org.apache.hadoop.security.UserGroupInformation
-    UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exauser"))
+    UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exadefusr"))
     FilesMetadataReader.run(metadata, iterator)
   }
 
