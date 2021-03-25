@@ -23,6 +23,7 @@ before_install:
   - git fetch --tags
   - docker pull "exasol/docker-db:$EXASOL_DOCKER_VERSION"
   - docker pull localstack/localstack:0.12.5
+  - docker pull alluxio/alluxio:2.5.0
 
 script:
   - ./scripts/ci.sh
