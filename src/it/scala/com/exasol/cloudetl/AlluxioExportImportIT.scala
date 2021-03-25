@@ -64,14 +64,16 @@ class AlluxioExportImportIT extends BaseIntegrationTest {
     assertResultSet(
       importedTable,
       table()
-        .row(java.lang.Long.valueOf(2), "Toy mouse")
         .row(java.lang.Long.valueOf(1), "Cat food")
+        .row(java.lang.Long.valueOf(2), "Toy mouse")
         .matches()
     )
   }
 
   def assertResultSet(table: Table, matcher: Matcher[ResultSet]): Unit = {
-    val resultSet = executeQuery(s"SELECT * FROM ${table.getFullyQualifiedName()}")
+    val resultSet = executeQuery(
+      s"SELECT * FROM ${table.getFullyQualifiedName()} ORDER BY PRODUCT_ID ASC"
+    )
     assertThat(resultSet, matcher)
     resultSet.close()
   }
