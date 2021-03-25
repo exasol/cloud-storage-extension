@@ -25,6 +25,7 @@ object Dependencies {
   private val ExasolTestDBBuilderVersion = "3.1.1"
   private val ExasolTestContainersVersion = "3.5.1"
   private val TestContainersLocalstackVersion = "1.15.2"
+  private val TestContainersScalaVersion = "0.39.3"
 
   val Resolvers: Seq[Resolver] = Seq(
     "Exasol Releases" at "https://maven.exasol.com/artifactory/exasol-releases"
@@ -93,6 +94,7 @@ object Dependencies {
     "com.exasol" % "test-db-builder-java" % ExasolTestDBBuilderVersion,
     "com.exasol" % "hamcrest-resultset-matcher" % ExasolHamcrestMatcherVersion,
     "org.hamcrest" % "hamcrest" % HamcrestVersion,
+    "com.dimafeng" %% "testcontainers-scala-scalatest" % TestContainersScalaVersion,
     "org.testcontainers" % "localstack" % TestContainersLocalstackVersion
   ).map(_ % Test)
 

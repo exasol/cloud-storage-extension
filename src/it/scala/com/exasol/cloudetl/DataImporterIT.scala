@@ -36,7 +36,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
 
-class DataImporterIT extends BaseIntegrationTest {
+class DataImporterIT extends BaseS3IntegrationTest {
 
   val INT_MIN = -2147483648
   val INT_MAX = 2147483647
@@ -47,9 +47,9 @@ class DataImporterIT extends BaseIntegrationTest {
   var conf: Configuration = _
 
   override final def beforeAll(): Unit = {
-    startContainers()
+    super.beforeAll()
     prepareExasolDatabase(schemaName)
-    prepareS3Client()
+    createS3ConnectionObject()
     conf = new Configuration
   }
 
@@ -1061,7 +1061,7 @@ class DataImporterIT extends BaseIntegrationTest {
           .createTableBuilder(tableName)
           .column("COLUMN", exaColumnType)
           .build()
-        importIntoExasol(schemaName, table, bucketName, path.getName(), dataFormat)
+        importFromS3IntoExasol(schemaName, table, bucketName, path.getName(), dataFormat)
         val rs = executeQuery(s"SELECT * FROM ${getTableName()}")
         block(rs)
         rs.close()
