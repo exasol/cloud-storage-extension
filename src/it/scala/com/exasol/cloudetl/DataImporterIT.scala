@@ -43,7 +43,7 @@ class DataImporterIT extends BaseS3IntegrationTest {
   val LONG_MIN = -9223372036854775808L
   val LONG_MAX = 9223372036854775807L
   val schemaName = "DATA_SCHEMA"
-  val bucketName: String = "databucket"
+  val bucketName: String = "dataimporter"
   var conf: Configuration = _
 
   override final def beforeAll(): Unit = {

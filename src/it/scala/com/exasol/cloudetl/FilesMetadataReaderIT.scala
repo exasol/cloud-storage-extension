@@ -16,7 +16,7 @@ class FilesMetadataReaderIT
 
   val schemaName = "DATA_SCHEMA"
   val tableName = "DATA_TABLE"
-  val bucketName: String = "databucket"
+  val bucketName: String = "filesmetadata"
   var outputDirectory: Path = _
 
   override final def beforeAll(): Unit = {
