@@ -67,7 +67,7 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
     val s3Endpoint = s3Container
       .getEndpointConfiguration(S3)
       .getServiceEndpoint()
-      .replaceAll("127.0.0.1", "172.17.0.1")
+      .replaceAll("127.0.0.1", getS3ContainerNetworkGatewayAddress())
     executeStmt(
       s"""|IMPORT INTO ${table.getFullyQualifiedName()}
           |FROM SCRIPT $schemaName.IMPORT_PATH WITH
@@ -80,5 +80,15 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
         """.stripMargin
     )
   }
+
+  private[this] def getS3ContainerNetworkGatewayAddress(): String =
+    s3Container
+      .getContainerInfo()
+      .getNetworkSettings()
+      .getNetworks()
+      .values()
+      .iterator()
+      .next()
+      .getGateway()
 
 }

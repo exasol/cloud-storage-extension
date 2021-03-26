@@ -1,6 +1,12 @@
-# Cloud Storage Extension 1.1.0, released 2021-MM-DD
+# Cloud Storage Extension 1.1.0, released 2021-02-26
 
-Code name:
+Code Name: v1.1.0 - Added support for Alluxio and HDFS filesystems
+
+## Summary
+
+The release `1.1.0` offers support for Alluxio and Hadoop Distributed Filesystem
+(HDFS) filesystems. We also fixed bug in Parquet dictionary encoded decimal
+converter and improved the documentation.
 
 ## Features
 
@@ -18,6 +24,8 @@ Code name:
 ## Dependency Updates
 
 ### Runtime Dependency Updates
+
+* Updated `org.apache.parquet:parquet-hadoop:1.11.1` to `1.12.0`
 
 ### Test Dependency Updates
 
