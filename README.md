@@ -23,6 +23,8 @@ Exasol Cloud Storage Extension provides [Exasol][exasol] user-defined functions
   Storage][gcs], [Azure Blob Storage][azure-blob], [Azure Data Lake (Gen1)
   Storage][azure-data-lake] and [Azure Data Lake (Gen2)
   Storage][azure-data-lake-gen2].
+* Supports the [Hadoop Distributed Filesystem (HDFS)][hdfs] and
+  [Alluxio][alluxio-overview-link] filesystems.
 * Allows configuration of parallel importer or exporter processes.
 
 ## Information for Users
@@ -102,6 +104,7 @@ These plugins help with project development.
 [gh-release-link]: https://github.com/exasol/cloud-storage-extension/releases/latest
 [exasol]: https://www.exasol.com/en/
 [ieudf]: https://github.com/exasol/import-export-udf-common-scala
+[avro]: https://avro.apache.org/
 [orc]: https://orc.apache.org/
 [parquet]: https://parquet.apache.org/
 [delta-io]: https://delta.io/
@@ -115,7 +118,9 @@ These plugins help with project development.
 [hadoop-azr-link]: https://hadoop.apache.org/docs/current/hadoop-azure/index.html
 [hadoop-azrlake-link]: https://hadoop.apache.org/docs/current/hadoop-azure-datalake/index.html
 [hadoop-client-link]: https://github.com/apache/hadoop/tree/trunk/hadoop-client-modules
+[hdfs]: https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html
 [alluxio-client-link]: https://docs.alluxio.io/os/user/stable/en/api/FS-API.html
+[alluxio-overview-link]: https://docs.alluxio.io/os/user/stable/en/Overview.html
 [gcs-connectors-link]: https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage
 [jdk-compatibility]: https://docs.scala-lang.org/overviews/jdk-compatibility/overview.html#running-versus-compiling
 [scalatest-link]: http://www.scalatest.org/
