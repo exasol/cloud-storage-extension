@@ -11,9 +11,10 @@ object Dependencies {
   private val HadoopVersion = "3.3.0"
   private val DeltaVersion = "0.7.0"
   private val OrcVersion = "1.6.7"
-  private val ParquetVersion = "1.11.1"
+  private val ParquetVersion = "1.12.0"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.1"
+  private val AlluxioCoreHDFSVersion = "2.5.0"
 
   // Test dependencies versions
   private val ScalaTestVersion = "3.2.6"
@@ -24,6 +25,7 @@ object Dependencies {
   private val ExasolTestDBBuilderVersion = "3.1.1"
   private val ExasolTestContainersVersion = "3.5.1"
   private val TestContainersLocalstackVersion = "1.15.2"
+  private val TestContainersScalaVersion = "0.39.3"
 
   val Resolvers: Seq[Resolver] = Seq(
     "Exasol Releases" at "https://maven.exasol.com/artifactory/exasol-releases"
@@ -58,6 +60,7 @@ object Dependencies {
         ExclusionRule(organization = "org.apache.zookeeper")
     ),
     "org.apache.hadoop" % "hadoop-hdfs" % HadoopVersion,
+    "org.alluxio" % "alluxio-core-client-hdfs" % AlluxioCoreHDFSVersion,
     "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion
       exclude ("com.google.guava", "guava")
       exclude ("org.apache.httpcomponents", "httpclient"),
@@ -91,6 +94,7 @@ object Dependencies {
     "com.exasol" % "test-db-builder-java" % ExasolTestDBBuilderVersion,
     "com.exasol" % "hamcrest-resultset-matcher" % ExasolHamcrestMatcherVersion,
     "org.hamcrest" % "hamcrest" % HamcrestVersion,
+    "com.dimafeng" %% "testcontainers-scala-scalatest" % TestContainersScalaVersion,
     "org.testcontainers" % "localstack" % TestContainersLocalstackVersion
   ).map(_ % Test)
 

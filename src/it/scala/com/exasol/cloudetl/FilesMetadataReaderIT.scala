@@ -10,19 +10,19 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.scalatest.BeforeAndAfterEach
 
 class FilesMetadataReaderIT
-    extends BaseIntegrationTest
+    extends BaseS3IntegrationTest
     with BeforeAndAfterEach
     with TestFileManager {
 
   val schemaName = "DATA_SCHEMA"
   val tableName = "DATA_TABLE"
-  val bucketName: String = "databucket"
+  val bucketName: String = "filesmetadata"
   var outputDirectory: Path = _
 
   override final def beforeAll(): Unit = {
-    startContainers()
+    super.beforeAll()
     prepareExasolDatabase(schemaName)
-    prepareS3Client()
+    createS3ConnectionObject()
   }
 
   override final def beforeEach(): Unit =
@@ -46,7 +46,7 @@ class FilesMetadataReaderIT
       .createTableBuilder(tableName)
       .column("COLUMN", "VARCHAR(5)")
       .build()
-    importIntoExasol(schemaName, exasolTable, bucketName, "*", "parquet")
+    importFromS3IntoExasol(schemaName, exasolTable, bucketName, "*", "parquet")
 
     val resultSet = executeQuery(s"SELECT * FROM ${getTableName()}")
     assertThat(resultSet, table("VARCHAR").matches())

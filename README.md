@@ -56,6 +56,7 @@ however, it should be safe to run it on the newer JVM versions. This is also
 | [Hadoop Azure][hadoop-azr-link]             | Access support for Azure Blob Storage                           | Apache License 2.0 |
 | [Hadoop Azure Datalake][hadoop-azrlake-link]| Access support for Azure Data Lake Store                        | Apache License 2.0 |
 | [Hadoop Client][hadoop-client-link]         | Apache Hadoop common dependencies as configuration or filesystem| Apache License 2.0 |
+| [Alluxio Client][alluxio-client-link]       | Alluxio filesystem API dependency                               | Apache License 2.0 |
 | [Google Cloud Storage][gcs-connectors-link] | Access support for Google Cloud Storage                         | Apache License 2.0 |
 | [Delta Lake Core][delta-io]                 | Integration support for Delta Lake format                       | Apache License 2.0 |
 | [Apache Spark SQL][spark-sql]               | Access support for Delta Lake formatted files                   | Apache License 2.0 |
@@ -114,6 +115,7 @@ These plugins help with project development.
 [hadoop-azr-link]: https://hadoop.apache.org/docs/current/hadoop-azure/index.html
 [hadoop-azrlake-link]: https://hadoop.apache.org/docs/current/hadoop-azure-datalake/index.html
 [hadoop-client-link]: https://github.com/apache/hadoop/tree/trunk/hadoop-client-modules
+[alluxio-client-link]: https://docs.alluxio.io/os/user/stable/en/api/FS-API.html
 [gcs-connectors-link]: https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage
 [jdk-compatibility]: https://docs.scala-lang.org/overviews/jdk-compatibility/overview.html#running-versus-compiling
 [scalatest-link]: http://www.scalatest.org/

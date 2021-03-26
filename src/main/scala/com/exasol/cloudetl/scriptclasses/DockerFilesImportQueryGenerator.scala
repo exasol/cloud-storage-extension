@@ -13,7 +13,7 @@ object DockerFilesImportQueryGenerator {
     importSpecification: ExaImportSpecification
   ): String = {
     import org.apache.hadoop.security.UserGroupInformation
-    UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exauser"))
+    UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exadefusr"))
     FilesImportQueryGenerator.generateSqlForImportSpec(metadata, importSpecification)
   }
 

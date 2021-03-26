@@ -10,7 +10,7 @@ object DockerTableDataExporter {
 
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
     import org.apache.hadoop.security.UserGroupInformation
-    UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exauser"))
+    UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exadefusr"))
     TableDataExporter.run(metadata, iterator)
   }
 

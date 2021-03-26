@@ -13,7 +13,7 @@ object DockerTableExportQueryGenerator {
     exportSpecification: ExaExportSpecification
   ): String = {
     import org.apache.hadoop.security.UserGroupInformation
-    UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exauser"))
+    UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exadefusr"))
     TableExportQueryGenerator.generateSqlForExportSpec(metadata, exportSpecification)
   }
 

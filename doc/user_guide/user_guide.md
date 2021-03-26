@@ -1066,3 +1066,59 @@ changes.
 [delta-io]: https://delta.io/
 [delta-storage]: https://docs.delta.io/latest/delta-storage.html
 [delta-history]: https://docs.delta.io/latest/delta-utility.html#history
+
+## Hadoop Distributed Filesystem (HDFS)
+
+The [Hadoop distributed file system (HDFS)][hdfs-link] is a distributed,
+scalable, and portable file system written in Java for the Hadoop framework
+
+[hdfs-link]: https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html
+
+When the Hadoop datanodes and Exasol cluster are installed in the same (virtual)
+network, you can access the HDFS using `cloud-storage-extension`.
+
+For import:
+
+```sql
+IMPORT INTO <schema>.<table>
+FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
+  BUCKET_PATH     = 'hdfs://<HDFS_PATH>/import/orc/data/*.orc'
+  DATA_FORMAT     = 'ORC'
+  PARALLELISM     = 'nproc()*<MULTIPLIER>';
+```
+
+For export:
+
+```sql
+EXPORT <schema>.<table>
+INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
+  BUCKET_PATH     = 'hdfs://<HDFS_PATH>/export/parquet/data/'
+  DATA_FORMAT     = 'PARQUET'
+  PARALLELISM     = 'iproc(), floor(random()*<MULTIPLIER>)';
+```
+
+Because we assume that they are in the same private network, you do not have to
+create a connection object.
+
+At the moment, it is not possible to access HDFS using `cloud-storage-extension`
+if the clusters are not located in the same private network.
+
+## Alluxio Filesystem
+
+[Alluxio](https://docs.alluxio.io/os/user/stable/en/Overview.html) is an open
+source data orchestration technology for analytics and AI for the cloud. It
+provides filesystem API similar to the HDFS.
+
+You can import formatted data from Alluxio using the cloud-storage-extension.
+
+```sql
+IMPORT INTO <schema>.<table>
+FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
+  BUCKET_PATH     = 'alluxio://<ALLUXIO_PATH>/import/parquet/data/*'
+  DATA_FORMAT     = 'PARQUET'
+  PARALLELISM     = 'nproc()*<MULTIPLIER>';
+```
+
+For this to work, the Alluxio and Exasol clusters should be located in a same
+(virtual) network. It is not possible to import if they are not within the same
+private network.
