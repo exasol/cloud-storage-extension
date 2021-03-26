@@ -1,4 +1,4 @@
-# Cloud Storage Extension 1.1.0, released 2021-02-26
+# Cloud Storage Extension 1.1.0, released 2021-03-26
 
 Code Name: v1.1.0 - Added support for Alluxio and HDFS filesystems
 
