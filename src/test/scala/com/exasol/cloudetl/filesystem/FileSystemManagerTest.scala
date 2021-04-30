@@ -46,18 +46,48 @@ class FileSystemManagerTest extends AnyFunSuite with BeforeAndAfterEach {
   }
 
   test("getFiles returns paths from a regular path without glob") {
-    assert(getFiles(getDirPath()) === getDefaultExpectedPaths)
+    assert(getFiles(getDirPath()) === getDefaultExpectedPaths())
   }
 
-  test("getFiles returns paths from sub directories") {
+  test("getFiles returns paths from top directory and ignores paths in sub directories") {
     val subDirectory = Files.createDirectories(Paths.get(s"${getDirPath()}/subDir/"))
     val subDirectoryFile = Files.createFile(subDirectory.resolve("aa.parquet"))
-    val expectedPaths = getDefaultExpectedPaths ++ Set(
-      new Path(s"file:${subDirectoryFile.toUri().getRawPath()}")
-    )
-    assert(getFiles(getDirPath()) === expectedPaths)
+    assert(getFiles(getDirPath()) === getDefaultExpectedPaths())
     Files.deleteIfExists(subDirectoryFile)
     Files.deleteIfExists(subDirectory)
+  }
+
+  test("getFiles returns paths from asterisk globbed directories") {
+    val subDirectory = Files.createDirectories(Paths.get(s"${getDirPath()}/subDir/"))
+    val subDirectoryFileParquet = Files.createFile(subDirectory.resolve("aa.parquet"))
+    val subDirectoryFileRegular = Files.createFile(subDirectory.resolve("summary.txt"))
+    val expectedPaths = getDefaultExpectedPaths ++ Set(
+      new Path(s"file:${subDirectoryFileParquet.toUri().getRawPath()}")
+    )
+    val pathPattern = s"${getDirPath()}/{*,subDir/*.parquet}"
+    assert(getFiles(pathPattern) === expectedPaths)
+    Files.deleteIfExists(subDirectoryFileParquet)
+    Files.deleteIfExists(subDirectoryFileRegular)
+    Files.deleteIfExists(subDirectory)
+  }
+
+  test("getFiles returns paths from direct globbed files") {
+    val subDirectory = Files.createDirectories(Paths.get(s"${getDirPath()}/subDir/"))
+    val subDirectoryFileParquet = Files.createFile(subDirectory.resolve("aa.parquet"))
+    val expectedPaths = Set(
+      new Path(s"file:$getDirPath/a.parquet"),
+      new Path(s"file:${subDirectoryFileParquet.toUri().getRawPath()}")
+    )
+    val pathPattern = s"${getDirPath()}/{a.parquet,subDir/aa.parquet}"
+    assert(getFiles(pathPattern) === expectedPaths)
+    Files.deleteIfExists(subDirectoryFileParquet)
+    Files.deleteIfExists(subDirectory)
+  }
+
+  test("getFiles returns direct file path") {
+    val expectedPaths = Set(new Path(s"file:$getDirPath/a.parquet"))
+    val pathPattern = s"${getDirPath()}/a.parquet"
+    assert(getFiles(pathPattern) === expectedPaths)
   }
 
   test("getFiles returns paths from a pattern with file extensions") {

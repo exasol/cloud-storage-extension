@@ -3,8 +3,6 @@ package com.exasol.cloudetl.filesystem
 import java.io.FileNotFoundException
 import java.nio.file.Path
 
-import scala.collection.mutable.ListBuffer
-
 import org.apache.hadoop.fs.{Path => HadoopPath}
 import org.apache.hadoop.fs.FileStatus
 import org.apache.hadoop.fs.FileSystem
@@ -38,24 +36,20 @@ final case class FileSystemManager(fileSystem: FileSystem) {
         s"Provided file path '$path' does not exist. Please use valid path."
       )
     } else {
-      listStatus(statuses)
+      if (isSingleDirectory(statuses)) {
+        // User path is a single directory without anyany glob, only then list the files.
+        listFiles(fileSystem.listStatus(statuses(0).getPath(), HiddenFilesFilter))
+      } else {
+        listFiles(statuses)
+      }
     }
   }
 
-  @SuppressWarnings(Array("org.wartremover.warts.Recursion"))
-  private[this] def listStatus(paths: Array[FileStatus]): Seq[HadoopPath] = {
-    val files = new ListBuffer[HadoopPath]
-    def addFilesRecursively(fileStatuses: Array[FileStatus]): Unit =
-      fileStatuses.foreach {
-        case fileStatus =>
-          if (fileStatus.isDirectory()) {
-            addFilesRecursively(fileSystem.listStatus(fileStatus.getPath(), HiddenFilesFilter))
-          } else {
-            files += fileStatus.getPath()
-          }
-      }
-    addFilesRecursively(paths)
-    files.toSeq
-  }
+  // Check if user provided path returns a single directory
+  private[this] def isSingleDirectory(paths: Array[FileStatus]): Boolean =
+    paths.length == 1 && fileSystem.getFileStatus(paths(0).getPath()).isDirectory()
+
+  private[this] def listFiles(paths: Array[FileStatus]): Seq[HadoopPath] =
+    paths.toSeq.filter(_.isFile()).map(_.getPath())
 
 }
