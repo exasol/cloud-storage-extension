@@ -72,7 +72,7 @@ abstract class Bucket extends LazyLogging {
    */
   final def getPaths(): Seq[Path] = properties.getFileFormat() match {
     case FileFormat.DELTA => getPathsFromDeltaLog()
-    case _                => FileSystemManager.globWithPattern(bucketPath, fileSystem)
+    case _                => FileSystemManager(fileSystem).getFiles(bucketPath)
   }
 
   private[this] def getPathsFromDeltaLog(): Seq[Path] = {

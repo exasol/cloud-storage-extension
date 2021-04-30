@@ -37,7 +37,7 @@ class AbstractSourceTest extends AnyFunSuite with BeforeAndAfterEach {
     Source(FileFormat(fileFormat), filePath, conf, fileSystem)
 
   final def getRecordsCount(filePath: Path): Int = {
-    val globbedFilePath = FileSystemManager.globWithLocal(filePath, fileSystem)
+    val globbedFilePath = FileSystemManager(fileSystem).getLocalFiles(filePath)
     globbedFilePath.map { file =>
       val src = getSource(file)
       val cnt = src.stream().size
