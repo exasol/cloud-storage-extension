@@ -20,6 +20,8 @@ Parquet, Avro or Orc.
 - [Azure DataLake Gen1 Storage](#azure-data-lake-gen1-storage)
 - [Azure DataLake Gen2 Storage](#azure-data-lake-gen2-storage)
 - [Delta Format](#delta-format)
+- [Hadoop Distributed Filesystem (HDFS)](#hadoop-distributed-filesystem-hdfs)
+- [Alluxio Filesystem](#alluxio-filesystem)
 
 ## Overview
 
