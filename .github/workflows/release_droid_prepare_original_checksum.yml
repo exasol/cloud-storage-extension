@@ -1,4 +1,4 @@
-name: Prepare Original Checksum
+name: Release Droid - Prepare Original Checksum
 
 on:
   workflow_dispatch:

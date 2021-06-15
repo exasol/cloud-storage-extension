@@ -16,8 +16,8 @@ scala:
   - 2.12.12
 
 env:
-  - EXASOL_DOCKER_VERSION="6.2.12-d1"
-  - EXASOL_DOCKER_VERSION="7.0.8"
+  - EXASOL_DOCKER_VERSION="6.2.15-d1"
+  - EXASOL_DOCKER_VERSION="7.0.10"
 
 before_install:
   - git fetch --tags

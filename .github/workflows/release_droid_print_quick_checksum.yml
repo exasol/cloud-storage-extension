@@ -1,4 +1,4 @@
-name: Print Quick Checksum
+name: Release Droid - Print Quick Checksum
 
 on:
   workflow_dispatch:

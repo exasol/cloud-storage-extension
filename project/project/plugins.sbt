@@ -4,4 +4,4 @@ addSbtPlugin("com.lucidchart" % "sbt-scalafmt-coursier" % "1.16")
 
 // Used to get updates for plugins
 // see https://github.com/rtimush/sbt-updates/issues/10
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.5.2")
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.5.3")
