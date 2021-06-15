@@ -4,9 +4,7 @@ Code name: Fixed bug listing files on a path using asterisk
 
 ## Summary
 
-In this release we fixed a bug related to listing files using asterisk on a
-path. We also updated user guide and added link checker to detect broken links
-in the project documentation.
+In this release we fixed a bug related to listing files using asterisk on a path. We also updated user guide and added link checker to detect broken links in the project documentation.  
 
 ## Bugfixes
 
