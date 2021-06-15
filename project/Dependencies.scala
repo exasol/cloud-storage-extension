@@ -8,24 +8,24 @@ object Dependencies {
 
   // Runtime dependencies versions
   private val ImportExportUDFVersion = "0.2.0"
-  private val HadoopVersion = "3.3.0"
+  private val HadoopVersion = "3.3.1"
   private val DeltaVersion = "0.7.0"
-  private val OrcVersion = "1.6.7"
+  private val OrcVersion = "1.6.8"
   private val ParquetVersion = "1.12.0"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.1"
   private val AlluxioCoreHDFSVersion = "2.5.0"
 
   // Test dependencies versions
-  private val ScalaTestVersion = "3.2.6"
+  private val ScalaTestVersion = "3.2.9"
   private val ScalaTestPlusVersion = "1.0.0-M2"
-  private val MockitoCoreVersion = "3.8.0"
+  private val MockitoCoreVersion = "3.11.1"
   private val HamcrestVersion = "2.2"
   private val ExasolHamcrestMatcherVersion = "1.4.0"
-  private val ExasolTestDBBuilderVersion = "3.1.1"
-  private val ExasolTestContainersVersion = "3.5.1"
-  private val TestContainersLocalstackVersion = "1.15.2"
-  private val TestContainersScalaVersion = "0.39.3"
+  private val ExasolTestDBBuilderVersion = "3.2.0"
+  private val ExasolTestContainersVersion = "3.5.3"
+  private val TestContainersLocalstackVersion = "1.15.3"
+  private val TestContainersScalaVersion = "0.39.5"
 
   val Resolvers: Seq[Resolver] = Seq(
     "Exasol Releases" at "https://maven.exasol.com/artifactory/exasol-releases"
