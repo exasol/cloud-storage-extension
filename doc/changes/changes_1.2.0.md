@@ -44,5 +44,5 @@ in the project documentation.
 * Updated `com.eed3si9n:sbt-assembly:0.15.0` to `1.0.0`
 * Updated `com.timushev.sbt:sbt-updates:0.5.2` to `0.5.3`
 * Updated `com.typesafe.sbt:sbt-git:1.0.0` to `1.0.1`
-* Updated `org.scoverage:sbt-coveralls:1.2.7` to `1.3.0
+* Updated `org.scoverage:sbt-coveralls:1.2.7` to `1.3.0`
 * Updated `org.scoverage:sbt-scoverage:1.6.1` to `1.8.2`
