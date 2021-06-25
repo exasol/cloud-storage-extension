@@ -84,6 +84,7 @@ object Settings {
     assemblyMergeStrategy in assembly := {
       case "META-INF/services/io.grpc.LoadBalancerProvider" => MergeStrategy.concat
       case "META-INF/services/io.grpc.NameResolverProvider" => MergeStrategy.concat
+      case "reference.conf"                                 => MergeStrategy.concat
       case PathList("META-INF", xs @ _*)                    => MergeStrategy.discard
       case x                                                => MergeStrategy.first
     },
