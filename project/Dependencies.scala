@@ -15,6 +15,7 @@ object Dependencies {
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.1"
   private val AlluxioCoreHDFSVersion = "2.5.0"
+  private val AkkaStreamVersion = "2.6.15"
 
   // Test dependencies versions
   private val ScalaTestVersion = "3.2.9"
@@ -83,7 +84,8 @@ object Dependencies {
         ExclusionRule(organization = "org.apache.curator"),
         ExclusionRule(organization = "org.apache.orc"),
         ExclusionRule(organization = "org.apache.zookeeper")
-    )
+    ),
+    "com.typesafe.akka" %% "akka-stream" % AkkaStreamVersion
   )
 
   lazy val TestDependencies: Seq[ModuleID] = Seq(
