@@ -11,7 +11,8 @@ import com.typesafe.sbt.SbtGit.git
 import scoverage.ScoverageSbtPlugin.autoImport._
 import org.scalastyle.sbt.ScalastylePlugin.autoImport._
 import wartremover.WartRemover.autoImport.wartremoverErrors
-import com.lucidchart.sbt.scalafmt.ScalafmtCorePlugin.autoImport._
+import org.scalafmt.sbt.ScalafmtPlugin.autoImport._
+
 
 /** A list of (boilerplate) settings for build process */
 object Settings {
@@ -85,7 +86,7 @@ object Settings {
       case "META-INF/services/io.grpc.LoadBalancerProvider" => MergeStrategy.concat
       case "META-INF/services/io.grpc.NameResolverProvider" => MergeStrategy.concat
       case PathList("META-INF", xs @ _*)                    => MergeStrategy.discard
-      case x                                                => MergeStrategy.first
+      case x                                                => MergeStrategy.last
     },
     assemblyExcludedJars in assembly := {
       val cp = (fullClasspath in assembly).value

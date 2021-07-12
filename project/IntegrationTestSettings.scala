@@ -4,7 +4,7 @@ import sbt._
 import sbt.Keys._
 import sbt.Def.Setting
 import org.scalastyle.sbt.ScalastylePlugin
-import com.lucidchart.sbt.scalafmt.ScalafmtCorePlugin
+import org.scalafmt.sbt.ScalafmtPlugin
 
 /** Settings for running integration tests */
 object IntegrationTestSettings {
