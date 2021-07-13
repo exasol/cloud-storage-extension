@@ -1,0 +1,48 @@
+name: CI Build
+
+on:
+  - push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    matrix:
+      scala: [ 2.12.14 ]
+      exasol-docker-version: [ 6.2.15-d1, 7.0.10 ]
+
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java and Scala with JDK 11
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: 11
+
+      - name: Cache Local SBT Dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.sbt
+            ~/.ivy2/cache
+            ~/.coursier/cache/v1
+            ~/.cache/coursier/v1
+            ~/AppData/Local/Coursier/Cache/v1
+            ~/Library/Caches/Coursier/v1
+          key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
+
+      - name: Pull Docker Images
+        run: |
+          docker pull exasol/docker-db:${{ matrix.exasol-docker-version }}
+          docker pull localstack/localstack:0.12.5
+          docker pull alluxio/alluxio:2.6.0
+
+      - name: Check Formatting
+        run: sbt ++${{ matrix.scala }} scalafmtSbtCheck scalafmtCheckAll
+
+      - name: Run CI
+        run: ./scripts/ci.sh
+        env:
+          SCALA_VERSION: ${{ matrix.scala }}

@@ -6,18 +6,18 @@ set -o errtrace -o nounset -o pipefail -o errexit
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd )"
 cd "$BASE_DIR"
 
-MAIN_SCALA_VERSION=2.12.12
+DEFAULT_SCALA_VERSION=2.12.14
 
-if [[ -z "${TRAVIS_SCALA_VERSION:-}" ]]; then
-  echo "Environment variable TRAVIS_SCALA_VERSION is not set"
-  echo "Using MAIN_SCALA_VERSION: $MAIN_SCALA_VERSION"
-  TRAVIS_SCALA_VERSION=$MAIN_SCALA_VERSION
+if [[ -z "${SCALA_VERSION:-}" ]]; then
+  echo "Environment variable SCALA_VERSION is not set"
+  echo "Using DEFAULT_SCALA_VERSION: $DEFAULT_SCALA_VERSION"
+  SCALA_VERSION=$DEFAULT_SCALA_VERSION
 fi
 
 run_self_check () {
   echo "############################################"
   echo "#                                          #"
-  echo "#        Self-check                        #"
+  echo "#        Self Script Check                 #"
   echo "#                                          #"
   echo "############################################"
   # Don't fail here, failing later at the end when all shell scripts are checked anyway.
@@ -28,46 +28,46 @@ run_self_check () {
 run_cleaning () {
   echo "############################################"
   echo "#                                          #"
-  echo "#        Cleaning                          #"
+  echo "#        Clean and Assembly                #"
   echo "#                                          #"
   echo "############################################"
-  ./sbtx ++$TRAVIS_SCALA_VERSION clean assembly
+  sbt ++$SCALA_VERSION clean assembly
 }
 
 run_unit_tests () {
   echo "############################################"
   echo "#                                          #"
-  echo "#        Unit testing                      #"
+  echo "#        Unit Testing                      #"
   echo "#                                          #"
   echo "############################################"
-  ./sbtx ++$TRAVIS_SCALA_VERSION coverage test
+  sbt ++$SCALA_VERSION coverage test
 }
 
 run_integration_tests () {
   echo "############################################"
   echo "#                                          #"
-  echo "#        Integration testing               #"
+  echo "#        Integration Testing               #"
   echo "#                                          #"
   echo "############################################"
-  ./sbtx ++$TRAVIS_SCALA_VERSION coverage it:test
+  sbt ++$SCALA_VERSION coverage it:test
 }
 
 run_coverage_report () {
   echo "############################################"
   echo "#                                          #"
-  echo "#        Coverage report                   #"
+  echo "#        Coverage Report                   #"
   echo "#                                          #"
   echo "############################################"
-  ./sbtx ++$TRAVIS_SCALA_VERSION coverageReport
+  sbt ++$SCALA_VERSION coverageReport
 }
 
 run_api_doc () {
   echo "############################################"
   echo "#                                          #"
-  echo "#        Generating API documentaion       #"
+  echo "#        Generating API Documentaion       #"
   echo "#                                          #"
   echo "############################################"
-  ./sbtx ++$TRAVIS_SCALA_VERSION doc
+  sbt ++$SCALA_VERSION doc
 }
 
 run_explicit_dependencies () {
@@ -76,16 +76,16 @@ run_explicit_dependencies () {
   echo "#        Unused Dependencies               #"
   echo "#                                          #"
   echo "############################################"
-  ./sbtx ++$TRAVIS_SCALA_VERSION undeclaredCompileDependencies unusedCompileDependencies
+  sbt ++$SCALA_VERSION undeclaredCompileDependencies unusedCompileDependencies
 }
 
 run_dependency_info () {
   echo "############################################"
   echo "#                                          #"
-  echo "#        Dependency information            #"
+  echo "#        Dependency Information            #"
   echo "#                                          #"
   echo "############################################"
-  ./sbtx ++$TRAVIS_SCALA_VERSION dependencyUpdates pluginUpdates dependencyTree
+  sbt ++$SCALA_VERSION dependencyUpdates pluginUpdates dependencyTree
 }
 
 run_shell_check () {
@@ -100,16 +100,16 @@ run_shell_check () {
 run_assembly () {
   echo "############################################"
   echo "#                                          #"
-  echo "#        Assembling binary artifact        #"
+  echo "#        Assembling Binary Artifact        #"
   echo "#                                          #"
   echo "############################################"
-  ./sbtx ++$TRAVIS_SCALA_VERSION assembly
+  sbt ++$SCALA_VERSION assembly
 }
 
 run_clean_worktree_check () {
   echo "############################################"
   echo "#                                          #"
-  echo "#        Check for clean worktree          #"
+  echo "#        Check for Clean Worktree          #"
   echo "#                                          #"
   echo "############################################"
   # To be executed after all other steps, to ensures that there is no uncommitted code and there

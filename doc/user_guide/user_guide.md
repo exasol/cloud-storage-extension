@@ -157,10 +157,11 @@ git clone https://github.com/exasol/cloud-storage-extension
 cd cloud-storage-extension/
 ```
 
-To create an assembled jar file, run the command:
+To create an assembled jar file, [install SBT build
+tool](https://www.scala-sbt.org/download.html) and run the command:
 
 ```sh
-./sbtx assembly
+sbt assembly
 ```
 
 The assembled jar file should be located at

@@ -13,11 +13,12 @@ jdk:
   - openjdk11
 
 scala:
-  - 2.12.12
+  - 2.12.14
 
 env:
   - EXASOL_DOCKER_VERSION="6.2.15-d1"
   - EXASOL_DOCKER_VERSION="7.0.10"
+  - SCALA_VERSION="$TRAVIS_SCALA_VERSION"
 
 before_install:
   - git fetch --tags
@@ -29,7 +30,7 @@ script:
   - ./scripts/ci.sh
 
 after_success:
-  - ./sbtx coveralls
+  - sbt coveralls
 
 cache:
   directories:
