@@ -37,9 +37,8 @@ class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with
   override final def afterEach(): Unit =
     deletePathFiles(tmpDir)
 
-  override final def afterAll(): Unit = {
-    //
-  }
+  override final def afterAll(): Unit =
+    spark.close()
 
   test("getPaths throws if the path is not delta format") {
     val thrown = intercept[IllegalArgumentException] {
