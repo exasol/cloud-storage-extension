@@ -18,7 +18,6 @@ scala:
 env:
   - EXASOL_DOCKER_VERSION="6.2.15-d1"
   - EXASOL_DOCKER_VERSION="7.0.10"
-  - SCALA_VERSION="$TRAVIS_SCALA_VERSION"
 
 before_install:
   - git fetch --tags
@@ -27,7 +26,7 @@ before_install:
   - docker pull alluxio/alluxio:2.5.0
 
 script:
-  - ./scripts/ci.sh
+  - SCALA_VERSION="$TRAVIS_SCALA_VERSION" ./scripts/ci.sh
 
 after_success:
   - sbt coveralls

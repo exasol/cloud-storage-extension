@@ -6,9 +6,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    matrix:
-      scala: [ 2.12.14 ]
-      exasol-docker-version: [ 6.2.15-d1, 7.0.10 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        scala: [ 2.12.14 ]
+        exasol-docker-version: [ 6.2.15-d1, 7.0.10 ]
 
     steps:
       - name: Checkout the Repository
