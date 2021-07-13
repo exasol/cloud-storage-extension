@@ -31,8 +31,6 @@ jobs:
             ~/.ivy2/cache
             ~/.coursier/cache/v1
             ~/.cache/coursier/v1
-            ~/AppData/Local/Coursier/Cache/v1
-            ~/Library/Caches/Coursier/v1
           key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
 
       - name: Pull Docker Images
@@ -48,3 +46,14 @@ jobs:
         run: ./scripts/ci.sh
         env:
           SCALA_VERSION: ${{ matrix.scala }}
+
+      - name: Upload Coverage Results to Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sonar Cloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
