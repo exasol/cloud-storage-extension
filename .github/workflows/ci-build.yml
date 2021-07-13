@@ -50,9 +50,9 @@ jobs:
           SCALA_VERSION: ${{ matrix.scala }}
 
       - name: Upload Coverage Results to Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: sbt coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Sonar Cloud Scan
         uses: sonarsource/sonarcloud-github-action@master
