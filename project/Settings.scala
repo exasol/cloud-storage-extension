@@ -11,8 +11,6 @@ import com.typesafe.sbt.SbtGit.git
 import scoverage.ScoverageSbtPlugin.autoImport._
 import org.scalastyle.sbt.ScalastylePlugin.autoImport._
 import wartremover.WartRemover.autoImport.wartremoverErrors
-import org.scalafmt.sbt.ScalafmtPlugin.autoImport._
-
 
 /** A list of (boilerplate) settings for build process */
 object Settings {
@@ -34,8 +32,6 @@ object Settings {
     wartremoverErrors in (Test, compile) := Compilation.WartremoverTestFlags,
     // General settings
     cancelable in Global := true,
-    // ScalaFmt settings
-    scalafmtOnCompile := true,
     // Scoverage settings
     coverageOutputHTML := true,
     coverageOutputXML := true,
@@ -55,8 +51,8 @@ object Settings {
       (scalastyleConfig in Test) := (baseDirectory in ThisBuild).value / "project" / "scalastyle-test-config.xml",
       mainScalastyle := scalastyle.in(Compile).toTask("").value,
       testScalastyle := scalastyle.in(Test).toTask("").value,
-      (test in Test) := ((test in Test) dependsOn mainScalastyle).value,
-      (test in Test) := ((test in Test) dependsOn testScalastyle).value,
+      (test in Test) := (test in Test).dependsOn(mainScalastyle).value,
+      (test in Test) := (test in Test).dependsOn(testScalastyle).value
     )
   }
 
@@ -73,8 +69,8 @@ object Settings {
       (scalastyleSources in IntegrationTest) := Seq((scalaSource in IntegrationTest).value),
       mainScalastyle := scalastyle.in(Compile).toTask("").value,
       itTestScalastyle := scalastyle.in(IntegrationTest).toTask("").value,
-      (test in IntegrationTest) := ((test in IntegrationTest) dependsOn mainScalastyle).value,
-      (test in IntegrationTest) := ((test in IntegrationTest) dependsOn itTestScalastyle).value
+      (test in IntegrationTest) := (test in IntegrationTest).dependsOn(mainScalastyle).value,
+      (test in IntegrationTest) := (test in IntegrationTest).dependsOn(itTestScalastyle).value
     )
   }
 

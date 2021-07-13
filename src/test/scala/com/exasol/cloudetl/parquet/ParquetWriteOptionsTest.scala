@@ -32,10 +32,9 @@ class ParquetWriteOptionsTest extends AnyFunSuite with BeforeAndAfterEach {
       "lzo" -> CompressionCodecName.LZO,
       "other" -> CompressionCodecName.UNCOMPRESSED
     )
-    testData.foreach {
-      case (given, expected) =>
-        properties = Map("PARQUET_COMPRESSION_CODEC" -> given)
-        assert(ParquetWriteOptions(StorageProperties(properties)).compressionCodec === expected)
+    testData.foreach { case (given, expected) =>
+      properties = Map("PARQUET_COMPRESSION_CODEC" -> given)
+      assert(ParquetWriteOptions(StorageProperties(properties)).compressionCodec === expected)
     }
   }
 

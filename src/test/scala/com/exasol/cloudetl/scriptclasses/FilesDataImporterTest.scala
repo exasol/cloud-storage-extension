@@ -37,7 +37,6 @@ class FilesDataImporterTest extends StorageTest {
   }
 
   /**
-   *
    * +---------+-----------+----------+------+-----+----------+--------+
    * |sales_id |position_id|article_id|amount|price|voucher_id|canceled|
    * +---------+-----------+----------+------+-----+----------+--------+
@@ -47,7 +46,6 @@ class FilesDataImporterTest extends StorageTest {
    * |582344312|0          |96982     |5     |0.56 |null      |null    |
    * |582344274|1          |96982     |1     |0.56 |null      |null    |
    * +---------+-----------+----------+------+-----+----------+--------+
-   *
    */
   test("run emits correct sequence of records from PARQUET file") {
     val parquetFile = s"$testResourceDir/import/parquet/sales_positions_small.snappy.parquet"
@@ -83,9 +81,8 @@ class FilesDataImporterTest extends StorageTest {
     }
 
     verify(iter, times(totalRecords)).emit(Seq(any[Object]): _*)
-    records.foreach {
-      case rows =>
-        verify(iter, times(1)).emit(rows: _*)
+    records.foreach { case rows =>
+      verify(iter, times(1)).emit(rows: _*)
     }
   }
 

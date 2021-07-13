@@ -15,11 +15,7 @@ import org.mockito.ExtraMockito
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 
-class TableDataExporterTest
-    extends StorageTest
-    with BeforeAndAfterEach
-    with DataRecords
-    with TestFileManager {
+class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with DataRecords with TestFileManager {
 
   private[this] var outputPath: Path = _
   private[this] val srcColumns: Seq[String] = Seq(
@@ -74,12 +70,11 @@ class TableDataExporterTest
       (9, classOf[java.sql.Date], 0L, 0L, 0L),
       (10, classOf[java.sql.Timestamp], 0L, 0L, 0L)
     )
-    returns.foreach {
-      case (idx, cls, prec, scale, len) =>
-        ExtraMockito.doReturn(cls).when(mockedMetadata).getInputColumnType(idx)
-        when(mockedMetadata.getInputColumnPrecision(idx)).thenReturn(prec)
-        when(mockedMetadata.getInputColumnScale(idx)).thenReturn(scale)
-        when(mockedMetadata.getInputColumnLength(idx)).thenReturn(len)
+    returns.foreach { case (idx, cls, prec, scale, len) =>
+      ExtraMockito.doReturn(cls).when(mockedMetadata).getInputColumnType(idx)
+      when(mockedMetadata.getInputColumnPrecision(idx)).thenReturn(prec)
+      when(mockedMetadata.getInputColumnScale(idx)).thenReturn(scale)
+      when(mockedMetadata.getInputColumnLength(idx)).thenReturn(len)
     }
 
     mockedMetadata

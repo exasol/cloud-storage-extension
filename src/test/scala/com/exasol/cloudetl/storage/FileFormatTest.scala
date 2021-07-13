@@ -14,9 +14,8 @@ class FileFormatTest extends AnyFunSuite {
       "fiLE" -> FILE,
       "parquet" -> PARQUET
     )
-    testData.foreach {
-      case (given, expected) =>
-        assert(FileFormat(given) === expected)
+    testData.foreach { case (given, expected) =>
+      assert(FileFormat(given) === expected)
     }
   }
 

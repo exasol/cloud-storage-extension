@@ -24,9 +24,8 @@ class AzureBlobBucketTest extends AbstractBucketTest {
       "fs.AbstractFileSystem.wasb.impl" -> classOf[Wasb].getName,
       "fs.AbstractFileSystem.wasbs.impl" -> classOf[Wasbs].getName
     )
-    (defaultMappings ++ extraMappings).foreach {
-      case (given, expected) =>
-        assert(conf.get(given) === expected)
+    (defaultMappings ++ extraMappings).foreach { case (given, expected) =>
+      assert(conf.get(given) === expected)
     }
   }
 
@@ -42,12 +41,12 @@ class AzureBlobBucketTest extends AbstractBucketTest {
 
   test("apply throws if no connection name is provided") {
     properties = defaultProperties
-    assertNoConnectionName { getBucket(properties).validate() }
+    assertNoConnectionName(getBucket(properties).validate())
   }
 
   test("apply throws if secret key is provided as parameter") {
     properties = defaultProperties ++ Map("AZURE_SECRET_KEY" -> "secret")
-    assertForbiddenProperty { getBucket(properties).validate() }
+    assertForbiddenProperty(getBucket(properties).validate())
   }
 
   test("apply throws if sas token is provided as parameter") {
@@ -56,7 +55,7 @@ class AzureBlobBucketTest extends AbstractBucketTest {
       "AZURE_SAS_TOKEN" -> "token",
       "AZURE_CONTAINER_NAME" -> "container1"
     )
-    assertForbiddenProperty { getBucket(properties).validate() }
+    assertForbiddenProperty(getBucket(properties).validate())
   }
 
   test("apply returns secret from password of connection object with account name") {

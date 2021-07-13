@@ -1,3 +1,7 @@
+// Adds a `scalafmt` sbt plugin
+// https://github.com/scalameta/sbt-scalafmt
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.3")
+
 // Adds a `wartremover` a flexible Scala code linting tool
 // http://github.com/puffnfresh/wartremover
 addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.4.15")
@@ -48,13 +52,3 @@ addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.16")
 // Adds a `sbt-reproducible-builds` plugin
 // https://github.com/raboof/sbt-reproducible-builds
 addSbtPlugin("net.bzzt" % "sbt-reproducible-builds" % "0.28")
-
-// Setup this and project/project/plugins.sbt for formatting
-// project/*.scala files with scalafmt
-inThisBuild(
-  Seq(
-    scalafmtOnCompile := true,
-    // Use the scalafmt config in the root directory
-    scalafmtConfig := baseDirectory(_.getParentFile / ".scalafmt.conf").value
-  )
-)

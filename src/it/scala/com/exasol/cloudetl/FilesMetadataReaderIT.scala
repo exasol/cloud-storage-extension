@@ -9,10 +9,7 @@ import org.apache.hadoop.fs.{Path => HPath}
 import org.hamcrest.MatcherAssert.assertThat
 import org.scalatest.BeforeAndAfterEach
 
-class FilesMetadataReaderIT
-    extends BaseS3IntegrationTest
-    with BeforeAndAfterEach
-    with TestFileManager {
+class FilesMetadataReaderIT extends BaseS3IntegrationTest with BeforeAndAfterEach with TestFileManager {
 
   val schemaName = "DATA_SCHEMA"
   val tableName = "DATA_TABLE"

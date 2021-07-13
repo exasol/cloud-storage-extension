@@ -60,7 +60,7 @@ object Dependencies {
         ExclusionRule(organization = "org.apache.kerby"),
         ExclusionRule(organization = "org.apache.curator"),
         ExclusionRule(organization = "org.apache.zookeeper")
-    ),
+      ),
     "org.apache.hadoop" % "hadoop-hdfs" % HadoopVersion
       exclude ("com.google.protobuf", "protobuf-java"),
     "org.alluxio" % "alluxio-core-client-hdfs" % AlluxioCoreHDFSVersion
@@ -74,7 +74,7 @@ object Dependencies {
       exclude ("org.apache.commons", "commons-lang3")
       exclude ("com.google.protobuf", "protobuf-java")
       exclude ("javax.xml.bind", "jaxb-api"),
-     "org.apache.parquet" % "parquet-hadoop" % ParquetVersion
+    "org.apache.parquet" % "parquet-hadoop" % ParquetVersion
       exclude ("org.slf4j", "slf4j-api")
       exclude ("commons-codec", "commons-codec")
       exclude ("org.xerial.snappy", "snappy-java"),
@@ -91,7 +91,7 @@ object Dependencies {
         ExclusionRule(organization = "org.apache.curator"),
         ExclusionRule(organization = "org.apache.orc"),
         ExclusionRule(organization = "org.apache.zookeeper")
-    )
+      )
   )
 
   lazy val TestDependencies: Seq[ModuleID] = Seq(

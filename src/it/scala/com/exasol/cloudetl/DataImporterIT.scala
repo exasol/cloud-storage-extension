@@ -142,7 +142,7 @@ class DataImporterIT extends BaseS3IntegrationTest {
     test("imports float") {
       val EPS = java.math.BigDecimal.valueOf(0.0001)
       AvroChecker(getBasicSchema("\"float\""), "FLOAT")
-        .withInputValues(List(3.14f, 2.71F))
+        .withInputValues(List(3.14f, 2.71f))
         .assertResultSet(
           table()
             .row(CellMatcherFactory.cellMatcher(3.14, STRICT, EPS))
@@ -427,7 +427,7 @@ class DataImporterIT extends BaseS3IntegrationTest {
     test("imports float") {
       val EPS = java.math.BigDecimal.valueOf(0.0001)
       OrcChecker("struct<f:float>", "FLOAT")
-        .withInputValues(List(3.14F, null))
+        .withInputValues(List(3.14f, null))
         .assertResultSet(
           table()
             .row(CellMatcherFactory.cellMatcher(3.14, STRICT, EPS))
@@ -701,7 +701,7 @@ class DataImporterIT extends BaseS3IntegrationTest {
     test("imports float") {
       val EPS = java.math.BigDecimal.valueOf(0.0001)
       ParquetChecker("optional float column;", "FLOAT")
-        .withInputValues[Any](List(2.71f, 3.14F, null))
+        .withInputValues[Any](List(2.71f, 3.14f, null))
         .assertResultSet(
           table()
             .row(CellMatcherFactory.cellMatcher(2.71, STRICT, EPS))
@@ -819,13 +819,12 @@ class DataImporterIT extends BaseS3IntegrationTest {
       """.stripMargin
 
       ParquetChecker(parquetType, "VARCHAR(20)")
-        .withWriter {
-          case (writer, schema) =>
-            val record = new SimpleGroup(schema)
-            val names = record.addGroup(0)
-            names.addGroup(0).append("name", "John")
-            names.addGroup(0).append("name", "Jana")
-            writer.write(record)
+        .withWriter { case (writer, schema) =>
+          val record = new SimpleGroup(schema)
+          val names = record.addGroup(0)
+          names.addGroup(0).append("name", "John")
+          names.addGroup(0).append("name", "Jana")
+          writer.write(record)
         }
         .assertResultSet(table().row("""["John","Jana"]""").matches())
     }
@@ -840,13 +839,12 @@ class DataImporterIT extends BaseS3IntegrationTest {
       """.stripMargin
 
       ParquetChecker(parquetType, "VARCHAR(20)")
-        .withWriter {
-          case (writer, schema) =>
-            val record = new SimpleGroup(schema)
-            val prices = record.addGroup(0)
-            prices.addGroup(0).append("price", 0.14)
-            prices.addGroup(0).append("price", 1.234)
-            writer.write(record)
+        .withWriter { case (writer, schema) =>
+          val record = new SimpleGroup(schema)
+          val prices = record.addGroup(0)
+          prices.addGroup(0).append("price", 0.14)
+          prices.addGroup(0).append("price", 1.234)
+          writer.write(record)
         }
         .assertResultSet(table().row("[0.14,1.234]").matches())
     }
@@ -861,13 +859,12 @@ class DataImporterIT extends BaseS3IntegrationTest {
       """.stripMargin
 
       ParquetChecker(parquetType, "VARCHAR(20)")
-        .withWriter {
-          case (writer, schema) =>
-            val record = new SimpleGroup(schema)
-            val ages = record.addGroup(0)
-            ages.addGroup(0).append("age", 21)
-            ages.addGroup(0).append("age", 12)
-            writer.write(record)
+        .withWriter { case (writer, schema) =>
+          val record = new SimpleGroup(schema)
+          val ages = record.addGroup(0)
+          ages.addGroup(0).append("age", 21)
+          ages.addGroup(0).append("age", 12)
+          writer.write(record)
         }
         .assertResultSet(table().row("[21,12]").matches())
     }
@@ -886,16 +883,15 @@ class DataImporterIT extends BaseS3IntegrationTest {
       """.stripMargin
 
       ParquetChecker(parquetType, "VARCHAR(20)")
-        .withWriter {
-          case (writer, schema) =>
-            val record = new SimpleGroup(schema)
-            val arrays = record.addGroup(0).addGroup(0)
-            var inner = arrays.addGroup("inner")
-            inner.addGroup(0).append("element", "a")
-            inner.addGroup(0).append("element", "b")
-            inner = arrays.addGroup("inner")
-            inner.addGroup(0).append("element", "c")
-            writer.write(record)
+        .withWriter { case (writer, schema) =>
+          val record = new SimpleGroup(schema)
+          val arrays = record.addGroup(0).addGroup(0)
+          var inner = arrays.addGroup("inner")
+          inner.addGroup(0).append("element", "a")
+          inner.addGroup(0).append("element", "b")
+          inner = arrays.addGroup("inner")
+          inner.addGroup(0).append("element", "c")
+          writer.write(record)
         }
         .assertResultSet(table().row("""[["a","b"],["c"]]""").matches())
     }
@@ -914,16 +910,15 @@ class DataImporterIT extends BaseS3IntegrationTest {
            |}
       """.stripMargin
       ParquetChecker(parquetType, "VARCHAR(35)")
-        .withWriter {
-          case (writer, schema) =>
-            val record = new SimpleGroup(schema)
-            val array = record.addGroup(0).addGroup(0)
-            var map = array.addGroup("map")
-            map.addGroup("key_value").append("name", "bob").append("age", 14)
-            map.addGroup("key_value").append("name", "jon").append("age", 12)
-            map = array.addGroup("map")
-            map.addGroup("key_value").append("name", "ted").append("age", 20)
-            writer.write(record)
+        .withWriter { case (writer, schema) =>
+          val record = new SimpleGroup(schema)
+          val array = record.addGroup(0).addGroup(0)
+          var map = array.addGroup("map")
+          map.addGroup("key_value").append("name", "bob").append("age", 14)
+          map.addGroup("key_value").append("name", "jon").append("age", 12)
+          map = array.addGroup("map")
+          map.addGroup("key_value").append("name", "ted").append("age", 20)
+          writer.write(record)
         }
         .assertResultSet(table().row("""[{"bob":14,"jon":12},{"ted":20}]""").matches())
     }
@@ -938,13 +933,12 @@ class DataImporterIT extends BaseS3IntegrationTest {
            |}
       """.stripMargin
       ParquetChecker(parquetType, "VARCHAR(20)")
-        .withWriter {
-          case (writer, schema) =>
-            val record = new SimpleGroup(schema)
-            val map = record.addGroup(0)
-            map.addGroup("key_value").append("key", "key1").append("value", 3L)
-            map.addGroup("key_value").append("key", "key2").append("value", 7L)
-            writer.write(record)
+        .withWriter { case (writer, schema) =>
+          val record = new SimpleGroup(schema)
+          val map = record.addGroup(0)
+          map.addGroup("key_value").append("key", "key1").append("value", 3L)
+          map.addGroup("key_value").append("key", "key2").append("value", 7L)
+          writer.write(record)
         }
         .assertResultSet(table().row("""{"key1":3,"key2":7}""").matches())
     }
@@ -964,14 +958,13 @@ class DataImporterIT extends BaseS3IntegrationTest {
       """.stripMargin
 
       ParquetChecker(parquetType, "VARCHAR(20)")
-        .withWriter {
-          case (writer, schema) =>
-            val record = new SimpleGroup(schema)
-            val map = record.addGroup(0).addGroup("key_value")
-            val prices = map.append("brand", "nike").addGroup("prices")
-            prices.addGroup(0).append("price", 0.14)
-            prices.addGroup(0).append("price", 5.11)
-            writer.write(record)
+        .withWriter { case (writer, schema) =>
+          val record = new SimpleGroup(schema)
+          val map = record.addGroup(0).addGroup("key_value")
+          val prices = map.append("brand", "nike").addGroup("prices")
+          prices.addGroup(0).append("price", 0.14)
+          prices.addGroup(0).append("price", 5.11)
+          writer.write(record)
         }
         .assertResultSet(table().row("""{"nike":[0.14,5.11]}""").matches())
     }
@@ -979,12 +972,11 @@ class DataImporterIT extends BaseS3IntegrationTest {
     test("imports repeated field") {
       val parquetType = "repeated binary name (UTF8);"
       ParquetChecker(parquetType, "VARCHAR(20)")
-        .withWriter {
-          case (writer, schema) =>
-            val record = new SimpleGroup(schema)
-            record.add(0, "John")
-            record.add(0, "Jane")
-            writer.write(record)
+        .withWriter { case (writer, schema) =>
+          val record = new SimpleGroup(schema)
+          record.add(0, "John")
+          record.add(0, "Jane")
+          writer.write(record)
         }
         .assertResultSet(table().row("""["John","Jane"]""").matches())
     }
@@ -996,14 +988,13 @@ class DataImporterIT extends BaseS3IntegrationTest {
            |}
       """.stripMargin
       ParquetChecker(parquetType, "VARCHAR(20)")
-        .withWriter {
-          case (writer, schema) =>
-            val record = new SimpleGroup(schema)
-            var person = record.addGroup(0)
-            person.append("name", "John")
-            person = record.addGroup(0)
-            person.append("name", "Jane")
-            writer.write(record)
+        .withWriter { case (writer, schema) =>
+          val record = new SimpleGroup(schema)
+          var person = record.addGroup(0)
+          person.append("name", "John")
+          person = record.addGroup(0)
+          person.append("name", "Jane")
+          writer.write(record)
         }
         .assertResultSet(table().row("""["John","Jane"]""").matches())
     }
@@ -1016,14 +1007,13 @@ class DataImporterIT extends BaseS3IntegrationTest {
            |}
       """.stripMargin
       ParquetChecker(parquetType, "VARCHAR(60)")
-        .withWriter {
-          case (writer, schema) =>
-            val record = new SimpleGroup(schema)
-            var person = record.addGroup(0)
-            person.append("name", "John").append("age", 24)
-            person = record.addGroup(0)
-            person.append("name", "Jane").append("age", 22)
-            writer.write(record)
+        .withWriter { case (writer, schema) =>
+          val record = new SimpleGroup(schema)
+          var person = record.addGroup(0)
+          person.append("name", "John").append("age", 24)
+          person = record.addGroup(0)
+          person.append("name", "Jane").append("age", 22)
+          writer.write(record)
         }
         .assertResultSet(
           table()
@@ -1074,8 +1064,7 @@ class DataImporterIT extends BaseS3IntegrationTest {
       }
     }
 
-    case class OrcChecker(orcColumn: String, exaColumn: String)
-        extends AbstractChecker(exaColumn) {
+    case class OrcChecker(orcColumn: String, exaColumn: String) extends AbstractChecker(exaColumn) {
 
       def withWriter(block: OrcTestDataWriter => Unit): OrcChecker = {
         val writer = new OrcTestDataWriter(path, conf)
@@ -1089,8 +1078,7 @@ class DataImporterIT extends BaseS3IntegrationTest {
       }
     }
 
-    case class AvroChecker(avroSchemaStr: String, exaColumn: String)
-        extends AbstractChecker(exaColumn) {
+    case class AvroChecker(avroSchemaStr: String, exaColumn: String) extends AbstractChecker(exaColumn) {
       private val avroSchema = new Schema.Parser().parse(avroSchemaStr)
 
       def withWriter(block: DataFileWriter[GenericRecord] => Unit): AvroChecker = {

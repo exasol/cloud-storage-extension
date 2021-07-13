@@ -146,12 +146,11 @@ class SchemaUtilTest extends AnyFunSuite with MockitoSugar {
       ts -> ExaColumnInfo("c_timestamp", classOf[java.sql.Timestamp])
     )
 
-    data.zipWithIndex.map {
-      case ((expectedValue, col), idx) =>
-        val nxtIdx = startIdx + idx
-        val ret = SchemaUtil.exaColumnToValue(iter, nxtIdx, col)
-        assert(ret === expectedValue)
-        assert(ret.getClass === col.`type`)
+    data.zipWithIndex.map { case ((expectedValue, col), idx) =>
+      val nxtIdx = startIdx + idx
+      val ret = SchemaUtil.exaColumnToValue(iter, nxtIdx, col)
+      assert(ret === expectedValue)
+      assert(ret.getClass === col.`type`)
     }
 
     val thrown = intercept[IllegalArgumentException] {

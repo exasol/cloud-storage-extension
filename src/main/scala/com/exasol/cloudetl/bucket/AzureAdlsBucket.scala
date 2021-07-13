@@ -5,9 +5,7 @@ import com.exasol.cloudetl.storage.StorageProperties
 import org.apache.hadoop.conf.Configuration
 
 /** A [[Bucket]] implementation for the Azure Data Lake Storage */
-final case class AzureAdlsBucket(path: String, params: StorageProperties)
-    extends Bucket
-    with SecureBucket {
+final case class AzureAdlsBucket(path: String, params: StorageProperties) extends Bucket with SecureBucket {
 
   private[this] val AZURE_CLIENT_ID: String = "AZURE_CLIENT_ID"
   private[this] val AZURE_CLIENT_SECRET: String = "AZURE_CLIENT_SECRET"

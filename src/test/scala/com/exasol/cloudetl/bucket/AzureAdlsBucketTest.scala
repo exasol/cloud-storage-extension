@@ -28,15 +28,14 @@ class AzureAdlsBucketTest extends AbstractBucketTest {
       "fs.AbstractFileSystem.adl.impl" -> classOf[org.apache.hadoop.fs.adl.Adl].getName,
       "dfs.adls.oauth2.access.token.provider.type" -> "ClientCredential"
     )
-    (defaultMappings ++ extraMappings).foreach {
-      case (given, expected) =>
-        assert(conf.get(given) === expected)
+    (defaultMappings ++ extraMappings).foreach { case (given, expected) =>
+      assert(conf.get(given) === expected)
     }
   }
 
   test("apply throws if no connection name is provided") {
     properties = defaultProperties
-    assertNoConnectionName { getBucket(properties).validate() }
+    assertNoConnectionName(getBucket(properties).validate())
   }
 
   test("apply throws if client id, client secret or directory id is provided as parameter") {
@@ -45,7 +44,7 @@ class AzureAdlsBucketTest extends AbstractBucketTest {
       "AZURE_CLIENT_SECRET" -> clientSecret,
       "AZURE_DIRECTORY_ID" -> directoryID
     )
-    assertForbiddenProperty { getBucket(properties).validate() }
+    assertForbiddenProperty(getBucket(properties).validate())
   }
 
   test("apply returns with credentails from username and password of connection object") {

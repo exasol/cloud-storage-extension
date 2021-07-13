@@ -49,9 +49,8 @@ object TableDataExporter extends LazyLogging {
   }
 
   private[this] def getRow(iter: ExaIterator, startIdx: Int, columns: Seq[ExaColumnInfo]): Row = {
-    val vals = columns.zipWithIndex.map {
-      case (col, idx) =>
-        SchemaUtil.exaColumnToValue(iter, startIdx + idx, col)
+    val vals = columns.zipWithIndex.map { case (col, idx) =>
+      SchemaUtil.exaColumnToValue(iter, startIdx + idx, col)
     }
     Row(values = vals)
   }

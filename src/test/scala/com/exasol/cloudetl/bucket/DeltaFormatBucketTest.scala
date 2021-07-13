@@ -15,13 +15,12 @@ class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with
   private[this] var tmpDir: java.nio.file.Path = _
   private[this] var spark: SparkSession = _
 
-  override final def beforeAll(): Unit = {
+  override final def beforeAll(): Unit =
     spark = SparkSession
       .builder()
       .appName("DeltaFormatTest")
       .master("local[2]")
       .getOrCreate()
-  }
 
   override final def beforeEach(): Unit = {
     super.beforeEach()
@@ -35,9 +34,8 @@ class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with
       .getOrCreate()
   }
 
-  override final def afterEach(): Unit = {
+  override final def afterEach(): Unit =
     deletePathFiles(tmpDir)
-  }
 
   override final def afterAll(): Unit = {
     //
