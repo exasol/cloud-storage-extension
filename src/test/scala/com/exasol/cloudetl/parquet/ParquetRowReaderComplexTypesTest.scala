@@ -278,7 +278,7 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
       writer.write(record)
     }
     val expected =
-      Row(Seq("""{"John":{"height":170,"weight":70},"Jane":{"height":160,"weight":60}}"""))
+      Row(Seq("""{"John":{"weight":70,"height":170},"Jane":{"weight":60,"height":160}}"""))
     assert(getRecords()(0) === expected)
   }
 
@@ -306,7 +306,7 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     }
     val expected = Row(
       Seq(
-        """[[{"key":"key1","price":3.14},{"key":"key2","price":2.71},{"key":"a","price":100.0}]]"""
+        """[[{"price":3.14,"key":"key1"},{"price":2.71,"key":"key2"},{"price":100.0,"key":"a"}]]"""
       )
     )
     assert(getRecords()(0) === expected)
@@ -344,8 +344,8 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
     val expected = Row(
       Seq(
         """|{
-           |"John":[{"year":2019,"height":170,"weight":70},{"year":2020,"height":170,"weight":80}],
-           |"Jane":[{"year":2019,"height":160,"weight":null}]
+           |"John":[{"year":2019,"weight":70,"height":170},{"year":2020,"weight":80,"height":170}],
+           |"Jane":[{"year":2019,"weight":null,"height":160}]
            |}
            |""".stripMargin.replaceAll("\n", "")
       )
@@ -371,7 +371,7 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
       contacts.append("name", "Jane").append("phoneNumber", "1337")
       writer.write(record)
     }
-    val expected = Row(Seq("John", """{"name":"Jane","phoneNumber":"1337"}"""))
+    val expected = Row(Seq("John", """{"phoneNumber":"1337","name":"Jane"}"""))
     assert(getRecords()(0) === expected)
   }
 
@@ -403,8 +403,8 @@ class ParquetRowReaderComplexTypesTest extends BaseParquetReaderTest {
         "John",
         """|{"person":
            |  [
-           |    {"name":"Jane","phoneNumber":"1337"},
-           |    {"name":"Jake","phoneNumber":null}
+           |    {"phoneNumber":"1337","name":"Jane"},
+           |    {"phoneNumber":null,"name":"Jake"}
            |  ],
            |"count":2
            |}
