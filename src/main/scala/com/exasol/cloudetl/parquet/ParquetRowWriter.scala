@@ -12,8 +12,7 @@ import org.apache.parquet.schema.MessageType
 
 object ParquetRowWriter {
 
-  private[this] class Builder(path: Path, messageType: MessageType)
-      extends ParquetWriter.Builder[Row, Builder](path) {
+  private[this] class Builder(path: Path, messageType: MessageType) extends ParquetWriter.Builder[Row, Builder](path) {
 
     override def getWriteSupport(conf: Configuration): WriteSupport[Row] =
       new RowWriteSupport(messageType)

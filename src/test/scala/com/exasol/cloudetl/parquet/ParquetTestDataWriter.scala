@@ -20,8 +20,7 @@ trait ParquetTestDataWriter {
       .withDictionaryEncoding(dictionaryEncoding)
       .build()
 
-  private[this] case class BaseGroupWriteSupport(schema: MessageType)
-      extends WriteSupport[Group] {
+  private[this] case class BaseGroupWriteSupport(schema: MessageType) extends WriteSupport[Group] {
     var writer: GroupWriter = null
 
     override def prepareForWrite(recordConsumer: RecordConsumer): Unit =

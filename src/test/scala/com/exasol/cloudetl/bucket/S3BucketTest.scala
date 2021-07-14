@@ -36,20 +36,19 @@ class S3BucketTest extends AbstractBucketTest {
       "fs.s3a.impl" -> classOf[S3AFileSystem].getName,
       "fs.s3a.endpoint" -> "eu-central-1"
     )
-    (defaultMappings ++ extraMappings).foreach {
-      case (given, expected) =>
-        assert(conf.get(given) === expected)
+    (defaultMappings ++ extraMappings).foreach { case (given, expected) =>
+      assert(conf.get(given) === expected)
     }
   }
 
   test("apply throws when no connection name is provided") {
     properties = defaultProperties
-    assertNoConnectionName { getBucket(properties).validate() }
+    assertNoConnectionName(getBucket(properties).validate())
   }
 
   test("apply throws with access, secret or session token parameters") {
     properties = accessProperties
-    assertForbiddenProperty { getBucket(properties).validate() }
+    assertForbiddenProperty(getBucket(properties).validate())
   }
 
   test("apply returns S3Bucket with secret from connection") {

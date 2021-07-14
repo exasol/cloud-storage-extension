@@ -39,7 +39,7 @@ class FilesImportQueryGeneratorTest extends PathTest {
   }
 
   test("generateSqlForImportSpec throws if required property is not set") {
-    val newProperties = properties - ("S3_ENDPOINT")
+    val newProperties = properties - "S3_ENDPOINT"
     when(metadata.getScriptSchema()).thenReturn(schema)
     when(importSpec.getParameters()).thenReturn(newProperties.asJava)
 

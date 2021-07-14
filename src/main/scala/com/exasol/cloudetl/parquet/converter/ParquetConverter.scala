@@ -448,8 +448,8 @@ final case class StructConverter(groupType: GroupType, index: Int, parentDataHol
     val map = dataHolder
       .getValues()
       .zipWithIndex
-      .map {
-        case (value, i) => (groupType.getFieldName(i), value)
+      .map { case (value, i) =>
+        (groupType.getFieldName(i), value)
       }
       .toMap
     parentDataHolder.put(index, map)

@@ -32,9 +32,8 @@ object FilesMetadataReader extends LazyLogging {
     val paths = bucket.getPaths()
     logger.info(s"Total number of files: ${paths.size} in bucket path: $bucketPath")
 
-    paths.zipWithIndex.foreach {
-      case (filename, idx) =>
-        iterator.emit(filename.toString, s"${idx % parallelism}")
+    paths.zipWithIndex.foreach { case (filename, idx) =>
+      iterator.emit(filename.toString, s"${idx % parallelism}")
     }
   }
 

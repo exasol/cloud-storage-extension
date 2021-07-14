@@ -10,16 +10,16 @@ object Dependencies {
   private val ImportExportUDFVersion = "0.2.0"
   private val HadoopVersion = "3.3.1"
   private val DeltaVersion = "0.7.0"
-  private val OrcVersion = "1.6.8"
   private val ParquetVersion = "1.12.0"
+  private val OrcVersion = "1.6.9"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.1"
-  private val AlluxioCoreHDFSVersion = "2.5.0"
+  private val AlluxioCoreHDFSVersion = "2.6.0"
 
   // Test dependencies versions
   private val ScalaTestVersion = "3.2.9"
   private val ScalaTestPlusVersion = "1.0.0-M2"
-  private val MockitoCoreVersion = "3.11.1"
+  private val MockitoCoreVersion = "3.11.2"
   private val HamcrestVersion = "2.2"
   private val ExasolHamcrestMatcherVersion = "1.4.0"
   private val ExasolTestDBBuilderVersion = "3.2.0"
@@ -32,10 +32,14 @@ object Dependencies {
   )
 
   lazy val StorageDependencies: Seq[ModuleID] = Seq(
-    "com.exasol" %% "import-export-udf-common-scala" % ImportExportUDFVersion,
+    "org.apache.commons" % "commons-lang3" % "3.12.0",
+    "com.google.guava" % "guava" % "30.1.1-jre",
+    "com.exasol" %% "import-export-udf-common-scala" % ImportExportUDFVersion
+      exclude ("org.slf4j", "slf4j-simple"),
     "org.apache.hadoop" % "hadoop-aws" % HadoopVersion,
     "org.apache.hadoop" % "hadoop-azure" % HadoopVersion
       exclude ("org.slf4j", "slf4j-api")
+      exclude ("commons-logging", "commons-logging")
       exclude ("com.fasterxml.jackson.core", "jackson-core")
       exclude ("com.microsoft.azure", "azure-keyvault-core"),
     "org.apache.hadoop" % "hadoop-azure-datalake" % HadoopVersion
@@ -52,28 +56,42 @@ object Dependencies {
       exclude ("org.apache.hadoop", "hadoop-yarn-api")
       exclude ("org.apache.hadoop", "hadoop-yarn-client")
       exclude ("org.apache.hadoop", "hadoop-yarn-common")
+      exclude ("org.apache.logging.log4j", "log4j-slf4j-impl")
       exclude ("com.fasterxml.jackson.core", "jackson-databind")
       excludeAll (
         ExclusionRule(organization = "org.eclipse.jetty"),
         ExclusionRule(organization = "org.apache.kerby"),
         ExclusionRule(organization = "org.apache.curator"),
         ExclusionRule(organization = "org.apache.zookeeper")
-    ),
-    "org.apache.hadoop" % "hadoop-hdfs" % HadoopVersion,
-    "org.alluxio" % "alluxio-core-client-hdfs" % AlluxioCoreHDFSVersion,
+      ),
+    "org.apache.hadoop" % "hadoop-hdfs" % HadoopVersion
+      exclude ("commons-logging", "commons-logging")
+      exclude ("com.google.protobuf", "protobuf-java"),
+    "org.alluxio" % "alluxio-core-client-hdfs" % AlluxioCoreHDFSVersion
+      exclude ("com.google.guava", "guava")
+      exclude ("commons-logging", "commons-logging")
+      exclude ("io.netty", "netty-handler")
+      exclude ("io.netty", "netty-transport-native-epoll")
+      exclude ("org.apache.logging.log4j", "log4j-slf4j-impl")
+      exclude ("org.apache.commons", "commons-lang3"),
     "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion
       exclude ("com.google.guava", "guava")
       exclude ("org.apache.httpcomponents", "httpclient"),
     "org.apache.orc" % "orc-core" % OrcVersion
       exclude ("org.slf4j", "slf4j-api")
+      exclude ("org.apache.commons", "commons-lang3")
+      exclude ("com.google.protobuf", "protobuf-java")
       exclude ("javax.xml.bind", "jaxb-api"),
     "org.apache.parquet" % "parquet-hadoop" % ParquetVersion
       exclude ("org.slf4j", "slf4j-api")
       exclude ("commons-codec", "commons-codec")
+      exclude ("javax.annotation", "javax.annotation-api")
       exclude ("org.xerial.snappy", "snappy-java"),
     "io.delta" %% "delta-core" % DeltaVersion,
     "org.apache.spark" %% "spark-sql" % SparkSQLVersion
       exclude ("org.apache.hadoop", "hadoop-client")
+      exclude ("org.apache.parquet", "parquet-hadoop")
+      exclude ("javax.activation", "activation")
       exclude ("com.fasterxml.jackson.core", "jackson-annotations")
       exclude ("com.fasterxml.jackson.core", "jackson-core")
       exclude ("com.fasterxml.jackson.core", "jackson-databind")
@@ -83,7 +101,10 @@ object Dependencies {
         ExclusionRule(organization = "org.apache.curator"),
         ExclusionRule(organization = "org.apache.orc"),
         ExclusionRule(organization = "org.apache.zookeeper")
-    )
+      ),
+    // Logging Dependencies
+    "org.slf4j" % "slf4j-log4j12" % "1.7.30",
+    "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4"
   )
 
   lazy val TestDependencies: Seq[ModuleID] = Seq(

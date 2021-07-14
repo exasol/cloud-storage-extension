@@ -6,13 +6,21 @@ import com.exasol.cloudetl.storage.FileFormat
 
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.SparkSession
+import org.scalatest.BeforeAndAfterAll
 
 @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
-class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager {
+class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with BeforeAndAfterAll {
 
   private[this] var path: String = _
   private[this] var tmpDir: java.nio.file.Path = _
   private[this] var spark: SparkSession = _
+
+  override final def beforeAll(): Unit =
+    spark = SparkSession
+      .builder()
+      .appName("DeltaFormatTest")
+      .master("local[2]")
+      .getOrCreate()
 
   override final def beforeEach(): Unit = {
     super.beforeEach()
@@ -26,10 +34,11 @@ class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager {
       .getOrCreate()
   }
 
-  override final def afterEach(): Unit = {
+  override final def afterEach(): Unit =
     deletePathFiles(tmpDir)
-    spark.stop()
-  }
+
+  override final def afterAll(): Unit =
+    spark.close()
 
   test("getPaths throws if the path is not delta format") {
     val thrown = intercept[IllegalArgumentException] {

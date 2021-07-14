@@ -41,7 +41,7 @@ class TableExportQueryGeneratorTest extends PathTest {
   }
 
   test("generateSqlForExportSpec throws if required property is not set") {
-    val newProperties = properties - ("S3_ENDPOINT")
+    val newProperties = properties - "S3_ENDPOINT"
     when(metadata.getScriptSchema()).thenReturn(schema)
     when(exportSpec.getParameters()).thenReturn(newProperties.asJava)
 

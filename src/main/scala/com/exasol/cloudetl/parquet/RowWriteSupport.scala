@@ -28,7 +28,6 @@ import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
  *
  * This is mostly adapted from Spark codebase:
  *  - org.apache.spark.sql.execution.datasources.parquet.ParquetWriteSupport
- *
  */
 class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
 
@@ -55,26 +54,25 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
   private val decimalBuffer =
     new Array[Byte](SchemaUtil.PRECISION_TO_BYTE_SIZE(SchemaUtil.DECIMAL_MAX_PRECISION - 1))
 
-  final override def init(configuration: Configuration): WriteSupport.WriteContext = {
+  override final def init(configuration: Configuration): WriteSupport.WriteContext = {
     this.rootFieldWriters = schema.getFields.asScala
-      .map {
-        case field =>
-          makeWriter(field.asPrimitiveType())
+      .map { case field =>
+        makeWriter(field.asPrimitiveType())
       }
       .toArray[RowValueWriter]
 
     new WriteSupport.WriteContext(schema, new java.util.HashMap())
   }
 
-  final override def prepareForWrite(record: RecordConsumer): Unit =
+  override final def prepareForWrite(record: RecordConsumer): Unit =
     this.recordConsumer = record
 
-  final override def write(row: Row): Unit =
+  override final def write(row: Row): Unit =
     consumeMessage {
       writeFields(row, schema, rootFieldWriters)
     }
 
-  final override def finalizeWrite(): FinalizedWriteContext =
+  override final def finalizeWrite(): FinalizedWriteContext =
     new FinalizedWriteContext(new java.util.HashMap())
 
   private def writeFields(row: Row, schema: MessageType, writers: Array[RowValueWriter]): Unit = {
@@ -109,29 +107,24 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
 
     typeName match {
       case PrimitiveTypeName.BOOLEAN =>
-        (row: Row, index: Int) =>
-          recordConsumer.addBoolean(row.getAs[Boolean](index))
+        (row: Row, index: Int) => recordConsumer.addBoolean(row.getAs[Boolean](index))
 
       case PrimitiveTypeName.INT32 =>
         originalType match {
           case OriginalType.DATE =>
             makeDateWriter()
           case _ =>
-            (row: Row, index: Int) =>
-              recordConsumer.addInteger(row.getAs[Integer](index))
+            (row: Row, index: Int) => recordConsumer.addInteger(row.getAs[Integer](index))
         }
 
       case PrimitiveTypeName.INT64 =>
-        (row: Row, index: Int) =>
-          recordConsumer.addLong(row.getAs[Long](index))
+        (row: Row, index: Int) => recordConsumer.addLong(row.getAs[Long](index))
 
       case PrimitiveTypeName.FLOAT =>
-        (row: Row, index: Int) =>
-          recordConsumer.addFloat(row.getAs[Double](index).floatValue)
+        (row: Row, index: Int) => recordConsumer.addFloat(row.getAs[Double](index).floatValue)
 
       case PrimitiveTypeName.DOUBLE =>
-        (row: Row, index: Int) =>
-          recordConsumer.addDouble(row.getAs[Double](index))
+        (row: Row, index: Int) => recordConsumer.addDouble(row.getAs[Double](index))
 
       case PrimitiveTypeName.BINARY =>
         (row: Row, index: Int) =>

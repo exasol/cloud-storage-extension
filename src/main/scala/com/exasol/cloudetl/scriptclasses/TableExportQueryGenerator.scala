@@ -61,9 +61,8 @@ object TableExportQueryGenerator {
   /** Returns source column names with quotes removed. */
   private[this] def getSourceColumns(spec: ExaExportSpecification): Seq[String] =
     spec.getSourceColumnNames.asScala
-      .map {
-        case value =>
-          getColumnName(value).replaceAll("\"", "")
+      .map { case value =>
+        getColumnName(value).replaceAll("\"", "")
       }
 
   /**

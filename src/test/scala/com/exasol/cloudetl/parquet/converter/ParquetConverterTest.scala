@@ -16,12 +16,11 @@ class ParquetConverterTest extends AnyFunSuite {
          |}
          |""".stripMargin
     )
-    Seq(-1, 1, 2, 5).foreach {
-      case index =>
-        val thrown = intercept[IllegalArgumentException] {
-          ArrayGroupConverter(schema.getType(0), -1, EmptyValueHolder).getConverter(index)
-        }
-        assert(thrown.getMessage().contains(s"Illegal index '$index' to array converter"))
+    Seq(-1, 1, 2, 5).foreach { case index =>
+      val thrown = intercept[IllegalArgumentException] {
+        ArrayGroupConverter(schema.getType(0), -1, EmptyValueHolder).getConverter(index)
+      }
+      assert(thrown.getMessage().contains(s"Illegal index '$index' to array converter"))
     }
   }
 
@@ -37,12 +36,11 @@ class ParquetConverterTest extends AnyFunSuite {
          |}
          |""".stripMargin
     )
-    Seq(-1, 2, 4).foreach {
-      case index =>
-        val thrown = intercept[IllegalArgumentException] {
-          MapConverter(schema.getType(0).asGroupType(), -1, EmptyValueHolder).getConverter(index)
-        }
-        assert(thrown.getMessage().contains(s"Illegal index '$index' to map converter"))
+    Seq(-1, 2, 4).foreach { case index =>
+      val thrown = intercept[IllegalArgumentException] {
+        MapConverter(schema.getType(0).asGroupType(), -1, EmptyValueHolder).getConverter(index)
+      }
+      assert(thrown.getMessage().contains(s"Illegal index '$index' to map converter"))
     }
   }
 }
