@@ -6,7 +6,7 @@ Code name:
 
 ## Refactoring
 
-* #157: Updated build setup
+* #157: Refactored build setup
 
 ## Dependency Updates
 

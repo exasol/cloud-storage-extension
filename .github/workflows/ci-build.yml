@@ -5,6 +5,7 @@ on:
 
 jobs:
   build:
+    name: Build with Scala ${{ matrix.scala }} and Exasol ${{ matrix.exasol-docker-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
