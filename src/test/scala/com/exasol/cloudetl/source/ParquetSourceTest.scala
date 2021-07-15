@@ -27,8 +27,7 @@ class ParquetSourceTest extends AbstractSourceTest {
     val globbedFilePath = FileSystemManager(getFileSystem()).getLocalFiles(filePattern)
     globbedFilePath.foreach { file =>
       val schema = ParquetSource(file, getConf(), getFileSystem()).getSchema()
-      assert(schema.isDefined)
-      schema.foreach { case messageType => assert(messageType === expectedMessageType) }
+      assert(schema === expectedMessageType)
     }
   }
 

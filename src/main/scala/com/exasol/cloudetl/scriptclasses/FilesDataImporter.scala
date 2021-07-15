@@ -34,12 +34,17 @@ object FilesDataImporter extends LazyLogging {
     logger.info(s"The total number of files for node: $nodeId, vm: $vmId is '${files.size}'.")
 
     files.foreach { file =>
-      logger.debug(s"Importing from file: '$file'")
+      logger.info(s"Importing from file: '$file'")
       val source =
         Source(fileFormat, new Path(file), bucket.getConfiguration(), bucket.fileSystem)
-      readAndEmit(source.stream(), iterator)
+      readAndEmit(transformValues(source), iterator)
       source.close()
     }
+  }
+
+  private[this] def transformValues(source: Source): Iterator[Row] = {
+    val converter = source.getValueConverter()
+    converter.convert(source.stream())
   }
 
   private[this] def groupFiles(

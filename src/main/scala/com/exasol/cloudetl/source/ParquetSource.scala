@@ -1,9 +1,12 @@
 package com.exasol.cloudetl.source
 
+import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
-import com.exasol.cloudetl.parquet.RowReadSupport
+import com.exasol.cloudetl.parquet.ParquetValueConverter
 import com.exasol.common.data.Row
+import com.exasol.parquetio.data.{Row => ParquetRow}
+import com.exasol.parquetio.reader.RowParquetReader
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
@@ -27,33 +30,58 @@ final case class ParquetSource(
 ) extends Source
     with LazyLogging {
 
-  private var recordReader = createReader()
+  private[this] val schema = getSchema()
+  private[this] var recordReader = createReader()
+  private[this] val valueConverter = getValueConverter()
 
-  /** @inheritdoc */
+  /**
+   * @inheritdoc
+   */
   override def stream(): Iterator[Row] =
-    Iterator.continually(recordReader.read).takeWhile(_ != null)
+    Iterator
+      .continually(recordReader.read())
+      .takeWhile(_ != null)
+      .map(parquetRow => Row(parquetRow.getValues().asScala))
 
-  private[this] def createReader(): ParquetReader[Row] = {
-    val newConf = new Configuration(conf)
+  /**
+   * @inheritdoc
+   */
+  override def getValueConverter(): ValueConverter = ParquetValueConverter(schema)
+
+  /**
+   * Applies additional transformation to Parquet values.
+   */
+  def streamWithValueConverter(): Iterator[Row] = valueConverter.convert(stream())
+
+  private[this] def createReader(): ParquetReader[ParquetRow] =
     try {
-      getSchema().foreach { schema =>
-        newConf.set(ReadSupport.PARQUET_READ_SCHEMA, schema.toString)
-      }
-      ParquetReader.builder(new RowReadSupport, path).withConf(newConf).build()
+      RowParquetReader
+        .builder(HadoopInputFile.fromPath(path, getConfWithSchema()))
+        .build()
     } catch {
       case NonFatal(exception) =>
-        logger.error(s"Could not create parquet reader for path: $path", exception)
+        logger.error(s"Could not create Parquet reader for path '$path'.", exception)
         throw exception
     }
+
+  private[this] def getConfWithSchema(): Configuration = {
+    val newConf = new Configuration(conf)
+    newConf.set(ReadSupport.PARQUET_READ_SCHEMA, schema.toString())
+    newConf
   }
 
-  def getSchema(): Option[MessageType] = {
+  /**
+   * Returns Parquet schema from a file.
+   */
+  def getSchema(): MessageType = {
     val footers = getFooters()
     if (footers.isEmpty) {
-      logger.error(s"Could not read parquet metadata from paths: $path")
+      logger.error(s"Could not read Parquet metadata from paths '$path'.")
       throw new RuntimeException("Parquet footers are empty!")
     }
-    footers.headOption.map(_.getFileMetaData().getSchema())
+    footers.headOption
+      .map(_.getFileMetaData().getSchema())
+      .fold(throw new RuntimeException("Could not read Parquet schema."))(identity)
   }
 
   private[this] def getFooters(): Seq[ParquetMetadata] =
@@ -66,6 +94,9 @@ final case class ParquetSource(
       }
     }
 
+  /**
+   * @inheritdoc
+   */
   override def close(): Unit =
     if (recordReader != null) {
       try {

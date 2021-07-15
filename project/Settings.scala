@@ -78,16 +78,16 @@ object Settings {
     assembly / test := {},
     assembly / logLevel := Level.Info,
     assembly / assemblyJarName := moduleName.value + "-" + version.value + ".jar",
-    assembly / assemblyMergeStrategy := {
-      case "META-INF/services/io.grpc.LoadBalancerProvider"     => MergeStrategy.concat
-      case "META-INF/services/io.grpc.NameResolverProvider"     => MergeStrategy.concat
-      case "org/apache/spark/unused/UnusedStubClass.class"      => MergeStrategy.first
-      case PathList("module-info.class")                        => MergeStrategy.discard
-      case PathList("META-INF", xs @ _*)                        => MergeStrategy.discard
-      case PathList(xs @ _*) if Assembly.isReadme(xs.last)      => MergeStrategy.rename
-      case PathList(xs @ _*) if Assembly.isLicenseFile(xs.last) => MergeStrategy.rename
-      case x if Assembly.isConfigFile(x)                        => MergeStrategy.concat
-      case x                                                    => MergeStrategy.deduplicate
+    assembly / assemblyMergeStrategy ~= { defaultStrategy =>
+      {
+        case "META-INF/services/io.grpc.LoadBalancerProvider" => MergeStrategy.concat
+        case "META-INF/services/io.grpc.NameResolverProvider" => MergeStrategy.concat
+        case x if x.endsWith("reflection-config.json")        => MergeStrategy.rename
+        case s if s.endsWith(".txt")                          => MergeStrategy.rename
+        case x if x.endsWith(".properties")                   => MergeStrategy.filterDistinctLines
+        case x if x.endsWith(".class")                        => MergeStrategy.last
+        case x                                                => defaultStrategy(x)
+      }
     },
     assembly / assemblyExcludedJars := {
       val cp = (assembly / fullClasspath).value

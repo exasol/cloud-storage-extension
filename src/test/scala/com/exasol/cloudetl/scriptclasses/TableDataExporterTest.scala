@@ -118,8 +118,9 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
 
     val properties = Map("BUCKET_PATH" -> testResourceDir, "DATA_FORMAT" -> "PARQUET")
     val importIter = mockExasolIterator(properties)
+    val exportedFiles = getOutputPathFiles()
     when(importIter.next()).thenReturn(false)
-    when(importIter.getString(2)).thenReturn(outputPath.toUri.toString)
+    when(importIter.getString(2)).thenReturn(exportedFiles(0))
 
     FilesDataImporter.run(mock[ExaMetadata], importIter)
 
@@ -147,9 +148,17 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
     outputPath: Path,
     compressionCodec: String
   ): Unit = {
-    val filtered = Files.list(outputPath).iterator().asScala.filter(_.endsWith(".crc"))
-    assert(filtered.forall(_.endsWith(s"$compressionCodec.parquet")))
+    assert(getOutputPathFiles().forall(_.endsWith(s"$compressionCodec.parquet")))
     ()
   }
+
+  private[this] def getOutputPathFiles(): Seq[String] =
+    Files
+      .list(outputPath)
+      .iterator()
+      .asScala
+      .map(_.toUri().toString())
+      .filter(_.endsWith(".parquet"))
+      .toSeq
 
 }
