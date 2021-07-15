@@ -6,6 +6,7 @@ Code name:
 
 ## Refactoring
 
+* #150: Added extracted parquet-io-java library
 * #157: Refactored build setup
 
 ## Dependency Updates

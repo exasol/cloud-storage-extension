@@ -7,6 +7,9 @@ import com.exasol.common.json.JsonMapper
 import org.apache.parquet.schema.MessageType
 import org.apache.parquet.schema.Type.Repetition
 
+/**
+ * A Parquet value converter class that transforms nested values to JSON strings.
+ */
 final case class ParquetValueConverter(schema: MessageType) extends ValueConverter {
 
   override def convert(values: Iterator[Row]): Iterator[Row] =
