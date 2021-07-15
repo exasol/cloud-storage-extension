@@ -51,15 +51,20 @@ object Dependencies {
       exclude ("org.slf4j", "slf4j-api")
       exclude ("com.fasterxml.jackson.core", "jackson-core"),
     "org.apache.hadoop" % "hadoop-hdfs" % HadoopVersion
+      exclude ("io.netty", "netty")
       exclude ("commons-logging", "commons-logging")
       exclude ("com.google.protobuf", "protobuf-java"),
     "org.alluxio" % "alluxio-core-client-hdfs" % AlluxioCoreHDFSVersion
       exclude ("com.google.guava", "guava")
       exclude ("commons-logging", "commons-logging")
+      exclude ("io.grpc", "grpc-netty")
       exclude ("io.netty", "netty-handler")
       exclude ("io.netty", "netty-transport-native-epoll")
+      exclude ("org.apache.logging.log4j", "log4j-api")
       exclude ("org.apache.logging.log4j", "log4j-slf4j-impl")
-      exclude ("org.apache.commons", "commons-lang3"),
+      exclude ("org.apache.commons", "commons-lang3")
+      exclude ("org.apache.hadoop", "hadoop-client"),
+    "io.grpc" % "grpc-netty" % "1.39.0",
     "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion
       exclude ("com.google.guava", "guava")
       exclude ("org.apache.httpcomponents", "httpclient"),
@@ -134,7 +139,9 @@ object Dependencies {
     ExclusionRule("com.sun.jersey", "jersey-json"),
     ExclusionRule("javax.servlet", "servlet-api"),
     ExclusionRule("javax.servlet.jsp", "jsp-api"),
-    ExclusionRule("org.openjfx", "javafx.base")
+    ExclusionRule("org.openjfx", "javafx.base"),
+    ExclusionRule("org.apache.logging.log4j", "log4j-core"),
+    ExclusionRule("org.slf4j", "slf4j-simple")
   )
 
 }

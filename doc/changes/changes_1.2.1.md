@@ -4,6 +4,10 @@ Code name:
 
 ## Summary
 
+## Bug Fixes
+
+* #156: Fixed bug related to logging backend
+
 ## Refactoring
 
 * #150: Added extracted parquet-io-java library
@@ -35,3 +39,4 @@ Code name:
 * Updated `org.scoverage:sbt-coveralls:1.3.0` to `1.3.1`
 * Updated `net.bzzt:sbt-reproducible-builds:0.25` to `0.28`
 * Removed `com.lucidchart:sbt-scalafmt-coursier:1.16`
+* Removed `com.typesafe.sbt:sbt-git:1.0.1`

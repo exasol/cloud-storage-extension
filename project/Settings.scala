@@ -7,7 +7,6 @@ import sbtassembly.MergeStrategy
 import sbtassembly.PathList
 import sbtassembly.AssemblyPlugin.autoImport._
 
-import com.typesafe.sbt.SbtGit.git
 import scoverage.ScoverageSbtPlugin.autoImport._
 import org.scalastyle.sbt.ScalastylePlugin.autoImport._
 import wartremover.WartRemover.autoImport.wartremoverErrors
@@ -36,9 +35,7 @@ object Settings {
     coverageOutputHTML := true,
     coverageOutputXML := true,
     coverageOutputCobertura := true,
-    coverageFailOnMinimum := false,
-    // Git versioning, use git describe
-    git.useGitDescribe := true
+    coverageFailOnMinimum := false
   )
 
   /** Creates a Scalastyle tasks that run with unit and integration tests. */
@@ -82,8 +79,9 @@ object Settings {
       {
         case "META-INF/services/io.grpc.LoadBalancerProvider" => MergeStrategy.concat
         case "META-INF/services/io.grpc.NameResolverProvider" => MergeStrategy.concat
+        case "log4j.properties"                               => MergeStrategy.last
         case x if x.endsWith("reflection-config.json")        => MergeStrategy.rename
-        case s if s.endsWith(".txt")                          => MergeStrategy.rename
+        case x if x.endsWith(".txt")                          => MergeStrategy.rename
         case x if x.endsWith(".properties")                   => MergeStrategy.filterDistinctLines
         case x if x.endsWith(".class")                        => MergeStrategy.last
         case x                                                => defaultStrategy(x)
