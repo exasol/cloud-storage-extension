@@ -20,8 +20,7 @@ import org.apache.parquet.hadoop.util.HadoopInputFile
 import org.apache.parquet.schema.MessageType
 
 /**
- * A Parquet source that can read parquet formatted files from Hadoop
- * compatible storage systems.
+ * A Parquet source that can read parquet formatted files from Hadoop compatible storage systems.
  */
 final case class ParquetSource(
   override val path: Path,
