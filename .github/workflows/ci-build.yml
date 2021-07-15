@@ -55,6 +55,12 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # This required because of the sonarcloud-github-action docker volume mapping.
+      - name: Prepare for Sonar Cloud Scan
+        if: matrix.exasol-docker-version == '7.0.10'
+        run: |
+          find . -name scoverage.xml -exec sed -i 's#/home/runner/work/cloud-storage-extension/cloud-storage-extension#/github/workspace#g' {} +
+
       - name: Sonar Cloud Scan
         if: matrix.exasol-docker-version == '7.0.10'
         uses: sonarsource/sonarcloud-github-action@master
