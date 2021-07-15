@@ -35,7 +35,7 @@ object Settings {
     coverageOutputHTML := true,
     coverageOutputXML := true,
     coverageOutputCobertura := true,
-    coverageFailOnMinimum := false,
+    coverageFailOnMinimum := false
   )
 
   /** Creates a Scalastyle tasks that run with unit and integration tests. */
