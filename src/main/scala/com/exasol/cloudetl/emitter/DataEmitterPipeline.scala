@@ -35,13 +35,13 @@ class DataEmitterPipeline(source: Source, properties: StorageProperties) extends
     val valueConverter = source.getValueConverter()
     val pipeline = AkkaSource
       .fromIterator(() => source.stream().grouped(getChunkSize()))
-      .via(ThroughputMonitor(1.seconds, stats => logger.info(getStatsMessage(stats, "READ"))))
+      .via(ThroughputMonitor(5.seconds, stats => logger.info(getStatsMessage(stats, "READ"))))
       .async
       .buffer(bufferSize, OverflowStrategy.backpressure)
-      .map { values => valueConverter.convert(values.iterator) }
+      .map { values => valueConverter.convert(values) }
       .async
       .buffer(bufferSize, OverflowStrategy.backpressure)
-      .via(ThroughputMonitor(1.seconds, stats => logger.info(getStatsMessage(stats, "EMIT"))))
+      .via(ThroughputMonitor(5.seconds, stats => logger.info(getStatsMessage(stats, "EMIT"))))
       .runForeach(buffer => emitBuffer(buffer, exasolIterator))
     try {
       Await
@@ -64,7 +64,7 @@ class DataEmitterPipeline(source: Source, properties: StorageProperties) extends
     s"$eventType processed '$count' events, throughput is ${"%.2f".format(throughput)} events/s"
   }
 
-  private[this] def emitBuffer(buffer: Iterator[Row], iterator: ExaIterator): Unit =
+  private[this] def emitBuffer(buffer: Seq[Row], iterator: ExaIterator): Unit =
     buffer.foreach { row =>
       val columns: Seq[Object] = row.getValues().map(_.asInstanceOf[AnyRef])
       iterator.emit(columns: _*)

@@ -49,8 +49,10 @@ final case class ParquetSource(
 
   /**
    * Applies additional transformation to Parquet values.
+   *
+   * This is used in the tests.
    */
-  def streamWithValueConverter(): Iterator[Row] = valueConverter.convert(stream())
+  def streamWithValueConverter(): Seq[Row] = valueConverter.convert(stream().toSeq)
 
   private[this] def createReader(): ParquetReader[ParquetRow] =
     try {
