@@ -17,6 +17,10 @@ class StorageProperties(
 
   import StorageProperties._
 
+  private[this] val AZURE_DELTA_LOG_STORE_CLASS = "org.apache.spark.sql.delta.storage.AzureLogStore"
+  private[this] val S3_DELTA_LOG_STORE_CLASS = "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore"
+  private[this] val HDFS_DELTA_LOG_STORE_CLASS = "org.apache.spark.sql.delta.storage.HDFSLogStore"
+
   /**
    * Returns the storage path.
    *
@@ -44,15 +48,13 @@ class StorageProperties(
    * requirements.
    */
   final def getDeltaFormatLogStoreClassName(): String = getStoragePathScheme() match {
-    case "abfs" | "abfss" => "org.apache.spark.sql.delta.storage.AzureLogStore"
-    case "adl"            => "org.apache.spark.sql.delta.storage.AzureLogStore"
+    case "abfs" | "abfss" => AZURE_DELTA_LOG_STORE_CLASS
+    case "adl"            => AZURE_DELTA_LOG_STORE_CLASS
     case "gs" =>
-      throw new UnsupportedOperationException(
-        "Delta format LogStore API is not supported in Google Cloud Storage yet."
-      )
-    case "s3a"            => "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore"
-    case "wasb" | "wasbs" => "org.apache.spark.sql.delta.storage.AzureLogStore"
-    case _                => "org.apache.spark.sql.delta.storage.HDFSLogStore"
+      throw new UnsupportedOperationException("Delta format LogStore API is not supported in Google Cloud Storage yet.")
+    case "s3a"            => S3_DELTA_LOG_STORE_CLASS
+    case "wasb" | "wasbs" => AZURE_DELTA_LOG_STORE_CLASS
+    case _                => HDFS_DELTA_LOG_STORE_CLASS
   }
 
   /** Returns the [[FileFormat]] file format. */

@@ -24,7 +24,7 @@ object Dependencies {
   private val ExasolHamcrestMatcherVersion = "1.4.0"
   private val ExasolTestDBBuilderVersion = "3.2.0"
   private val ExasolTestContainersVersion = "3.5.3"
-  private val TestContainersLocalstackVersion = "1.15.3"
+  private val TestContainersLocalstackVersion = "1.16.0"
   private val TestContainersScalaVersion = "0.39.5"
 
   val Resolvers: Seq[Resolver] = Seq(
@@ -115,7 +115,7 @@ object Dependencies {
         ExclusionRule(organization = "org.apache.zookeeper")
       ),
     // Logging Dependencies
-    "org.slf4j" % "slf4j-log4j12" % "1.7.31",
+    "org.slf4j" % "slf4j-log4j12" % "1.7.32",
     "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4"
   )
 
