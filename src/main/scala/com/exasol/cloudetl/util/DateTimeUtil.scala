@@ -63,9 +63,9 @@ object DateTimeUtil {
    */
   @SuppressWarnings(Array("org.wartremover.contrib.warts.ExposedTuples"))
   def getJulianDayAndNanos(us: Long): (Int, Long) = {
-    val julian_us = us + JULIAN_DAY_OF_EPOCH * MICROS_PER_DAY
-    val day = julian_us / MICROS_PER_DAY
-    val micros = julian_us % MICROS_PER_DAY
+    val julianMicros = us + JULIAN_DAY_OF_EPOCH * MICROS_PER_DAY
+    val day = julianMicros / MICROS_PER_DAY
+    val micros = julianMicros % MICROS_PER_DAY
     (day.toInt, micros * 1000L)
   }
 
