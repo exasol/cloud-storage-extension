@@ -8,7 +8,7 @@ import com.exasol.cloudetl.bucket.Bucket
 import com.exasol.cloudetl.data.ExaColumnInfo
 import com.exasol.cloudetl.sink.BatchSizedSink
 import com.exasol.cloudetl.storage.StorageProperties
-import com.exasol.cloudetl.util.SchemaUtil
+import com.exasol.cloudetl.util.ExasolColumnValueProvider
 import com.exasol.common.data.Row
 
 import com.typesafe.scalalogging.LazyLogging
@@ -18,6 +18,10 @@ import com.typesafe.scalalogging.LazyLogging
  */
 object TableDataExporter extends LazyLogging {
 
+  private[this] val STORAGE_PROPERTIES_INDEX = 1
+  private[this] val SOURCE_COLUMNS_INDEX = 2
+  private[this] val FIRST_COLUMN_INDEX = 3
+
   /**
    * Reads the table data and saves them to external filesystem.
    *
@@ -25,34 +29,33 @@ object TableDataExporter extends LazyLogging {
    * @param iterator an Exasol iterator object
    */
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
-    val storageProperties = StorageProperties(iterator.getString(1), metadata)
+    val storageProperties = StorageProperties(iterator.getString(STORAGE_PROPERTIES_INDEX), metadata)
     val bucket = Bucket(storageProperties)
-    val srcColumnNames = iterator.getString(2).split("\\.")
-    val firstColumnIdx = 3
-
-    val nodeId = metadata.getNodeId
-    val vmId = metadata.getVmId
-    val columns = getColumns(metadata, srcColumnNames, firstColumnIdx)
-
+    val sourceColumnNames = iterator.getString(SOURCE_COLUMNS_INDEX).split("\\.")
+    val columns = getColumns(metadata, sourceColumnNames)
+    val nodeId = metadata.getNodeId()
+    val vmId = metadata.getVmId()
     val sink = new BatchSizedSink(nodeId, vmId, iterator.size(), columns, bucket)
-
     logger.info(s"Starting export from node: $nodeId, vm: $vmId.")
 
     do {
-      val row = getRow(iterator, firstColumnIdx, columns)
-      sink.write(row)
+      sink.write(getRow(iterator, columns))
     } while (iterator.next())
-
     sink.close()
 
-    logger.info(s"Exported '${sink.getTotalRecords()}' records from node: $nodeId, vm: $vmId.")
+    logger.info(s"Exported '${sink.getTotalRecords()}' records from node '$nodeId' and vm '$vmId'.")
   }
 
-  private[this] def getRow(iter: ExaIterator, startIdx: Int, columns: Seq[ExaColumnInfo]): Row = {
-    val vals = columns.zipWithIndex.map { case (col, idx) =>
-      SchemaUtil.exaColumnToValue(iter, startIdx + idx, col)
+  private[this] def getRow(iterator: ExaIterator, columns: Seq[ExaColumnInfo]): Row = {
+    val columnValueProvider = ExasolColumnValueProvider(iterator)
+    val values = ListBuffer[Any]()
+    var index = 0
+    while (index < columns.size) {
+      val value = columnValueProvider.getColumnValue(FIRST_COLUMN_INDEX + index, columns(index))
+      values.append(value)
+      index += 1
     }
-    Row(values = vals)
+    Row(values)
   }
 
   /**
@@ -64,26 +67,24 @@ object TableDataExporter extends LazyLogging {
    * corresponding functions on Exasol metadata for input columns.
    *
    * @param meta An Exasol [[ExaMetadata]] metadata
-   * @param srcColumnNames A sequence of column names per each input
-   *        column in metadata
-   * @param startIdx A starting integer index to reference input column
+   * @param sourceColumnNames A sequence of column names per each input column in metadata
    * @return A sequence of [[ExaColumnInfo]] columns
    */
-  private[this] def getColumns(meta: ExaMetadata, srcColumnNames: Seq[String], startIdx: Int): Seq[ExaColumnInfo] = {
-    val totalColumnCnt = meta.getInputColumnCount.toInt
+  private[this] def getColumns(meta: ExaMetadata, sourceColumnNames: Seq[String]): Seq[ExaColumnInfo] = {
+    val totalColumnCount = meta.getInputColumnCount().toInt
     val columns = ListBuffer[ExaColumnInfo]()
-
-    for { idx <- startIdx until totalColumnCnt } columns.append(
-      ExaColumnInfo(
-        name = srcColumnNames(idx - startIdx),
-        `type` = meta.getInputColumnType(idx),
-        precision = meta.getInputColumnPrecision(idx).toInt,
-        scale = meta.getInputColumnScale(idx).toInt,
-        length = meta.getInputColumnLength(idx).toInt,
-        isNullable = true
+    for { idx <- FIRST_COLUMN_INDEX until totalColumnCount } {
+      columns.append(
+        ExaColumnInfo(
+          name = sourceColumnNames(idx - FIRST_COLUMN_INDEX),
+          `type` = meta.getInputColumnType(idx),
+          precision = meta.getInputColumnPrecision(idx).toInt,
+          scale = meta.getInputColumnScale(idx).toInt,
+          length = meta.getInputColumnLength(idx).toInt,
+          isNullable = true
+        )
       )
-    )
-
+    }
     columns.toSeq
   }
 

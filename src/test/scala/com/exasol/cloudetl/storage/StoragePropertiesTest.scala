@@ -113,6 +113,15 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     assert(BaseProperties(properties).isOverwrite() === false)
   }
 
+  test("isParquetLowercaseSchema returns true by default") {
+    assert(BaseProperties(properties).isParquetLowercaseSchema() === true)
+  }
+
+  test("isParquetLowercaseSchema returns user set value") {
+    properties = Map(StorageProperties.PARQUET_LOWERCASE_SCHEMA -> "false")
+    assert(BaseProperties(properties).isParquetLowercaseSchema() === false)
+  }
+
   final def newConnectionInformation(
     username: String,
     password: String

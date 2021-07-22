@@ -10,10 +10,8 @@ import org.apache.hadoop.fs.Path
  * that handles user provided key-value parameters for storage import
  * and export user-defined-functions (UDFs).
  */
-class StorageProperties(
-  private val properties: Map[String, String],
-  private val exaMetadata: Option[ExaMetadata]
-) extends AbstractProperties(properties) {
+class StorageProperties(private val properties: Map[String, String], private val exaMetadata: Option[ExaMetadata])
+    extends AbstractProperties(properties) {
 
   import StorageProperties._
 
@@ -79,6 +77,14 @@ class StorageProperties(
     isEnabled(OVERWRITE)
 
   /**
+   * Checks if the Parquet export schema with lower case fields enabled.
+   *
+   * By default it is set to {@code true}.
+   */
+  final def isParquetLowercaseSchema(): Boolean =
+    get(PARQUET_LOWERCASE_SCHEMA).fold(true)(_.toBoolean)
+
+  /**
    * Returns a new [[StorageProperties]] that merges the key-value pairs
    * parsed from user provided Exasol named connection object.
    */
@@ -114,6 +120,9 @@ object StorageProperties extends CommonProperties {
 
   /** An optional property key name for the overwite. */
   private[storage] final val OVERWRITE: String = "OVERWRITE"
+
+  /** An optional property for setting Parquet export schema with lowercase fields. */
+  private[storage] final val PARQUET_LOWERCASE_SCHEMA: String = "PARQUET_LOWERCASE_SCHEMA"
 
   /**
    * Returns [[StorageProperties]] from key values map and

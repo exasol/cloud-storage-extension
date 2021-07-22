@@ -6,12 +6,13 @@ import com.exasol.cloudetl.bucket.Bucket
 import com.exasol.cloudetl.data.ExaColumnInfo
 import com.exasol.cloudetl.parquet.ParquetRowWriter
 import com.exasol.cloudetl.parquet.ParquetWriteOptions
-import com.exasol.cloudetl.util.SchemaUtil
+import com.exasol.cloudetl.util.ParquetSchemaConverter
 import com.exasol.common.data.Row
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.fs.Path
 import org.apache.parquet.hadoop.metadata.CompressionCodecName
+import org.apache.parquet.schema.MessageType
 
 /**
  * A specific [[Sink]] implementation with records per file request.
@@ -29,18 +30,18 @@ final class BatchSizedSink(
 ) extends Sink[Row]
     with LazyLogging {
 
-  final val DEFAULT_BATCH_SIZE: Int = 100000
-
-  private val requestedBatchSize: Int =
+  private[this] val DEFAULT_BATCH_SIZE: Int = 100000
+  private[this] val requestedBatchSize: Int =
     bucket.properties.get("EXPORT_BATCH_SIZE").fold(DEFAULT_BATCH_SIZE)(_.toInt)
+  private[this] val isParquetLowercaseSchema: Boolean = bucket.properties.isParquetLowercaseSchema()
 
-  private val numOfBuckets: Long = math.ceil(numOfRecords / requestedBatchSize.toDouble).toLong
-  private val batchSize: Long = math.floor(numOfRecords / numOfBuckets.toDouble).toLong
-  private var leftOvers: Long = numOfRecords % numOfBuckets
+  private[this] val numOfBuckets: Long = math.ceil(numOfRecords / requestedBatchSize.toDouble).toLong
+  private[this] val batchSize: Long = math.floor(numOfRecords / numOfBuckets.toDouble).toLong
+  private[this] var leftOvers: Long = numOfRecords % numOfBuckets
 
-  private var writer: Writer[Row] = null
-  private var recordsCount: Long = 0
-  private var totalRecords: Long = 0
+  private[this] var writer: Writer[Row] = null
+  private[this] var recordsCount: Long = 0
+  private[this] var totalRecords: Long = 0
 
   /** Returns the total number of records written so far. */
   def getTotalRecords(): Long = totalRecords
@@ -48,9 +49,8 @@ final class BatchSizedSink(
   /** @inheritdoc */
   override def createWriter(path: String): Writer[Row] = new Writer[Row] {
     val newPath = new Path(bucket.bucketPath, path)
-    val messageType = SchemaUtil.createParquetMessageType(columns, "exasol_export_schema")
     val options = ParquetWriteOptions(bucket.properties)
-    val writer = ParquetRowWriter(newPath, bucket.getConfiguration(), messageType, options)
+    val writer = ParquetRowWriter(newPath, bucket.getConfiguration(), getParquetMessageType(), options)
 
     override def write(value: Row): Unit =
       writer.write(value)
@@ -58,6 +58,9 @@ final class BatchSizedSink(
     override def close(): Unit =
       writer.close()
   }
+
+  private[this] def getParquetMessageType(): MessageType =
+    ParquetSchemaConverter(isParquetLowercaseSchema).createParquetMessageType(columns, "exasol_export_schema")
 
   /**
    * @inheritdoc
