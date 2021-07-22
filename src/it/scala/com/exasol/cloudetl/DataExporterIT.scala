@@ -108,7 +108,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
   test("exports and imports identifier cases") {
     val columns = LinkedHashMap(
       "C_VARCHAR_mixedcase" -> "VARCHAR(20)",
-      "C_VARCHAR_MixedCase" -> "VARCHAR(20)",
+      "C_VARCHAR_Mixed_Case" -> "VARCHAR(20)",
       "C_VARCHAR_REGULAR" -> "VARCHAR(50)"
     )
     val values = Stream[Array[Any]](
