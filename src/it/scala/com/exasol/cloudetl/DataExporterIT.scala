@@ -48,7 +48,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
 
   test("exports and imports character") {
     val columns = LinkedHashMap(
-      "C_CHAR20" -> "CHAR(20)",
+      "C_CHAR20" -> "CHAR(20)"
     )
     val tableValues = Stream[Array[Any]](
       Array(1L, null),
