@@ -69,11 +69,7 @@ object TableDataExporter extends LazyLogging {
    * @param startIdx A starting integer index to reference input column
    * @return A sequence of [[ExaColumnInfo]] columns
    */
-  private[this] def getColumns(
-    meta: ExaMetadata,
-    srcColumnNames: Seq[String],
-    startIdx: Int
-  ): Seq[ExaColumnInfo] = {
+  private[this] def getColumns(meta: ExaMetadata, srcColumnNames: Seq[String], startIdx: Int): Seq[ExaColumnInfo] = {
     val totalColumnCnt = meta.getInputColumnCount.toInt
     val columns = ListBuffer[ExaColumnInfo]()
 
