@@ -59,7 +59,7 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
     createBucket(bucket)
     val request = new PutObjectRequest(bucket, file.getName(), new File(file.toUri()))
     s3.putObject(request)
-    Thread.sleep(3 * 1000)
+    Thread.sleep(1 * 1000) // Add delay for S3 eventual consistency
     ()
   }
 

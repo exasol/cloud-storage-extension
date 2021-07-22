@@ -1,7 +1,8 @@
-package com.exasol.cloudetl
+package com.exasol.cloudetl.alluxio
 
 import java.sql.ResultSet
 
+import com.exasol.cloudetl.BaseIntegrationTest
 import com.exasol.dbbuilder.dialects.Table
 import com.exasol.matcher.ResultSetStructureMatcher.table
 import com.dimafeng.testcontainers.GenericContainer

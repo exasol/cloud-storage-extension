@@ -1,4 +1,4 @@
-package com.exasol.cloudetl
+package com.exasol.cloudetl.export
 
 import java.sql.Date
 import java.sql.ResultSet
@@ -6,6 +6,7 @@ import java.sql.Timestamp
 
 import scala.collection.mutable.LinkedHashMap
 
+import com.exasol.cloudetl.BaseS3IntegrationTest
 import com.exasol.dbbuilder.dialects.Table
 import com.exasol.matcher.ResultSetStructureMatcher.table
 import com.exasol.matcher.TypeMatchMode
