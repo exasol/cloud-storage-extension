@@ -2,7 +2,7 @@ package com.exasol.cloudetl.orc.converter
 
 import scala.collection.mutable.{Map => MMap}
 
-import com.exasol.cloudetl.util.DateTimeUtil
+import com.exasol.cloudetl.helper.DateTimeConverter
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.hive.ql.exec.vector._
@@ -118,7 +118,7 @@ object DateConverter extends OrcConverter[LongColumnVector] {
       null
     } else {
       val daysSinceEpoch = vector.vector(index)
-      DateTimeUtil.daysToDate(daysSinceEpoch)
+      DateTimeConverter.daysToDate(daysSinceEpoch)
     }
 }
 

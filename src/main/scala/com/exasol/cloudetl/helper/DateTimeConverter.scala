@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.util
+package com.exasol.cloudetl.helper
 
 import java.sql.Date
 import java.sql.Timestamp
@@ -8,7 +8,7 @@ import java.util.TimeZone
 /**
  * Helper functions to convert date time values.
  */
-object DateTimeUtil {
+object DateTimeConverter {
   // scalastyle:off magic.number
   val UnixEpochDateTime: LocalDateTime = LocalDateTime.of(1970, 1, 1, 0, 0, 0)
   // scalastyle:on magic.number

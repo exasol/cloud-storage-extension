@@ -6,8 +6,8 @@ import java.nio.charset.StandardCharsets.UTF_8
 
 import scala.collection.JavaConverters._
 
-import com.exasol.cloudetl.util.DateTimeUtil
-import com.exasol.cloudetl.util.SchemaUtil
+import com.exasol.cloudetl.helper.DateTimeConverter._
+import com.exasol.cloudetl.helper.ParquetSchemaConverter
 import com.exasol.common.data.Row
 
 import org.apache.hadoop.conf.Configuration
@@ -52,7 +52,7 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
   // Reusable byte array used to write decimal values as Parquet
   // FIXED_LEN_BYTE_ARRAY values
   private val decimalBuffer =
-    new Array[Byte](SchemaUtil.PRECISION_TO_BYTE_SIZE(SchemaUtil.DECIMAL_MAX_PRECISION - 1))
+    new Array[Byte](ParquetSchemaConverter.PRECISION_TO_BYTE_SIZE(ParquetSchemaConverter.DECIMAL_MAX_PRECISION - 1))
 
   override final def init(configuration: Configuration): WriteSupport.WriteContext = {
     this.rootFieldWriters = schema.getFields.asScala
@@ -147,15 +147,15 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
   private def makeDateWriter(): RowValueWriter = (row: Row, index: Int) => {
     // Write the number of days since unix epoch as integer
     val date = row.getAs[java.sql.Date](index)
-    val days = DateTimeUtil.daysSinceEpoch(date)
+    val days = daysSinceEpoch(date)
 
     recordConsumer.addInteger(days.toInt)
   }
 
   private def makeTimestampWriter(): RowValueWriter = (row: Row, index: Int) => {
     val timestamp = row.getAs[java.sql.Timestamp](index)
-    val micros = DateTimeUtil.getMicrosFromTimestamp(timestamp)
-    val (days, nanos) = DateTimeUtil.getJulianDayAndNanos(micros)
+    val micros = getMicrosFromTimestamp(timestamp)
+    val (days, nanos) = getJulianDayAndNanos(micros)
 
     val buf = ByteBuffer.wrap(timestampBuffer)
     val _ = buf.order(ByteOrder.LITTLE_ENDIAN).putLong(nanos).putInt(days)
@@ -169,14 +169,14 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
       s"Decimal precision $precision should not be less than minimum precision 1"
     )
     require(
-      precision <= SchemaUtil.DECIMAL_MAX_PRECISION,
+      precision <= ParquetSchemaConverter.DECIMAL_MAX_PRECISION,
       s"""|Decimal precision $precision should not exceed
-          |max precision ${SchemaUtil.DECIMAL_MAX_PRECISION}
+          |max precision ${ParquetSchemaConverter.DECIMAL_MAX_PRECISION}
       """.stripMargin
     )
 
     // The number of bytes from given the precision
-    val numBytes = SchemaUtil.PRECISION_TO_BYTE_SIZE(precision - 1)
+    val numBytes = ParquetSchemaConverter.PRECISION_TO_BYTE_SIZE(precision - 1)
 
     val bytesWriter = (row: Row, index: Int) => {
       val decimal = row.getAs[java.math.BigDecimal](index)

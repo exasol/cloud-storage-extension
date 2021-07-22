@@ -12,7 +12,7 @@ import java.time._
 
 import com.exasol.cloudetl.orc.OrcTestDataWriter
 import com.exasol.cloudetl.parquet.ParquetTestDataWriter
-import com.exasol.cloudetl.util.DateTimeUtil
+import com.exasol.cloudetl.helper.DateTimeConverter._
 import com.exasol.matcher.CellMatcherFactory
 import com.exasol.matcher.ResultSetStructureMatcher.table
 import com.exasol.matcher.TypeMatchMode._
@@ -630,11 +630,11 @@ class DataImporterIT extends BaseS3IntegrationTest {
         .withInputValues[Any](List(0, 1, 54, 567, 1234))
         .assertResultSet(
           table()
-            .row(DateTimeUtil.daysToDate(0))
-            .row(DateTimeUtil.daysToDate(1))
-            .row(DateTimeUtil.daysToDate(54))
-            .row(DateTimeUtil.daysToDate(567))
-            .row(DateTimeUtil.daysToDate(1234))
+            .row(daysToDate(0))
+            .row(daysToDate(1))
+            .row(daysToDate(54))
+            .row(daysToDate(567))
+            .row(daysToDate(1234))
             .matches()
         )
     }
@@ -794,8 +794,8 @@ class DataImporterIT extends BaseS3IntegrationTest {
       val millis = System.currentTimeMillis()
       val timestamp = new Timestamp(millis)
       val buffer = ByteBuffer.allocate(12).order(ByteOrder.LITTLE_ENDIAN)
-      val micros = DateTimeUtil.getMicrosFromTimestamp(timestamp)
-      val (days, nanos) = DateTimeUtil.getJulianDayAndNanos(micros)
+      val micros = getMicrosFromTimestamp(timestamp)
+      val (days, nanos) = getJulianDayAndNanos(micros)
       buffer.putLong(nanos).putInt(days)
       val zdt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.of("Europe/Berlin"))
       val expectedTimestamp = Timestamp.valueOf(zdt.toLocalDateTime())
