@@ -8,7 +8,7 @@ import java.util.TimeZone
 /**
  * Helper functions to convert date time values.
  */
-object DateTimeHelper {
+object DateTimeConverter {
   // scalastyle:off magic.number
   val UnixEpochDateTime: LocalDateTime = LocalDateTime.of(1970, 1, 1, 0, 0, 0)
   // scalastyle:on magic.number

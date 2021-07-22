@@ -55,16 +55,16 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
     ()
   }
 
-  def createBucket(bucket: String): Unit = {
-    s3.createBucket(new CreateBucketRequest(bucket))
-    ()
-  }
-
   def uploadFileToS3(bucket: String, file: HPath): Unit = {
     createBucket(bucket)
     val request = new PutObjectRequest(bucket, file.getName(), new File(file.toUri()))
     s3.putObject(request)
     Thread.sleep(3 * 1000)
+    ()
+  }
+
+  def createBucket(bucket: String): Unit = {
+    s3.createBucket(new CreateBucketRequest(bucket))
     ()
   }
 

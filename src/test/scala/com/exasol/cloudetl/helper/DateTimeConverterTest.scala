@@ -8,10 +8,10 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
 @SuppressWarnings(Array("org.wartremover.contrib.warts.OldTime"))
-class DateTimeHelperTest extends AnyFunSuite with Matchers {
+class DateTimeConverterTest extends AnyFunSuite with Matchers {
 
   final def daysSinceEpochToDate(dt: Date): Unit = {
-    val newDT = DateTimeHelper.daysToDate(DateTimeHelper.daysSinceEpoch(dt))
+    val newDT = DateTimeConverter.daysToDate(DateTimeConverter.daysSinceEpoch(dt))
     assert(dt.toString === newDT.toString)
     ()
   }

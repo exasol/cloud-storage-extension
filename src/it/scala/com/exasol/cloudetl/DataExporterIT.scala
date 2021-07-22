@@ -27,36 +27,35 @@ class DataExporterIT extends BaseS3IntegrationTest {
     val columns = LinkedHashMap(
       "C_BOOLEAN" -> "BOOLEAN"
     )
-    val values = Stream[Array[Any]](
+    val tableValues = Stream[Array[Any]](
       Array(1L, null),
       Array(2L, true),
       Array(3L, false)
     )
-    ExportImportChecker(columns, values, "boolean-bucket").assert()
+    ExportImportChecker(columns, tableValues, "boolean-bucket").assert()
   }
 
   test("exports and imports varchar") {
     val columns = LinkedHashMap(
       "NAME" -> "VARCHAR(40)"
     )
-    val values = Stream[Array[Any]](
+    val tableValues = Stream[Array[Any]](
       Array(1L, "Cat"),
       Array(2L, "Dog")
     )
-    ExportImportChecker(columns, values, "varchar-bucket").assert()
+    ExportImportChecker(columns, tableValues, "varchar-bucket").assert()
   }
 
   test("exports and imports character") {
     val columns = LinkedHashMap(
       "C_CHAR20" -> "CHAR(20)",
-      "C_VARCHAR20" -> "VARCHAR(20)"
     )
-    val values = Stream[Array[Any]](
-      Array(1L, null, null),
-      Array(2L, "foo                 ", "bar"),
-      Array(3L, "0123456789abcdefghij", "ABCEDFGHIJ0123456789")
+    val tableValues = Stream[Array[Any]](
+      Array(1L, null),
+      Array(2L, "foo                 "),
+      Array(3L, "0123456789abcdefghij")
     )
-    ExportImportChecker(columns, values, "character-bucket").assert()
+    ExportImportChecker(columns, tableValues, "character-bucket").assert()
   }
 
   test("exports and imports numeric") {
@@ -64,7 +63,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
       "C_DECIMAL" -> "DECIMAL(3,2)",
       "C_DOUBLE" -> "DOUBLE PRECISION"
     )
-    val values = Stream[Array[Any]](
+    val tableValues = Stream[Array[Any]](
       Array(1L, null, null),
       Array(2L, 1.23, 3.14159265358979323846264338327950288),
       Array(3L, 0.0, 0.0),
@@ -73,7 +72,20 @@ class DataExporterIT extends BaseS3IntegrationTest {
       Array(6L, 9.99, 9.9999999999999),
       Array(7L, -9.99, -9.9999999999999)
     )
-    ExportImportChecker(columns, values, "numeric-bucket").assert(TypeMatchMode.NO_JAVA_TYPE_CHECK)
+    ExportImportChecker(columns, tableValues, "numeric-bucket").assert(TypeMatchMode.NO_JAVA_TYPE_CHECK)
+  }
+
+  test("exports and imports numeric minimum and maximum") {
+    val columns = LinkedHashMap(
+      "C_INT" -> "INTEGER",
+      "C_LONG" -> "BIGINT"
+    )
+    val tableValues = Stream[Array[Any]](
+      Array(1L, null, null),
+      Array(2L, -2147483648, -9223372036854775808L),
+      Array(3L, 2147483647, 9223372036854775807L)
+    )
+    ExportImportChecker(columns, tableValues, "numeric-min-max-bucket").assert(TypeMatchMode.NO_JAVA_TYPE_CHECK)
   }
 
   test("exports and imports numeric alias") {
@@ -85,11 +97,11 @@ class DataExporterIT extends BaseS3IntegrationTest {
       "C_SMALLINT" -> "SMALLINT",
       "C_TINYINT" -> "TINYINT"
     )
-    val values = Stream[Array[Any]](
+    val tableValues = Stream[Array[Any]](
       Array(1L, null, null, null, null, null, null),
       Array(2L, 100, 3.1415, 1.0f, 7, 12, 5)
     )
-    ExportImportChecker(columns, values, "numeric-alias-bucket").assert(TypeMatchMode.NO_JAVA_TYPE_CHECK)
+    ExportImportChecker(columns, tableValues, "numeric-alias-bucket").assert(TypeMatchMode.NO_JAVA_TYPE_CHECK)
   }
 
   test("exports and imports date timestamp") {
@@ -97,12 +109,12 @@ class DataExporterIT extends BaseS3IntegrationTest {
       "C_DATE" -> "DATE",
       "C_TIMESTAMP" -> "TIMESTAMP"
     )
-    val values = Stream[Array[Any]](
+    val tableValues = Stream[Array[Any]](
       Array(1L, Date.valueOf("0001-01-01"), Timestamp.valueOf("0001-01-01 01:01:01.0")),
       Array(2L, Date.valueOf("1970-01-01"), Timestamp.valueOf("2001-01-01 01:01:01")),
-      Array(3L, Date.valueOf("9999-12-31"), Timestamp.valueOf("2001-01-01 01:01:01.0"))
+      Array(3L, Date.valueOf("9999-12-31"), Timestamp.valueOf("9999-12-31 23:59:59"))
     )
-    ExportImportChecker(columns, values, "date-timestamp-bucket").assert()
+    ExportImportChecker(columns, tableValues, "date-timestamp-bucket").assert()
   }
 
   test("exports and imports identifier cases") {
@@ -111,22 +123,18 @@ class DataExporterIT extends BaseS3IntegrationTest {
       "C_VARCHAR_Mixed_Case" -> "VARCHAR(20)",
       "C_VARCHAR_REGULAR" -> "VARCHAR(50)"
     )
-    val values = Stream[Array[Any]](
+    val tableValues = Stream[Array[Any]](
       Array(1L, "Quoted, lower case", "Quoted, mixed case", "Not quoted, automatically turned to upper case"),
       Array(2L, "Cats", "Dogs", "Ducks")
     )
-    ExportImportChecker(columns, values, "delimited-bucket").assert()
+    ExportImportChecker(columns, tableValues, "delimited-bucket").assert()
   }
 
-  case class ExportImportChecker(
-    columns: LinkedHashMap[String, String],
-    tableValues: Stream[Array[Any]],
-    bucket: String
-  ) {
-    val values = tableValues.map(_.map(_.asInstanceOf[AnyRef]))
+  case class ExportImportChecker(columns: LinkedHashMap[String, String], input: Stream[Array[Any]], bucket: String) {
+    val tableValues = input.map(_.map(_.asInstanceOf[AnyRef]))
     val exportTable = {
       var table = createTable(getTableName("EXPORT"))
-      values.foreach { case rows => table = table.insert(rows: _*) }
+      tableValues.foreach { case rows => table = table.insert(rows: _*) }
       table
     }
     val importTable = createTable(getTableName("IMPORT"))
@@ -142,7 +150,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
 
     def getMatcher(typeMatchMode: TypeMatchMode): Matcher[ResultSet] = {
       var matcher = table()
-      values.foreach { case rows => matcher = matcher.row(rows: _*) }
+      tableValues.foreach { case rows => matcher = matcher.row(rows: _*) }
       matcher.matches(typeMatchMode)
     }
 
