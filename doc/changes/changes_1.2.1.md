@@ -6,6 +6,7 @@ Code name:
 
 ## Bug Fixes
 
+* #145: Fixed issue exporting tables with delimited identifiers
 * #156: Fixed bug related to logging backend
 
 ## Refactoring
