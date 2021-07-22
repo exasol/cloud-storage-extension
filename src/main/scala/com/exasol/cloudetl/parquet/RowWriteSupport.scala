@@ -138,7 +138,7 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
       case PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY if originalType == OriginalType.DECIMAL =>
         val decimal =
           primitiveType.getLogicalTypeAnnotation().asInstanceOf[DecimalLogicalTypeAnnotation]
-        makeDecimalWriter(decimal.getPrecision(), decimal.getScale())
+        makeDecimalWriter(decimal.getPrecision())
 
       case _ => throw new UnsupportedOperationException(s"Unsupported parquet type '$typeName'.")
     }
@@ -163,7 +163,7 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
     recordConsumer.addBinary(Binary.fromReusedByteArray(timestampBuffer))
   }
 
-  private def makeDecimalWriter(precision: Int, scale: Int): RowValueWriter = {
+  private def makeDecimalWriter(precision: Int): RowValueWriter = {
     require(
       precision >= 1,
       s"Decimal precision $precision should not be less than minimum precision 1"
