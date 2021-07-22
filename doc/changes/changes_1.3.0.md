@@ -1,8 +1,12 @@
-# Cloud Storage Extension 1.2.1, released 2021-??-??
+# Cloud Storage Extension 1.3.0, released 2021-??-??
 
 Code name: 
 
 ## Summary
+
+## Features
+
+* #37: Added support for Hive compatible Parquet schema when exporting Exasol tables
 
 ## Bug Fixes
 
