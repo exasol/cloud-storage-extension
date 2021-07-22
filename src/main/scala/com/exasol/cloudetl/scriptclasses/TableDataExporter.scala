@@ -6,9 +6,9 @@ import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.bucket.Bucket
 import com.exasol.cloudetl.data.ExaColumnInfo
+import com.exasol.cloudetl.helper.ExasolColumnValueProvider
 import com.exasol.cloudetl.sink.BatchSizedSink
 import com.exasol.cloudetl.storage.StorageProperties
-import com.exasol.cloudetl.util.ExasolColumnValueProvider
 import com.exasol.common.data.Row
 
 import com.typesafe.scalalogging.LazyLogging

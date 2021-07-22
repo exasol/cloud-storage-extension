@@ -2,6 +2,7 @@ package com.exasol.cloudetl.util
 
 import com.exasol.ExaIterator
 import com.exasol.cloudetl.data.ExaColumnInfo
+import com.exasol.cloudetl.helper.ExasolColumnValueProvider
 
 import org.mockito.Mockito._
 import org.scalatest.funsuite.AnyFunSuite

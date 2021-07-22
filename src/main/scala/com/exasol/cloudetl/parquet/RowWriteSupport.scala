@@ -6,8 +6,8 @@ import java.nio.charset.StandardCharsets.UTF_8
 
 import scala.collection.JavaConverters._
 
-import com.exasol.cloudetl.util.DateTimeUtil
-import com.exasol.cloudetl.util.ParquetSchemaConverter
+import com.exasol.cloudetl.helper.DateTimeHelper
+import com.exasol.cloudetl.helper.ParquetSchemaConverter
 import com.exasol.common.data.Row
 
 import org.apache.hadoop.conf.Configuration
@@ -147,15 +147,15 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
   private def makeDateWriter(): RowValueWriter = (row: Row, index: Int) => {
     // Write the number of days since unix epoch as integer
     val date = row.getAs[java.sql.Date](index)
-    val days = DateTimeUtil.daysSinceEpoch(date)
+    val days = DateTimeHelper.daysSinceEpoch(date)
 
     recordConsumer.addInteger(days.toInt)
   }
 
   private def makeTimestampWriter(): RowValueWriter = (row: Row, index: Int) => {
     val timestamp = row.getAs[java.sql.Timestamp](index)
-    val micros = DateTimeUtil.getMicrosFromTimestamp(timestamp)
-    val (days, nanos) = DateTimeUtil.getJulianDayAndNanos(micros)
+    val micros = DateTimeHelper.getMicrosFromTimestamp(timestamp)
+    val (days, nanos) = DateTimeHelper.getJulianDayAndNanos(micros)
 
     val buf = ByteBuffer.wrap(timestampBuffer)
     val _ = buf.order(ByteOrder.LITTLE_ENDIAN).putLong(nanos).putInt(days)

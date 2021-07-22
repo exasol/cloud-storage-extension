@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.util
+package com.exasol.cloudetl.helper
 
 /**
  * An extendable trait that holds Java class types.

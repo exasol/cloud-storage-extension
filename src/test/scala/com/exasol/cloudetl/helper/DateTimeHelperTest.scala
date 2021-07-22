@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.util
+package com.exasol.cloudetl.helper
 
 import java.sql.Date
 import java.text.SimpleDateFormat
@@ -8,10 +8,10 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
 @SuppressWarnings(Array("org.wartremover.contrib.warts.OldTime"))
-class DateTimeUtilTest extends AnyFunSuite with Matchers {
+class DateTimeHelperTest extends AnyFunSuite with Matchers {
 
   final def daysSinceEpochToDate(dt: Date): Unit = {
-    val newDT = DateTimeUtil.daysToDate(DateTimeUtil.daysSinceEpoch(dt))
+    val newDT = DateTimeHelper.daysToDate(DateTimeHelper.daysSinceEpoch(dt))
     assert(dt.toString === newDT.toString)
     ()
   }

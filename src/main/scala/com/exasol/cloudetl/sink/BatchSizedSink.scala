@@ -4,9 +4,9 @@ import java.util.UUID
 
 import com.exasol.cloudetl.bucket.Bucket
 import com.exasol.cloudetl.data.ExaColumnInfo
+import com.exasol.cloudetl.helper.ParquetSchemaConverter
 import com.exasol.cloudetl.parquet.ParquetRowWriter
 import com.exasol.cloudetl.parquet.ParquetWriteOptions
-import com.exasol.cloudetl.util.ParquetSchemaConverter
 import com.exasol.common.data.Row
 
 import com.typesafe.scalalogging.LazyLogging

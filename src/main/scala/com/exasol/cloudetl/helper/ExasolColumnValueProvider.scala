@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.util
+package com.exasol.cloudetl.helper
 
 import com.exasol.ExaIterator
 import com.exasol.cloudetl.data.ExaColumnInfo
