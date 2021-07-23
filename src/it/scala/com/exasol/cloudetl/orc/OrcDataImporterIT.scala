@@ -33,7 +33,7 @@ class OrcDataImporterIT extends BaseDataImporter {
   }
 
   test("imports byte") {
-    OrcChecker("struct<f:tinyint>", "DECIMAL(9,0)", "byte_table")
+    OrcChecker("struct<f:tinyint>", "DECIMAL(3,0)", "byte_table")
       .withInputValues(List(11, null))
       .assertResultSet(
         table().row(java.lang.Byte.valueOf("11")).row(null).matches(NO_JAVA_TYPE_CHECK)
