@@ -16,10 +16,15 @@ import org.apache.orc.TypeDescription.Category
 @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
 class OrcTestDataWriter(path: Path, conf: Configuration) {
 
+  private[this] val ORC_STRIPE_SIZE = 32L * 1024 * 1024
+  private[this] val ORC_BLOCK_SIZE  = 64L * 1024 * 1024
+
   final def write[T](
     schema: TypeDescription,
     values: List[T]
   ): Unit = {
+    conf.set("orc.stripe.size", s"$ORC_STRIPE_SIZE")
+    conf.set("orc.block.size", s"$ORC_BLOCK_SIZE")
     val writer = OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(schema))
     val schemaChildren = schema.getChildren()
     val batch = schema.createRowBatch()

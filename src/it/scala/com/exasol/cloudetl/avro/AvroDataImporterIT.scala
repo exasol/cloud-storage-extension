@@ -162,8 +162,7 @@ class AvroDataImporterIT extends BaseDataImporter {
   }
 
   test("imports fixed (decimal)") {
-    val inner =
-      """{"type":"fixed","name":"fx","size":7,"logicalType":"decimal","precision":7,"scale":4}"""
+    val inner = """{"type":"fixed","name":"fx","size":7,"logicalType":"decimal","precision":7,"scale":4}"""
     val schema = getBasicSchema(inner)
     val fixedSchema = new Schema.Parser().parse(schema).getField("column").schema()
     val fixedData = new Conversions.DecimalConversion().toFixed(
@@ -329,10 +328,13 @@ class AvroDataImporterIT extends BaseDataImporter {
 
   case class AvroChecker(avroSchemaStr: String, exaColumn: String, tableName: String)
       extends AbstractChecker(exaColumn, tableName) {
+    val AVRO_SYNC_INTERVAL_SIZE = 32 * 1024 * 1024
     val avroSchema = new Schema.Parser().parse(avroSchemaStr)
 
     def withWriter(block: DataFileWriter[GenericRecord] => Unit): AvroChecker = {
       val writer = new DataFileWriter[GenericRecord](new SpecificDatumWriter[GenericRecord]())
+      writer.setFlushOnEveryBlock(false)
+      writer.setSyncInterval(AVRO_SYNC_INTERVAL_SIZE)
       writer.create(avroSchema, new File(path.toUri))
       block(writer)
       writer.close()
