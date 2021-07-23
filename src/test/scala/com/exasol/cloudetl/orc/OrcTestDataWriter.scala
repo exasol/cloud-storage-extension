@@ -17,7 +17,7 @@ import org.apache.orc.TypeDescription.Category
 class OrcTestDataWriter(path: Path, conf: Configuration) {
 
   private[this] val ORC_STRIPE_SIZE = 32L * 1024 * 1024
-  private[this] val ORC_BLOCK_SIZE  = 64L * 1024 * 1024
+  private[this] val ORC_BLOCK_SIZE = 64L * 1024 * 1024
 
   final def write[T](
     schema: TypeDescription,
