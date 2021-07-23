@@ -328,7 +328,7 @@ class AvroDataImporterIT extends BaseDataImporter {
 
   case class AvroChecker(avroSchemaStr: String, exaColumn: String, tableName: String)
       extends AbstractChecker(exaColumn, tableName) {
-    val AVRO_SYNC_INTERVAL_SIZE = 32 * 1024 * 1024
+    val AVRO_SYNC_INTERVAL_SIZE = 64 * 1024 * 1024
     val avroSchema = new Schema.Parser().parse(avroSchemaStr)
 
     def withWriter(block: DataFileWriter[GenericRecord] => Unit): AvroChecker = {
