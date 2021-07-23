@@ -15,6 +15,7 @@ Code name:
 
 ## Refactoring
 
+* #140: Refactored importer integration tests into multiple suites
 * #150: Added extracted parquet-io-java library
 * #157: Refactored build setup
 * #162: Fixed code smells reported by Sonar cloud
