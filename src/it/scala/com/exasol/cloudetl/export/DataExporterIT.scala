@@ -10,12 +10,12 @@ import com.exasol.cloudetl.BaseS3IntegrationTest
 import com.exasol.dbbuilder.dialects.Table
 import com.exasol.matcher.ResultSetStructureMatcher.table
 import com.exasol.matcher.TypeMatchMode
+
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
 
 // Exports to parquet and imports exported files into another table, and check two tables are similar.
 class DataExporterIT extends BaseS3IntegrationTest {
-
   val SCHEMA_NAME = "DATA_SCHEMA"
 
   override final def beforeAll(): Unit = {
