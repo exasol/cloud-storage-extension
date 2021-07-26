@@ -1,8 +1,10 @@
-package com.exasol.cloudetl
+package com.exasol.cloudetl.scriptclasses
 
 import java.nio.file.Files
 import java.nio.file.Path
 
+import com.exasol.cloudetl.BaseS3IntegrationTest
+import com.exasol.cloudetl.TestFileManager
 import com.exasol.matcher.ResultSetStructureMatcher.table
 
 import org.apache.hadoop.fs.{Path => HPath}

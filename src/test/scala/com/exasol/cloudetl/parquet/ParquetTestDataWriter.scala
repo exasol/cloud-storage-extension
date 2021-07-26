@@ -11,12 +11,16 @@ import org.apache.parquet.schema._
 
 trait ParquetTestDataWriter {
 
+  private[this] val PARQUET_BLOCK_SIZE = 64 * 1024 * 1024
+
   final def getParquetWriter(
     path: HPath,
     schema: MessageType,
     dictionaryEncoding: Boolean
   ): ParquetWriter[Group] =
     BaseGroupWriterBuilder(path, schema)
+      .withPageSize(ParquetWriter.DEFAULT_PAGE_SIZE)
+      .withRowGroupSize(PARQUET_BLOCK_SIZE)
       .withDictionaryEncoding(dictionaryEncoding)
       .build()
 
