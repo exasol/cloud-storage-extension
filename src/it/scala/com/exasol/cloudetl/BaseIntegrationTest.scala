@@ -27,13 +27,18 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
   }
   var factory: ExasolObjectFactory = _
   var schema: ExasolSchema = _
+  var connection: java.sql.Connection = null
   val assembledJarName = getAssembledJarName()
 
   override def beforeAll(): Unit =
     exasolContainer.start()
 
-  override def afterAll(): Unit =
+  override def afterAll(): Unit = {
+    if (connection != null) {
+      connection.close()
+    }
     exasolContainer.stop()
+  }
 
   def prepareExasolDatabase(schemaName: String): Unit = {
     executeStmt(s"DROP SCHEMA IF EXISTS $schemaName CASCADE;")
@@ -57,8 +62,12 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
     findFileOrDirectory("target/" + jarDir, JAR_NAME_PATTERN)
   }
 
-  private[this] def getConnection(): java.sql.Connection =
-    exasolContainer.createConnection("")
+  private[this] def getConnection(): java.sql.Connection = {
+    if (connection == null) {
+      connection = exasolContainer.createConnection("")
+    }
+    connection
+  }
 
   private[this] def createImportDeploymentScripts(): Unit = {
     val jarPath = s"/buckets/bfsdefault/default/$assembledJarName"
