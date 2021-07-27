@@ -4,7 +4,7 @@ Code name: Bug Fixes and Refactorings
 
 ## Summary
 
-In this releases we added support for exporting Hive compatible Parquet schema. Also, this release fixes several bugs. We fixed bug with delimited identifiers and missing decimal trailing zeros when doing export.
+In this releases we added support for exporting Hive compatible Parquet schema. Also, this release fixes several bugs. We fixed a bug related to delimited identifiers and another bug with missing trailing zeros in decimals when doing export.
 
 We also added several refactorings such as extracting parquet-io-java library, improving integration tests and migrating continuous integration (CI) setup to Github actions.
 
