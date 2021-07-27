@@ -1,6 +1,5 @@
 package com.exasol.cloudetl
 
-import java.lang.Long
 import java.nio.file.Path
 import java.sql.ResultSet
 
@@ -10,11 +9,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.scalatest.BeforeAndAfterEach
 
 trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach with TestFileManager {
-  val INT_MIN = Integer.MIN_VALUE
-  val INT_MAX = Integer.MAX_VALUE
-  val LONG_MIN = Long.MIN_VALUE
-  val LONG_MAX = Long.MAX_VALUE
-
   val schemaName: String
   val bucketName: String
   val dataFormat: String
