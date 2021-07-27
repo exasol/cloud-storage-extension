@@ -42,7 +42,7 @@ final case class ExasolColumnValueProvider(iterator: ExaIterator) extends JavaCl
       val updatedBigDecimal = bigDecimal.setScale(scale, RoundingMode.HALF_UP)
       if (updatedBigDecimal.precision > precision) {
         throw new IllegalArgumentException(
-          s"Precision of big decimal value exceeds '$precision' after setting scale to '$scale'."
+          s"Actual precision of big decimal value exceeds configured '$precision'."
         )
       }
       updatedBigDecimal
