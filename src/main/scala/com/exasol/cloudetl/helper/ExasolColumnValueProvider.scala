@@ -1,5 +1,8 @@
 package com.exasol.cloudetl.helper
 
+import java.math.BigDecimal
+import java.math.RoundingMode
+
 import com.exasol.ExaIterator
 import com.exasol.cloudetl.data.ExaColumnInfo
 
@@ -21,7 +24,7 @@ final case class ExasolColumnValueProvider(iterator: ExaIterator) extends JavaCl
     columnType match {
       case `jInteger`      => iterator.getInteger(index)
       case `jLong`         => iterator.getLong(index)
-      case `jBigDecimal`   => iterator.getBigDecimal(index)
+      case `jBigDecimal`   => updateBigDecimal(iterator.getBigDecimal(index), columnInfo.precision, columnInfo.scale)
       case `jDouble`       => iterator.getDouble(index)
       case `jString`       => iterator.getString(index)
       case `jBoolean`      => iterator.getBoolean(index)
@@ -31,5 +34,18 @@ final case class ExasolColumnValueProvider(iterator: ExaIterator) extends JavaCl
         throw new IllegalArgumentException(s"Cannot get Exasol value for column type '$columnType'.")
     }
   }
+
+  private[this] def updateBigDecimal(bigDecimal: BigDecimal, precision: Int, scale: Int): BigDecimal =
+    if (bigDecimal == null) {
+      bigDecimal
+    } else {
+      val updatedBigDecimal = bigDecimal.setScale(scale, RoundingMode.HALF_UP)
+      if (updatedBigDecimal.precision > precision) {
+        throw new IllegalArgumentException(
+          s"Precision of big decimal value exceeds '$precision' after setting scale to '$scale'."
+        )
+      }
+      updatedBigDecimal
+    }
 
 }

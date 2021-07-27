@@ -83,8 +83,8 @@ class DataExporterIT extends BaseS3IntegrationTest {
     )
     val tableValues = Stream[Array[Any]](
       Array(1L, null, null),
-      Array(2L, -2147483648, -9223372036854775808L),
-      Array(3L, 2147483647, 9223372036854775807L)
+      Array(2L, INT_MIN, LONG_MIN),
+      Array(3L, INT_MAX, LONG_MAX)
     )
     ExportImportChecker(columns, tableValues, "numeric-min-max-bucket").assert(TypeMatchMode.NO_JAVA_TYPE_CHECK)
   }
@@ -131,6 +131,48 @@ class DataExporterIT extends BaseS3IntegrationTest {
     ExportImportChecker(columns, tableValues, "delimited-bucket").assert()
   }
 
+  test("exports and imports decimals with trailing zeros") {
+    val columns = LinkedHashMap("C_DECIMAL" -> "DECIMAL(18, 4)")
+    val tableValues = Stream[Array[Any]](Array(1L, 238316.38))
+    ExportImportChecker(columns, tableValues, "decimal-trailing-zeros-bucket")
+      .assertWithMatcher(
+        table()
+          .row(java.lang.Long.valueOf(1), java.math.BigDecimal.valueOf(238316.3800))
+          .matches()
+      )
+  }
+
+  test("exports and imports from view") {
+    val bucket = "decimal-cast-view"
+    val importTable = schema
+      .createTable("DECIMAL_IMPORT_TABLE", "ID", "DECIMAL(18,0)", "C_DECIMAL", "DECIMAL(18,2)")
+    val decimalTable = schema
+      .createTable("DECIMAL_EXPORT_TABLE", "ID", "DECIMAL(18,0)", "C_DECIMAL", "DECIMAL(18,2)")
+      .insert("1", java.lang.Double.valueOf(238316.38))
+    val viewName = s"$SCHEMA_NAME.DECIMAL_TABLE_V"
+    executeStmt(
+      s"""|CREATE OR REPLACE VIEW $viewName
+          |AS SELECT
+          |   ID AS ID,
+          |   CAST(C_DECIMAL AS DECIMAL(18,4)) AS C_DECIMAL
+          |FROM ${decimalTable.getFullyQualifiedName()}
+      """.stripMargin
+    )
+
+    createBucket(bucket)
+    exportIntoS3(SCHEMA_NAME, viewName, bucket)
+    importFromS3IntoExasol(SCHEMA_NAME, importTable, bucket, "*", "PARQUET")
+
+    val resultSet = executeQuery(s"SELECT * FROM ${importTable.getFullyQualifiedName()}")
+    assertThat(
+      resultSet,
+      table()
+        .row(java.lang.Long.valueOf(1), java.lang.Double.valueOf(238316.3800))
+        .matches(TypeMatchMode.NO_JAVA_TYPE_CHECK)
+    )
+    resultSet.close()
+  }
+
   case class ExportImportChecker(columns: LinkedHashMap[String, String], input: Stream[Array[Any]], bucket: String) {
     val tableValues = input.map(_.map(_.asInstanceOf[AnyRef]))
     val exportTable = {
@@ -161,23 +203,20 @@ class DataExporterIT extends BaseS3IntegrationTest {
       resultSet.close()
     }
 
-    def exportIntoS3(): Unit =
-      executeStmt(
-        s"""|EXPORT ${exportTable.getFullyQualifiedName()}
-            |INTO SCRIPT $SCHEMA_NAME.EXPORT_PATH WITH
-            |BUCKET_PATH     = 's3a://$bucket/'
-            |DATA_FORMAT     = 'PARQUET'
-            |S3_ENDPOINT     = '$s3Endpoint'
-            |CONNECTION_NAME = 'S3_CONNECTION'
-            |PARALLELISM     = 'iproc()';
-      """.stripMargin
-      )
+    def exportAndImport(): Unit = {
+      createBucket(bucket)
+      exportIntoS3(SCHEMA_NAME, exportTable.getFullyQualifiedName(), bucket)
+      importFromS3IntoExasol(SCHEMA_NAME, importTable, bucket, "*", "PARQUET")
+    }
 
     def assert(typeMatchMode: TypeMatchMode = TypeMatchMode.STRICT): Unit = {
-      createBucket(bucket)
-      exportIntoS3()
-      importFromS3IntoExasol(SCHEMA_NAME, importTable, bucket, "*", "PARQUET")
+      exportAndImport()
       withResultSet(assertThat(_, getMatcher(typeMatchMode)))
+    }
+
+    def assertWithMatcher(matcher: Matcher[ResultSet]): Unit = {
+      exportAndImport()
+      withResultSet(assertThat(_, matcher))
     }
   }
 

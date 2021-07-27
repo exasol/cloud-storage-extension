@@ -1,8 +1,12 @@
-# Cloud Storage Extension 1.3.0, released 2021-??-??
+# Cloud Storage Extension 1.3.0, released 2021-07-27
 
-Code name: 
+Code name: Bug Fixes and Refactorings
 
 ## Summary
+
+In this releases we added support for exporting Hive compatible Parquet schema. Also, this release fixes several bugs. We fixed bug with delimited identifiers and missing decimal trailing zeros when doing export.
+
+We also added several refactorings such as extracting parquet-io-java library, improving integration tests and migrating continuous integration (CI) setup to Github actions.
 
 ## Features
 
@@ -12,6 +16,7 @@ Code name:
 
 * #145: Fixed issue exporting tables with delimited identifiers
 * #156: Fixed bug related to logging backend
+* #166: Fixed bug with missing decimal trailing zeros on export
 
 ## Refactoring
 

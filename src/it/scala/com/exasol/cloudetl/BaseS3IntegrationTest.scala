@@ -1,6 +1,7 @@
 package com.exasol.cloudetl
 
 import java.io.File
+import java.lang.Long
 
 import com.exasol.dbbuilder.dialects.Table
 
@@ -13,6 +14,10 @@ import org.testcontainers.containers.localstack.LocalStackContainer
 import org.testcontainers.containers.localstack.LocalStackContainer.Service.S3
 
 trait BaseS3IntegrationTest extends BaseIntegrationTest {
+  val INT_MIN = Integer.MIN_VALUE
+  val INT_MAX = Integer.MAX_VALUE
+  val LONG_MIN = Long.MIN_VALUE
+  val LONG_MAX = Long.MAX_VALUE
 
   val LOCALSTACK_DOCKER_IMAGE = DockerImageName.parse("localstack/localstack:0.12.15")
   val s3Container = new LocalStackContainer(LOCALSTACK_DOCKER_IMAGE)
@@ -78,6 +83,18 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
           |CONNECTION_NAME          = 'S3_CONNECTION'
           |PARALLELISM              = 'nproc()';
         """.stripMargin
+    )
+
+  def exportIntoS3(schemaName: String, tableName: String, bucket: String): Unit =
+    executeStmt(
+      s"""|EXPORT $tableName
+          |INTO SCRIPT $schemaName.EXPORT_PATH WITH
+          |BUCKET_PATH     = 's3a://$bucket/'
+          |DATA_FORMAT     = 'PARQUET'
+          |S3_ENDPOINT     = '$s3Endpoint'
+          |CONNECTION_NAME = 'S3_CONNECTION'
+          |PARALLELISM     = 'iproc()';
+      """.stripMargin
     )
 
   private[this] def getS3ContainerNetworkGatewayAddress(): String =

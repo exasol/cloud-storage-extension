@@ -136,8 +136,7 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
         makeTimestampWriter()
 
       case PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY if originalType == OriginalType.DECIMAL =>
-        val decimal =
-          primitiveType.getLogicalTypeAnnotation().asInstanceOf[DecimalLogicalTypeAnnotation]
+        val decimal = primitiveType.getLogicalTypeAnnotation().asInstanceOf[DecimalLogicalTypeAnnotation]
         makeDecimalWriter(decimal.getPrecision())
 
       case _ => throw new UnsupportedOperationException(s"Unsupported parquet type '$typeName'.")
