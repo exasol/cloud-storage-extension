@@ -1,5 +1,6 @@
 package com.exasol.cloudetl.scriptclasses
 
+import java.lang.Long
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -33,10 +34,7 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
   private[this] var iterator: ExaIterator = _
   private[this] val defaultProperties = Map("DATA_FORMAT" -> "PARQUET")
 
-  final def createMockedIterator(
-    resourceDir: String,
-    extraProperties: Map[String, String]
-  ): ExaIterator = {
+  final def createMockedIterator(resourceDir: String, extraProperties: Map[String, String]): ExaIterator = {
     val properties = defaultProperties ++ Map("BUCKET_PATH" -> resourceDir) ++ extraProperties
     val mockedIterator = mockExasolIterator(properties)
 
@@ -95,7 +93,7 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
   test("run exports table rows") {
     TableDataExporter.run(metadata, iterator)
 
-    verify(metadata, times(1)).getInputColumnCount
+    verify(metadata, times(1)).getInputColumnCount()
     for { idx <- 3 to 10 } {
       verify(metadata, times(1)).getInputColumnType(idx)
       verify(metadata, times(1)).getInputColumnPrecision(idx)
@@ -111,6 +109,7 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
     verify(iterator, times(2)).getBoolean(8)
     verify(iterator, times(2)).getDate(9)
     verify(iterator, times(2)).getTimestamp(10)
+    verify(iterator, times(1)).emit(Long.valueOf(2))
   }
 
   test("imports exported rows from a path") {
@@ -124,8 +123,8 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
 
     FilesDataImporter.run(mock[ExaMetadata], importIter)
 
-    val totalRecords = 2
-    verify(importIter, times(totalRecords)).emit(Seq(any[Object]): _*)
+    verify(importIter, times(2)).emit(Seq(any[Object]): _*)
+    verify(iterator, times(1)).emit(Long.valueOf(2))
   }
 
   test("export creates file without compression extension if compression codec is not set") {
@@ -144,10 +143,7 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
     checkExportFileExtensions(outputPath, ".snappy")
   }
 
-  private[this] def checkExportFileExtensions(
-    outputPath: Path,
-    compressionCodec: String
-  ): Unit = {
+  private[this] def checkExportFileExtensions(outputPath: Path, compressionCodec: String): Unit = {
     assert(getOutputPathFiles().forall(_.endsWith(s"$compressionCodec.parquet")))
     ()
   }

@@ -1,5 +1,6 @@
 package com.exasol.cloudetl.sink
 
+import java.lang.{Long => JLong}
 import java.util.UUID
 
 import com.exasol.cloudetl.bucket.Bucket
@@ -44,7 +45,7 @@ final class BatchSizedSink(
   private[this] var totalRecords: Long = 0
 
   /** Returns the total number of records written so far. */
-  def getTotalRecords(): Long = totalRecords
+  def getTotalRecords(): JLong = totalRecords
 
   /** @inheritdoc */
   override def createWriter(path: String): Writer[Row] = new Writer[Row] {

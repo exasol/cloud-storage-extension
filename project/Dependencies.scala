@@ -8,22 +8,22 @@ object Dependencies {
 
   // Runtime dependencies versions
   private val ImportExportUDFVersion = "0.2.0"
-  private val ParquetIOVersion = "1.0.2"
+  private val ParquetIOVersion = "1.0.3"
   private val HadoopVersion = "3.3.1"
   private val DeltaVersion = "0.7.0"
   private val OrcVersion = "1.6.9"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.1"
-  private val AlluxioCoreHDFSVersion = "2.6.0"
+  private val AlluxioCoreHDFSVersion = "2.6.1"
 
   // Test dependencies versions
   private val ScalaTestVersion = "3.2.9"
   private val ScalaTestPlusVersion = "1.0.0-M2"
   private val MockitoCoreVersion = "3.11.2"
   private val HamcrestVersion = "2.2"
-  private val ExasolHamcrestMatcherVersion = "1.4.0"
-  private val ExasolTestDBBuilderVersion = "3.2.0"
-  private val ExasolTestContainersVersion = "3.5.3"
+  private val ExasolHamcrestMatcherVersion = "1.4.1"
+  private val ExasolTestDBBuilderVersion = "3.2.1"
+  private val ExasolTestContainersVersion = "4.0.0"
   private val TestContainersLocalstackVersion = "1.16.0"
   private val TestContainersScalaVersion = "0.39.5"
 
