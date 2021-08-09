@@ -46,12 +46,11 @@ object FilesDataImporter extends LazyLogging {
     val fileFormat = properties.getFileFormat()
     val conf = bucket.getConfiguration()
     val filesystem = bucket.fileSystem
-    files.foreach {
-      case file =>
-        logger.info(s"Starting import for file '$file'.")
-        val source = Source(fileFormat, new Path(file), conf, filesystem)
-        new DataEmitterPipeline(source, properties).emit(iterator)
-        source.close()
+    files.foreach { case file =>
+      logger.info(s"Starting import for file '$file'.")
+      val source = Source(fileFormat, new Path(file), conf, filesystem)
+      new DataEmitterPipeline(source, properties).emit(iterator)
+      source.close()
     }
   }
 

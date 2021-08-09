@@ -16,6 +16,7 @@ object Dependencies {
   private val SparkSQLVersion = "3.0.1"
   private val AlluxioCoreHDFSVersion = "2.6.0"
   private val AkkaStreamVersion = "2.6.15"
+  private val AkkaStreamMonVersion = "0.1.0"
 
   // Test dependencies versions
   private val ScalaTestVersion = "3.2.9"
@@ -88,8 +89,9 @@ object Dependencies {
         ExclusionRule(organization = "org.apache.curator"),
         ExclusionRule(organization = "org.apache.orc"),
         ExclusionRule(organization = "org.apache.zookeeper")
-    ),
+      ),
     "com.typesafe.akka" %% "akka-stream" % AkkaStreamVersion,
+    "net.ruippeixotog" %% "akka-stream-mon" % AkkaStreamMonVersion,
     "com.exasol" % "parquet-io-java" % ParquetIOVersion
       exclude ("org.slf4j", "slf4j-api")
       exclude ("org.slf4j", "slf4j-log4j12")

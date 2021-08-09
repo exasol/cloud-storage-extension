@@ -16,7 +16,7 @@ class StorageProperties(private val properties: Map[String, String], private val
   import StorageProperties._
 
   private[this] val DEFAULT_CHUNK_SIZE = 10000
-  private[this] val DEFAULT_BUFFER_SIZE = 64
+  private[this] val DEFAULT_BUFFER_SIZE = 256
   private[this] val AZURE_DELTA_LOG_STORE_CLASS = "org.apache.spark.sql.delta.storage.AzureLogStore"
   private[this] val S3_DELTA_LOG_STORE_CLASS = "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore"
   private[this] val HDFS_DELTA_LOG_STORE_CLASS = "org.apache.spark.sql.delta.storage.HDFSLogStore"
@@ -61,7 +61,7 @@ class StorageProperties(private val properties: Map[String, String], private val
   final def getFileFormat(): FileFormat =
     FileFormat(getString(DATA_FORMAT))
 
-  /** Returns a chunk size for grouping records.  */
+  /** Returns a chunk size for grouping records. */
   final def getChunkSize(): Int = get(CHUNK_SIZE).fold(DEFAULT_CHUNK_SIZE)(_.toInt)
 
   /** Returns a buffer size used between reading and emitting. */
