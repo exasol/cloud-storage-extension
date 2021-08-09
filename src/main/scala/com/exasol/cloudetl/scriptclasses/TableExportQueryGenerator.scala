@@ -20,10 +20,7 @@ object TableExportQueryGenerator {
    * @param metadata an Exasol metadata object
    * @param exportSpecification an Exasol export specification object
    */
-  def generateSqlForExportSpec(
-    metadata: ExaMetadata,
-    exportSpec: ExaExportSpecification
-  ): String = {
+  def generateSqlForExportSpec(metadata: ExaMetadata, exportSpec: ExaExportSpecification): String = {
     val storageProperties = StorageProperties(exportSpec.getParameters.asScala.toMap, metadata)
     val bucket = Bucket(storageProperties)
     bucket.validate()
@@ -32,7 +29,7 @@ object TableExportQueryGenerator {
     val bucketPath = bucket.bucketPath
     val parallelism = storageProperties.getParallelism("iproc()")
     val storagePropertiesStr = storageProperties.mkString()
-    val scriptSchema = metadata.getScriptSchema
+    val scriptSchema = metadata.getScriptSchema()
     val srcColumns = getSourceColumns(exportSpec)
     val srcColumnsStr = srcColumns.mkString(".")
 
@@ -60,21 +57,16 @@ object TableExportQueryGenerator {
 
   /** Returns source column names with quotes removed. */
   private[this] def getSourceColumns(spec: ExaExportSpecification): Seq[String] =
-    spec.getSourceColumnNames.asScala
-      .map {
-        case value =>
-          getColumnName(value).replaceAll("\"", "")
-      }
+    spec.getSourceColumnNames.asScala.map(getColumnName(_))
 
   /**
    * Given a table name dot column name syntax (myTable.colInt), return
    * the column name.
    */
-  private[this] def getColumnName(str: String): String = str.split("\\.") match {
-    case Array(colName)              => colName
-    case Array(tblName @ _, colName) => colName
-    case _ =>
-      throw new RuntimeException(s"Could not parse the column name from '$str'!")
+  private[this] def getColumnName(columnName: String): String = columnName.split("\\.") match {
+    case Array(column)            => column
+    case Array(table @ _, column) => column
+    case _                        => throw new RuntimeException(s"Could not parse the column name from '$columnName'!")
   }
 
 }

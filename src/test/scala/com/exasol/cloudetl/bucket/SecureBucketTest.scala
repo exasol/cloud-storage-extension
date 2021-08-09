@@ -8,7 +8,7 @@ import org.apache.hadoop.conf.Configuration
 class SecureBucketTest extends AbstractBucketTest {
 
   test("validate throws if no connection name is provided") {
-    assertNoConnectionName { BaseSecureBucket(properties).validate() }
+    assertNoConnectionName(BaseSecureBucket(properties).validate())
   }
 
   test("validate throws if access properties are provided") {
@@ -16,7 +16,7 @@ class SecureBucketTest extends AbstractBucketTest {
       "accountNameProperty" -> "user",
       "accountSecretProperty" -> "secret"
     )
-    assertForbiddenProperty { BaseSecureBucket(properties).validate() }
+    assertForbiddenProperty(BaseSecureBucket(properties).validate())
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))

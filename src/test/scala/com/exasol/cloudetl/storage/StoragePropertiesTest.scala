@@ -57,11 +57,10 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
       "wasb" -> "org.apache.spark.sql.delta.storage.AzureLogStore",
       "file" -> "org.apache.spark.sql.delta.storage.HDFSLogStore"
     )
-    data.foreach {
-      case (scheme, expected) =>
-        val path = s"$scheme://a/path"
-        properties = Map(StorageProperties.BUCKET_PATH -> path)
-        assert(BaseProperties(properties).getDeltaFormatLogStoreClassName() === expected)
+    data.foreach { case (scheme, expected) =>
+      val path = s"$scheme://a/path"
+      properties = Map(StorageProperties.BUCKET_PATH -> path)
+      assert(BaseProperties(properties).getDeltaFormatLogStoreClassName() === expected)
     }
   }
 
@@ -112,6 +111,15 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
 
   test("isOverwrite returns default false value if it is not set") {
     assert(BaseProperties(properties).isOverwrite() === false)
+  }
+
+  test("isParquetLowercaseSchema returns true by default") {
+    assert(BaseProperties(properties).isParquetLowercaseSchema() === true)
+  }
+
+  test("isParquetLowercaseSchema returns user set value") {
+    properties = Map(StorageProperties.PARQUET_LOWERCASE_SCHEMA -> "false")
+    assert(BaseProperties(properties).isParquetLowercaseSchema() === false)
   }
 
   final def newConnectionInformation(
@@ -216,7 +224,6 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     assert(StorageProperties(mkStringResult, metadata) === expected)
   }
 
-  private[this] case class BaseProperties(val params: Map[String, String])
-      extends StorageProperties(params, None)
+  private[this] case class BaseProperties(val params: Map[String, String]) extends StorageProperties(params, None)
 
 }

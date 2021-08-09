@@ -2,6 +2,11 @@ import com.exasol.cloudetl.sbt.Dependencies
 import com.exasol.cloudetl.sbt.Settings
 import com.exasol.cloudetl.sbt.IntegrationTestPlugin
 
+// Adding this since dependency excludes are not properly handled using coursier.
+// See: https://github.com/sbt/sbt/issues/5170
+// Enable coursier once the issue is resolved.
+ThisBuild / useCoursier := false
+
 lazy val orgSettings = Seq(
   name := "cloud-storage-extension",
   description := "Exasol Cloud Storage Import and Export Extension",
@@ -10,15 +15,15 @@ lazy val orgSettings = Seq(
 )
 
 lazy val buildSettings = Seq(
-  scalaVersion := "2.12.12",
-  crossScalaVersions := Seq("2.11.12", "2.12.12")
+  scalaVersion := "2.12.14",
+  crossScalaVersions := Seq("2.11.12", "2.12.14")
 )
 
 lazy val root =
   project
     .in(file("."))
     .settings(moduleName := "exasol-cloud-storage-extension")
-    .settings(version := "1.2.0")
+    .settings(version := "1.3.0")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.projectSettings(scalaVersion))
@@ -28,6 +33,6 @@ lazy val root =
       libraryDependencies ++= Dependencies.TestDependencies,
       excludeDependencies ++= Dependencies.ExcludedDependencies
     )
-    .enablePlugins(IntegrationTestPlugin, GitVersioning, ReproducibleBuildsPlugin)
+    .enablePlugins(IntegrationTestPlugin, ReproducibleBuildsPlugin)
 
 addCommandAlias("pluginUpdates", ";reload plugins;dependencyUpdates;reload return")

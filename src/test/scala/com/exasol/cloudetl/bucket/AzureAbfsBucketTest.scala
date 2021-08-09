@@ -24,9 +24,8 @@ class AzureAbfsBucketTest extends AbstractBucketTest {
       "fs.AbstractFileSystem.abfs.impl" -> classOf[Abfs].getName,
       "fs.AbstractFileSystem.abfss.impl" -> classOf[Abfss].getName
     )
-    (defaultMappings ++ extraMappings).foreach {
-      case (given, expected) =>
-        assert(conf.get(given) === expected)
+    (defaultMappings ++ extraMappings).foreach { case (given, expected) =>
+      assert(conf.get(given) === expected)
     }
   }
 
@@ -42,12 +41,12 @@ class AzureAbfsBucketTest extends AbstractBucketTest {
 
   test("apply throws if no connection name is provided") {
     properties = defaultProperties
-    assertNoConnectionName { getBucket(properties).validate() }
+    assertNoConnectionName(getBucket(properties).validate())
   }
 
   test("apply throws if secret key is provided as parameter") {
     properties = defaultProperties ++ Map("AZURE_SECRET_KEY" -> "secret")
-    assertForbiddenProperty { getBucket(properties).validate() }
+    assertForbiddenProperty(getBucket(properties).validate())
   }
 
   test("apply returns secret from connection object (account name from path)") {

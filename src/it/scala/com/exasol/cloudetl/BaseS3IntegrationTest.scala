@@ -1,6 +1,7 @@
 package com.exasol.cloudetl
 
 import java.io.File
+import java.lang.Long
 
 import com.exasol.dbbuilder.dialects.Table
 
@@ -13,12 +14,17 @@ import org.testcontainers.containers.localstack.LocalStackContainer
 import org.testcontainers.containers.localstack.LocalStackContainer.Service.S3
 
 trait BaseS3IntegrationTest extends BaseIntegrationTest {
+  val INT_MIN = Integer.MIN_VALUE
+  val INT_MAX = Integer.MAX_VALUE
+  val LONG_MIN = Long.MIN_VALUE
+  val LONG_MAX = Long.MAX_VALUE
 
-  val LOCALSTACK_DOCKER_IMAGE = DockerImageName.parse("localstack/localstack:0.12.5")
+  val LOCALSTACK_DOCKER_IMAGE = DockerImageName.parse("localstack/localstack:0.12.15")
   val s3Container = new LocalStackContainer(LOCALSTACK_DOCKER_IMAGE)
     .withServices(S3)
     .withReuse(true)
   var s3: AmazonS3 = _
+  var s3Endpoint: String = _
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -31,7 +37,7 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
     super.afterAll()
   }
 
-  def prepareS3Client(): Unit =
+  def prepareS3Client(): Unit = {
     s3 = AmazonS3ClientBuilder
       .standard()
       .withPathStyleAccessEnabled(true)
@@ -39,6 +45,11 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
       .withCredentials(s3Container.getDefaultCredentialsProvider())
       .disableChunkedEncoding()
       .build()
+    s3Endpoint = s3Container
+      .getEndpointConfiguration(S3)
+      .getServiceEndpoint()
+      .replaceAll("127.0.0.1", getS3ContainerNetworkGatewayAddress())
+  }
 
   def createS3ConnectionObject(): Unit = {
     val credentials = s3Container.getDefaultCredentialsProvider().getCredentials()
@@ -50,24 +61,18 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
   }
 
   def uploadFileToS3(bucket: String, file: HPath): Unit = {
-    s3.createBucket(new CreateBucketRequest(bucket))
+    createBucket(bucket)
     val request = new PutObjectRequest(bucket, file.getName(), new File(file.toUri()))
     s3.putObject(request)
-    Thread.sleep(3 * 1000)
     ()
   }
 
-  def importFromS3IntoExasol(
-    schemaName: String,
-    table: Table,
-    bucket: String,
-    file: String,
-    dataFormat: String
-  ): Unit = {
-    val s3Endpoint = s3Container
-      .getEndpointConfiguration(S3)
-      .getServiceEndpoint()
-      .replaceAll("127.0.0.1", getS3ContainerNetworkGatewayAddress())
+  def createBucket(bucket: String): Unit = {
+    s3.createBucket(new CreateBucketRequest(bucket))
+    ()
+  }
+
+  def importFromS3IntoExasol(schemaName: String, table: Table, bucket: String, file: String, dataFormat: String): Unit =
     executeStmt(
       s"""|IMPORT INTO ${table.getFullyQualifiedName()}
           |FROM SCRIPT $schemaName.IMPORT_PATH WITH
@@ -79,7 +84,18 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
           |PARALLELISM              = 'nproc()';
         """.stripMargin
     )
-  }
+
+  def exportIntoS3(schemaName: String, tableName: String, bucket: String): Unit =
+    executeStmt(
+      s"""|EXPORT $tableName
+          |INTO SCRIPT $schemaName.EXPORT_PATH WITH
+          |BUCKET_PATH     = 's3a://$bucket/'
+          |DATA_FORMAT     = 'PARQUET'
+          |S3_ENDPOINT     = '$s3Endpoint'
+          |CONNECTION_NAME = 'S3_CONNECTION'
+          |PARALLELISM     = 'iproc()';
+      """.stripMargin
+    )
 
   private[this] def getS3ContainerNetworkGatewayAddress(): String =
     s3Container

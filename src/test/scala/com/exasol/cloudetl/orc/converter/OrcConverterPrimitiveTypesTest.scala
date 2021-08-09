@@ -48,7 +48,7 @@ class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
 
   test("reads FLOAT as float value") {
     val schema = createStruct().addField("float", createFloat())
-    orcWriter.write[Any](schema, List(3.14F, null))
+    orcWriter.write[Any](schema, List(3.14f, null))
     val records = getRecords()
     assert(records(0).get(0) === 3.14f)
     assert(records(1).isNullAt(0) === true)

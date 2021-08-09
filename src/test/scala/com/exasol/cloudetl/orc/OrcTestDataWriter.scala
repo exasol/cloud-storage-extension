@@ -16,10 +16,15 @@ import org.apache.orc.TypeDescription.Category
 @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
 class OrcTestDataWriter(path: Path, conf: Configuration) {
 
+  private[this] val ORC_STRIPE_SIZE = 32L * 1024 * 1024
+  private[this] val ORC_BLOCK_SIZE = 64L * 1024 * 1024
+
   final def write[T](
     schema: TypeDescription,
     values: List[T]
   ): Unit = {
+    conf.set("orc.stripe.size", s"$ORC_STRIPE_SIZE")
+    conf.set("orc.block.size", s"$ORC_BLOCK_SIZE")
     val writer = OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(schema))
     val schemaChildren = schema.getChildren()
     val batch = schema.createRowBatch()
@@ -28,10 +33,9 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
       columnWriters(i) = getColumnSetter(schemaChildren.get(i), batch.cols(i))
     }
     batch.size = 0
-    values.foreach {
-      case value =>
-        columnWriters.foreach(writer => writer(value, batch.size))
-        batch.size += 1
+    values.foreach { case value =>
+      columnWriters.foreach(writer => writer(value, batch.size))
+      batch.size += 1
     }
     writer.addRowBatch(batch)
     writer.close()
@@ -78,7 +82,7 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
         case _ =>
           column.noNulls = false
           column.isNull(index) = true
-    }
+      }
 
   private[this] def doubleWriter(column: DoubleColumnVector): (Any, Int) => Unit =
     (value: Any, index: Int) =>
@@ -86,7 +90,7 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
         case d: Double => column.vector(index) = d
         case f: Float  => column.vector(index) = f.toDouble
         case _         => setNull(column, index)
-    }
+      }
 
   private[this] def decimalWriter(
     column: DecimalColumnVector,
@@ -96,21 +100,21 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
       value match {
         case dec: String => column.set(index, HiveDecimal.create(dec))
         case _           => setNull(column, index)
-    }
+      }
 
   private[this] def stringWriter(column: BytesColumnVector): (Any, Int) => Unit =
     (value: Any, index: Int) =>
       value match {
         case str: String => column.setVal(index, str.getBytes(UTF_8))
         case _           => setNull(column, index)
-    }
+      }
 
   private[this] def timestampWriter(column: TimestampColumnVector): (Any, Int) => Unit =
     (value: Any, index: Int) =>
       value match {
         case ts: java.sql.Timestamp => column.set(index, ts)
         case _                      => setNull(column, index)
-    }
+      }
 
   @SuppressWarnings(Array("org.wartremover.warts.Equals"))
   private[this] def listWriter(
@@ -152,11 +156,10 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
           column.keys.ensureSize(column.childCount, column.offsets(index) != 0)
           column.values.ensureSize(column.childCount, column.offsets(index) != 0)
           var offset = 0
-          map.foreach {
-            case (key, value) =>
-              keySetter(key, column.offsets(index).toInt + offset)
-              valueSetter(value, column.offsets(index).toInt + offset)
-              offset += 1
+          map.foreach { case (key, value) =>
+            keySetter(key, column.offsets(index).toInt + offset)
+            valueSetter(value, column.offsets(index).toInt + offset)
+            offset += 1
           }
         case _ => setNull(column, index)
       }
@@ -168,17 +171,16 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
   ): (Any, Int) => Unit = {
     val columns = orcType.getChildren()
     val fieldNames = orcType.getFieldNames()
-    val fieldSetters = (0 until columns.size()).map {
-      case idx => fieldNames.get(idx) -> getColumnSetter(columns.get(idx), column.fields(idx))
+    val fieldSetters = (0 until columns.size()).map { case idx =>
+      fieldNames.get(idx) -> getColumnSetter(columns.get(idx), column.fields(idx))
     }.toMap
     (value: Any, index: Int) =>
       value match {
         case m: Map[_, _] =>
           val map = m.asInstanceOf[Map[String, Any]]
-          fieldSetters.foreach {
-            case (key, innerSetter) =>
-              val mapValue = map.getOrElse(key, null)
-              innerSetter(mapValue, index)
+          fieldSetters.foreach { case (key, innerSetter) =>
+            val mapValue = map.getOrElse(key, null)
+            innerSetter(mapValue, index)
           }
         case _ => setNull(column, index)
       }

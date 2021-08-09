@@ -21,11 +21,11 @@ import com.typesafe.scalalogging.LazyLogging
  * A class that uses actor system to read a file and emit into Exasol,
  * with an asynchronous boundary between the two stages.
  */
-class DataEmitterPipeline(source: Source, properties: StorageProperties)
-    extends Emitter
-    with LazyLogging {
+class DataEmitterPipeline(source: Source, properties: StorageProperties) extends Emitter with LazyLogging {
   private[this] implicit val system: ActorSystem = ActorSystem()
   private[this] implicit val dispatcher: ExecutionContextExecutor = system.dispatcher
+
+  private[this] val valueConverter = source.getValueConverter()
 
   /**
    * @inheritdoc
@@ -33,6 +33,9 @@ class DataEmitterPipeline(source: Source, properties: StorageProperties)
   override final def emit(iterator: ExaIterator): Unit = {
     val pipeline = AkkaSource
       .fromIterator(() => source.stream().grouped(getChunkSize()))
+      .async
+      .buffer(getBufferSize(), OverflowStrategy.backpressure)
+      .map(buffer => valueConverter.convert(buffer.toIterator))
       .async
       .buffer(getBufferSize(), OverflowStrategy.backpressure)
       .runForeach(buffer => emitBuffer(buffer, iterator))
@@ -51,7 +54,7 @@ class DataEmitterPipeline(source: Source, properties: StorageProperties)
     }
   }
 
-  private[this] def emitBuffer(buffer: Seq[Row], iterator: ExaIterator): Unit =
+  private[this] def emitBuffer(buffer: Iterator[Row], iterator: ExaIterator): Unit =
     buffer.foreach { row =>
       val columns: Seq[Object] = row.getValues().map(_.asInstanceOf[AnyRef])
       iterator.emit(columns: _*)

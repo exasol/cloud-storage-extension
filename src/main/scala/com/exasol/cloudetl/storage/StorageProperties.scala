@@ -10,15 +10,16 @@ import org.apache.hadoop.fs.Path
  * that handles user provided key-value parameters for storage import
  * and export user-defined-functions (UDFs).
  */
-class StorageProperties(
-  private val properties: Map[String, String],
-  private val exaMetadata: Option[ExaMetadata]
-) extends AbstractProperties(properties) {
+class StorageProperties(private val properties: Map[String, String], private val exaMetadata: Option[ExaMetadata])
+    extends AbstractProperties(properties) {
 
   import StorageProperties._
 
   private[this] val DEFAULT_CHUNK_SIZE = 10000
   private[this] val DEFAULT_BUFFER_SIZE = 64
+  private[this] val AZURE_DELTA_LOG_STORE_CLASS = "org.apache.spark.sql.delta.storage.AzureLogStore"
+  private[this] val S3_DELTA_LOG_STORE_CLASS = "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore"
+  private[this] val HDFS_DELTA_LOG_STORE_CLASS = "org.apache.spark.sql.delta.storage.HDFSLogStore"
 
   /**
    * Returns the storage path.
@@ -47,15 +48,13 @@ class StorageProperties(
    * requirements.
    */
   final def getDeltaFormatLogStoreClassName(): String = getStoragePathScheme() match {
-    case "abfs" | "abfss" => "org.apache.spark.sql.delta.storage.AzureLogStore"
-    case "adl"            => "org.apache.spark.sql.delta.storage.AzureLogStore"
+    case "abfs" | "abfss" => AZURE_DELTA_LOG_STORE_CLASS
+    case "adl"            => AZURE_DELTA_LOG_STORE_CLASS
     case "gs" =>
-      throw new UnsupportedOperationException(
-        "Delta format LogStore API is not supported in Google Cloud Storage yet."
-      )
-    case "s3a"            => "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore"
-    case "wasb" | "wasbs" => "org.apache.spark.sql.delta.storage.AzureLogStore"
-    case _                => "org.apache.spark.sql.delta.storage.HDFSLogStore"
+      throw new UnsupportedOperationException("Delta format LogStore API is not supported in Google Cloud Storage yet.")
+    case "s3a"            => S3_DELTA_LOG_STORE_CLASS
+    case "wasb" | "wasbs" => AZURE_DELTA_LOG_STORE_CLASS
+    case _                => HDFS_DELTA_LOG_STORE_CLASS
   }
 
   /** Returns the [[FileFormat]] file format. */
@@ -84,6 +83,14 @@ class StorageProperties(
    */
   final def isOverwrite(): Boolean =
     isEnabled(OVERWRITE)
+
+  /**
+   * Checks if the Parquet export schema with lower case fields enabled.
+   *
+   * By default it is set to {@code true}.
+   */
+  final def isParquetLowercaseSchema(): Boolean =
+    get(PARQUET_LOWERCASE_SCHEMA).fold(true)(_.toBoolean)
 
   /**
    * Returns a new [[StorageProperties]] that merges the key-value pairs
@@ -127,6 +134,9 @@ object StorageProperties extends CommonProperties {
 
   /** An optional property key name for size of asynchronous boundary size. */
   private[storage] val BUFFER_SIZE = "BUFFER_SIZE"
+
+  /** An optional property for setting Parquet export schema with lowercase fields. */
+  private[storage] final val PARQUET_LOWERCASE_SCHEMA: String = "PARQUET_LOWERCASE_SCHEMA"
 
   /**
    * Returns [[StorageProperties]] from key values map and

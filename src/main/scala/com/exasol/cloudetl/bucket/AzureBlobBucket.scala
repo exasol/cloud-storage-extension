@@ -7,9 +7,7 @@ import com.exasol.cloudetl.storage.StorageProperties
 import org.apache.hadoop.conf.Configuration
 
 /** A [[Bucket]] implementation for the Azure Blob Storage */
-final case class AzureBlobBucket(path: String, params: StorageProperties)
-    extends Bucket
-    with SecureBucket {
+final case class AzureBlobBucket(path: String, params: StorageProperties) extends Bucket with SecureBucket {
 
   private[this] val AZURE_ACCOUNT_NAME: String = "AZURE_ACCOUNT_NAME"
   private[this] val AZURE_CONTAINER_NAME: String = "AZURE_CONTAINER_NAME"

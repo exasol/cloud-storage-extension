@@ -5,9 +5,7 @@ import com.exasol.cloudetl.storage.StorageProperties
 import org.apache.hadoop.conf.Configuration
 
 /** A [[Bucket]] implementation for the AWS S3 */
-final case class S3Bucket(path: String, params: StorageProperties)
-    extends Bucket
-    with SecureBucket {
+final case class S3Bucket(path: String, params: StorageProperties) extends Bucket with SecureBucket {
 
   private[this] val S3_ENDPOINT: String = "S3_ENDPOINT"
   private[this] val S3_ACCESS_KEY: String = "S3_ACCESS_KEY"

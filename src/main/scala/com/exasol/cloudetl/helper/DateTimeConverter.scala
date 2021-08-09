@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.util
+package com.exasol.cloudetl.helper
 
 import java.sql.Date
 import java.sql.Timestamp
@@ -8,7 +8,7 @@ import java.util.TimeZone
 /**
  * Helper functions to convert date time values.
  */
-object DateTimeUtil {
+object DateTimeConverter {
   // scalastyle:off magic.number
   val UnixEpochDateTime: LocalDateTime = LocalDateTime.of(1970, 1, 1, 0, 0, 0)
   // scalastyle:on magic.number
@@ -63,9 +63,9 @@ object DateTimeUtil {
    */
   @SuppressWarnings(Array("org.wartremover.contrib.warts.ExposedTuples"))
   def getJulianDayAndNanos(us: Long): (Int, Long) = {
-    val julian_us = us + JULIAN_DAY_OF_EPOCH * MICROS_PER_DAY
-    val day = julian_us / MICROS_PER_DAY
-    val micros = julian_us % MICROS_PER_DAY
+    val julianMicros = us + JULIAN_DAY_OF_EPOCH * MICROS_PER_DAY
+    val day = julianMicros / MICROS_PER_DAY
+    val micros = julianMicros % MICROS_PER_DAY
     (day.toInt, micros * 1000L)
   }
 

@@ -1,7 +1,8 @@
-package com.exasol.cloudetl
+package com.exasol.cloudetl.alluxio
 
 import java.sql.ResultSet
 
+import com.exasol.cloudetl.BaseIntegrationTest
 import com.exasol.dbbuilder.dialects.Table
 import com.exasol.matcher.ResultSetStructureMatcher.table
 import com.dimafeng.testcontainers.GenericContainer
@@ -10,7 +11,7 @@ import org.hamcrest.MatcherAssert.assertThat
 
 class AlluxioExportImportIT extends BaseIntegrationTest {
 
-  val ALLUXIO_IMAGE = "alluxio/alluxio:2.5.0"
+  val ALLUXIO_IMAGE = "alluxio/alluxio:2.6.0"
   val SCHEMA_NAME = "ALLUXIO_SCHEMA"
 
   val alluxioMainContainer =

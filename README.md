@@ -2,9 +2,21 @@
 
 <img alt="cloud-storage-extension logo" src="doc/images/cloud-storage-etl-udfs_128x128.png" style="float:left; padding:0px 10px 10px 10px;"/>
 
-[![Build Status](https://travis-ci.com/exasol/cloud-storage-extension.svg?branch=main)](https://travis-ci.com/exasol/cloud-storage-extension)
-[![Coveralls][coveralls-badge]][coveralls-link]
-[![GitHub Release][gh-release-badge]][gh-release-link]
+[![Build Status](https://github.com/exasol/cloud-storage-extension/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/cloud-storage-extension/actions/workflows/ci-build.yml)
+[![Coveralls](https://img.shields.io/coveralls/exasol/cloud-storage-extension.svg)](https://coveralls.io/github/exasol/cloud-storage-extension)
+[![GitHub Release](https://img.shields.io/github/release/exasol/cloud-storage-extension.svg?logo=github)](https://github.com/exasol/cloud-storage-extension/releases/latest)
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Acloud-storage-extension&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.exasol%3Acloud-storage-extension)
+
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Acloud-storage-extension&metric=security_rating)](https://sonarcloud.io/dashboard?id=com.exasol%3Acloud-storage-extension)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Acloud-storage-extension&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=com.exasol%3Acloud-storage-extension)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Acloud-storage-extension&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=com.exasol%3Acloud-storage-extension)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Acloud-storage-extension&metric=sqale_index)](https://sonarcloud.io/dashboard?id=com.exasol%3Acloud-storage-extension)
+
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Acloud-storage-extension&metric=code_smells)](https://sonarcloud.io/dashboard?id=com.exasol%3Acloud-storage-extension)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Acloud-storage-extension&metric=coverage)](https://sonarcloud.io/dashboard?id=com.exasol%3Acloud-storage-extension)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Acloud-storage-extension&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=com.exasol%3Acloud-storage-extension)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Acloud-storage-extension&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.exasol%3Acloud-storage-extension)
 
 ## Overview
 
@@ -96,10 +108,6 @@ These plugins help with project development.
 | [SBT Explicit Dependencies][sbt-expdep-link]| Checks which direct libraries required to compile your code     | Apache License 2.0   |
 | [SBT Git][sbt-git-link]                     | A plugin for Git integration, used to version the release jars  | BSD 2-Clause License |
 
-[coveralls-badge]: https://img.shields.io/coveralls/exasol/cloud-storage-extension.svg
-[coveralls-link]: https://coveralls.io/github/exasol/cloud-storage-extension
-[gh-release-badge]: https://img.shields.io/github/release/exasol/cloud-storage-extension.svg?logo=github
-[gh-release-link]: https://github.com/exasol/cloud-storage-extension/releases/latest
 [exasol]: https://www.exasol.com/en/
 [ieudf]: https://github.com/exasol/import-export-udf-common-scala
 [avro]: https://avro.apache.org/

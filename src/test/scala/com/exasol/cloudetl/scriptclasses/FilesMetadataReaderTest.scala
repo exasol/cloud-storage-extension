@@ -23,9 +23,8 @@ class FilesMetadataReaderTest extends StorageTest {
 
     FilesMetadataReader.run(mock[ExaMetadata], iter)
     verify(iter, times(3)).emit(anyString(), anyString())
-    expectedParquetFiles.foreach {
-      case (filename, partitionId) =>
-        verify(iter, times(1)).emit(filename, partitionId)
+    expectedParquetFiles.foreach { case (filename, partitionId) =>
+      verify(iter, times(1)).emit(filename, partitionId)
     }
   }
 

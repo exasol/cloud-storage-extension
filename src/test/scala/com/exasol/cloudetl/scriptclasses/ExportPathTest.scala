@@ -12,7 +12,7 @@ class ExportPathTest extends PathTest {
     val thrown = intercept[IllegalArgumentException] {
       ExportPath.generateSqlForExportSpec(metadata, exportSpec)
     }
-    assert(thrown.getMessage().contains("Please use the ExportTableQueryGenerator"))
+    assert(thrown.getMessage().contains("Please use the TableExportQueryGenerator"))
   }
 
 }

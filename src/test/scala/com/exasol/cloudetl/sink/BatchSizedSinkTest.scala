@@ -12,11 +12,7 @@ import com.exasol.common.data.Row
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
 
-class BatchSizedSinkTest
-    extends AnyFunSuite
-    with BeforeAndAfterEach
-    with DataRecords
-    with TestFileManager {
+class BatchSizedSinkTest extends AnyFunSuite with BeforeAndAfterEach with DataRecords with TestFileManager {
 
   private var outputPath: Path = _
   private val properties = Map("BUCKET_PATH" -> "a/path", "DATA_FORMAT" -> "avro")
