@@ -11,7 +11,12 @@ jobs:
       fail-fast: false
       matrix:
         scala: [ 2.12.14 ]
-        exasol-docker-version: [ 6.2.15-d1, 7.0.11 ]
+        sonar-run: [ false ]
+        include:
+          - exasol-docker-version: 6.2.15-d1
+          - exasol-docker-version: 7.0.11
+          - exasol-docker-version: 7.1.0-d1
+            sonar-run: true
 
     steps:
       - name: Checkout the Repository
@@ -57,12 +62,12 @@ jobs:
 
       # This required because of the sonarcloud-github-action docker volume mapping.
       - name: Prepare for Sonar Cloud Scan
-        if: matrix.exasol-docker-version == '7.0.11'
+        if: matrix.sonar-run
         run: |
           find . -name scoverage.xml -exec sed -i 's#/home/runner/work/cloud-storage-extension/cloud-storage-extension#/github/workspace#g' {} +
 
       - name: Sonar Cloud Scan
-        if: matrix.exasol-docker-version == '7.0.11'
+        if: matrix.sonar-run
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
