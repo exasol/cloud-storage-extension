@@ -35,7 +35,7 @@ jobs:
       - name: Pull Docker Images
         run: |
           docker pull exasol/docker-db:${{ matrix.exasol-docker-version }}
-          docker pull localstack/localstack:0.12.15
+          docker pull localstack/localstack:0.12.16
           docker pull alluxio/alluxio:2.6.1
 
       - name: Cache Local SBT Dependencies
