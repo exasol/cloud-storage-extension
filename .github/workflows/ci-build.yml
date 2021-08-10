@@ -10,12 +10,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        scala: [ 2.12.14 ]
-        sonar-run: [ false ]
         include:
-          - exasol-docker-version: 6.2.15-d1
-          - exasol-docker-version: 7.0.11
-          - exasol-docker-version: 7.1.0-d1
+          - scala: 2.12.14
+            exasol-docker-version: 6.2.15-d1
+            sonar-run: false
+          - scala: 2.12.14
+            exasol-docker-version: 7.0.11
+            sonar-run: false
+          - scala: 2.12.14
+            exasol-docker-version: 7.1.0-d1
             sonar-run: true
 
     steps:
@@ -33,7 +36,7 @@ jobs:
         run: |
           docker pull exasol/docker-db:${{ matrix.exasol-docker-version }}
           docker pull localstack/localstack:0.12.15
-          docker pull alluxio/alluxio:2.6.0
+          docker pull alluxio/alluxio:2.6.1
 
       - name: Cache Local SBT Dependencies
         uses: actions/cache@v2
@@ -54,6 +57,7 @@ jobs:
         run: ./scripts/ci.sh
         env:
           SCALA_VERSION: ${{ matrix.scala }}
+          EXASOL_DOCKER_VERSION: ${{ matrix.exasol-docker-version }}
 
       - name: Upload Coverage Results to Coveralls
         run: sbt coveralls

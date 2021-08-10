@@ -15,7 +15,7 @@ import org.scalatest.funsuite.AnyFunSuite
 trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
   private[this] val JAR_DIRECTORY_PATTERN = "scala-"
   private[this] val JAR_NAME_PATTERN = "cloud-storage-extension-"
-  private[this] val DEFAULT_EXASOL_DOCKER_IMAGE = "7.0.11"
+  private[this] val DEFAULT_EXASOL_DOCKER_IMAGE = "7.1.0-d1"
 
   val network = DockerNamedNetwork("it-tests", true)
   val exasolContainer = {
