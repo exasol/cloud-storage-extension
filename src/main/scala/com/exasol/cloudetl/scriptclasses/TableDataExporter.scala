@@ -37,12 +37,11 @@ object TableDataExporter extends LazyLogging {
     val vmId = metadata.getVmId()
     val sink = new BatchSizedSink(nodeId, vmId, iterator.size(), columns, bucket)
     logger.info(s"Starting export from node: $nodeId, vm: $vmId.")
-
     do {
       sink.write(getRow(iterator, columns))
     } while (iterator.next())
     sink.close()
-
+    iterator.emit(sink.getTotalRecords())
     logger.info(s"Exported '${sink.getTotalRecords()}' records from node '$nodeId' and vm '$vmId'.")
   }
 

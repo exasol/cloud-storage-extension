@@ -9,9 +9,14 @@ cd "$BASE_DIR"
 DEFAULT_SCALA_VERSION=2.12.14
 
 if [[ -z "${SCALA_VERSION:-}" ]]; then
-  echo "Environment variable SCALA_VERSION is not set"
-  echo "Using DEFAULT_SCALA_VERSION: $DEFAULT_SCALA_VERSION"
+  echo "Environment variable SCALA_VERSION is not set."
+  echo "Using DEFAULT_SCALA_VERSION: $DEFAULT_SCALA_VERSION."
   SCALA_VERSION=$DEFAULT_SCALA_VERSION
+fi
+
+if [[ -z "${EXASOL_DOCKER_VERSION:-}" ]]; then
+  echo "Environment variable for EXASOL_DOCKER_VERSION is not set."
+  echo "Using default version defined in the integration tests."
 fi
 
 run_self_check () {

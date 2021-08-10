@@ -31,7 +31,7 @@ addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.3.1")
 // Adds a `dependencyUpdates` task to check Maven repositories for
 // dependency updates
 // http://github.com/rtimush/sbt-updates
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.5.3")
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.6.0")
 
 // Adds `scalastyle` a coding style checker and enforcer
 // https://github.com/scalastyle/scalastyle-sbt-plugin

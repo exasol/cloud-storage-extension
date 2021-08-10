@@ -9,10 +9,11 @@ import com.exasol.dbbuilder.dialects.exasol.ExasolObjectFactory
 import com.exasol.dbbuilder.dialects.exasol.ExasolSchema
 import com.exasol.dbbuilder.dialects.exasol.udf.UdfScript
 
+import com.typesafe.scalalogging.LazyLogging
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
 
-trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
+trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLogging {
   private[this] val JAR_DIRECTORY_PATTERN = "scala-"
   private[this] val JAR_NAME_PATTERN = "cloud-storage-extension-"
   private[this] val DEFAULT_EXASOL_DOCKER_IMAGE = "7.0.11"
@@ -20,7 +21,6 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
   val network = DockerNamedNetwork("it-tests", true)
   val exasolContainer = {
     val c: ExasolContainer[_] = new ExasolContainer(getExasolDockerImageVersion())
-    c.withExposedPorts(8563, 2580)
     c.withNetwork(network)
     c.withReuse(true)
     c
@@ -150,7 +150,18 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll {
     }
   }
 
-  private[this] def getExasolDockerImageVersion(): String =
-    System.getProperty("EXASOL_DOCKER_VERSION", DEFAULT_EXASOL_DOCKER_IMAGE)
+  private[this] def getExasolDockerImageVersion(): String = {
+    val dockerVersion = System.getenv("EXASOL_DOCKER_VERSION")
+    if (dockerVersion == null) {
+      logger.info(
+        s"No 'EXASOL_DOCKER_VERSION' environment variable is not set, " +
+          s"using default '$DEFAULT_EXASOL_DOCKER_IMAGE' version."
+      )
+      DEFAULT_EXASOL_DOCKER_IMAGE
+    } else {
+      logger.info(s"Using docker '$dockerVersion' version from environment.")
+      dockerVersion
+    }
+  }
 
 }

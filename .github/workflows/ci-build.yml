@@ -10,8 +10,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        scala: [ 2.12.14 ]
-        exasol-docker-version: [ 6.2.15-d1, 7.0.11 ]
+        include:
+          - scala: 2.12.14
+            exasol-docker-version: 6.2.15-d1
+            sonar-run: false
+          - scala: 2.12.14
+            exasol-docker-version: 7.0.11
+            sonar-run: true
 
     steps:
       - name: Checkout the Repository
@@ -27,8 +32,8 @@ jobs:
       - name: Pull Docker Images
         run: |
           docker pull exasol/docker-db:${{ matrix.exasol-docker-version }}
-          docker pull localstack/localstack:0.12.15
-          docker pull alluxio/alluxio:2.6.0
+          docker pull localstack/localstack:0.12.16
+          docker pull alluxio/alluxio:2.6.1
 
       - name: Cache Local SBT Dependencies
         uses: actions/cache@v2
@@ -49,6 +54,7 @@ jobs:
         run: ./scripts/ci.sh
         env:
           SCALA_VERSION: ${{ matrix.scala }}
+          EXASOL_DOCKER_VERSION: ${{ matrix.exasol-docker-version }}
 
       - name: Upload Coverage Results to Coveralls
         run: sbt coveralls
@@ -57,12 +63,12 @@ jobs:
 
       # This required because of the sonarcloud-github-action docker volume mapping.
       - name: Prepare for Sonar Cloud Scan
-        if: matrix.exasol-docker-version == '7.0.11'
+        if: matrix.sonar-run
         run: |
           find . -name scoverage.xml -exec sed -i 's#/home/runner/work/cloud-storage-extension/cloud-storage-extension#/github/workspace#g' {} +
 
       - name: Sonar Cloud Scan
-        if: matrix.exasol-docker-version == '7.0.11'
+        if: matrix.sonar-run
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
