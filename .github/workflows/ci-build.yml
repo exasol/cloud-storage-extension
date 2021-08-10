@@ -16,9 +16,6 @@ jobs:
             sonar-run: false
           - scala: 2.12.14
             exasol-docker-version: 7.0.11
-            sonar-run: false
-          - scala: 2.12.14
-            exasol-docker-version: 7.1.0-d1
             sonar-run: true
 
     steps:
