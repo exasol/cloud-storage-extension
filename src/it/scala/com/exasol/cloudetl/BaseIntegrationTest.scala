@@ -21,7 +21,6 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   val network = DockerNamedNetwork("it-tests", true)
   val exasolContainer = {
     val c: ExasolContainer[_] = new ExasolContainer(getExasolDockerImageVersion())
-    c.withExposedPorts(8563, 2580)
     c.withNetwork(network)
     c.withReuse(true)
     c
