@@ -1,8 +1,10 @@
-# Cloud Storage Extension 1.3.1, released 2021-??-??
+# Cloud Storage Extension 1.3.1, released 2021-08-10
 
-Code name:
+Code name: Return Exported Records Count
 
 ## Summary
+
+This release fixes an issue in the export so that the number of exported records are shown after the export process.
 
 ## Bug Fixes
 
