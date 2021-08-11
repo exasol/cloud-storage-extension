@@ -36,6 +36,7 @@ object Dependencies {
     "com.google.guava" % "guava" % "30.1.1-jre",
     "com.exasol" %% "import-export-udf-common-scala" % ImportExportUDFVersion
       exclude ("org.slf4j", "slf4j-simple"),
+    "com.exasol" % "error-reporting-java" % "0.4.0",
     "org.apache.hadoop" % "hadoop-common" % HadoopVersion
       exclude ("com.google.guava", "guava")
       exclude ("org.apache.commons", "commons-text")

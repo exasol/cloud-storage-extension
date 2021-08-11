@@ -1,0 +1,4 @@
+error-tags:
+  CSE:
+    packages:
+      - com.exasol.cloudetl
