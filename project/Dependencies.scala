@@ -11,7 +11,7 @@ object Dependencies {
   private val ParquetIOVersion = "1.0.3"
   private val HadoopVersion = "3.3.1"
   private val DeltaVersion = "0.7.0"
-  private val OrcVersion = "1.6.9"
+  private val OrcVersion = "1.6.10"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.1"
   private val AlluxioCoreHDFSVersion = "2.6.1"
