@@ -23,7 +23,8 @@ class FileFormatTest extends AnyFunSuite {
     val thrown = intercept[IllegalArgumentException] {
       FileFormat("CsV")
     }
-    assert(thrown.getMessage === s"Unsupported file format CsV!")
+    assert(thrown.getMessage().startsWith("E-CSE-17"))
+    assert(thrown.getMessage().contains("file format 'CsV' is not supported."))
   }
 
 }

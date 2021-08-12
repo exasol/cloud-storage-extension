@@ -31,13 +31,10 @@ class TableExportQueryGeneratorTest extends PathTest {
          |  iproc();
          |""".stripMargin
 
-    assert(
-      TableExportQueryGenerator
-        .generateSqlForExportSpec(metadata, exportSpec) === expectedSQLStatement
-    )
-    verify(metadata, atLeastOnce).getScriptSchema
-    verify(exportSpec, times(1)).getParameters
-    verify(exportSpec, times(1)).getSourceColumnNames
+    assert(TableExportQueryGenerator.generateSqlForExportSpec(metadata, exportSpec) === expectedSQLStatement)
+    verify(metadata, atLeastOnce).getScriptSchema()
+    verify(exportSpec, times(1)).getParameters()
+    verify(exportSpec, times(1)).getSourceColumnNames()
   }
 
   test("generateSqlForExportSpec throws if required property is not set") {
@@ -48,9 +45,10 @@ class TableExportQueryGeneratorTest extends PathTest {
     val thrown = intercept[IllegalArgumentException] {
       TableExportQueryGenerator.generateSqlForExportSpec(metadata, exportSpec)
     }
-    assert(thrown.getMessage === "Please provide a value for the S3_ENDPOINT property!")
-    verify(exportSpec, times(1)).getParameters
-    verify(exportSpec, never).getSourceColumnNames
+    assert(thrown.getMessage().startsWith("E-CSE-2"))
+    assert(thrown.getMessage().contains("'S3_ENDPOINT' property value is missing."))
+    verify(exportSpec, times(1)).getParameters()
+    verify(exportSpec, never).getSourceColumnNames()
   }
 
   test("generateSqlForExportSpec throws if columns cannot be parsed (e.g, contains extra '.')") {
@@ -59,13 +57,14 @@ class TableExportQueryGeneratorTest extends PathTest {
     val srcCols = Seq("tbl.c_int.integer")
     when(exportSpec.getSourceColumnNames).thenReturn(srcCols.asJava)
 
-    val thrown = intercept[RuntimeException] {
+    val thrown = intercept[TableExporterException] {
       TableExportQueryGenerator.generateSqlForExportSpec(metadata, exportSpec)
     }
-    assert(thrown.getMessage === "Could not parse the column name from 'tbl.c_int.integer'!")
-    verify(metadata, atLeastOnce).getScriptSchema
-    verify(exportSpec, times(1)).getParameters
-    verify(exportSpec, times(1)).getSourceColumnNames
+    assert(thrown.getMessage().startsWith("E-CSE-17"))
+    assert(thrown.getMessage().contains("from given column syntax 'tbl.c_int.integer'"))
+    verify(metadata, atLeastOnce).getScriptSchema()
+    verify(exportSpec, times(1)).getParameters()
+    verify(exportSpec, times(1)).getSourceColumnNames()
   }
 
   private[this] def createDummyFiles(path: java.nio.file.Path): Seq[java.nio.file.Path] = {

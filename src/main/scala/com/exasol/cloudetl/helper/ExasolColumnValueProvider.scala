@@ -5,6 +5,7 @@ import java.math.RoundingMode
 
 import com.exasol.ExaIterator
 import com.exasol.cloudetl.data.ExaColumnInfo
+import com.exasol.errorreporting.ExaError
 
 /**
  * A class that returns column value on a given index and type from Exasol iterator.
@@ -31,7 +32,13 @@ final case class ExasolColumnValueProvider(iterator: ExaIterator) extends JavaCl
       case `jSqlDate`      => iterator.getDate(index)
       case `jSqlTimestamp` => iterator.getTimestamp(index)
       case _ =>
-        throw new IllegalArgumentException(s"Cannot get Exasol value for column type '$columnType'.")
+        throw new IllegalArgumentException(
+          ExaError
+            .messageBuilder("E-CSE-23")
+            .message("Cannot obtain Exasol value for column type {{TYPE}}.")
+            .parameter("TYPE", String.valueOf(columnType))
+            .toString()
+        )
     }
   }
 
@@ -41,7 +48,13 @@ final case class ExasolColumnValueProvider(iterator: ExaIterator) extends JavaCl
     } else {
       val updatedBigDecimal = bigDecimal.setScale(scale, RoundingMode.HALF_UP)
       if (updatedBigDecimal.precision > precision) {
-        throw new IllegalArgumentException(s"Actual precision of big decimal value exceeds configured '$precision'.")
+        throw new IllegalArgumentException(
+          ExaError
+            .messageBuilder("E-CSE-24")
+            .message("Actual precision of big decimal value exceeds configured {{PRECISION}}.")
+            .parameter("PRECISION", String.valueOf(precision))
+            .toString()
+        )
       }
       updatedBigDecimal
     }

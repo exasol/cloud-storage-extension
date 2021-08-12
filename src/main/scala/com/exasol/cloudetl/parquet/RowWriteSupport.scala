@@ -9,6 +9,7 @@ import scala.collection.JavaConverters._
 import com.exasol.cloudetl.helper.DateTimeConverter._
 import com.exasol.cloudetl.helper.ParquetSchemaConverter
 import com.exasol.common.data.Row
+import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.parquet.hadoop.api.WriteSupport
@@ -102,8 +103,8 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
   }
 
   private def makeWriter(primitiveType: PrimitiveType): RowValueWriter = {
-    val typeName = primitiveType.getPrimitiveTypeName
-    val originalType = primitiveType.getOriginalType
+    val typeName = primitiveType.getPrimitiveTypeName()
+    val originalType = primitiveType.getOriginalType()
 
     typeName match {
       case PrimitiveTypeName.BOOLEAN =>
@@ -139,7 +140,14 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
         val decimal = primitiveType.getLogicalTypeAnnotation().asInstanceOf[DecimalLogicalTypeAnnotation]
         makeDecimalWriter(decimal.getPrecision())
 
-      case _ => throw new UnsupportedOperationException(s"Unsupported parquet type '$typeName'.")
+      case _ =>
+        throw new UnsupportedOperationException(
+          ExaError
+            .messageBuilder("E-CSE-18")
+            .message("Parquet type {{PARQUET_TYPE}} is not supported.")
+            .parameter("PARQUET_TYPE", typeName.toString())
+            .toString()
+        )
     }
   }
 
@@ -200,7 +208,11 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
           decimalBuffer
         } else {
           throw new IllegalStateException(
-            s"The precision $precision is too small for decimal value."
+            ExaError
+              .messageBuilder("E-CSE-9")
+              .message("The precision {{PRECISION}} is too small for decimal value.")
+              .parameter("PRECISION", String.valueOf(precision))
+              .toString()
           )
         }
 

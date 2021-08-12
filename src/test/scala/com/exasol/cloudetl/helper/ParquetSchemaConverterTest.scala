@@ -18,8 +18,8 @@ class ParquetSchemaConverterTest extends AnyFunSuite with MockitoSugar {
     val thrown = intercept[IllegalArgumentException] {
       converter.createParquetMessageType(columns, "test_schema")
     }
-    val expectedMsg = s"Cannot convert Exasol type '${classOf[java.lang.Short]}' to Parquet type."
-    assert(thrown.getMessage === expectedMsg)
+    assert(thrown.getMessage().startsWith("E-CSE-22"))
+    assert(thrown.getMessage().contains("Exasol type 'class java.lang.Short' to Parquet type."))
   }
 
   test("createParquetMessageType returns Parquet schema from Exasol columns") {

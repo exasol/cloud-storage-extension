@@ -35,8 +35,7 @@ object FilesDataImporter extends LazyLogging {
 
     files.foreach { file =>
       logger.info(s"Importing from file: '$file'")
-      val source =
-        Source(fileFormat, new Path(file), bucket.getConfiguration(), bucket.fileSystem)
+      val source = Source(fileFormat, new Path(file), bucket.getConfiguration(), bucket.fileSystem)
       readAndEmit(transformValues(source), iterator)
       source.close()
     }

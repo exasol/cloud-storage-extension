@@ -5,6 +5,7 @@ import scala.util.control.NonFatal
 import com.exasol.cloudetl.orc.converter.StructConverter
 import com.exasol.common.data.Row
 import com.exasol.common.json.JsonMapper
+import com.exasol.errorreporting.ExaError
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
@@ -69,7 +70,14 @@ final case class OrcSource(
     } catch {
       case NonFatal(exception) =>
         logger.error(s"Could not create orc reader for the path: $path", exception)
-        throw exception
+        throw new SourceValidationException(
+          ExaError
+            .messageBuilder("E-CSE-25")
+            .message("Could not create Orc reader for path {{PATH}}.")
+            .parameter("PATH", path.toString())
+            .toString(),
+          exception
+        )
     }
   }
 

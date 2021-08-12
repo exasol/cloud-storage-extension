@@ -11,18 +11,15 @@ class AzureBlobBucketTest extends AbstractBucketTest {
     FORMAT -> "ORC"
   )
 
-  private[this] def assertAzureBlobBucket(
-    bucket: Bucket,
-    extraMappings: Map[String, String]
-  ): Unit = {
+  private[this] def assertAzureBlobBucket(bucket: Bucket, extraMappings: Map[String, String]): Unit = {
     assert(bucket.isInstanceOf[AzureBlobBucket])
     val conf = bucket.getConfiguration()
     val defaultMappings = Map(
-      "fs.azure" -> classOf[NativeAzureFileSystem].getName,
-      "fs.wasb.impl" -> classOf[NativeAzureFileSystem].getName,
-      "fs.wasbs.impl" -> classOf[NativeAzureFileSystem].getName,
-      "fs.AbstractFileSystem.wasb.impl" -> classOf[Wasb].getName,
-      "fs.AbstractFileSystem.wasbs.impl" -> classOf[Wasbs].getName
+      "fs.azure" -> classOf[NativeAzureFileSystem].getName(),
+      "fs.wasb.impl" -> classOf[NativeAzureFileSystem].getName(),
+      "fs.wasbs.impl" -> classOf[NativeAzureFileSystem].getName(),
+      "fs.AbstractFileSystem.wasb.impl" -> classOf[Wasb].getName(),
+      "fs.AbstractFileSystem.wasbs.impl" -> classOf[Wasbs].getName()
     )
     (defaultMappings ++ extraMappings).foreach { case (given, expected) =>
       assert(conf.get(given) === expected)
@@ -36,7 +33,8 @@ class AzureBlobBucketTest extends AbstractBucketTest {
     val thrown = intercept[BucketValidationException] {
       getBucket(properties, exaMetadata).getConfiguration()
     }
-    assert(thrown.getMessage === s"Invalid Azure blob wasb(s) path: $path!")
+    assert(thrown.getMessage().startsWith("E-CSE-19"))
+    assert(thrown.getMessage().contains(s"path '$path' is not valid."))
   }
 
   test("apply throws if no connection name is provided") {
@@ -65,20 +63,14 @@ class AzureBlobBucketTest extends AbstractBucketTest {
     )
     val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret")
     val bucket = getBucket(properties, exaMetadata)
-    assertAzureBlobBucket(
-      bucket,
-      Map("fs.azure.account.key.account1.blob.core.windows.net" -> "secret")
-    )
+    assertAzureBlobBucket(bucket, Map("fs.azure.account.key.account1.blob.core.windows.net" -> "secret"))
   }
 
   test("apply returns secret from password of connection object") {
     properties = defaultProperties ++ Map("CONNECTION_NAME" -> "connection_info")
     val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret")
     val bucket = getBucket(properties, exaMetadata)
-    assertAzureBlobBucket(
-      bucket,
-      Map("fs.azure.account.key.account1.blob.core.windows.net" -> "secret")
-    )
+    assertAzureBlobBucket(bucket, Map("fs.azure.account.key.account1.blob.core.windows.net" -> "secret"))
   }
 
   test("apply returns sas token from password of connection with account, container name") {
@@ -89,20 +81,14 @@ class AzureBlobBucketTest extends AbstractBucketTest {
     )
     val exaMetadata = mockConnectionInfo("", "AZURE_SAS_TOKEN=token")
     val bucket = getBucket(properties, exaMetadata)
-    assertAzureBlobBucket(
-      bucket,
-      Map("fs.azure.sas.container1.account1.blob.core.windows.net" -> "token")
-    )
+    assertAzureBlobBucket(bucket, Map("fs.azure.sas.container1.account1.blob.core.windows.net" -> "token"))
   }
 
   test("apply returns sas token from password of connection object") {
     properties = defaultProperties ++ Map("CONNECTION_NAME" -> "connection_info")
     val exaMetadata = mockConnectionInfo("", "AZURE_SAS_TOKEN=token")
     val bucket = getBucket(properties, exaMetadata)
-    assertAzureBlobBucket(
-      bucket,
-      Map("fs.azure.sas.container1.account1.blob.core.windows.net" -> "token")
-    )
+    assertAzureBlobBucket(bucket, Map("fs.azure.sas.container1.account1.blob.core.windows.net" -> "token"))
   }
 
   test("apply returns sas from connection object if both sas and secret are provided") {
@@ -113,10 +99,7 @@ class AzureBlobBucketTest extends AbstractBucketTest {
     )
     val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret;AZURE_SAS_TOKEN=token")
     val bucket = getBucket(properties, exaMetadata)
-    assertAzureBlobBucket(
-      bucket,
-      Map("fs.azure.sas.container1.account1.blob.core.windows.net" -> "token")
-    )
+    assertAzureBlobBucket(bucket, Map("fs.azure.sas.container1.account1.blob.core.windows.net" -> "token"))
   }
 
 }

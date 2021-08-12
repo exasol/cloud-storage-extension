@@ -44,8 +44,8 @@ class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with
     val thrown = intercept[IllegalArgumentException] {
       getBucket(properties).getPaths()
     }
-    val expectedMessage = s"The provided path: '$path' is not a Delta formatted directory!"
-    assert(thrown.getMessage.contains(expectedMessage))
+    assert(thrown.getMessage().startsWith("F-CSE-3"))
+    assert(thrown.getMessage().contains(s"path '$path' is not a Delta formatted"))
   }
 
   test("getPaths returns delta log files with latest snapshot") {

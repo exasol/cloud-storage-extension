@@ -4,6 +4,7 @@ import scala.util.control.NonFatal
 
 import com.exasol.common.avro.AvroRowIterator
 import com.exasol.common.data.Row
+import com.exasol.errorreporting.ExaError
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.avro.file.DataFileReader
@@ -49,7 +50,14 @@ final case class AvroSource(
     } catch {
       case NonFatal(exception) =>
         logger.error(s"Could not create avro reader for path: $path", exception);
-        throw exception
+        throw new SourceValidationException(
+          ExaError
+            .messageBuilder("E-CSE-26")
+            .message("Could not create Avro reader for path {{PATH}}.")
+            .parameter("PATH", path.toString())
+            .toString(),
+          exception
+        )
     }
 
   override def close(): Unit =

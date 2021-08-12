@@ -12,10 +12,7 @@ class AzureAbfsBucketTest extends AbstractBucketTest {
     FORMAT -> "PARQUET"
   )
 
-  private[this] def assertAzureAbfsBucket(
-    bucket: Bucket,
-    extraMappings: Map[String, String]
-  ): Unit = {
+  private[this] def assertAzureAbfsBucket(bucket: Bucket, extraMappings: Map[String, String]): Unit = {
     assert(bucket.isInstanceOf[AzureAbfsBucket])
     val conf = bucket.getConfiguration()
     val defaultMappings = Map(
@@ -36,7 +33,8 @@ class AzureAbfsBucketTest extends AbstractBucketTest {
     val thrown = intercept[BucketValidationException] {
       getBucket(properties, exaMetadata).getConfiguration()
     }
-    assert(thrown.getMessage === s"Invalid Azure datalake abfs(s) path: $path!")
+    assert(thrown.getMessage().startsWith("E-CSE-20"))
+    assert(thrown.getMessage().contains(s"path '$path' is not valid."))
   }
 
   test("apply throws if no connection name is provided") {
@@ -53,10 +51,7 @@ class AzureAbfsBucketTest extends AbstractBucketTest {
     properties = defaultProperties ++ Map("CONNECTION_NAME" -> "connection_info")
     val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret")
     val bucket = getBucket(properties, exaMetadata)
-    assertAzureAbfsBucket(
-      bucket,
-      Map("fs.azure.account.key.account1.dfs.core.windows.net" -> "secret")
-    )
+    assertAzureAbfsBucket(bucket, Map("fs.azure.account.key.account1.dfs.core.windows.net" -> "secret"))
   }
 
   test("apply returns secret from connection object with account name") {
@@ -66,10 +61,7 @@ class AzureAbfsBucketTest extends AbstractBucketTest {
     )
     val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret")
     val bucket = getBucket(properties, exaMetadata)
-    assertAzureAbfsBucket(
-      bucket,
-      Map("fs.azure.account.key.account1.dfs.core.windows.net" -> "secret")
-    )
+    assertAzureAbfsBucket(bucket, Map("fs.azure.account.key.account1.dfs.core.windows.net" -> "secret"))
   }
 
 }

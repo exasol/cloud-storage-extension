@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.orc.converter
 
+import com.exasol.errorreporting.ExaError
+
 import org.apache.hadoop.hive.ql.exec.vector.ColumnVector
 import org.apache.orc.TypeDescription
 import org.apache.orc.TypeDescription.Category
@@ -20,9 +22,7 @@ object OrcConverterFactory {
       createComplexConverter(orcType)
     }
 
-  private[this] def createPrimitiveConverter(
-    orcType: TypeDescription
-  ): OrcConverter[_ <: ColumnVector] =
+  private[this] def createPrimitiveConverter(orcType: TypeDescription): OrcConverter[_ <: ColumnVector] =
     orcType.getCategory() match {
       case Category.BOOLEAN   => BooleanConverter
       case Category.BYTE      => ByteConverter
@@ -40,13 +40,15 @@ object OrcConverterFactory {
       case Category.VARCHAR   => StringConverter
       case _ =>
         throw new IllegalArgumentException(
-          s"Found orc unsupported type, '${orcType.getCategory}'."
+          ExaError
+            .messageBuilder("E-CSE-10")
+            .message("Orc primitive type {{PRIMITIVE_TYPE}} is not supported.")
+            .parameter("PRIMITIVE_TYPE", orcType.getCategory())
+            .toString()
         )
     }
 
-  private[this] def createComplexConverter(
-    orcType: TypeDescription
-  ): OrcConverter[_ <: ColumnVector] =
+  private[this] def createComplexConverter(orcType: TypeDescription): OrcConverter[_ <: ColumnVector] =
     orcType.getCategory() match {
       case Category.LIST =>
         val listElementType = orcType.getChildren().get(0)
@@ -59,7 +61,12 @@ object OrcConverterFactory {
       case Category.UNION  => UnionConverter(orcType)
       case _ =>
         throw new IllegalArgumentException(
-          s"Found orc unsupported type, '${orcType.getCategory}'."
+          ExaError
+            .messageBuilder("E-CSE-11")
+            .message("Orc complex type {{COMPLEX_TYPE}} is not supported.")
+            .parameter("COMPLEX_TYPE", orcType.getCategory())
+            .toString()
         )
     }
+
 }

@@ -61,7 +61,8 @@ class ExasolColumnValueProviderTest extends AnyFunSuite with BeforeAndAfterEach 
     val thrown = intercept[IllegalArgumentException] {
       columnValueProvider.getColumnValue(0, ExaColumnInfo("c_short", classOf[java.lang.Short]))
     }
-    assert(thrown.getMessage() === "Cannot get Exasol value for column type 'class java.lang.Short'.")
+    assert(thrown.getMessage().startsWith("E-CSE-23"))
+    assert(thrown.getMessage().contains("Cannot obtain Exasol value for column type 'class java.lang.Short'."))
   }
 
   test("getColumnValue throws for updated big decimal with higher precision") {
@@ -71,7 +72,8 @@ class ExasolColumnValueProviderTest extends AnyFunSuite with BeforeAndAfterEach 
     val thrown = intercept[IllegalArgumentException] {
       columnValueProvider.getColumnValue(3, columnInfo)
     }
-    assert(thrown.getMessage() === "Actual precision of big decimal value exceeds configured '4'.")
+    assert(thrown.getMessage().contains("E-CSE-24"))
+    assert(thrown.getMessage().contains("Actual precision of big decimal value exceeds configured '4'."))
   }
 
   test("getColumnValue returns updated big decimal") {

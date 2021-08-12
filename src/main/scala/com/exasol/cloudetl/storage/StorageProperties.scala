@@ -2,6 +2,7 @@ package com.exasol.cloudetl.storage
 
 import com.exasol.ExaMetadata
 import com.exasol.common.{AbstractProperties, CommonProperties}
+import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.fs.Path
 
@@ -46,13 +47,20 @@ class StorageProperties(private val properties: Map[String, String], private val
    * requirements.
    */
   final def getDeltaFormatLogStoreClassName(): String = getStoragePathScheme() match {
-    case "abfs" | "abfss" => AZURE_DELTA_LOG_STORE_CLASS
-    case "adl"            => AZURE_DELTA_LOG_STORE_CLASS
+    case "abfs"  => AZURE_DELTA_LOG_STORE_CLASS
+    case "abfss" => AZURE_DELTA_LOG_STORE_CLASS
+    case "adl"   => AZURE_DELTA_LOG_STORE_CLASS
     case "gs" =>
-      throw new UnsupportedOperationException("Delta format LogStore API is not supported in Google Cloud Storage yet.")
-    case "s3a"            => S3_DELTA_LOG_STORE_CLASS
-    case "wasb" | "wasbs" => AZURE_DELTA_LOG_STORE_CLASS
-    case _                => HDFS_DELTA_LOG_STORE_CLASS
+      throw new UnsupportedOperationException(
+        ExaError
+          .messageBuilder("E-CSE-16")
+          .message("Delta format LogStore API is not supported in Google Cloud Storage yet.")
+          .toString()
+      )
+    case "s3a"   => S3_DELTA_LOG_STORE_CLASS
+    case "wasb"  => AZURE_DELTA_LOG_STORE_CLASS
+    case "wasbs" => AZURE_DELTA_LOG_STORE_CLASS
+    case _       => HDFS_DELTA_LOG_STORE_CLASS
   }
 
   /** Returns the [[FileFormat]] file format. */

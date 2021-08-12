@@ -3,6 +3,7 @@ package com.exasol.cloudetl.bucket
 import scala.util.matching.Regex
 
 import com.exasol.cloudetl.storage.StorageProperties
+import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.conf.Configuration
 
@@ -86,7 +87,14 @@ final case class AzureBlobBucket(path: String, params: StorageProperties) extend
   private[this] def regexParsePath(path: String): AccountAndContainer = path match {
     case AZURE_BLOB_PATH_REGEX(containerName, accountName, _) =>
       AccountAndContainer(accountName, containerName)
-    case _ => throw new BucketValidationException(s"Invalid Azure blob wasb(s) path: $path!")
+    case _ =>
+      throw new BucketValidationException(
+        ExaError
+          .messageBuilder("E-CSE-19")
+          .message("Azure blob wasb(s) path {{PATH}} is not valid.")
+          .parameter("PATH", path)
+          .toString()
+      )
   }
 
   private[this] case class AccountAndContainer(accountName: String, containerName: String)

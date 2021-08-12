@@ -20,7 +20,8 @@ class FilesDataImporterTest extends StorageTest {
     val thrown = intercept[IllegalArgumentException] {
       FilesDataImporter.run(mock[ExaMetadata], iter)
     }
-    assert(thrown.getMessage === "Unsupported file format CSV!")
+    assert(thrown.getMessage().startsWith("E-CSE-17"))
+    assert(thrown.getMessage().contains("file format 'CSV' is not supported."))
   }
 
   test("run emits all records from a source") {

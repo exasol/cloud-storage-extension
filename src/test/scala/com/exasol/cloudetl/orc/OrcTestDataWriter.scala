@@ -2,6 +2,8 @@ package com.exasol.cloudetl.orc
 
 import java.nio.charset.StandardCharsets.UTF_8
 
+import com.exasol.errorreporting.ExaError
+
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.hive.common.`type`.HiveDecimal
@@ -65,7 +67,13 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
       case Category.MAP       => mapWriter(column.asInstanceOf[MapColumnVector], orcType)
       case Category.STRUCT    => structWriter(column.asInstanceOf[StructColumnVector], orcType)
       case _ =>
-        throw new UnsupportedOperationException(s"Unknown writer type '$orcType'")
+        throw new UnsupportedOperationException(
+          ExaError
+            .messageBuilder("E-CSE-15")
+            .message("Unknown Orc type {{ORC_TYPE}} for writer.")
+            .parameter("ORC_TYPE", orcType)
+            .toString()
+        )
     }
 
   private[this] def longWriter(column: LongColumnVector): (Any, Int) => Unit =

@@ -5,6 +5,7 @@ import scala.collection.JavaConverters._
 import com.exasol.cloudetl.filesystem.FileSystemManager
 import com.exasol.cloudetl.storage.FileFormat
 import com.exasol.cloudetl.storage.StorageProperties
+import com.exasol.errorreporting.ExaError
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
@@ -54,7 +55,12 @@ abstract class Bucket extends LazyLogging {
     getRequiredProperties().foreach { key =>
       if (!properties.containsKey(key)) {
         throw new IllegalArgumentException(
-          s"Please provide a value for the $key property!"
+          ExaError
+            .messageBuilder("E-CSE-2")
+            .message("Required {{KEY}} property value is missing.")
+            .parameter("KEY", key)
+            .mitigation("Please provide value for a key as parameter.")
+            .toString()
         )
       }
     }
@@ -81,7 +87,12 @@ abstract class Bucket extends LazyLogging {
     val deltaLog = DeltaLog.forTable(spark, strippedBucketPath)
     if (!deltaLog.isValid()) {
       throw new IllegalArgumentException(
-        s"The provided path: '$bucketPath' is not a Delta formatted directory!"
+        ExaError
+          .messageBuilder("F-CSE-3")
+          .message("The provided path {{PATH}} is not a Delta formatted directory.")
+          .parameter("PATH", bucketPath)
+          .mitigation("Please use valid Delta format path.")
+          .toString()
       )
     }
     val latestSnapshot = deltaLog.update()
@@ -146,7 +157,14 @@ object Bucket extends LazyLogging {
       case "hdfs"           => HDFSBucket(path, storageProperties)
       case "file"           => LocalBucket(path, storageProperties)
       case _ =>
-        throw new IllegalArgumentException(s"Unsupported path scheme $scheme!")
+        throw new IllegalArgumentException(
+          ExaError
+            .messageBuilder("F-CSE-4")
+            .message("Provided path scheme {{SCHEME}} is not supported.")
+            .parameter("SCHEME", scheme)
+            .mitigation("Please check out the user guide for supported storage systems and their path schemes.")
+            .toString()
+        )
     }
   }
 
