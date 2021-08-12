@@ -34,7 +34,7 @@ class AzureAbfsBucketTest extends AbstractBucketTest {
       getBucket(properties, exaMetadata).getConfiguration()
     }
     assert(thrown.getMessage().startsWith("E-CSE-20"))
-    assert(thrown.getMessage().contains(s"path '$path' is not valid."))
+    assert(thrown.getMessage().contains(s"path '$path' scheme is not valid."))
   }
 
   test("apply throws if no connection name is provided") {

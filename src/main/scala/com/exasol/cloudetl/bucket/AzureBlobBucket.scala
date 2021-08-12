@@ -47,14 +47,11 @@ final case class AzureBlobBucket(path: String, params: StorageProperties) extend
     validate()
 
     val conf = new Configuration()
-    conf.set("fs.azure", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
-    conf.set("fs.wasb.impl", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
-    conf.set("fs.wasbs.impl", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName)
-    conf.set("fs.AbstractFileSystem.wasb.impl", classOf[org.apache.hadoop.fs.azure.Wasb].getName)
-    conf.set(
-      "fs.AbstractFileSystem.wasbs.impl",
-      classOf[org.apache.hadoop.fs.azure.Wasbs].getName
-    )
+    conf.set("fs.azure", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName())
+    conf.set("fs.wasb.impl", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName())
+    conf.set("fs.wasbs.impl", classOf[org.apache.hadoop.fs.azure.NativeAzureFileSystem].getName())
+    conf.set("fs.AbstractFileSystem.wasb.impl", classOf[org.apache.hadoop.fs.azure.Wasb].getName())
+    conf.set("fs.AbstractFileSystem.wasbs.impl", classOf[org.apache.hadoop.fs.azure.Wasbs].getName())
 
     val mergedProperties = if (properties.hasNamedConnection()) {
       properties.merge(AZURE_ACCOUNT_NAME)
@@ -91,8 +88,8 @@ final case class AzureBlobBucket(path: String, params: StorageProperties) extend
       throw new BucketValidationException(
         ExaError
           .messageBuilder("E-CSE-19")
-          .message("Azure blob wasb(s) path {{PATH}} is not valid.")
-          .parameter("PATH", path)
+          .message("Azure blob storage path {{PATH}} scheme is not valid.", path)
+          .mitigation("It should be either 'wasb' or 'wasbs'.")
           .toString()
       )
   }

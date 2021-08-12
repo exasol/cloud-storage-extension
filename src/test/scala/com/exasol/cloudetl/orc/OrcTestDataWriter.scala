@@ -71,7 +71,7 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
           ExaError
             .messageBuilder("E-CSE-15")
             .message("Unknown Orc type {{ORC_TYPE}} for writer.")
-            .parameter("ORC_TYPE", orcType)
+            .parameter("ORC_TYPE", String.valueOf(orcType))
             .toString()
         )
     }

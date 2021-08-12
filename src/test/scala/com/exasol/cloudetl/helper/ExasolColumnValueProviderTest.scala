@@ -72,8 +72,8 @@ class ExasolColumnValueProviderTest extends AnyFunSuite with BeforeAndAfterEach 
     val thrown = intercept[IllegalArgumentException] {
       columnValueProvider.getColumnValue(3, columnInfo)
     }
-    assert(thrown.getMessage().contains("E-CSE-24"))
-    assert(thrown.getMessage().contains("Actual precision of big decimal value exceeds configured '4'."))
+    assert(thrown.getMessage().startsWith("E-CSE-24"))
+    assert(thrown.getMessage().contains("value exceeds configured '4'."))
   }
 
   test("getColumnValue returns updated big decimal") {

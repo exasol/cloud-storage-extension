@@ -51,7 +51,11 @@ final case class ExasolColumnValueProvider(iterator: ExaIterator) extends JavaCl
         throw new IllegalArgumentException(
           ExaError
             .messageBuilder("E-CSE-24")
-            .message("Actual precision of big decimal value exceeds configured {{PRECISION}}.")
+            .message(
+              "Actual precision {{ACTUAL_PRECISION}} of big decimal {{VALUE}} value exceeds configured {{PRECISION}}."
+            )
+            .parameter("ACTUAL_PRECISION", String.valueOf(updatedBigDecimal.precision))
+            .parameter("VALUE", updatedBigDecimal.toString())
             .parameter("PRECISION", String.valueOf(precision))
             .toString()
         )

@@ -2,6 +2,7 @@ package com.exasol.cloudetl.storage
 
 import java.util.Locale.ENGLISH
 
+import com.exasol.cloudetl.constants.Constants.USER_GUIDE_LINK
 import com.exasol.errorreporting.ExaError
 
 /**
@@ -22,10 +23,9 @@ object FileFormat {
       throw new IllegalArgumentException(
         ExaError
           .messageBuilder("E-CSE-17")
-          .message("Provided file format {{FORMAT}} is not supported.")
-          .parameter("FORMAT", fileFormat)
+          .message("Provided file format {{FORMAT}} is not supported.", fileFormat)
           .mitigation("Please use one of supported formats.")
-          .mitigation("You can check user guide for supported list of formats.")
+          .mitigation("You can check user guide at {{LINK}} for supported list of formats.", USER_GUIDE_LINK)
           .toString()
       )
   }

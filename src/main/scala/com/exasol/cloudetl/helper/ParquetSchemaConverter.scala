@@ -100,9 +100,10 @@ final case class ParquetSchemaConverter(isLowercaseSchemaEnabled: Boolean) exten
       case _ =>
         throw new IllegalArgumentException(
           ExaError
-            .messageBuilder("E-CSE-22")
+            .messageBuilder("F-CSE-22")
             .message("Cannot convert Exasol type {{TYPE}} to Parquet type.")
             .parameter("TYPE", String.valueOf(columnType))
+            .ticketMitigation()
             .toString()
         )
     }

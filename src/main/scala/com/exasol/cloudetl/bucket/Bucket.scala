@@ -57,8 +57,7 @@ abstract class Bucket extends LazyLogging {
         throw new IllegalArgumentException(
           ExaError
             .messageBuilder("E-CSE-2")
-            .message("Required {{KEY}} property value is missing.")
-            .parameter("KEY", key)
+            .message("Required {{KEY}} property value is missing.", key)
             .mitigation("Please provide value for a key as parameter.")
             .toString()
         )
@@ -89,8 +88,7 @@ abstract class Bucket extends LazyLogging {
       throw new IllegalArgumentException(
         ExaError
           .messageBuilder("F-CSE-3")
-          .message("The provided path {{PATH}} is not a Delta formatted directory.")
-          .parameter("PATH", bucketPath)
+          .message("The provided path {{PATH}} is not a Delta formatted directory.", bucketPath)
           .mitigation("Please use valid Delta format path.")
           .toString()
       )
@@ -160,8 +158,7 @@ object Bucket extends LazyLogging {
         throw new IllegalArgumentException(
           ExaError
             .messageBuilder("F-CSE-4")
-            .message("Provided path scheme {{SCHEME}} is not supported.")
-            .parameter("SCHEME", scheme)
+            .message("Provided path scheme {{SCHEME}} is not supported.", scheme)
             .mitigation("Please check out the user guide for supported storage systems and their path schemes.")
             .toString()
         )

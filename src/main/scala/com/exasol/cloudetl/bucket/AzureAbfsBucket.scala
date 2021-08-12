@@ -75,8 +75,8 @@ final case class AzureAbfsBucket(path: String, params: StorageProperties) extend
       throw new BucketValidationException(
         ExaError
           .messageBuilder("E-CSE-20")
-          .message("Azure datalake abfs(s) path {{PATH}} is not valid.")
-          .parameter("PATH", path)
+          .message("Azure datalake storage path {{PATH}} scheme is not valid.", path)
+          .mitigation("It should be either 'abfs' or 'abfss'.")
           .toString()
       )
   }

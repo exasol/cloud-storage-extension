@@ -41,9 +41,10 @@ object OrcConverterFactory {
       case _ =>
         throw new IllegalArgumentException(
           ExaError
-            .messageBuilder("E-CSE-10")
+            .messageBuilder("F-CSE-10")
             .message("Orc primitive type {{PRIMITIVE_TYPE}} is not supported.")
-            .parameter("PRIMITIVE_TYPE", orcType.getCategory())
+            .parameter("PRIMITIVE_TYPE", String.valueOf(orcType.getCategory()))
+            .ticketMitigation()
             .toString()
         )
     }
@@ -62,9 +63,10 @@ object OrcConverterFactory {
       case _ =>
         throw new IllegalArgumentException(
           ExaError
-            .messageBuilder("E-CSE-11")
+            .messageBuilder("F-CSE-11")
             .message("Orc complex type {{COMPLEX_TYPE}} is not supported.")
-            .parameter("COMPLEX_TYPE", orcType.getCategory())
+            .parameter("COMPLEX_TYPE", String.valueOf(orcType.getCategory()))
+            .ticketMitigation()
             .toString()
         )
     }

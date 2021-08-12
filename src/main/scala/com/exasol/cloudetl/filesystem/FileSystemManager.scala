@@ -37,8 +37,7 @@ final case class FileSystemManager(fileSystem: FileSystem) {
       throw new FileNotFoundException(
         ExaError
           .messageBuilder("E-CSE-1")
-          .message("Provided file path {{PATH}} does not exist.")
-          .parameter("PATH", path)
+          .message("Provided file path {{PATH}} does not exist.", path)
           .mitigation("Please use valid file path.")
           .toString()
       )
