@@ -3,6 +3,7 @@ package com.exasol.cloudetl.source
 import com.exasol.cloudetl.storage.FileFormat
 import com.exasol.cloudetl.storage.FileFormat._
 import com.exasol.common.data.Row
+import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
@@ -53,17 +54,22 @@ abstract class Source {
  */
 object Source {
 
-  def apply(
-    fileFormat: FileFormat,
-    filePath: Path,
-    conf: Configuration,
-    fileSystem: FileSystem
-  ): Source = fileFormat match {
-    case AVRO            => AvroSource(filePath, conf, fileSystem)
-    case ORC             => OrcSource(filePath, conf, fileSystem)
-    case DELTA | PARQUET => ParquetSource(filePath, conf, fileSystem)
-    case _ =>
-      throw new IllegalArgumentException(s"Unsupported storage format: '$fileFormat'")
-  }
+  def apply(fileFormat: FileFormat, filePath: Path, conf: Configuration, fileSystem: FileSystem): Source =
+    fileFormat match {
+      case AVRO    => AvroSource(filePath, conf, fileSystem)
+      case ORC     => OrcSource(filePath, conf, fileSystem)
+      case DELTA   => ParquetSource(filePath, conf, fileSystem)
+      case PARQUET => ParquetSource(filePath, conf, fileSystem)
+      case _ =>
+        throw new IllegalArgumentException(
+          ExaError
+            .messageBuilder("E-CSE-21")
+            .message("Storage format {{FORMAT}} is not supported.")
+            .parameter("FORMAT", String.valueOf(fileFormat))
+            .mitigation("Please use one of supported storage formats.")
+            .mitigation("Please check the user guide for more information.")
+            .toString()
+        )
+    }
 
 }

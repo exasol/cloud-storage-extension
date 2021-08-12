@@ -9,7 +9,8 @@ class BucketTest extends AbstractBucketTest {
     val thrown = intercept[IllegalArgumentException] {
       getBucket(properties)
     }
-    assert(thrown.getMessage === "Unsupported path scheme xyz!")
+    assert(thrown.getMessage().startsWith("F-CSE-4"))
+    assert(thrown.getMessage().contains("Provided path scheme 'xyz' is not supported."))
   }
 
   test("apply returns LocalBucket") {

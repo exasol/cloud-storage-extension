@@ -2,6 +2,9 @@ package com.exasol.cloudetl.storage
 
 import java.util.Locale.ENGLISH
 
+import com.exasol.cloudetl.constants.Constants.USER_GUIDE_LINK
+import com.exasol.errorreporting.ExaError
+
 /**
  * A companion object for [[FileFormat]] class.
  *
@@ -16,7 +19,15 @@ object FileFormat {
     case "FILE"    => FILE
     case "ORC"     => ORC
     case "PARQUET" => PARQUET
-    case _         => throw new IllegalArgumentException(s"Unsupported file format $fileFormat!")
+    case _ =>
+      throw new IllegalArgumentException(
+        ExaError
+          .messageBuilder("E-CSE-17")
+          .message("Provided file format {{FORMAT}} is not supported.", fileFormat)
+          .mitigation("Please use one of supported formats.")
+          .mitigation("You can check user guide at {{LINK}} for supported list of formats.", USER_GUIDE_LINK)
+          .toString()
+      )
   }
 
   case object AVRO extends FileFormat

@@ -30,12 +30,9 @@ class FilesImportQueryGeneratorTest extends PathTest {
           |  partition_index;
           |""".stripMargin
 
-    assert(
-      FilesImportQueryGenerator
-        .generateSqlForImportSpec(metadata, importSpec) === expectedSQLStatement
-    )
-    verify(metadata, atLeastOnce).getScriptSchema
-    verify(importSpec, times(1)).getParameters
+    assert(FilesImportQueryGenerator.generateSqlForImportSpec(metadata, importSpec) === expectedSQLStatement)
+    verify(metadata, atLeastOnce).getScriptSchema()
+    verify(importSpec, times(1)).getParameters()
   }
 
   test("generateSqlForImportSpec throws if required property is not set") {
@@ -46,8 +43,9 @@ class FilesImportQueryGeneratorTest extends PathTest {
     val thrown = intercept[IllegalArgumentException] {
       FilesImportQueryGenerator.generateSqlForImportSpec(metadata, importSpec)
     }
-    assert(thrown.getMessage === "Please provide a value for the S3_ENDPOINT property!")
-    verify(importSpec, times(1)).getParameters
+    assert(thrown.getMessage().startsWith("E-CSE-2"))
+    assert(thrown.getMessage().contains("'S3_ENDPOINT' property value is missing."))
+    verify(importSpec, times(1)).getParameters()
   }
 
 }

@@ -13,10 +13,11 @@ class AvroSourceTest extends AbstractSourceTest {
 
   test("stream throws if it cannot create AVRO reader") {
     val nonPath = new org.apache.hadoop.fs.Path(s"$resourceDir/notFile.avro")
-    val thrown = intercept[java.io.FileNotFoundException] {
+    val thrown = intercept[SourceValidationException] {
       getSource(nonPath).stream().size
     }
-    assert(thrown.getMessage === s"File $nonPath does not exist")
+    assert(thrown.getMessage().startsWith("E-CSE-26"))
+    assert(thrown.getMessage().contains(s"Could not create Avro reader for path '$nonPath'."))
   }
 
 }

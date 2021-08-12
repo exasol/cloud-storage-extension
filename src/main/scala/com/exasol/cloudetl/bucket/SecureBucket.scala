@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.bucket
 
+import com.exasol.errorreporting.ExaError
+
 import com.typesafe.scalalogging.LazyLogging
 
 /**
@@ -23,14 +25,20 @@ trait SecureBucket extends LazyLogging { self: Bucket =>
   protected[this] final def validateConnectionProperties(): Unit = {
     if (hasSecureProperties()) {
       throw new BucketValidationException(
-        "Using credentials as parameters is forbidded. Please use an Exasol " +
-          "named connection object via CONNECTION_NAME property."
+        ExaError
+          .messageBuilder("E-CSE-5")
+          .message("Using credentials as parameters is forbidded.")
+          .mitigation("Please use an Exasol named connection object via CONNECTION_NAME property.")
+          .toString()
       )
     }
     if (!properties.hasNamedConnection()) {
       throw new BucketValidationException(
-        "No CONNECTION_NAME property is defined. Please use connection object " +
-          "to provide access credentials."
+        ExaError
+          .messageBuilder("E-CSE-6")
+          .message("No CONNECTION_NAME property is defined.")
+          .mitigation("Please use connection object to provide access credentials.")
+          .toString()
       )
     }
   }

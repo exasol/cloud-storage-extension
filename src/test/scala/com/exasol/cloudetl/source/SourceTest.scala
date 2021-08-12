@@ -9,7 +9,8 @@ class SourceTest extends AbstractSourceTest {
     val thrown = intercept[IllegalArgumentException] {
       getSource(path, "file")
     }
-    assert(thrown.getMessage === "Unsupported storage format: 'FILE'")
+    assert(thrown.getMessage().startsWith("E-CSE-21"))
+    assert(thrown.getMessage().contains("Storage format 'FILE' is not supported."))
   }
 
 }

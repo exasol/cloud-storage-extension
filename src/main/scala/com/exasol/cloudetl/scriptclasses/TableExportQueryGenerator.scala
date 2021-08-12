@@ -6,6 +6,7 @@ import com.exasol.ExaExportSpecification
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.bucket.Bucket
 import com.exasol.cloudetl.storage.StorageProperties
+import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.fs.Path
 
@@ -66,7 +67,14 @@ object TableExportQueryGenerator {
   private[this] def getColumnName(columnName: String): String = columnName.split("\\.") match {
     case Array(column)            => column
     case Array(table @ _, column) => column
-    case _                        => throw new RuntimeException(s"Could not parse the column name from '$columnName'!")
+    case _ =>
+      throw new TableExporterException(
+        ExaError
+          .messageBuilder("E-CSE-17")
+          .message("Could not parse the column name from given column syntax {{COLUMN}}.")
+          .parameter("COLUMN", columnName)
+          .toString()
+      )
   }
 
 }

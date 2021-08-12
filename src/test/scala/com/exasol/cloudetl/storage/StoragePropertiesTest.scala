@@ -26,10 +26,7 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     val thrown = intercept[IllegalArgumentException] {
       BaseProperties(properties).getStoragePath()
     }
-    assert(
-      thrown.getMessage === s"Please provide a value for the "
-        + s"${StorageProperties.BUCKET_PATH} property!"
-    )
+    assert(thrown.getMessage() === s"Please provide a value for the ${StorageProperties.BUCKET_PATH} property!")
   }
 
   test("getStoragePathScheme returns path scheme value") {
@@ -71,7 +68,8 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
       val thrown = intercept[UnsupportedOperationException] {
         BaseProperties(properties).getDeltaFormatLogStoreClassName()
       }
-      assert(thrown.getMessage.startsWith("Delta format LogStore API is not supported"))
+      assert(thrown.getMessage().startsWith("E-CSE-16"))
+      assert(thrown.getMessage().contains("is not supported in Google Cloud Storage"))
     }
   }
 
@@ -92,7 +90,8 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     val thrown = intercept[IllegalArgumentException] {
       BaseProperties(properties).getFileFormat()
     }
-    assert(thrown.getMessage === s"Unsupported file format $fileFormat!")
+    assert(thrown.getMessage().startsWith("E-CSE-17"))
+    assert(thrown.getMessage().contains(s"file format '$fileFormat' is not supported."))
   }
 
   test("getParallelism returns user provided value") {
@@ -174,7 +173,7 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     val thrown = intercept[IllegalArgumentException] {
       StorageProperties(properties, metadata).merge("")
     }
-    assert(thrown.getMessage === "Connection object password does not contain key=value pairs!")
+    assert(thrown.getMessage() === "Connection object password does not contain key=value pairs!")
   }
 
   test("mkString returns empty string by default") {
@@ -206,7 +205,7 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     val thrown = intercept[IllegalArgumentException] {
       StorageProperties("")
     }
-    assert(thrown.getMessage === s"The input string is not separated by ';'!")
+    assert(thrown.getMessage() === s"The input string is not separated by ';'!")
   }
 
   test("apply(string) returns correct StorageProperties") {

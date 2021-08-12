@@ -3,6 +3,7 @@ package com.exasol.cloudetl.bucket
 import scala.util.matching.Regex
 
 import com.exasol.cloudetl.storage.StorageProperties
+import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.conf.Configuration
 
@@ -40,19 +41,10 @@ final case class AzureAbfsBucket(path: String, params: StorageProperties) extend
     validate()
 
     val conf = new Configuration()
-    conf.set("fs.abfs.impl", classOf[org.apache.hadoop.fs.azurebfs.AzureBlobFileSystem].getName)
-    conf.set(
-      "fs.AbstractFileSystem.abfs.impl",
-      classOf[org.apache.hadoop.fs.azurebfs.Abfs].getName
-    )
-    conf.set(
-      "fs.abfss.impl",
-      classOf[org.apache.hadoop.fs.azurebfs.SecureAzureBlobFileSystem].getName
-    )
-    conf.set(
-      "fs.AbstractFileSystem.abfss.impl",
-      classOf[org.apache.hadoop.fs.azurebfs.Abfss].getName
-    )
+    conf.set("fs.abfs.impl", classOf[org.apache.hadoop.fs.azurebfs.AzureBlobFileSystem].getName())
+    conf.set("fs.AbstractFileSystem.abfs.impl", classOf[org.apache.hadoop.fs.azurebfs.Abfs].getName())
+    conf.set("fs.abfss.impl", classOf[org.apache.hadoop.fs.azurebfs.SecureAzureBlobFileSystem].getName())
+    conf.set("fs.AbstractFileSystem.abfss.impl", classOf[org.apache.hadoop.fs.azurebfs.Abfss].getName())
 
     val mergedProperties = if (properties.hasNamedConnection()) {
       properties.merge(AZURE_ACCOUNT_NAME)
@@ -79,7 +71,14 @@ final case class AzureAbfsBucket(path: String, params: StorageProperties) extend
   private[this] def regexParsePath(path: String): AccountAndContainer = path match {
     case AZURE_ABFS_PATH_REGEX(containerName, accountName, _) =>
       AccountAndContainer(accountName, containerName)
-    case _ => throw new BucketValidationException(s"Invalid Azure datalake abfs(s) path: $path!")
+    case _ =>
+      throw new BucketValidationException(
+        ExaError
+          .messageBuilder("E-CSE-20")
+          .message("Azure datalake storage path {{PATH}} scheme is not valid.", path)
+          .mitigation("It should be either 'abfs' or 'abfss'.")
+          .toString()
+      )
   }
 
   private[this] case class AccountAndContainer(accountName: String, containerName: String)

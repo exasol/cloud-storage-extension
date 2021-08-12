@@ -5,6 +5,7 @@ import scala.util.control.NonFatal
 
 import com.exasol.cloudetl.parquet.ParquetValueConverter
 import com.exasol.common.data.Row
+import com.exasol.errorreporting.ExaError
 import com.exasol.parquetio.data.{Row => ParquetRow}
 import com.exasol.parquetio.reader.RowParquetReader
 
@@ -61,7 +62,14 @@ final case class ParquetSource(
     } catch {
       case NonFatal(exception) =>
         logger.error(s"Could not create Parquet reader for path '$path'.", exception)
-        throw exception
+        throw new SourceValidationException(
+          ExaError
+            .messageBuilder("E-CSE-14")
+            .message("Could not create Parquet reader for path {{PATH}}.")
+            .parameter("PATH", path.toString())
+            .toString(),
+          exception
+        )
     }
 
   private[this] def getConfWithSchema(): Configuration = {
@@ -76,12 +84,26 @@ final case class ParquetSource(
   def getSchema(): MessageType = {
     val footers = getFooters()
     if (footers.isEmpty) {
-      logger.error(s"Could not read Parquet metadata from paths '$path'.")
-      throw new RuntimeException("Parquet footers are empty!")
+      logger.error(s"Parquet file footers are empty for file '$path'.")
+      throw new SourceValidationException(
+        ExaError
+          .messageBuilder("E-CSE-12")
+          .message("Parquet footers are empty for file {{PATH}}.")
+          .parameter("{{PATH}}", path.toString())
+          .toString()
+      )
     }
     footers.headOption
       .map(_.getFileMetaData().getSchema())
-      .fold(throw new RuntimeException("Could not read Parquet schema."))(identity)
+      .fold {
+        throw new SourceValidationException(
+          ExaError
+            .messageBuilder("E-CSE-13")
+            .message("Could not read schema from metadata of Parquet file {{PATH}}.")
+            .parameter("{{PATH}}", path.toString())
+            .toString()
+        )
+      }(identity)
   }
 
   private[this] def getFooters(): Seq[ParquetMetadata] =

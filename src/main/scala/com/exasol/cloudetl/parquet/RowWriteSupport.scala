@@ -9,6 +9,7 @@ import scala.collection.JavaConverters._
 import com.exasol.cloudetl.helper.DateTimeConverter._
 import com.exasol.cloudetl.helper.ParquetSchemaConverter
 import com.exasol.common.data.Row
+import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.parquet.hadoop.api.WriteSupport
@@ -102,8 +103,8 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
   }
 
   private def makeWriter(primitiveType: PrimitiveType): RowValueWriter = {
-    val typeName = primitiveType.getPrimitiveTypeName
-    val originalType = primitiveType.getOriginalType
+    val typeName = primitiveType.getPrimitiveTypeName()
+    val originalType = primitiveType.getOriginalType()
 
     typeName match {
       case PrimitiveTypeName.BOOLEAN =>
@@ -139,7 +140,14 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
         val decimal = primitiveType.getLogicalTypeAnnotation().asInstanceOf[DecimalLogicalTypeAnnotation]
         makeDecimalWriter(decimal.getPrecision())
 
-      case _ => throw new UnsupportedOperationException(s"Unsupported parquet type '$typeName'.")
+      case _ =>
+        throw new UnsupportedOperationException(
+          ExaError
+            .messageBuilder("E-CSE-18")
+            .message("Parquet type {{PARQUET_TYPE}} is not supported.")
+            .parameter("PARQUET_TYPE", typeName.toString())
+            .toString()
+        )
     }
   }
 
@@ -181,13 +189,14 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
       val decimal = row.getAs[java.math.BigDecimal](index)
       val unscaled = decimal.unscaledValue()
       val bytes = unscaled.toByteArray
+      val length = bytes.length
       val fixedLenBytesArray =
-        if (bytes.length == numBytes) {
+        if (length == numBytes) {
           // If the length of the underlying byte array of the unscaled
           // `BigDecimal` happens to be `numBytes`, just reuse it, so
           // that we don't bother copying it to `decimalBuffer`.
           bytes
-        } else if (bytes.length < numBytes) {
+        } else if (length < numBytes) {
           // Otherwise, the length must be less than `numBytes`.  In
           // this case we copy contents of the underlying bytes with
           // padding sign bytes to `decimalBuffer` to form the result
@@ -195,12 +204,17 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
 
           // For negatives all high bits need to be 1 hence -1 used
           val signByte = if (unscaled.signum < 0) -1: Byte else 0: Byte
-          java.util.Arrays.fill(decimalBuffer, 0, numBytes - bytes.length, signByte)
-          System.arraycopy(bytes, 0, decimalBuffer, numBytes - bytes.length, bytes.length)
+          java.util.Arrays.fill(decimalBuffer, 0, numBytes - length, signByte)
+          System.arraycopy(bytes, 0, decimalBuffer, numBytes - length, length)
           decimalBuffer
         } else {
           throw new IllegalStateException(
-            s"The precision $precision is too small for decimal value."
+            ExaError
+              .messageBuilder("E-CSE-9")
+              .message("The precision {{PRECISION}} is too small for decimal value.")
+              .parameter("PRECISION", String.valueOf(precision))
+              .mitigation("The precision should be at least as {{LEN}}.", String.valueOf(length))
+              .toString()
           )
         }
 

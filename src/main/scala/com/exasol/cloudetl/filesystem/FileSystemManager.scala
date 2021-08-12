@@ -3,6 +3,8 @@ package com.exasol.cloudetl.filesystem
 import java.io.FileNotFoundException
 import java.nio.file.Path
 
+import com.exasol.errorreporting.ExaError
+
 import org.apache.hadoop.fs.{Path => HadoopPath}
 import org.apache.hadoop.fs.FileStatus
 import org.apache.hadoop.fs.FileSystem
@@ -33,11 +35,15 @@ final case class FileSystemManager(fileSystem: FileSystem) {
     val statuses = fileSystem.globStatus(hadoopPath, HiddenFilesFilter)
     if (statuses == null) {
       throw new FileNotFoundException(
-        s"Provided file path '$path' does not exist. Please use valid path."
+        ExaError
+          .messageBuilder("E-CSE-1")
+          .message("Provided file path {{PATH}} does not exist.", path)
+          .mitigation("Please use valid file path.")
+          .toString()
       )
     } else {
       if (isSingleDirectory(statuses)) {
-        // User path is a single directory without anyany glob, only then list the files.
+        // User path is a single directory without any glob, only then list the files.
         listFiles(fileSystem.listStatus(statuses(0).getPath(), HiddenFilesFilter))
       } else {
         listFiles(statuses)

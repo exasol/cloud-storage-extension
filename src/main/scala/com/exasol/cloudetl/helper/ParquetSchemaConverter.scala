@@ -3,6 +3,7 @@ package com.exasol.cloudetl.helper
 import java.util.Locale.ENGLISH
 
 import com.exasol.cloudetl.data.ExaColumnInfo
+import com.exasol.errorreporting.ExaError
 
 import org.apache.parquet.schema._
 import org.apache.parquet.schema.LogicalTypeAnnotation._
@@ -96,7 +97,15 @@ final case class ParquetSchemaConverter(isLowercaseSchemaEnabled: Boolean) exten
       case `jBoolean`      => getPrimitiveType(columnName, BOOLEAN, repetition, None, None)
       case `jSqlDate`      => getPrimitiveType(columnName, INT32, repetition, None, Option(dateType()))
       case `jSqlTimestamp` => getPrimitiveType(columnName, INT96, repetition, None, None)
-      case _ => throw new IllegalArgumentException(s"Cannot convert Exasol type '$columnType' to Parquet type.")
+      case _ =>
+        throw new IllegalArgumentException(
+          ExaError
+            .messageBuilder("F-CSE-22")
+            .message("Cannot convert Exasol type {{TYPE}} to Parquet type.")
+            .parameter("TYPE", String.valueOf(columnType))
+            .ticketMitigation()
+            .toString()
+        )
     }
   }
 
