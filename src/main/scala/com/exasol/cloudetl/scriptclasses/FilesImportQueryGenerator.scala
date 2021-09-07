@@ -19,10 +19,7 @@ object FilesImportQueryGenerator {
    * @param metadata an Exasol metadata object
    * @param importSpecification an Exasol import specification object
    */
-  def generateSqlForImportSpec(
-    metadata: ExaMetadata,
-    importSpecification: ExaImportSpecification
-  ): String = {
+  def generateSqlForImportSpec(metadata: ExaMetadata, importSpecification: ExaImportSpecification): String = {
     val storageProperties = StorageProperties(importSpecification.getParameters())
     val bucket = Bucket(storageProperties)
     bucket.validate()

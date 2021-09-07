@@ -46,10 +46,7 @@ object FilesDataImporter extends LazyLogging {
     converter.convert(source.stream())
   }
 
-  private[this] def groupFiles(
-    iterator: ExaIterator,
-    fileStartingIndex: Int
-  ): Seq[String] = {
+  private[this] def groupFiles(iterator: ExaIterator, fileStartingIndex: Int): Seq[String] = {
     val files = ListBuffer[String]()
     do {
       files.append(iterator.getString(fileStartingIndex))

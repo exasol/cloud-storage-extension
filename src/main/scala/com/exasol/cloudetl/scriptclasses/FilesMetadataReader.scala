@@ -12,28 +12,27 @@ import com.typesafe.scalalogging.LazyLogging
  */
 object FilesMetadataReader extends LazyLogging {
 
+  private[this] val BUCKET_PATH_INDEX = 0
+  private[this] val STORAGE_PROPERTIES_INDEX = 1
+  private[this] val PARALLELISM_INDEX = 2
+
   /**
-   * Emits the number of files available in the storage path into Exasol
-   * iterator.
+   * Emits the number of files available in the storage path into Exasol iterator.
    *
    * @param metadata an Exasol metadata object
    * @param iterator an Exasol iterator object
    */
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
-    val bucketPath = iterator.getString(0)
-    val parallelism = iterator.getInteger(2)
-    logger.info(
-      s"Reading metadata from bucket path: $bucketPath "
-        + s"with parallelism: ${parallelism.toString}"
-    )
+    val bucketPath = iterator.getString(BUCKET_PATH_INDEX)
+    val parallelism = iterator.getInteger(PARALLELISM_INDEX)
+    logger.info(s"Reading metadata from bucket path '$bucketPath' with parallelism '$parallelism'.")
 
-    val storageProperties = StorageProperties(iterator.getString(1), metadata)
-    val bucket = Bucket(storageProperties)
-    val paths = bucket.getPaths()
-    logger.info(s"Total number of files: ${paths.size} in bucket path: $bucketPath")
+    val storageProperties = StorageProperties(iterator.getString(STORAGE_PROPERTIES_INDEX), metadata)
+    val paths = Bucket(storageProperties).getPaths()
+    logger.info(s"Total number of files '${paths.size}' in bucket path '$bucketPath'. ")
 
     paths.zipWithIndex.foreach { case (filename, idx) =>
-      iterator.emit(filename.toString, s"${idx % parallelism}")
+      iterator.emit(filename.toString(), s"${idx % parallelism}")
     }
   }
 
