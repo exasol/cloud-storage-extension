@@ -31,7 +31,7 @@ object FilesImportQueryGenerator {
 
     s"""|SELECT
         |  $scriptSchema.IMPORT_FILES(
-        |    '$bucketPath', '$storagePropertiesAsString', filename
+        |    '$bucketPath', '$storagePropertiesAsString', filename, start_index, end_index
         |)
         |FROM (
         |  SELECT $scriptSchema.IMPORT_METADATA(

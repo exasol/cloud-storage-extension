@@ -28,10 +28,7 @@ public class ParquetFileSplitter implements FileSplitter {
   public List<Interval> getSplits() throws IOException {
     try (final ParquetFileReader reader = ParquetFileReader.open(file)) {
       return getSplits(reader.getRowGroups());
-    } catch (final IOException exception) {
-      //
     }
-    return Collections.emptyList();
   }
 
   private List<Interval> getSplits(final List<BlockMetaData> rowGroups) {
@@ -50,7 +47,7 @@ public class ParquetFileSplitter implements FileSplitter {
     if (currentSize != 0) {
       chunks.add(new ChunkInterval(startPosition, end));
     }
-    return null;
+    return chunks;
   }
 
 }

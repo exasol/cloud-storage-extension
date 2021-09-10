@@ -16,6 +16,7 @@ class StorageProperties(private val properties: Map[String, String], private val
 
   import StorageProperties._
 
+  private[this] val DEFAULT_CHUNK_SIZE = 64L * 1024 * 1024
   private[this] val AZURE_DELTA_LOG_STORE_CLASS = "org.apache.spark.sql.delta.storage.AzureLogStore"
   private[this] val S3_DELTA_LOG_STORE_CLASS = "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore"
   private[this] val HDFS_DELTA_LOG_STORE_CLASS = "org.apache.spark.sql.delta.storage.HDFSLogStore"
@@ -66,6 +67,9 @@ class StorageProperties(private val properties: Map[String, String], private val
   /** Returns the [[FileFormat]] file format. */
   final def getFileFormat(): FileFormat =
     FileFormat(getString(DATA_FORMAT))
+
+  /** Returns a chunk size for splitting a Parquet file. */
+  final def getChunkSize(): Long = get(CHUNK_SIZE).fold(DEFAULT_CHUNK_SIZE)(_.toLong)
 
   /**
    * Returns the number of partitions provided as user property.
@@ -128,6 +132,9 @@ object StorageProperties extends CommonProperties {
 
   /** An optional property key name for the overwite. */
   private[storage] final val OVERWRITE: String = "OVERWRITE"
+
+  /** An optional property key name for size of chunk to split a Parquet file. */
+  private[storage] val CHUNK_SIZE = "CHUNK_SIZE"
 
   /** An optional property for setting Parquet export schema with lowercase fields. */
   private[storage] final val PARQUET_LOWERCASE_SCHEMA: String = "PARQUET_LOWERCASE_SCHEMA"
