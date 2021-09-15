@@ -6,8 +6,7 @@ import com.exasol.cloudetl.bucket.Bucket
 import com.exasol.cloudetl.storage.StorageProperties
 
 /**
- * A SQL query generator class that facilitates the metadata reading and
- * file data importing.
+ * A SQL query generator class that facilitates the metadata reading and file data importing.
  */
 object FilesImportQueryGenerator {
 

@@ -16,7 +16,6 @@ class FilesDataImporterTest extends StorageTest {
   test("run throws if file format is not supported") {
     val file = s"$testResourceDir/import/parquet/sales_positions1.snappy.parquet"
     val iter = mockFileIterator("CSV", file)
-
     val thrown = intercept[IllegalArgumentException] {
       FilesDataImporter.run(mock[ExaMetadata], iter)
     }
@@ -32,6 +31,8 @@ class FilesDataImporterTest extends StorageTest {
     val iter = mockExasolIterator(properties)
     when(iter.next()).thenReturn(true, false)
     when(iter.getString(2)).thenReturn(file1, file2)
+    when(iter.getLong(3)).thenReturn(0L, 0L)
+    when(iter.getLong(4)).thenReturn(1L, 1L)
 
     FilesDataImporter.run(mock[ExaMetadata], iter)
     verify(iter, times(expectedNumberOfRecords)).emit(Seq(any[Object]): _*)
@@ -66,6 +67,8 @@ class FilesDataImporterTest extends StorageTest {
     val iter = mockExasolIterator(properties ++ Map("DATA_FORMAT" -> fileFormat))
     when(iter.next()).thenReturn(false)
     when(iter.getString(2)).thenReturn(filename)
+    when(iter.getLong(3)).thenReturn(0L)
+    when(iter.getLong(4)).thenReturn(1L)
     iter
   }
 
