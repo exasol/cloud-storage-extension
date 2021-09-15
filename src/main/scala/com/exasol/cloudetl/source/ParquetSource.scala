@@ -1,64 +1,60 @@
 package com.exasol.cloudetl.source
 
+import java.util.Collections
+import java.util.List
+
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
 import com.exasol.cloudetl.parquet.ParquetValueConverter
 import com.exasol.common.data.Row
 import com.exasol.errorreporting.ExaError
-import com.exasol.parquetio.data.{Row => ParquetRow}
-import com.exasol.parquetio.reader.RowParquetReader
+import com.exasol.parquetio.data.Interval
+import com.exasol.parquetio.reader.RowParquetChunkReader
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
 import org.apache.parquet.hadoop.ParquetFileReader
-import org.apache.parquet.hadoop.ParquetReader
 import org.apache.parquet.hadoop.api.ReadSupport
 import org.apache.parquet.hadoop.metadata.ParquetMetadata
 import org.apache.parquet.hadoop.util.HadoopInputFile
 import org.apache.parquet.schema.MessageType
 
 /**
- * A Parquet source that can read parquet formatted files from Hadoop
- * compatible storage systems.
+ * A Parquet source that can read parquet formatted files from Hadoop compatible storage systems.
  */
 final case class ParquetSource(
   override val path: Path,
   override val conf: Configuration,
-  override val fileSystem: FileSystem
+  override val fileSystem: FileSystem,
+  chunks: List[Interval] = Collections.emptyList()
 ) extends Source
     with LazyLogging {
 
   private[this] val schema = getSchema()
   private[this] var recordReader = createReader()
-  private[this] val valueConverter = getValueConverter()
+  private[this] val valueConverter = ParquetValueConverter(schema)
 
   /**
    * @inheritdoc
    */
   override def stream(): Iterator[Row] =
-    Iterator
-      .continually(recordReader.read())
-      .takeWhile(_ != null)
-      .map(parquetRow => Row(parquetRow.getValues().asScala))
+    valueConverter.convert(
+      recordReader
+        .iterator()
+        .asScala
+        .map(parquetRow => Row(parquetRow.getValues().asScala))
+    )
 
-  /**
-   * @inheritdoc
-   */
-  override def getValueConverter(): ValueConverter = ParquetValueConverter(schema)
-
-  /**
-   * Applies additional transformation to Parquet values.
-   */
-  def streamWithValueConverter(): Iterator[Row] = valueConverter.convert(stream())
-
-  private[this] def createReader(): ParquetReader[ParquetRow] =
+  private[this] def createReader(): RowParquetChunkReader =
     try {
-      RowParquetReader
-        .builder(HadoopInputFile.fromPath(path, getConfWithSchema()))
-        .build()
+      if (chunks.isEmpty()) {
+        new RowParquetChunkReader(HadoopInputFile.fromPath(path, getConfWithSchema()), 0L, getRowGroupCount())
+      } else {
+        new RowParquetChunkReader(HadoopInputFile.fromPath(path, getConfWithSchema()), chunks)
+      }
     } catch {
       case NonFatal(exception) =>
         logger.error(s"Could not create Parquet reader for path '$path'.", exception)
@@ -115,6 +111,15 @@ final case class ParquetSource(
         reader.close()
       }
     }
+
+  private[this] def getRowGroupCount(): Long = {
+    val reader = ParquetFileReader.open(HadoopInputFile.fromPath(path, conf))
+    try {
+      reader.getRowGroups().size().toLong
+    } finally {
+      reader.close()
+    }
+  }
 
   /**
    * @inheritdoc

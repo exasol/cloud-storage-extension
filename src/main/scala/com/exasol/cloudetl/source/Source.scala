@@ -35,11 +35,6 @@ abstract class Source {
   def stream(): Iterator[Row]
 
   /**
-   * Returns value converter specific for a given source.
-   */
-  def getValueConverter(): ValueConverter
-
-  /**
    * Finally close the resource used for this source.
    */
   def close(): Unit

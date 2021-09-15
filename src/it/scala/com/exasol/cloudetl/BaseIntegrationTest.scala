@@ -87,7 +87,9 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
       .inputType(UdfScript.InputType.SCALAR)
       .emits(
         new Column("filename", "VARCHAR(2000)"),
-        new Column("partition_index", "VARCHAR(100)")
+        new Column("partition_index", "VARCHAR(100)"),
+        new Column("start_index", "DECIMAL(36, 0)"),
+        new Column("end_index", "DECIMAL(36, 0)")
       )
       .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerFilesMetadataReader", jarPath)
       .build()

@@ -109,6 +109,7 @@ object Compilation {
   val WartremoverFlags: Seq[Wart] = ExtraWartremoverFlags ++ Warts.allBut(
     Wart.Any,
     Wart.AsInstanceOf,
+    Wart.DefaultArguments,
     Wart.Equals,
     Wart.IsInstanceOf,
     Wart.Null,
