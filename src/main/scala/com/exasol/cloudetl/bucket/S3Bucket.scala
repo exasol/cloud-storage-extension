@@ -69,6 +69,13 @@ final case class S3Bucket(path: String, params: StorageProperties) extends Bucke
       conf.set("fs.s3a.session.token", mergedProperties.getString(S3_SESSION_TOKEN))
     }
 
+    properties.getProxyHost().foreach(proxyHost => {
+      conf.set("fs.s3a.proxy.host", proxyHost)
+      properties.getProxyPort().foreach(conf.set("fs.s3a.proxy.port", _))
+      properties.getProxyUsername().foreach(conf.set("fs.s3a.proxy.username", _))
+      properties.getProxyPassword().foreach(conf.set("fs.s3a.proxy.password", _))
+    })
+
     conf
   }
 

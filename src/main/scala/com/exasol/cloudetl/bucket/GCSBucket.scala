@@ -45,6 +45,13 @@ final case class GCSBucket(path: String, params: StorageProperties) extends Buck
       properties.getString(GCS_KEYFILE_PATH)
     )
 
+    properties.getProxyHost().foreach(proxyHost => {
+      val address = (proxyHost +: properties.getProxyPort().toSeq).mkString(":")
+      conf.set("fs.gs.proxy.address", address)
+      properties.getProxyUsername().foreach(conf.set("fs.gs.proxy.username", _))
+      properties.getProxyPassword().foreach(conf.set("fs.gs.proxy.password", _))
+    })
+
     conf
   }
 

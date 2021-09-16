@@ -110,4 +110,31 @@ class S3BucketTest extends AbstractBucketTest {
     assertConfigurationProperties(bucketWithDefaultConnectionString(properties), extraConfigs)
   }
 
+  test("proxy settings should be added when present") {
+    properties = defaultProperties ++ Map(
+      "CONNECTION_NAME" -> "connection_info",
+      "PROXY_HOST" -> "my_proxy.net",
+      "PROXY_PORT" -> "2345"
+    )
+    val extraConfigs = configMappings ++ Map(
+      "fs.s3a.proxy.host" -> "my_proxy.net",
+      "fs.s3a.proxy.port" -> "2345"
+    )
+    assertConfigurationProperties(bucketWithDefaultConnectionString(properties), extraConfigs)
+  }
+
+
+  test("proxy settings should not be added without host") {
+    properties = defaultProperties ++ Map(
+      "CONNECTION_NAME" -> "connection_info",
+      "PROXY_USERNAME" -> "myUser",
+      "PROXY_PASSWORD" -> "mySecretPassword",
+      "PROXY_PORT" -> "2345"
+    )
+
+    import scala.collection.JavaConverters.mapAsScalaMapConverter
+    val conf = bucketWithDefaultConnectionString(properties).getConfiguration()
+    assert(conf.getValByRegex("fs\\.s3a\\.proxy.+").asScala == Map.empty)
+  }
+
 }
