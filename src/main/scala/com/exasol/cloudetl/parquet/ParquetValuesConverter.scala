@@ -15,13 +15,23 @@ final case class ParquetValueConverter(schema: MessageType) extends ValueConvert
   override def convert(values: Iterator[Row]): Iterator[Row] =
     values.map(row => Row(mapComplexValuesToJSON(row.getValues())))
 
-  private[this] def mapComplexValuesToJSON(values: Seq[Any]): Seq[Any] =
-    values.zipWithIndex.map { case (value, i) =>
-      val fieldType = schema.getType(i)
-      if (fieldType.isPrimitive() && !fieldType.isRepetition(Repetition.REPEATED)) {
-        value
-      } else {
-        JsonMapper.toJson(value)
-      }
+  private[this] def mapComplexValuesToJSON(values: Seq[Any]): Seq[Any] = {
+    val size = values.size
+    val convertedValues = Array.ofDim[Any](size)
+    var i = 0
+    while (i < size) {
+      convertedValues(i) = convertValue(i, values(i))
+      i += 1
     }
+    convertedValues.toSeq
+  }
+
+  private[this] def convertValue(i: Int, value: Any): Any = {
+    val fieldType = schema.getType(i)
+    if (fieldType.isPrimitive() && !fieldType.isRepetition(Repetition.REPEATED)) {
+      value
+    } else {
+      JsonMapper.toJson(value)
+    }
+  }
 }

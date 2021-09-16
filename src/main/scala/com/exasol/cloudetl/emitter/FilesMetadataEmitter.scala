@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.scriptclasses
+package com.exasol.cloudetl.emitter
 
 import java.lang.Long
 
@@ -15,14 +15,19 @@ import org.apache.parquet.hadoop.util.HadoopInputFile
 
 /**
  * A class that calculates and emits file based metadata from a storage path.
+ *
+ * @param properties a storage properties to create configurations
+ * @param parallelism a parallelism number to create groups
  */
-final case class FilesMetadataEmitter(properties: StorageProperties, parallelism: Int) extends LazyLogging {
+final case class FilesMetadataEmitter(properties: StorageProperties, parallelism: Int)
+    extends Emitter
+    with LazyLogging {
 
   private[this] val bucket = Bucket(properties)
   private[this] val paths = bucket.getPaths()
   private[this] val fileFormat = properties.getFileFormat()
 
-  def emit(context: ExaIterator): Unit = {
+  override def emit(context: ExaIterator): Unit = {
     logger.info(s"Found total of '${paths.size}' files in path '${bucket.bucketPath}'.")
     if (fileFormat != FileFormat.PARQUET) {
       emitRegularFilesMetadata(context)

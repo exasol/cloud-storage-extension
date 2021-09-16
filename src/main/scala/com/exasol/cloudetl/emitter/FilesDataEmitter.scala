@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.scriptclasses
+package com.exasol.cloudetl.emitter
 
 import java.util.List
 
@@ -14,13 +14,20 @@ import com.exasol.parquetio.data.Interval
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.fs.Path
 
+/**
+ * A class that emits data read from storage into an Exasol database.
+ *
+ * @param properties a storage properties to create configurations
+ * @param files a list of files with there chunks to read
+ */
 final case class FilesDataEmitter(properties: StorageProperties, files: Map[String, List[Interval]])
-    extends LazyLogging {
+    extends Emitter
+    with LazyLogging {
 
   private[this] val bucket = Bucket(properties)
   private[this] val fileFormat = properties.getFileFormat()
 
-  def emit(context: ExaIterator): Unit = {
+  override def emit(context: ExaIterator): Unit =
     files.foreach { case (filename, intervals) =>
       logger.info(s"Emitting data from file '$filename.")
       val source = getSource(filename, intervals)
@@ -29,15 +36,13 @@ final case class FilesDataEmitter(properties: StorageProperties, files: Map[Stri
       }
       source.close()
     }
-  }
 
-  private[this] def getSource(filename: String, chunks: List[Interval]): Source = {
+  private[this] def getSource(filename: String, chunks: List[Interval]): Source =
     if (fileFormat != FileFormat.PARQUET) {
       Source(fileFormat, new Path(filename), bucket.getConfiguration(), bucket.fileSystem)
     } else {
       ParquetSource(new Path(filename), bucket.getConfiguration(), bucket.fileSystem, chunks)
     }
-  }
 
   private[this] def mapValuesToArray(row: RegularRow): Array[Object] =
     row.getValues().map(_.asInstanceOf[Object]).toArray

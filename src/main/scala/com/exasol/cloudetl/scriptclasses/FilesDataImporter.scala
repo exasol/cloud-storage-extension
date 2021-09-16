@@ -7,6 +7,7 @@ import scala.collection.mutable.HashMap
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
+import com.exasol.cloudetl.emitter.FilesDataEmitter
 import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.parquetio.data.ChunkInterval
 import com.exasol.parquetio.data.Interval

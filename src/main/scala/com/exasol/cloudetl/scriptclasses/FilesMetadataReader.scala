@@ -2,6 +2,7 @@ package com.exasol.cloudetl.scriptclasses
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
+import com.exasol.cloudetl.emitter.FilesMetadataEmitter
 import com.exasol.cloudetl.storage.StorageProperties
 
 import com.typesafe.scalalogging.LazyLogging
