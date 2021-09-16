@@ -4,6 +4,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 import com.exasol.cloudetl.filesystem.FileSystemManager
+import com.exasol.cloudetl.parquet.ParquetSourceTest
 import com.exasol.cloudetl.storage.FileFormat
 
 import org.apache.hadoop.conf.Configuration
@@ -31,10 +32,15 @@ class AbstractSourceTest extends AnyFunSuite with BeforeAndAfterEach {
   final def getFileSystem(): FileSystem = fileSystem
 
   final def getSource(filePath: org.apache.hadoop.fs.Path): Source =
-    Source(FileFormat(format), filePath, conf, fileSystem)
+    getSource(filePath, format)
 
-  final def getSource(filePath: org.apache.hadoop.fs.Path, fileFormat: String): Source =
-    Source(FileFormat(fileFormat), filePath, conf, fileSystem)
+  final def getSource(filePath: org.apache.hadoop.fs.Path, fileFormat: String): Source = {
+    val format = FileFormat(fileFormat)
+    format match {
+      case FileFormat.PARQUET | FileFormat.DELTA => ParquetSourceTest(filePath, conf)
+      case _ => Source(FileFormat(fileFormat), filePath, conf, fileSystem)
+    }
+  }
 
   final def getRecordsCount(filePath: Path): Int = {
     val globbedFilePath = FileSystemManager(fileSystem).getLocalFiles(filePath)

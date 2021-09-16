@@ -1,8 +1,7 @@
 package com.exasol.cloudetl.bucket
 
 import com.exasol.cloudetl.TestFileManager
-import com.exasol.cloudetl.source.Source
-import com.exasol.cloudetl.storage.FileFormat
+import com.exasol.cloudetl.parquet.ParquetSourceTest
 
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.SparkSession
@@ -97,9 +96,8 @@ class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with
   private[this] def collectToSet[T](bucket: Bucket): Set[T] = {
     val set = scala.collection.mutable.Set[T]()
     val conf = bucket.getConfiguration()
-    val fileSystem = bucket.fileSystem
     bucket.getPaths().map { path =>
-      val source = Source(FileFormat("delta"), path, conf, fileSystem)
+      val source = ParquetSourceTest(path, conf)
       source.stream().foreach { row =>
         set.add(row.getAs[T](0))
       }

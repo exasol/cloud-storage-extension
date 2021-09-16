@@ -1,18 +1,26 @@
 package com.exasol.cloudetl.emitter
 
+import java.io.IOException
 import java.util.List
+import java.util.function.Consumer
 
 import com.exasol.ExaIterator
 import com.exasol.cloudetl.bucket.Bucket
-import com.exasol.cloudetl.source.ParquetSource
+import com.exasol.cloudetl.parquet.ParquetValueConverter
 import com.exasol.cloudetl.source.Source
 import com.exasol.cloudetl.storage.FileFormat
 import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.common.data.{Row => RegularRow}
+import com.exasol.errorreporting.ExaError
 import com.exasol.parquetio.data.Interval
+import com.exasol.parquetio.data.Row
+import com.exasol.parquetio.reader.RowParquetChunkReader
+import com.exasol.parquetio.reader.RowParquetReader
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.fs.Path
+import org.apache.parquet.hadoop.util.HadoopInputFile
+import org.apache.parquet.io.InputFile
 
 /**
  * A class that emits data read from storage into an Exasol database.
@@ -27,24 +35,48 @@ final case class FilesDataEmitter(properties: StorageProperties, files: Map[Stri
   private[this] val bucket = Bucket(properties)
   private[this] val fileFormat = properties.getFileFormat()
 
-  override def emit(context: ExaIterator): Unit =
-    files.foreach { case (filename, intervals) =>
-      logger.info(s"Emitting data from file '$filename.")
-      val source = getSource(filename, intervals)
+  override def emit(context: ExaIterator): Unit = fileFormat match {
+    case FileFormat.PARQUET => emitParquetData(context)
+    case FileFormat.DELTA   => emitParquetData(context)
+    case _                  => emitRegularData(context)
+  }
+
+  private[this] def emitRegularData(context: ExaIterator): Unit =
+    files.foreach { case (filename, _) =>
+      val source = Source(fileFormat, new Path(filename), bucket.getConfiguration(), bucket.fileSystem)
       source.stream().foreach { row =>
-        context.emit(mapValuesToArray(row): _*)
+        context.emit(transformRegularRowValues(row): _*)
       }
       source.close()
     }
 
-  private[this] def getSource(filename: String, chunks: List[Interval]): Source =
-    if (fileFormat != FileFormat.PARQUET) {
-      Source(fileFormat, new Path(filename), bucket.getConfiguration(), bucket.fileSystem)
-    } else {
-      ParquetSource(new Path(filename), bucket.getConfiguration(), bucket.fileSystem, chunks)
+  private[this] def transformRegularRowValues(row: RegularRow): Array[Object] =
+    row.getValues().map(_.asInstanceOf[Object]).toArray
+
+  private[this] def emitParquetData(context: ExaIterator): Unit =
+    files.foreach { case (filename, intervals) =>
+      val inputFile = getInputFile(filename)
+      val converter = ParquetValueConverter(RowParquetReader.getSchema(inputFile))
+      val source = new RowParquetChunkReader(inputFile, intervals)
+      source.read(new Consumer[Row] {
+        override def accept(row: Row): Unit =
+          context.emit(converter.convert(row): _*)
+      })
     }
 
-  private[this] def mapValuesToArray(row: RegularRow): Array[Object] =
-    row.getValues().map(_.asInstanceOf[Object]).toArray
+  private[this] def getInputFile(filename: String): InputFile =
+    try {
+      HadoopInputFile.fromPath(new Path(filename), bucket.getConfiguration())
+    } catch {
+      case exception: IOException =>
+        throw new IllegalStateException(
+          ExaError
+            .messageBuilder("E-CSE-27")
+            .message("Failed to create an input file from {{FILE}}.", filename)
+            .mitigation("Please make sure that the file is not corrupted.")
+            .toString(),
+          exception
+        )
+    }
 
 }

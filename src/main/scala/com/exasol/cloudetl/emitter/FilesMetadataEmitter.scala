@@ -60,18 +60,22 @@ final case class FilesMetadataEmitter(properties: StorageProperties, parallelism
     var index = 0L
     var count = 0L
     chunks.foreach { case interval =>
+      val filename = interval.filename
+      val start = interval.start
+      val end = interval.end
+      logger.info(s"Emitting filename metadata $filename -> [$start ... $end) on index $index.")
+      context.emit(filename, s"$index", interval.start, interval.end)
       count += 1
-      context.emit(interval.filename, s"$index", interval.start, interval.end)
       if (partitioner.isNewPartition(count)) {
         index += 1
+        count = 0
       }
     }
   }
 
   private[this] case class FilenameChunkInterval(filename: String, start: Long, end: Long)
 
-  private[this] case class Partitioner(total: Int, requestedPartitionSize: Int) {
-    val numberOfPartitions: Long = math.ceil(total / requestedPartitionSize.toDouble).toLong
+  private[this] case class Partitioner(total: Int, numberOfPartitions: Int) {
     val partitionSize: Long = math.floor(total / numberOfPartitions.toDouble).toLong
     var leftOvers: Long = total % numberOfPartitions
 

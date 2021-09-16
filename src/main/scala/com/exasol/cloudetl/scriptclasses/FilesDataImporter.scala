@@ -33,7 +33,9 @@ object FilesDataImporter extends LazyLogging {
     val files = collectFiles(iterator)
     val nodeId = metadata.getNodeId()
     val vmId = metadata.getVmId()
-    logger.info(s"Collected total number of '${files.size}' files for node '$nodeId' and vm '$vmId'.")
+    files.foreach { case (filename, intervals) =>
+      logger.info(s"Intervals '${getIntervalString(intervals)}' for file $filename on node '$nodeId' and vm '$vmId'.")
+    }
     FilesDataEmitter(storageProperties, files).emit(iterator)
   }
 
@@ -53,6 +55,18 @@ object FilesDataImporter extends LazyLogging {
         }
     } while (iterator.next())
     files.toMap
+  }
+
+  private[this] def getIntervalString(intervals: List[Interval]): String = {
+    val sb = new StringBuilder()
+    for { i <- 0 until intervals.size() } {
+      sb.append("[")
+        .append(intervals.get(i).getStartPosition())
+        .append(",")
+        .append(intervals.get(i).getEndPosition())
+        .append("), ")
+    }
+    sb.toString()
   }
 
 }

@@ -3,10 +3,14 @@ package com.exasol.cloudetl.source
 import java.nio.file.Paths
 
 import com.exasol.cloudetl.filesystem.FileSystemManager
+import com.exasol.parquetio.reader.RowParquetReader
 
+import org.apache.hadoop.fs.Path
+import org.apache.parquet.hadoop.util.HadoopInputFile
+import org.apache.parquet.io.InputFile
 import org.apache.parquet.schema.MessageTypeParser
 
-class ParquetSourceTest extends AbstractSourceTest {
+class ParquetSourceTestTest extends AbstractSourceTest {
 
   override val format: String = "parquet"
 
@@ -26,9 +30,13 @@ class ParquetSourceTest extends AbstractSourceTest {
     val filePattern = Paths.get(s"$resourceDir/sales_pos*.parquet")
     val globbedFilePath = FileSystemManager(getFileSystem()).getLocalFiles(filePattern)
     globbedFilePath.foreach { file =>
-      val schema = ParquetSource(file, getConf(), getFileSystem()).getSchema()
+      val schema = RowParquetReader.getSchema(getInputFile(file))
       assert(schema === expectedMessageType)
     }
+  }
+
+  private[this] def getInputFile(path: Path): InputFile = {
+      HadoopInputFile.fromPath(path, getConf())
   }
 
   test("stream returns count of records from single PARQUET file") {
