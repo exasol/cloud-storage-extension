@@ -40,7 +40,7 @@ final case class GCSBucket(path: String, params: StorageProperties) extends Buck
     conf.set("fs.gs.project.id", properties.getString(GCS_PROJECT_ID))
     conf.set("fs.gs.auth.service.account.json.keyfile", properties.getString(GCS_KEYFILE_PATH))
 
-    properties.getProxyHost().foreach { case proxyHost =>
+    properties.getProxyHost().foreach { proxyHost =>
       properties.getProxyPort().foreach(proxyPort => conf.set("fs.gs.proxy.address", s"$proxyHost:$proxyPort"))
       properties.getProxyUsername().foreach(conf.set("fs.gs.proxy.username", _))
       properties.getProxyPassword().foreach(conf.set("fs.gs.proxy.password", _))
