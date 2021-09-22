@@ -4,6 +4,10 @@ Code name: Improved Parquet Reader
 
 ## Summary
 
+In this release we add optimized Parquet file importer. Previous version read single Parquet file in a single importer process, in this version we improved it by virtually splitting files into fixed sized chunks that then can be imported in many parallel processes.
+
+In addition, we added support for using proxies when accessing cloud storage systems.
+
 ## Features
 
 * #173: Added improved chunked Parquet reader
