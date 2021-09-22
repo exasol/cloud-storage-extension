@@ -35,8 +35,7 @@ final case class S3Bucket(path: String, params: StorageProperties) extends Bucke
   /**
    * @inheritdoc
    *
-   * Additionally validates that all required parameters are available
-   * in order to create a configuration.
+   * Additionally validates that all required parameters are available in order to create a configuration.
    */
   override def getConfiguration(): Configuration = {
     validate()
@@ -64,17 +63,17 @@ final case class S3Bucket(path: String, params: StorageProperties) extends Bucke
     if (mergedProperties.containsKey(S3_SESSION_TOKEN)) {
       conf.set(
         "fs.s3a.aws.credentials.provider",
-        classOf[org.apache.hadoop.fs.s3a.TemporaryAWSCredentialsProvider].getName
+        classOf[org.apache.hadoop.fs.s3a.TemporaryAWSCredentialsProvider].getName()
       )
       conf.set("fs.s3a.session.token", mergedProperties.getString(S3_SESSION_TOKEN))
     }
 
-    properties.getProxyHost().foreach(proxyHost => {
+    properties.getProxyHost().foreach { case proxyHost =>
       conf.set("fs.s3a.proxy.host", proxyHost)
       properties.getProxyPort().foreach(conf.set("fs.s3a.proxy.port", _))
       properties.getProxyUsername().foreach(conf.set("fs.s3a.proxy.username", _))
       properties.getProxyPassword().foreach(conf.set("fs.s3a.proxy.password", _))
-    })
+    }
 
     conf
   }

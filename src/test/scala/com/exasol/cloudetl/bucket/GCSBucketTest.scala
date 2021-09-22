@@ -11,19 +11,21 @@ class GCSBucketTest extends AbstractBucketTest {
     "GCS_PROJECT_ID" -> "myProject"
   )
 
-  test("Must construct bucket properly") {
+  test("constructs bucket properly") {
     val bucket = getBucket(defaultProperties)
     bucket.validate()
     assert(bucket.isInstanceOf[GCSBucket])
   }
 
   test("proxy settings should be added when present") {
-    val bucket = getBucket(defaultProperties ++ Map(
-      "PROXY_HOST" -> "myproxy.net",
-      "PROXY_PORT" -> "3198",
-      "PROXY_USERNAME" -> "user",
-      "PROXY_PASSWORD" -> "password"
-    ))
+    val bucket = getBucket(
+      defaultProperties ++ Map(
+        "PROXY_HOST" -> "myproxy.net",
+        "PROXY_PORT" -> "3198",
+        "PROXY_USERNAME" -> "user",
+        "PROXY_PASSWORD" -> "password"
+      )
+    )
     bucket.validate()
     assert(bucket.isInstanceOf[GCSBucket])
     val conf = bucket.getConfiguration()
@@ -33,14 +35,16 @@ class GCSBucketTest extends AbstractBucketTest {
   }
 
   test("proxy settings should not be added without host") {
-    val bucket = getBucket(defaultProperties ++ Map(
-      "PROXY_PORT" -> "3198",
-      "PROXY_USERNAME" -> "user",
-      "PROXY_PASSWORD" -> "password"
-    ))
+    val bucket = getBucket(
+      defaultProperties ++ Map(
+        "PROXY_PORT" -> "3198",
+        "PROXY_USERNAME" -> "user",
+        "PROXY_PASSWORD" -> "password"
+      )
+    )
     bucket.validate()
     assert(bucket.isInstanceOf[GCSBucket])
     val conf = bucket.getConfiguration()
-    assert(conf.getValByRegex("fs\\.s3a\\.proxy.+").asScala == Map.empty)
+    assert(conf.getValByRegex("fs\\.s3a\\.proxy.+").asScala === Map.empty[String, String])
   }
 }
