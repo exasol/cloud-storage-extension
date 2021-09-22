@@ -93,12 +93,12 @@ class StorageProperties(private val properties: Map[String, String], private val
     get(PARQUET_LOWERCASE_SCHEMA).fold(true)(_.toBoolean)
 
   /**
-   *  Return the proxy host to use for the bucket
+   *  Returns the proxy host to use for the bucket.
    */
   final def getProxyHost(): Option[String] = get(PROXY_HOST)
 
   /**
-   *  Return the proxy port to use for the bucket
+   *  Returns the proxy port to use for the bucket.
    */
   final def getProxyPort(): Option[String] = get(PROXY_PORT)
 
@@ -151,7 +151,7 @@ object StorageProperties extends CommonProperties {
   /** An optional property for setting Parquet export schema with lowercase fields. */
   private[storage] final val PARQUET_LOWERCASE_SCHEMA: String = "PARQUET_LOWERCASE_SCHEMA"
 
-  /** An optional proxy host that needs to be used when accessing the bucket */
+  /** An optional proxy host that needs to be used when accessing the bucket. */
   private[storage] final val PROXY_HOST: String = "PROXY_HOST"
 
   /** An optional proxy port that needs to be used when accessing the bucket */

@@ -403,7 +403,7 @@ can be configured with:
 * ``PROXY_PASSWORD`` - Configures the port to use for the proxy defined with `PROXY_HOST`
 
 This is only available for S3 and GCP buckets. For Azure Buckets, the proxy can be configured via JVM
-properties with the `%jvmoption`  
+properties using the `%jvmoption`  when creating deployment scripts.
 
 ## Parallelism
 
