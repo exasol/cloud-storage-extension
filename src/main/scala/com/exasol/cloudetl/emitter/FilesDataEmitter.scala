@@ -12,7 +12,7 @@ import com.exasol.cloudetl.storage.FileFormat
 import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.common.data.{Row => RegularRow}
 import com.exasol.errorreporting.ExaError
-import com.exasol.parquetio.data.Interval
+import com.exasol.parquetio.data.ChunkInterval
 import com.exasol.parquetio.data.Row
 import com.exasol.parquetio.reader.RowParquetChunkReader
 import com.exasol.parquetio.reader.RowParquetReader
@@ -28,7 +28,7 @@ import org.apache.parquet.io.InputFile
  * @param properties a storage properties to create configurations
  * @param files a list of files with there chunks to read
  */
-final case class FilesDataEmitter(properties: StorageProperties, files: Map[String, List[Interval]])
+final case class FilesDataEmitter(properties: StorageProperties, files: Map[String, List[ChunkInterval]])
     extends Emitter
     with LazyLogging {
 

@@ -16,7 +16,7 @@ import org.scalatest.funsuite.AnyFunSuite
 trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLogging {
   private[this] val JAR_DIRECTORY_PATTERN = "scala-"
   private[this] val JAR_NAME_PATTERN = "cloud-storage-extension-"
-  private[this] val DEFAULT_EXASOL_DOCKER_IMAGE = "7.0.11"
+  private[this] val DEFAULT_EXASOL_DOCKER_IMAGE = "7.1.1"
 
   val network = DockerNamedNetwork("it-tests", true)
   val exasolContainer = {
@@ -76,10 +76,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
       .language(UdfScript.Language.JAVA)
       .inputType(UdfScript.InputType.SET)
       .emits()
-      .bucketFsContent(
-        "com.exasol.cloudetl.scriptclasses.DockerFilesImportQueryGenerator",
-        jarPath
-      )
+      .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerFilesImportQueryGenerator", jarPath)
       .build()
     schema
       .createUdfBuilder("IMPORT_METADATA")
@@ -110,10 +107,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
       .language(UdfScript.Language.JAVA)
       .inputType(UdfScript.InputType.SET)
       .emits()
-      .bucketFsContent(
-        "com.exasol.cloudetl.scriptclasses.DockerTableExportQueryGenerator",
-        jarPath
-      )
+      .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerTableExportQueryGenerator", jarPath)
       .build()
     schema
       .createUdfBuilder("EXPORT_TABLE")

@@ -10,7 +10,7 @@ import com.exasol.ExaMetadata
 import com.exasol.cloudetl.emitter.FilesDataEmitter
 import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.parquetio.data.ChunkInterval
-import com.exasol.parquetio.data.Interval
+import com.exasol.parquetio.data.ChunkIntervalImpl
 
 import com.typesafe.scalalogging.LazyLogging
 
@@ -39,25 +39,25 @@ object FilesDataImporter extends LazyLogging {
     FilesDataEmitter(storageProperties, files).emit(iterator)
   }
 
-  private[this] def collectFiles(iterator: ExaIterator): Map[String, List[Interval]] = {
-    val files = new HashMap[String, List[Interval]]()
+  private[this] def collectFiles(iterator: ExaIterator): Map[String, List[ChunkInterval]] = {
+    val files = new HashMap[String, List[ChunkInterval]]()
     do {
       val filename = iterator.getString(FILENAME_STARTING_INDEX)
       val startIndex = iterator.getLong(FILENAME_STARTING_INDEX + 1)
       val endIndex = iterator.getLong(FILENAME_STARTING_INDEX + 2)
       if (!files.contains(filename)) {
-        val _ = files.put(filename, new ArrayList[Interval]())
+        val _ = files.put(filename, new ArrayList[ChunkInterval]())
       }
       files
         .get(filename)
         .map { list =>
-          val _ = list.add(new ChunkInterval(startIndex, endIndex))
+          val _ = list.add(new ChunkIntervalImpl(startIndex, endIndex))
         }
     } while (iterator.next())
     files.toMap
   }
 
-  private[this] def getIntervalString(intervals: List[Interval]): String = {
+  private[this] def getIntervalString(intervals: List[ChunkInterval]): String = {
     val sb = new StringBuilder()
     for { i <- 0 until intervals.size() } {
       sb.append("[")

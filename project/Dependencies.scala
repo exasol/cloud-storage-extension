@@ -11,21 +11,21 @@ object Dependencies {
   private val ParquetIOVersion = "1.1.0"
   private val HadoopVersion = "3.3.1"
   private val DeltaVersion = "0.7.0"
-  private val OrcVersion = "1.6.10"
+  private val OrcVersion = "1.7.0"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.0.1"
-  private val AlluxioCoreHDFSVersion = "2.6.1"
+  private val AlluxioCoreHDFSVersion = "2.6.2"
 
   // Test dependencies versions
-  private val ScalaTestVersion = "3.2.9"
+  private val ScalaTestVersion = "3.2.10"
   private val ScalaTestPlusVersion = "1.0.0-M2"
-  private val MockitoCoreVersion = "3.11.2"
+  private val MockitoCoreVersion = "3.12.4"
   private val HamcrestVersion = "2.2"
   private val ExasolHamcrestMatcherVersion = "1.4.1"
   private val ExasolTestDBBuilderVersion = "3.2.1"
-  private val ExasolTestContainersVersion = "4.0.0"
+  private val ExasolTestContainersVersion = "5.0.0"
   private val TestContainersLocalstackVersion = "1.16.0"
-  private val TestContainersScalaVersion = "0.39.5"
+  private val TestContainersScalaVersion = "0.39.8"
 
   val Resolvers: Seq[Resolver] = Seq(
     "Exasol Releases" at "https://maven.exasol.com/artifactory/exasol-releases"
@@ -65,7 +65,7 @@ object Dependencies {
       exclude ("org.apache.logging.log4j", "log4j-slf4j-impl")
       exclude ("org.apache.commons", "commons-lang3")
       exclude ("org.apache.hadoop", "hadoop-client"),
-    "io.grpc" % "grpc-netty" % "1.39.0",
+    "io.grpc" % "grpc-netty" % "1.40.1",
     "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion
       exclude ("com.google.guava", "guava")
       exclude ("org.apache.httpcomponents", "httpclient"),
