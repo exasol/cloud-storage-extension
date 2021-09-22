@@ -46,12 +46,10 @@ final case class ParquetSourceTest(val path: Path, override val conf: Configurat
         throw new IllegalStateException(s"Could not create Parquet reader for path $path.", exception)
     }
 
-  private[this] def getInputFile(path: Path): InputFile = {
+  private[this] def getInputFile(path: Path): InputFile =
     HadoopInputFile.fromPath(path, conf)
-  }
 
-  override def close(): Unit = {
+  override def close(): Unit =
     recordReader = null
-  }
 
 }

@@ -38,7 +38,7 @@ class AbstractSourceTest extends AnyFunSuite with BeforeAndAfterEach {
     val format = FileFormat(fileFormat)
     format match {
       case FileFormat.PARQUET | FileFormat.DELTA => ParquetSourceTest(filePath, conf)
-      case _ => Source(FileFormat(fileFormat), filePath, conf, fileSystem)
+      case _                                     => Source(FileFormat(fileFormat), filePath, conf, fileSystem)
     }
   }
 

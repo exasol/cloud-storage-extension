@@ -35,9 +35,8 @@ class ParquetSourceTestTest extends AbstractSourceTest {
     }
   }
 
-  private[this] def getInputFile(path: Path): InputFile = {
-      HadoopInputFile.fromPath(path, getConf())
-  }
+  private[this] def getInputFile(path: Path): InputFile =
+    HadoopInputFile.fromPath(path, getConf())
 
   test("stream returns count of records from single PARQUET file") {
     val filePath = Paths.get(s"$resourceDir/sales_positions1.snappy.parquet")
