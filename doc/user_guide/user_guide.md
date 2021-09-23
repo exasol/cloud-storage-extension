@@ -431,8 +431,12 @@ scripts.
 For example:
 
 ```sql
-CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...)
-EMITS (filename VARCHAR(2000), partition_index VARCHAR(100)) AS
+CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
+  filename VARCHAR(2000),
+  partition_index VARCHAR(100),
+  start_index DECIMAL(36, 0),
+  end_index DECIMAL(36, 0)
+) AS
   %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
