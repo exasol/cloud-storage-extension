@@ -7,9 +7,8 @@ import com.exasol.errorreporting.ExaError
 import org.apache.hadoop.fs.Path
 
 /**
- * A specific implementation of [[com.exasol.common.AbstractProperties]]
- * that handles user provided key-value parameters for storage import
- * and export user-defined-functions (UDFs).
+ * A specific implementation of [[com.exasol.common.AbstractProperties]] that handles user provided key-value parameters
+ * for storage import and export user-defined-functions (UDFs).
  */
 class StorageProperties(private val properties: Map[String, String], private val exaMetadata: Option[ExaMetadata])
     extends AbstractProperties(properties) {
@@ -93,8 +92,28 @@ class StorageProperties(private val properties: Map[String, String], private val
     get(PARQUET_LOWERCASE_SCHEMA).fold(true)(_.toBoolean)
 
   /**
-   * Returns a new [[StorageProperties]] that merges the key-value pairs
-   * parsed from user provided Exasol named connection object.
+   * Returns the proxy host to use for the bucket.
+   */
+  final def getProxyHost(): Option[String] = get(PROXY_HOST)
+
+  /**
+   * Returns the proxy port to use for the bucket.
+   */
+  final def getProxyPort(): Option[String] = get(PROXY_PORT)
+
+  /**
+   * Returns the proxy username.
+   */
+  final def getProxyUsername(): Option[String] = get(PROXY_USERNAME)
+
+  /**
+   * Returns the proxy password.
+   */
+  final def getProxyPassword(): Option[String] = get(PROXY_PASSWORD)
+
+  /**
+   * Returns a new [[StorageProperties]] that merges the key-value pairs parsed from user provided Exasol named
+   * connection object.
    */
   final def merge(accountName: String): StorageProperties = {
     val connectionParsedMap = parseConnectionInfo(accountName, exaMetadata)
@@ -132,9 +151,20 @@ object StorageProperties extends CommonProperties {
   /** An optional property for setting Parquet export schema with lowercase fields. */
   private[storage] final val PARQUET_LOWERCASE_SCHEMA: String = "PARQUET_LOWERCASE_SCHEMA"
 
+  /** An optional proxy host that needs to be used when accessing the bucket. */
+  private[storage] final val PROXY_HOST: String = "PROXY_HOST"
+
+  /** An optional proxy port that needs to be used when accessing the bucket. */
+  private[storage] final val PROXY_PORT: String = "PROXY_PORT"
+
+  /** An optional username for authentication against the proxy. */
+  private[storage] final val PROXY_USERNAME: String = "PROXY_USERNAME"
+
+  /** An optional password for authentication the proxy. */
+  private[storage] final val PROXY_PASSWORD: String = "PROXY_PASSWORD"
+
   /**
-   * Returns [[StorageProperties]] from key values map and
-   * [[ExaMetadata]] metadata object.
+   * Returns [[StorageProperties]] from key values map and [[ExaMetadata]] metadata object.
    */
   def apply(params: Map[String, String], metadata: ExaMetadata): StorageProperties =
     new StorageProperties(params, Option(metadata))
