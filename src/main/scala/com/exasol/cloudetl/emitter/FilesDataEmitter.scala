@@ -26,7 +26,7 @@ import org.apache.parquet.io.InputFile
  * A class that emits data read from storage into an Exasol database.
  *
  * @param properties a storage properties to create configurations
- * @param files a list of files with there chunks to read
+ * @param files a list of files with the chunks to read
  */
 final case class FilesDataEmitter(properties: StorageProperties, files: Map[String, List[ChunkInterval]])
     extends Emitter

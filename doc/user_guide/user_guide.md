@@ -379,7 +379,7 @@ These are optional parameters that have default values.
 
 #### Import Optional Parameters
 
-The following are option parameters for import statements.
+The following are optional parameters for import statements.
 
 * ``CHUNK_SIZE`` - It specifies a file chunk size in bytes. The importer then
   will try to virtually splits a file into chunks with specified size, and
