@@ -224,8 +224,12 @@ CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 
-CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...)
-EMITS (filename VARCHAR(2000), partition_index VARCHAR(100)) AS
+CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
+  filename VARCHAR(2000),
+  partition_index VARCHAR(100),
+  start_index DECIMAL(36, 0),
+  end_index DECIMAL(36, 0)
+) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
@@ -255,8 +259,12 @@ CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
 
-CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...)
-EMITS (filename VARCHAR(2000), partition_index VARCHAR(100)) AS
+CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
+  filename VARCHAR(2000),
+  partition_index VARCHAR(100),
+  start_index DECIMAL(36, 0),
+  end_index DECIMAL(36, 0)
+) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesMetadataReader;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
 /
@@ -369,6 +377,14 @@ These are optional parameters that have default values.
   in the Import SQL statement. Likewise, the default value is `iproc()` in the
   Export SQL statement.
 
+#### Import Optional Parameters
+
+The following are optional parameters for import statements.
+
+* ``CHUNK_SIZE`` - It specifies a file chunk size in bytes. The importer then
+  will try to virtually splits a file into chunks with specified size, and
+  imports each chunk in parallel. By default it is `67108864` (64MB).
+
 #### Export Optional Parameters
 
 These optional parameters only apply to the data export statements.
@@ -415,8 +431,12 @@ scripts.
 For example:
 
 ```sql
-CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...)
-EMITS (filename VARCHAR(2000), partition_index VARCHAR(100)) AS
+CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
+  filename VARCHAR(2000),
+  partition_index VARCHAR(100),
+  start_index DECIMAL(36, 0),
+  end_index DECIMAL(36, 0)
+) AS
   %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
   %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;

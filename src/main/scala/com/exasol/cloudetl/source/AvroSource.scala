@@ -32,15 +32,6 @@ final case class AvroSource(
   override def stream(): Iterator[Row] =
     AvroRowIterator(recordReader)
 
-  /**
-   * @inheritdoc
-   *
-   * For now Avro values do not require additional transformation.
-   */
-  override def getValueConverter(): ValueConverter = new ValueConverter {
-    override def convert(rows: Iterator[Row]) = rows
-  }
-
   private[this] def createReader(): DataFileReader[GenericRecord] =
     try {
       new DataFileReader[GenericRecord](

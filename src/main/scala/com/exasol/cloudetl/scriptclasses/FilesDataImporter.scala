@@ -1,21 +1,26 @@
 package com.exasol.cloudetl.scriptclasses
 
-import scala.collection.mutable.ListBuffer
+import java.util.ArrayList
+import java.util.List
+
+import scala.collection.mutable.HashMap
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
-import com.exasol.cloudetl.bucket.Bucket
-import com.exasol.cloudetl.source._
+import com.exasol.cloudetl.emitter.FilesDataEmitter
 import com.exasol.cloudetl.storage.StorageProperties
-import com.exasol.common.data.Row
+import com.exasol.parquetio.data.ChunkInterval
+import com.exasol.parquetio.data.ChunkIntervalImpl
 
 import com.typesafe.scalalogging.LazyLogging
-import org.apache.hadoop.fs.Path
 
 /**
  * A importer class that reads and imports data into Exasol database.
  */
 object FilesDataImporter extends LazyLogging {
+
+  private[this] val STORAGE_PROPERTIES_INDEX = 1
+  private[this] val FILENAME_STARTING_INDEX = 2
 
   /**
    * Reads files and emits their data into Exasol iterator.
@@ -24,43 +29,44 @@ object FilesDataImporter extends LazyLogging {
    * @param iterator an Exasol iterator object
    */
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
-    val storageProperties = StorageProperties(iterator.getString(1), metadata)
-    val fileFormat = storageProperties.getFileFormat()
-    val bucket = Bucket(storageProperties)
-
-    val files = groupFiles(iterator, 2)
-    val nodeId = metadata.getNodeId
-    val vmId = metadata.getVmId
-    logger.info(s"The total number of files for node: $nodeId, vm: $vmId is '${files.size}'.")
-
-    files.foreach { file =>
-      logger.info(s"Importing from file: '$file'")
-      val source = Source(fileFormat, new Path(file), bucket.getConfiguration(), bucket.fileSystem)
-      readAndEmit(transformValues(source), iterator)
-      source.close()
+    val storageProperties = StorageProperties(iterator.getString(STORAGE_PROPERTIES_INDEX), metadata)
+    val files = collectFiles(iterator)
+    val nodeId = metadata.getNodeId()
+    val vmId = metadata.getVmId()
+    files.foreach { case (filename, intervals) =>
+      logger.info(s"Intervals '${getIntervalString(intervals)}' for file $filename on node '$nodeId' and vm '$vmId'.")
     }
+    FilesDataEmitter(storageProperties, files).emit(iterator)
   }
 
-  private[this] def transformValues(source: Source): Iterator[Row] = {
-    val converter = source.getValueConverter()
-    converter.convert(source.stream())
-  }
-
-  private[this] def groupFiles(
-    iterator: ExaIterator,
-    fileStartingIndex: Int
-  ): Seq[String] = {
-    val files = ListBuffer[String]()
+  private[this] def collectFiles(iterator: ExaIterator): Map[String, List[ChunkInterval]] = {
+    val files = new HashMap[String, List[ChunkInterval]]()
     do {
-      files.append(iterator.getString(fileStartingIndex))
+      val filename = iterator.getString(FILENAME_STARTING_INDEX)
+      val startIndex = iterator.getLong(FILENAME_STARTING_INDEX + 1)
+      val endIndex = iterator.getLong(FILENAME_STARTING_INDEX + 2)
+      if (!files.contains(filename)) {
+        val _ = files.put(filename, new ArrayList[ChunkInterval]())
+      }
+      files
+        .get(filename)
+        .map { list =>
+          val _ = list.add(new ChunkIntervalImpl(startIndex, endIndex))
+        }
     } while (iterator.next())
-    files.toSeq
+    files.toMap
   }
 
-  private[this] def readAndEmit(rowIterator: Iterator[Row], ctx: ExaIterator): Unit =
-    rowIterator.foreach { row =>
-      val columns: Seq[Object] = row.getValues().map(_.asInstanceOf[AnyRef])
-      ctx.emit(columns: _*)
+  private[this] def getIntervalString(intervals: List[ChunkInterval]): String = {
+    val sb = new StringBuilder()
+    for { i <- 0 until intervals.size() } {
+      sb.append("[")
+        .append(intervals.get(i).getStartPosition())
+        .append(",")
+        .append(intervals.get(i).getEndPosition())
+        .append("), ")
     }
+    sb.toString()
+  }
 
 }

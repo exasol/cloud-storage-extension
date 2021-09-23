@@ -11,11 +11,11 @@ import org.hamcrest.MatcherAssert.assertThat
 
 class AlluxioExportImportIT extends BaseIntegrationTest {
 
-  val ALLUXIO_IMAGE = "alluxio/alluxio:2.6.0"
+  val ALLUXIO_IMAGE = "alluxio/alluxio:2.6.2"
   val SCHEMA_NAME = "ALLUXIO_SCHEMA"
 
   val alluxioMainContainer =
-    GenericContainer(ALLUXIO_IMAGE, exposedPorts = Seq(19998), command = Seq("master"))
+    GenericContainer(ALLUXIO_IMAGE, exposedPorts = Seq(19998, 19999), command = Seq("master"))
       .configure { c =>
         c.withNetwork(network)
         c.withNetworkAliases("alluxio-main")
@@ -33,7 +33,7 @@ class AlluxioExportImportIT extends BaseIntegrationTest {
           "-Dalluxio.master.hostname=alluxio-main " +
             "-Dalluxio.worker.container.hostname=alluxio-worker -Dalluxio.worker.ramdisk.size=64MB"
         )
-        c.withSharedMemorySize(1024 * 1024 * 1024 * 1024)
+        c.withSharedMemorySize(1024 * 1024 * 1024)
         c.dependsOn(alluxioMainContainer)
         c.withReuse(true)
         ()
@@ -81,13 +81,11 @@ class AlluxioExportImportIT extends BaseIntegrationTest {
 
   def prepareContainers(bucket: String): Unit = {
     val alluxioFsCmd = "/opt/alluxio/bin/alluxio fs"
-    var exitCode = alluxioMainContainer
-      .execInContainer("/bin/sh", "-c", s"$alluxioFsCmd mkdir /$bucket")
+    var exitCode = alluxioMainContainer.execInContainer("/bin/sh", "-c", s"$alluxioFsCmd mkdir /$bucket")
     if (exitCode.getExitCode() != 0) {
       throw new RuntimeException(s"Could not create '$bucket' folder in Alluxio container.")
     }
-    exitCode = alluxioMainContainer
-      .execInContainer("/bin/sh", "-c", s"$alluxioFsCmd chmod 777 /$bucket/")
+    exitCode = alluxioMainContainer.execInContainer("/bin/sh", "-c", s"$alluxioFsCmd chmod 777 /$bucket/")
     if (exitCode.getExitCode() != 0) {
       throw new RuntimeException(
         s"Could not change '$bucket' folder permissions in Alluxio container."

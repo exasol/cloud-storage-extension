@@ -120,6 +120,8 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
     val exportedFiles = getOutputPathFiles()
     when(importIter.next()).thenReturn(false)
     when(importIter.getString(2)).thenReturn(exportedFiles(0))
+    when(importIter.getLong(3)).thenReturn(0L)
+    when(importIter.getLong(4)).thenReturn(1L)
 
     FilesDataImporter.run(mock[ExaMetadata], importIter)
 

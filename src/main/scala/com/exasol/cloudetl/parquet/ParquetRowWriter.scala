@@ -27,7 +27,7 @@ object ParquetRowWriter {
     options: ParquetWriteOptions
   ): ParquetWriter[Row] =
     new Builder(path, messageType)
-      .withRowGroupSize(options.blockSize)
+      .withRowGroupSize(options.blockSize.toLong)
       .withPageSize(options.pageSize)
       .withCompressionCodec(options.compressionCodec)
       .withDictionaryEncoding(options.enableDictionaryEncoding)

@@ -2,4 +2,4 @@ error-tags:
   CSE:
     packages:
       - com.exasol.cloudetl
-    highest-index: 26
+    highest-index: 27

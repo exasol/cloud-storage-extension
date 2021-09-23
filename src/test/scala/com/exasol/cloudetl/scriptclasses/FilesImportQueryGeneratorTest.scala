@@ -19,7 +19,7 @@ class FilesImportQueryGeneratorTest extends PathTest {
     val expectedSQLStatement =
       s"""|SELECT
           |  $schema.IMPORT_FILES(
-          |    '$bucketPath', '$storagePropertyPairs', filename
+          |    '$bucketPath', '$storagePropertyPairs', filename, start_index, end_index
           |)
           |FROM (
           |  SELECT $schema.IMPORT_METADATA(

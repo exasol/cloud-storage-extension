@@ -54,15 +54,6 @@ final case class OrcSource(
       }
     }
 
-  /**
-   * @inheritdoc
-   *
-   * At the moment Orc values do not require additional transformation.
-   */
-  override def getValueConverter(): ValueConverter = new ValueConverter {
-    override def convert(rows: Iterator[Row]) = rows
-  }
-
   private[this] def createReader(): Reader = {
     val options = OrcFile.readerOptions(conf).filesystem(fileSystem)
     try {

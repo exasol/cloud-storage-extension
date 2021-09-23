@@ -35,11 +35,6 @@ abstract class Source {
   def stream(): Iterator[Row]
 
   /**
-   * Returns value converter specific for a given source.
-   */
-  def getValueConverter(): ValueConverter
-
-  /**
    * Finally close the resource used for this source.
    */
   def close(): Unit
@@ -56,10 +51,8 @@ object Source {
 
   def apply(fileFormat: FileFormat, filePath: Path, conf: Configuration, fileSystem: FileSystem): Source =
     fileFormat match {
-      case AVRO    => AvroSource(filePath, conf, fileSystem)
-      case ORC     => OrcSource(filePath, conf, fileSystem)
-      case DELTA   => ParquetSource(filePath, conf, fileSystem)
-      case PARQUET => ParquetSource(filePath, conf, fileSystem)
+      case AVRO => AvroSource(filePath, conf, fileSystem)
+      case ORC  => OrcSource(filePath, conf, fileSystem)
       case _ =>
         throw new IllegalArgumentException(
           ExaError

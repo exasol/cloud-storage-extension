@@ -6,8 +6,7 @@ import com.exasol.cloudetl.bucket.Bucket
 import com.exasol.cloudetl.storage.StorageProperties
 
 /**
- * A SQL query generator class that facilitates the metadata reading and
- * file data importing.
+ * A SQL query generator class that facilitates the metadata reading and file data importing.
  */
 object FilesImportQueryGenerator {
 
@@ -19,10 +18,7 @@ object FilesImportQueryGenerator {
    * @param metadata an Exasol metadata object
    * @param importSpecification an Exasol import specification object
    */
-  def generateSqlForImportSpec(
-    metadata: ExaMetadata,
-    importSpecification: ExaImportSpecification
-  ): String = {
+  def generateSqlForImportSpec(metadata: ExaMetadata, importSpecification: ExaImportSpecification): String = {
     val storageProperties = StorageProperties(importSpecification.getParameters())
     val bucket = Bucket(storageProperties)
     bucket.validate()
@@ -34,7 +30,7 @@ object FilesImportQueryGenerator {
 
     s"""|SELECT
         |  $scriptSchema.IMPORT_FILES(
-        |    '$bucketPath', '$storagePropertiesAsString', filename
+        |    '$bucketPath', '$storagePropertiesAsString', filename, start_index, end_index
         |)
         |FROM (
         |  SELECT $scriptSchema.IMPORT_METADATA(
