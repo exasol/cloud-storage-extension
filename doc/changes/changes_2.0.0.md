@@ -4,7 +4,7 @@ Code name: Improved Parquet Reader
 
 ## Summary
 
-In this release we add optimized Parquet file importer. Previous versions read single Parquet file in a single importer process, in this version we improved it by virtually splitting files into fixed sized chunks that then can be imported in many parallel processes. For that, we please do not forget to update to the latest deployment scripts in the user guide.
+In this release we add optimized Parquet file importer. Previous versions read single Parquet file in a single importer process, in this version we improved it by virtually splitting files into fixed sized chunks that then can be imported in many parallel processes. For that, please do not forget to update to the latest deployment scripts in the user guide.
 
 In addition, we added support for connections behind proxies when accessing cloud storage systems and added unified error codes.
 
