@@ -11,6 +11,7 @@ In addition, we added support for connections behind proxies when accessing clou
 ## Features
 
 * #173: Added improved chunked Parquet reader
+* Added support for connection behind proxy (PR #172)
 
 ## Refactoring
 
@@ -24,7 +25,7 @@ In addition, we added support for connections behind proxies when accessing clou
 * Updated `com.exasol:parquet-io-java:1.0.3` to `1.1.0`
 * Updated `org.apache.orc:orc-core:1.6.9` to `1.7.0`
 * Updated `org.alluxio:alluxio-core-client-hdfs:2.6.1` to `2.6.2`
-* Updated `io.grpc:grpc-netty:1.39.0` to `1.40.1`
+* Updated `io.grpc:grpc-netty:1.39.0` to `1.41.0`
 
 ### Test Dependency Updates
 

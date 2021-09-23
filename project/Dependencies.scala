@@ -65,7 +65,7 @@ object Dependencies {
       exclude ("org.apache.logging.log4j", "log4j-slf4j-impl")
       exclude ("org.apache.commons", "commons-lang3")
       exclude ("org.apache.hadoop", "hadoop-client"),
-    "io.grpc" % "grpc-netty" % "1.40.1",
+    "io.grpc" % "grpc-netty" % "1.41.0",
     "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion
       exclude ("com.google.guava", "guava")
       exclude ("org.apache.httpcomponents", "httpclient"),
