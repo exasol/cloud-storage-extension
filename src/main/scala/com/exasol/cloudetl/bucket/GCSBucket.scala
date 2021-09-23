@@ -21,8 +21,7 @@ final case class GCSBucket(path: String, params: StorageProperties) extends Buck
     validateRequiredProperties()
 
   /**
-   * Returns the list of required property keys for Google Cloud
-   * Storage.
+   * Returns the list of required property keys for Google Cloud Storage.
    */
   override def getRequiredProperties(): Seq[String] =
     Seq(GCS_PROJECT_ID, GCS_KEYFILE_PATH)
@@ -30,8 +29,7 @@ final case class GCSBucket(path: String, params: StorageProperties) extends Buck
   /**
    * @inheritdoc
    *
-   * Additionally validates that all required parameters are available
-   * in order to create a configuration.
+   * Additionally validates that all required parameters are available in order to create a configuration.
    */
   override def getConfiguration(): Configuration = {
     validate()
@@ -40,10 +38,13 @@ final case class GCSBucket(path: String, params: StorageProperties) extends Buck
     conf.set("fs.gs.impl", classOf[com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem].getName)
     conf.setBoolean("fs.gs.auth.service.account.enable", true)
     conf.set("fs.gs.project.id", properties.getString(GCS_PROJECT_ID))
-    conf.set(
-      "fs.gs.auth.service.account.json.keyfile",
-      properties.getString(GCS_KEYFILE_PATH)
-    )
+    conf.set("fs.gs.auth.service.account.json.keyfile", properties.getString(GCS_KEYFILE_PATH))
+
+    properties.getProxyHost().foreach { proxyHost =>
+      properties.getProxyPort().foreach(proxyPort => conf.set("fs.gs.proxy.address", s"$proxyHost:$proxyPort"))
+      properties.getProxyUsername().foreach(conf.set("fs.gs.proxy.username", _))
+      properties.getProxyPassword().foreach(conf.set("fs.gs.proxy.password", _))
+    }
 
     conf
   }

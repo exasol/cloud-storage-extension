@@ -405,6 +405,49 @@ These optional parameters only apply to the data export statements.
   gets `1M` rows to export, it will create 10 files with default 100000 records
   in each file.
 
+#### Optional proxy configuration
+
+If access to the cloud storage is restricted by a proxy, the IMPORT and EXPORT
+statements can be configured with:
+
+* ``PROXY_HOST`` - Configures a proxy host that is used to access the bucket if
+  this is required.
+
+* ``PROXY_PORT`` - Configures the port to use for the proxy defined with
+  `PROXY_HOST`.
+
+* ``PROXY_USERNAME`` - Configures the username to use for the proxy defined with
+  `PROXY_HOST`.
+
+* ``PROXY_PASSWORD`` - Configures the port to use for the proxy defined with
+  `PROXY_HOST`.
+
+These parameters are only available for S3 and GCP buckets.
+
+For Azure Buckets, the proxy can be configured via JVM properties using the
+`%jvmoption` when creating metadata reader and files data importer deployment
+scripts.
+
+For example:
+
+```sql
+CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...)
+EMITS (filename VARCHAR(2000), partition_index VARCHAR(100)) AS
+  %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
+  %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+/
+
+CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
+  %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
+  %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+/
+```
+
+The variable names may be different, please check out the Azure storage
+documentation.
+
 ## Parallelism
 
 The setting for parallelism is **different** for import and export statements.
