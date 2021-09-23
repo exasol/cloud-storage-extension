@@ -11,9 +11,9 @@ jobs:
       fail-fast: false
       matrix:
         scala: [ 2.12.15 ]
-        exasol-docker-version: [ 6.2.16-d1, 7.0.12, 7.1.1 ]
+        exasol-docker-version: [ "6.2.16-d1", "7.0.12", "7.1.1" ]
     env:
-      DEFAULT_DOCKER_DB_VERSION: 7.1.1
+      DEFAULT_DOCKER_DB_VERSION: "7.1.1"
 
     steps:
       - name: Checkout the Repository
@@ -54,19 +54,20 @@ jobs:
           EXASOL_DOCKER_VERSION: ${{ matrix.exasol-docker-version }}
 
       - name: Upload Coverage Results to Coveralls
-        run: sbt coveralls
+        if: ${{ env.DEFAULT_DOCKER_DB_VERSION == matrix.exasol-docker-version }}
+        run: sbt ++${{ matrix.scala }} coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # This required because of the sonarcloud-github-action docker volume mapping.
       - name: Prepare for Sonar Cloud Scan
-        if: ${{ env.DEFAULT_DOCKER_DB_VERSION == matrix.exasol-docker-version }} && github.repository_owner == 'exasol'
+        if: ${{ env.DEFAULT_DOCKER_DB_VERSION == matrix.exasol-docker-version }}
         run: |
           find . -name scoverage.xml -exec sed -i \
             's#/home/runner/work/cloud-storage-extension/cloud-storage-extension#/github/workspace#g' {} +
 
       - name: Sonar Cloud Scan
-        if: ${{ env.DEFAULT_DOCKER_DB_VERSION == matrix.exasol-docker-version }} && github.repository_owner == 'exasol'
+        if: ${{ env.DEFAULT_DOCKER_DB_VERSION == matrix.exasol-docker-version }}
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
