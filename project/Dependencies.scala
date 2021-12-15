@@ -10,10 +10,10 @@ object Dependencies {
   private val ImportExportUDFVersion = "0.2.0"
   private val ParquetIOVersion = "1.1.0"
   private val HadoopVersion = "3.3.1"
-  private val DeltaVersion = "0.7.0"
+  private val DeltaVersion = "1.1.0"
   private val OrcVersion = "1.7.1"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
-  private val SparkSQLVersion = "3.0.1"
+  private val SparkSQLVersion = "3.2.0"
   private val AlluxioCoreHDFSVersion = "2.7.1"
 
   // Test dependencies versions

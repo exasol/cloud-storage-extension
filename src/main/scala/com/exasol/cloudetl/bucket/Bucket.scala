@@ -84,7 +84,7 @@ abstract class Bucket extends LazyLogging {
     val spark = createSparkSession()
     val strippedBucketPath = stripTrailingStar(bucketPath)
     val deltaLog = DeltaLog.forTable(spark, strippedBucketPath)
-    if (!deltaLog.isValid()) {
+    if (!deltaLog.tableExists) {
       throw new IllegalArgumentException(
         ExaError
           .messageBuilder("F-CSE-3")
