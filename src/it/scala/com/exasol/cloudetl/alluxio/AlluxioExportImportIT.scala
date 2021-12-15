@@ -11,7 +11,7 @@ import org.hamcrest.MatcherAssert.assertThat
 
 class AlluxioExportImportIT extends BaseIntegrationTest {
 
-  val ALLUXIO_IMAGE = "alluxio/alluxio:2.6.2"
+  val ALLUXIO_IMAGE = "alluxio/alluxio:2.7.1"
   val SCHEMA_NAME = "ALLUXIO_SCHEMA"
 
   val alluxioMainContainer =

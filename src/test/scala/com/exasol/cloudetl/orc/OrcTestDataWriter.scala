@@ -57,7 +57,7 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
       case Category.DATE      => longWriter(column.asInstanceOf[LongColumnVector])
       case Category.FLOAT     => doubleWriter(column.asInstanceOf[DoubleColumnVector])
       case Category.DOUBLE    => doubleWriter(column.asInstanceOf[DoubleColumnVector])
-      case Category.DECIMAL   => decimalWriter(column.asInstanceOf[DecimalColumnVector], orcType)
+      case Category.DECIMAL   => decimalWriter(column.asInstanceOf[DecimalColumnVector])
       case Category.CHAR      => stringWriter(column.asInstanceOf[BytesColumnVector])
       case Category.VARCHAR   => stringWriter(column.asInstanceOf[BytesColumnVector])
       case Category.BINARY    => stringWriter(column.asInstanceOf[BytesColumnVector])
@@ -100,10 +100,7 @@ class OrcTestDataWriter(path: Path, conf: Configuration) {
         case _         => setNull(column, index)
       }
 
-  private[this] def decimalWriter(
-    column: DecimalColumnVector,
-    orcType: TypeDescription
-  ): (Any, Int) => Unit =
+  private[this] def decimalWriter(column: DecimalColumnVector): (Any, Int) => Unit =
     (value: Any, index: Int) =>
       value match {
         case dec: String => column.set(index, HiveDecimal.create(dec))

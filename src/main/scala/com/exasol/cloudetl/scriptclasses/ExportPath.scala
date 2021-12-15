@@ -5,9 +5,12 @@ import com.exasol.ExaMetadata
 import com.exasol.cloudetl.constants.Constants.USER_GUIDE_LINK
 import com.exasol.errorreporting.ExaError
 
-object ExportPath {
+import com.typesafe.scalalogging.LazyLogging
 
-  def generateSqlForExportSpec(meta: ExaMetadata, spec: ExaExportSpecification): String =
+object ExportPath extends LazyLogging {
+
+  def generateSqlForExportSpec(meta: ExaMetadata, spec: ExaExportSpecification): String = {
+    logger.info(s"Script '${meta.getScriptName()}' with parameters '${spec.getParameters()}'.")
     throw new IllegalArgumentException(
       ExaError
         .messageBuilder("E-CSE-7")
@@ -16,4 +19,5 @@ object ExportPath {
         .mitigation("Please check the user guide at {{LINK}} for updated deployment scripts.", USER_GUIDE_LINK)
         .toString()
     )
+  }
 }

@@ -133,7 +133,7 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
     TableDataExporter.run(metadata, iterator)
     assert(Files.exists(outputPath) === true)
     assert(Files.list(outputPath).count() === 2)
-    checkExportFileExtensions(outputPath, "")
+    checkExportFileExtensions("")
   }
 
   test("export creates file with compression extension if compression codec is set") {
@@ -142,10 +142,10 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
     TableDataExporter.run(metadata, iterator)
     assert(Files.exists(outputPath) === true)
     assert(Files.list(outputPath).count() === 2)
-    checkExportFileExtensions(outputPath, ".snappy")
+    checkExportFileExtensions(".snappy")
   }
 
-  private[this] def checkExportFileExtensions(outputPath: Path, compressionCodec: String): Unit = {
+  private[this] def checkExportFileExtensions(compressionCodec: String): Unit = {
     assert(getOutputPathFiles().forall(_.endsWith(s"$compressionCodec.parquet")))
     ()
   }
