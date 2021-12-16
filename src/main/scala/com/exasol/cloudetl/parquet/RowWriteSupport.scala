@@ -4,7 +4,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.charset.StandardCharsets.UTF_8
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import com.exasol.cloudetl.helper.DateTimeConverter._
 import com.exasol.cloudetl.helper.ParquetSchemaConverter

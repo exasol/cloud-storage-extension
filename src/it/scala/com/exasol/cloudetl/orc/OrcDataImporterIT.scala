@@ -187,20 +187,20 @@ class OrcDataImporterIT extends BaseDataImporter {
   test("imports list of maps") {
     OrcChecker("struct<f:array<map<string,int>>>", "VARCHAR(30)", "list_map")
       .withInputValues(List(Seq(Map("p" -> 314), Map("a" -> 1, "b" -> 2))))
-      .assertResultSet(table().row("""[{"p":314},{"b":2,"a":1}]""").matches())
+      .assertResultSet(table().row("""[{"p":314},{"a":1,"b":2}]""").matches())
   }
 
   test("imports map") {
     OrcChecker("struct<f:map<string,int>>", "VARCHAR(30)", "map_table")
       .withInputValues(List(Map("a" -> 3, "b" -> 5, "c" -> 7)))
-      .assertResultSet(table().row("""{"b":5,"a":3,"c":7}""").matches())
+      .assertResultSet(table().row("""{"a":3,"b":5,"c":7}""").matches())
   }
 
   test("imports map with list values") {
     val input = Map("consts" -> List(3.14, 2.71), "nums" -> List(1.0, 0.5))
     OrcChecker("struct<f:map<string,array<double>>>", "VARCHAR(40)", "map_list_values")
       .withInputValues(List(input))
-      .assertResultSet(table().row("""{"consts":[3.14,2.71],"nums":[1.0,0.5]}""").matches())
+      .assertResultSet(table().row("""{"nums":[1.0,0.5],"consts":[3.14,2.71]}""").matches())
   }
 
   test("imports nested struct") {
@@ -212,7 +212,7 @@ class OrcDataImporterIT extends BaseDataImporter {
     ).withInputValues(List(input))
       .assertResultSet(
         table()
-          .row("""{"phoneNumber":1337,"name":"Jon","pets":["cat","direwolf"]}""")
+          .row("""{"pets":["cat","direwolf"],"phoneNumber":1337,"name":"Jon"}""")
           .matches()
       )
   }
@@ -239,9 +239,9 @@ class OrcDataImporterIT extends BaseDataImporter {
     OrcChecker(orcType, "VARCHAR(30)", "union_table")
       .assertResultSet(
         table()
-          .row("""{"INT":null,"STRING":"str"}""")
-          .row("""{"INT":23,"STRING":null}""")
-          .row("""{"INT":null,"STRING":null}""")
+          .row("""{"STRING":"str","INT":null}""")
+          .row("""{"STRING":null,"INT":23}""")
+          .row("""{"STRING":null,"INT":null}""")
           .matches()
       )
   }

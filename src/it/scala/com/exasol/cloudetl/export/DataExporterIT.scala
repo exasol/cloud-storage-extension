@@ -28,7 +28,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
     val columns = LinkedHashMap(
       "C_BOOLEAN" -> "BOOLEAN"
     )
-    val tableValues = Stream[Array[Any]](
+    val tableValues = LazyList[Array[Any]](
       Array(1L, null),
       Array(2L, true),
       Array(3L, false)
@@ -40,7 +40,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
     val columns = LinkedHashMap(
       "NAME" -> "VARCHAR(40)"
     )
-    val tableValues = Stream[Array[Any]](
+    val tableValues = LazyList[Array[Any]](
       Array(1L, "Cat"),
       Array(2L, "Dog")
     )
@@ -51,7 +51,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
     val columns = LinkedHashMap(
       "C_CHAR20" -> "CHAR(20)"
     )
-    val tableValues = Stream[Array[Any]](
+    val tableValues = LazyList[Array[Any]](
       Array(1L, null),
       Array(2L, "foo                 "),
       Array(3L, "0123456789abcdefghij")
@@ -64,7 +64,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
       "C_DECIMAL" -> "DECIMAL(3,2)",
       "C_DOUBLE" -> "DOUBLE PRECISION"
     )
-    val tableValues = Stream[Array[Any]](
+    val tableValues = LazyList[Array[Any]](
       Array(1L, null, null),
       Array(2L, 1.23, 3.14159265358979323846264338327950288),
       Array(3L, 0.0, 0.0),
@@ -81,7 +81,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
       "C_INT" -> "INTEGER",
       "C_LONG" -> "BIGINT"
     )
-    val tableValues = Stream[Array[Any]](
+    val tableValues = LazyList[Array[Any]](
       Array(1L, null, null),
       Array(2L, INT_MIN, LONG_MIN),
       Array(3L, INT_MAX, LONG_MAX)
@@ -98,7 +98,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
       "C_SMALLINT" -> "SMALLINT",
       "C_TINYINT" -> "TINYINT"
     )
-    val tableValues = Stream[Array[Any]](
+    val tableValues = LazyList[Array[Any]](
       Array(1L, null, null, null, null, null, null),
       Array(2L, 100, 3.1415, 1.0f, 7, 12, 5)
     )
@@ -110,7 +110,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
       "C_DATE" -> "DATE",
       "C_TIMESTAMP" -> "TIMESTAMP"
     )
-    val tableValues = Stream[Array[Any]](
+    val tableValues = LazyList[Array[Any]](
       Array(1L, Date.valueOf("0001-01-01"), Timestamp.valueOf("0001-01-01 01:01:01.0")),
       Array(2L, Date.valueOf("1970-01-01"), Timestamp.valueOf("2001-01-01 01:01:01")),
       Array(3L, Date.valueOf("9999-12-31"), Timestamp.valueOf("9999-12-31 23:59:59"))
@@ -124,7 +124,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
       "C_VARCHAR_Mixed_Case" -> "VARCHAR(20)",
       "C_VARCHAR_REGULAR" -> "VARCHAR(50)"
     )
-    val tableValues = Stream[Array[Any]](
+    val tableValues = LazyList[Array[Any]](
       Array(1L, "Quoted, lower case", "Quoted, mixed case", "Not quoted, automatically turned to upper case"),
       Array(2L, "Cats", "Dogs", "Ducks")
     )
@@ -133,7 +133,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
 
   test("exports and imports decimals with trailing zeros") {
     val columns = LinkedHashMap("C_DECIMAL" -> "DECIMAL(18, 4)")
-    val tableValues = Stream[Array[Any]](Array(1L, 238316.38))
+    val tableValues = LazyList[Array[Any]](Array(1L, 238316.38))
     ExportImportChecker(columns, tableValues, "decimal-trailing-zeros-bucket")
       .assertWithMatcher(
         table()
@@ -173,7 +173,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
     resultSet.close()
   }
 
-  case class ExportImportChecker(columns: LinkedHashMap[String, String], input: Stream[Array[Any]], bucket: String) {
+  case class ExportImportChecker(columns: LinkedHashMap[String, String], input: LazyList[Array[Any]], bucket: String) {
     val tableValues = input.map(_.map(_.asInstanceOf[AnyRef]))
     val exportTable = {
       var table = createTable(getTableName("EXPORT"))

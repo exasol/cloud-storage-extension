@@ -1,6 +1,6 @@
 package com.exasol.cloudetl.bucket
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import com.exasol.cloudetl.filesystem.FileSystemManager
 import com.exasol.cloudetl.storage.FileFormat
@@ -98,6 +98,7 @@ abstract class Bucket extends LazyLogging {
     latestSnapshot.allFiles
       .select("path")
       .collect()
+      .toSeq
       .map { case Row(path: String) => new Path(s"$strippedBucketPath/$path") }
   }
 

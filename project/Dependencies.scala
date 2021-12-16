@@ -8,7 +8,7 @@ object Dependencies {
 
   // Runtime dependencies versions
   private val ImportExportUDFVersion = "0.2.0"
-  private val ParquetIOVersion = "1.1.0"
+  private val ParquetIOVersion = "1.2.1"
   private val HadoopVersion = "3.3.1"
   private val DeltaVersion = "1.1.0"
   private val OrcVersion = "1.7.1"
@@ -37,6 +37,7 @@ object Dependencies {
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.13.0",
     "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.13.0",
     "io.grpc" % "grpc-netty" % "1.43.0",
+    "io.netty" % "netty-all" % "4.1.72.Final",
     "com.exasol" %% "import-export-udf-common-scala" % ImportExportUDFVersion
       exclude ("org.slf4j", "slf4j-simple")
       exclude ("org.apache.avro", "avro")

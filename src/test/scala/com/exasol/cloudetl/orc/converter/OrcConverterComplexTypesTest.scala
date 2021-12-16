@@ -50,7 +50,7 @@ class OrcConverterComplexTypesTest extends BaseOrcConverterTest {
     val map = createMap(createString(), createInt())
     val schema = createStruct().addField("column", map)
     orcWriter.write(schema, List(Map("a" -> 1, "b" -> 2, "c" -> 3)))
-    assert(getRecords()(0) === Row(Seq("""{"b":2,"a":1,"c":3}""")))
+    assert(getRecords()(0) === Row(Seq("""{"a":1,"b":2,"c":3}""")))
   }
 
   test("reads map with list values as JSON string") {
@@ -60,7 +60,7 @@ class OrcConverterComplexTypesTest extends BaseOrcConverterTest {
       schema,
       List(Map("consts" -> List(3.14, 2.71), "nums" -> List(1.0, 0.5)))
     )
-    assert(getRecords()(0) === Row(Seq("""{"consts":[3.14,2.71],"nums":[1.0,0.5]}""")))
+    assert(getRecords()(0) === Row(Seq("""{"nums":[1.0,0.5],"consts":[3.14,2.71]}""")))
   }
 
   test("reads nested struct as JSON string") {
@@ -73,7 +73,7 @@ class OrcConverterComplexTypesTest extends BaseOrcConverterTest {
       schema,
       List(Map("name" -> "John", "phoneNumber" -> 1337, "pets" -> Seq("cat", "dog")))
     )
-    val expected = Row(Seq("""{"phoneNumber":1337,"name":"John","pets":["cat","dog"]}"""))
+    val expected = Row(Seq("""{"pets":["cat","dog"],"phoneNumber":1337,"name":"John"}"""))
     assert(getRecords()(0) === expected)
   }
 
@@ -98,9 +98,9 @@ class OrcConverterComplexTypesTest extends BaseOrcConverterTest {
     writer.close()
 
     val records = getRecords()
-    assert(records(0) === Row(Seq("""{"INT":23,"STRING":null}""")))
-    assert(records(1) === Row(Seq("""{"INT":null,"STRING":"str"}""")))
-    assert(records(2) === Row(Seq("""{"INT":null,"STRING":null}""")))
+    assert(records(0) === Row(Seq("""{"STRING":null,"INT":23}""")))
+    assert(records(1) === Row(Seq("""{"STRING":"str","INT":null}""")))
+    assert(records(2) === Row(Seq("""{"STRING":null,"INT":null}""")))
   }
 
 }

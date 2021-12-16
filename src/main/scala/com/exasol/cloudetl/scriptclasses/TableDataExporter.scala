@@ -32,7 +32,7 @@ object TableDataExporter extends LazyLogging {
     val storageProperties = StorageProperties(iterator.getString(STORAGE_PROPERTIES_INDEX), metadata)
     val bucket = Bucket(storageProperties)
     val sourceColumnNames = iterator.getString(SOURCE_COLUMNS_INDEX).split("\\.")
-    val columns = getColumns(metadata, sourceColumnNames)
+    val columns = getColumns(metadata, sourceColumnNames.toSeq)
     val nodeId = metadata.getNodeId()
     val vmId = metadata.getVmId()
     val sink = new BatchSizedSink(nodeId, vmId, iterator.size(), columns, bucket)
@@ -51,10 +51,10 @@ object TableDataExporter extends LazyLogging {
     var index = 0
     while (index < columns.size) {
       val value = columnValueProvider.getColumnValue(FIRST_COLUMN_INDEX + index, columns(index))
-      values.append(value)
+      val _ = values.append(value)
       index += 1
     }
-    Row(values)
+    Row(values.toSeq)
   }
 
   /**

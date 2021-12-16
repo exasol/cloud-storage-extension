@@ -1,6 +1,6 @@
 package com.exasol.cloudetl.scriptclasses
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import com.exasol.ExaExportSpecification
 import com.exasol.ExaMetadata
@@ -58,7 +58,7 @@ object TableExportQueryGenerator {
 
   /** Returns source column names with quotes removed. */
   private[this] def getSourceColumns(spec: ExaExportSpecification): Seq[String] =
-    spec.getSourceColumnNames.asScala.map(getColumnName(_))
+    spec.getSourceColumnNames().asScala.map(getColumnName(_)).toSeq
 
   /**
    * Given a table name dot column name syntax (myTable.colInt), return

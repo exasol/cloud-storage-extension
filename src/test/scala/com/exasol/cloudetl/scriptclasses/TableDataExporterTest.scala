@@ -4,7 +4,7 @@ import java.lang.Long
 import java.nio.file.Files
 import java.nio.file.Path
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata

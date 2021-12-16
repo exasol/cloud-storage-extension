@@ -1,6 +1,6 @@
 package com.exasol.cloudetl.bucket
 
-import scala.collection.JavaConverters.mapAsScalaMapConverter
+import scala.jdk.CollectionConverters.MapHasAsScala
 
 class GCSBucketTest extends AbstractBucketTest {
 

@@ -44,6 +44,6 @@ trait SecureBucket extends LazyLogging { self: Bucket =>
   }
 
   private[this] def hasSecureProperties(): Boolean =
-    getSecureProperties.exists(properties.containsKey(_))
+    getSecureProperties().exists(properties.containsKey(_))
 
 }

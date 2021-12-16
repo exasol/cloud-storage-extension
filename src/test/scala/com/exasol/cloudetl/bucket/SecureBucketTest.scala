@@ -28,9 +28,9 @@ class SecureBucketTest extends AbstractBucketTest {
     override val properties = StorageProperties(params, metadata)
 
     override val bucketPath = "local_path"
-    override def getRequiredProperties: Seq[String] = Seq.empty[String]
-    override def getSecureProperties: Seq[String] = Seq("accountSecretProperty")
-    override def getConfiguration: Configuration = new Configuration()
+    override def getRequiredProperties(): Seq[String] = Seq.empty[String]
+    override def getSecureProperties(): Seq[String] = Seq("accountSecretProperty")
+    override def getConfiguration(): Configuration = new Configuration()
     override def validate(): Unit = {
       validateRequiredProperties()
       validateConnectionProperties()
