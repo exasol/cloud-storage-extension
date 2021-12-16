@@ -34,8 +34,9 @@ object Dependencies {
   lazy val StorageDependencies: Seq[ModuleID] = Seq(
     "org.apache.commons" % "commons-lang3" % "3.12.0",
     "com.google.guava" % "guava" % "31.0.1-jre",
-    "com.fasterxml.jackson.core" % "jackson-databind" % "2.12.6",
-    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.12.6",
+    "com.fasterxml.jackson.core" % "jackson-databind" % "2.13.0",
+    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.13.0",
+    "io.grpc" % "grpc-netty" % "1.43.0",
     "com.exasol" %% "import-export-udf-common-scala" % ImportExportUDFVersion
       exclude ("org.slf4j", "slf4j-simple")
       exclude ("org.apache.avro", "avro")
@@ -44,21 +45,21 @@ object Dependencies {
     "org.apache.hadoop" % "hadoop-common" % HadoopVersion
       exclude ("log4j", "log4j")
       exclude ("net.minidev", "json-smart")
+      exclude ("org.apache.avro", "avro")
       exclude ("com.google.guava", "guava")
       exclude ("org.apache.commons", "commons-text")
       exclude ("org.apache.commons", "commons-lang3")
       exclude ("org.apache.commons", "commons-compress")
       exclude ("org.codehaus.jackson", "jackson-mapper-asl")
       exclude ("org.eclipse.jetty", "jetty-server")
-      exclude ("org.eclipse.jetty", "jetty-http")
-      exclude ("org.apache.avro", "avro"),
+      exclude ("org.eclipse.jetty", "jetty-http"),
     "org.apache.hadoop" % "hadoop-aws" % HadoopVersion,
     "org.apache.hadoop" % "hadoop-azure" % HadoopVersion
       exclude ("org.slf4j", "slf4j-api")
       exclude ("commons-logging", "commons-logging")
       exclude ("com.fasterxml.jackson.core", "jackson-core")
-      exclude ("org.codehaus.jackson", "jackson-mapper-asl")
-      exclude ("com.microsoft.azure", "azure-keyvault-core"),
+      exclude ("com.microsoft.azure", "azure-keyvault-core")
+      exclude ("org.codehaus.jackson", "jackson-mapper-asl"),
     "org.apache.hadoop" % "hadoop-azure-datalake" % HadoopVersion
       exclude ("org.slf4j", "slf4j-api")
       exclude ("com.fasterxml.jackson.core", "jackson-core"),
@@ -71,8 +72,11 @@ object Dependencies {
       exclude ("com.google.protobuf", "protobuf-java"),
     "org.alluxio" % "alluxio-core-client-hdfs" % AlluxioCoreHDFSVersion
       exclude ("log4j", "log4j")
+      exclude ("org.apache.avro", "avro")
       exclude ("com.google.guava", "guava")
       exclude ("commons-logging", "commons-logging")
+      exclude ("org.apache.commons", "commons-lang3")
+      exclude ("org.apache.commons", "commons-compress")
       exclude ("io.grpc", "grpc-netty")
       exclude ("io.netty", "netty-all")
       exclude ("io.netty", "netty-handler")
@@ -82,11 +86,7 @@ object Dependencies {
       exclude ("org.apache.logging.log4j", "log4j-api")
       exclude ("org.apache.logging.log4j", "log4j-core")
       exclude ("org.apache.logging.log4j", "log4j-slf4j-impl")
-      exclude ("org.apache.commons", "commons-lang3")
-      exclude ("org.apache.commons", "commons-compress")
-      exclude ("org.apache.avro", "avro")
       exclude ("org.apache.hadoop", "hadoop-client"),
-    "io.grpc" % "grpc-netty" % "1.43.0",
     "com.google.cloud.bigdataoss" % "gcs-connector" % GoogleStorageVersion
       exclude ("com.google.guava", "guava")
       exclude ("org.apache.httpcomponents", "httpclient"),
@@ -98,8 +98,9 @@ object Dependencies {
     "org.apache.avro" % "avro" % "1.11.0",
     "io.delta" %% "delta-core" % DeltaVersion,
     "org.apache.spark" %% "spark-sql" % SparkSQLVersion
-      exclude ("log4j", "log4j")
       exclude ("org.spark-project.spark", "unused")
+      exclude ("log4j", "log4j")
+      exclude ("io.netty", "netty-all")
       exclude ("org.apache.commons", "commons-compress")
       exclude ("org.apache.hadoop", "hadoop-client")
       exclude ("org.apache.parquet", "parquet-hadoop")
@@ -143,7 +144,10 @@ object Dependencies {
       ),
     // Logging Dependencies
     "org.slf4j" % "jul-to-slf4j" % "1.7.32",
-    "org.slf4j" % "slf4j-log4j12" % "1.7.32",
+    "org.slf4j" % "slf4j-log4j12" % "1.7.32"
+      exclude ("log4j", "log4j"),
+    "org.apache.logging.log4j" % "log4j-api" % "2.16.0",
+    "org.apache.logging.log4j" % "log4j-1.2-api" % "2.16.0",
     "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4"
   )
 

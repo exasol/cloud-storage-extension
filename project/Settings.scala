@@ -84,6 +84,7 @@ object Settings {
         case x if x.endsWith(".txt")                          => MergeStrategy.rename
         case x if x.endsWith(".properties")                   => MergeStrategy.filterDistinctLines
         case x if x.endsWith(".class")                        => MergeStrategy.last
+        case x if x.endsWith("package.html")                  => MergeStrategy.last
         case x                                                => defaultStrategy(x)
       }
     },
