@@ -22,7 +22,7 @@ lazy val root =
   project
     .in(file("."))
     .settings(moduleName := "exasol-cloud-storage-extension")
-    .settings(version := "2.0.0")
+    .settings(version := "2.1.0")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.projectSettings(scalaVersion))
