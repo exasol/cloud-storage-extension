@@ -1,14 +1,14 @@
 # Cloud Storage Extension 2.1.0, released 2021-12-16
 
-Code name: Fixed Log4J Vulnerability
+Code name: Fixed the Log4J Vulnerability
 
 ## Summary
 
-In this release we updated dependencies and fixed Log4J `CVE-2021-44228` vulnerability.
+In this release we updated dependencies and fixed the Log4J `CVE-2021-44228` vulnerability.
 
 ## Bug Fixes
 
-* #175: Updated dependencies and fixed log4j vulnerability
+* #175: Updated dependencies and fixed the log4j vulnerability
 
 ## Dependency Updates
 
