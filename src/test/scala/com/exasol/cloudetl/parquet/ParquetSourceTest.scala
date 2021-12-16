@@ -29,11 +29,11 @@ final case class ParquetSourceTest(val path: Path, override val conf: Configurat
     val values = ListBuffer.empty[Row]
     recordReader.read(new Consumer[ParquetRow] {
       override def accept(row: ParquetRow): Unit = {
-        val rowValues = Row(valueConverter.convert(row).clone()) // reused
+        val rowValues = Row(valueConverter.convert(row).clone().toSeq) // reused
         values.append(rowValues)
       }
     })
-    values.toIterator
+    values.iterator
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.Throw")) // fine in tests

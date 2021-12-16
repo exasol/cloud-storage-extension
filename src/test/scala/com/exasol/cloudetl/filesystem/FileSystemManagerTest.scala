@@ -61,7 +61,7 @@ class FileSystemManagerTest extends AnyFunSuite with BeforeAndAfterEach {
     val subDirectory = Files.createDirectories(Paths.get(s"${getDirPath()}/subDir/"))
     val subDirectoryFileParquet = Files.createFile(subDirectory.resolve("aa.parquet"))
     val subDirectoryFileRegular = Files.createFile(subDirectory.resolve("summary.txt"))
-    val expectedPaths = getDefaultExpectedPaths ++ Set(
+    val expectedPaths = getDefaultExpectedPaths() ++ Set(
       new Path(s"file:${subDirectoryFileParquet.toUri().getRawPath()}")
     )
     val pathPattern = s"${getDirPath()}/{*,subDir/*.parquet}"
@@ -75,7 +75,7 @@ class FileSystemManagerTest extends AnyFunSuite with BeforeAndAfterEach {
     val subDirectory = Files.createDirectories(Paths.get(s"${getDirPath()}/subDir/"))
     val subDirectoryFileParquet = Files.createFile(subDirectory.resolve("aa.parquet"))
     val expectedPaths = Set(
-      new Path(s"file:$getDirPath/a.parquet"),
+      new Path(s"file:${getDirPath()}/a.parquet"),
       new Path(s"file:${subDirectoryFileParquet.toUri().getRawPath()}")
     )
     val pathPattern = s"${getDirPath()}/{a.parquet,subDir/aa.parquet}"
@@ -85,7 +85,7 @@ class FileSystemManagerTest extends AnyFunSuite with BeforeAndAfterEach {
   }
 
   test("getFiles returns direct file path") {
-    val expectedPaths = Set(new Path(s"file:$getDirPath/a.parquet"))
+    val expectedPaths = Set(new Path(s"file:${getDirPath()}/a.parquet"))
     val pathPattern = s"${getDirPath()}/a.parquet"
     assert(getFiles(pathPattern) === expectedPaths)
   }

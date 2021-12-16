@@ -15,15 +15,14 @@ lazy val orgSettings = Seq(
 )
 
 lazy val buildSettings = Seq(
-  scalaVersion := "2.12.15",
-  crossScalaVersions := Seq("2.11.12", "2.12.15")
+  scalaVersion := "2.13.7"
 )
 
 lazy val root =
   project
     .in(file("."))
     .settings(moduleName := "exasol-cloud-storage-extension")
-    .settings(version := "2.0.0")
+    .settings(version := "2.1.0")
     .settings(orgSettings)
     .settings(buildSettings)
     .settings(Settings.projectSettings(scalaVersion))

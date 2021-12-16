@@ -1,6 +1,6 @@
 package com.exasol.cloudetl.scriptclasses
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import com.exasol.cloudetl.storage.StorageProperties
 

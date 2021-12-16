@@ -1,6 +1,6 @@
 package com.exasol.cloudetl.bucket
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import com.exasol.cloudetl.filesystem.FileSystemManager
 import com.exasol.cloudetl.storage.FileFormat
@@ -84,7 +84,7 @@ abstract class Bucket extends LazyLogging {
     val spark = createSparkSession()
     val strippedBucketPath = stripTrailingStar(bucketPath)
     val deltaLog = DeltaLog.forTable(spark, strippedBucketPath)
-    if (!deltaLog.isValid()) {
+    if (!deltaLog.tableExists) {
       throw new IllegalArgumentException(
         ExaError
           .messageBuilder("F-CSE-3")
@@ -98,6 +98,7 @@ abstract class Bucket extends LazyLogging {
     latestSnapshot.allFiles
       .select("path")
       .collect()
+      .toSeq
       .map { case Row(path: String) => new Path(s"$strippedBucketPath/$path") }
   }
 

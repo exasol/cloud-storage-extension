@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.bucket
 
+import scala.jdk.CollectionConverters.MapHasAsScala
+
 import org.apache.hadoop.fs.s3a.S3AFileSystem
 
 class S3BucketTest extends AbstractBucketTest {
@@ -130,7 +132,6 @@ class S3BucketTest extends AbstractBucketTest {
       "PROXY_PASSWORD" -> "mySecretPassword",
       "PROXY_PORT" -> "2345"
     )
-    import scala.collection.JavaConverters.mapAsScalaMapConverter
     val conf = bucketWithDefaultConnectionString(properties).getConfiguration()
     assert(conf.getValByRegex("fs\\.s3a\\.proxy.+").asScala === Map.empty[String, String])
   }
