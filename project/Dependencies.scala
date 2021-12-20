@@ -19,7 +19,7 @@ object Dependencies {
   // Test dependencies versions
   private val ScalaTestVersion = "3.2.10"
   private val ScalaTestPlusVersion = "1.0.0-M2"
-  private val MockitoCoreVersion = "4.1.0"
+  private val MockitoCoreVersion = "4.2.0"
   private val HamcrestVersion = "2.2"
   private val ExasolHamcrestMatcherVersion = "1.5.1"
   private val ExasolTestDBBuilderVersion = "3.2.1"
@@ -34,8 +34,8 @@ object Dependencies {
   lazy val StorageDependencies: Seq[ModuleID] = Seq(
     "org.apache.commons" % "commons-lang3" % "3.12.0",
     "com.google.guava" % "guava" % "31.0.1-jre",
-    "com.fasterxml.jackson.core" % "jackson-databind" % "2.13.0",
-    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.13.0",
+    "com.fasterxml.jackson.core" % "jackson-databind" % "2.13.1",
+    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.13.1",
     "io.grpc" % "grpc-netty" % "1.43.0",
     "io.netty" % "netty-all" % "4.1.72.Final",
     "com.exasol" %% "import-export-udf-common-scala" % ImportExportUDFVersion
@@ -147,8 +147,8 @@ object Dependencies {
     "org.slf4j" % "jul-to-slf4j" % "1.7.32",
     "org.slf4j" % "slf4j-log4j12" % "1.7.32"
       exclude ("log4j", "log4j"),
-    "org.apache.logging.log4j" % "log4j-api" % "2.16.0",
-    "org.apache.logging.log4j" % "log4j-1.2-api" % "2.16.0",
+    "org.apache.logging.log4j" % "log4j-api" % "2.17.0",
+    "org.apache.logging.log4j" % "log4j-1.2-api" % "2.17.0",
     "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4"
   )
 
