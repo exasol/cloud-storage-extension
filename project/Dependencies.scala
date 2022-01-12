@@ -14,7 +14,7 @@ object Dependencies {
   private val OrcVersion = "1.7.2"
   private val GoogleStorageVersion = "1.9.4-hadoop3"
   private val SparkSQLVersion = "3.2.0"
-  private val AlluxioCoreHDFSVersion = "2.7.1"
+  private val AlluxioCoreHDFSVersion = "2.7.2"
 
   // Test dependencies versions
   private val ScalaTestVersion = "3.2.10"
@@ -36,7 +36,7 @@ object Dependencies {
     "com.google.guava" % "guava" % "31.0.1-jre",
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.13.1",
     "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.13.1",
-    "io.grpc" % "grpc-netty" % "1.43.1",
+    "io.grpc" % "grpc-netty" % "1.43.2",
     "io.netty" % "netty-all" % "4.1.72.Final",
     "com.exasol" %% "import-export-udf-common-scala" % ImportExportUDFVersion
       exclude ("org.slf4j", "slf4j-simple")
@@ -147,8 +147,8 @@ object Dependencies {
     "org.slf4j" % "jul-to-slf4j" % "1.7.32",
     "org.slf4j" % "slf4j-log4j12" % "1.7.32"
       exclude ("log4j", "log4j"),
-    "org.apache.logging.log4j" % "log4j-api" % "2.17.0",
-    "org.apache.logging.log4j" % "log4j-1.2-api" % "2.17.0",
+    "org.apache.logging.log4j" % "log4j-api" % "2.17.1",
+    "org.apache.logging.log4j" % "log4j-1.2-api" % "2.17.1",
     "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4"
   )
 
