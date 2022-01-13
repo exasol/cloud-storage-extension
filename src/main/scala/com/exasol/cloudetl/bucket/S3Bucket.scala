@@ -11,6 +11,7 @@ final case class S3Bucket(path: String, params: StorageProperties) extends Bucke
   private[this] val S3_ACCESS_KEY: String = "S3_ACCESS_KEY"
   private[this] val S3_SECRET_KEY: String = "S3_SECRET_KEY"
   private[this] val S3_SESSION_TOKEN: String = "S3_SESSION_TOKEN"
+  private[this] val S3_SSL_ENABLED: String = "S3_SSL_ENABLED"
   private[this] val S3_PATH_STYLE_ACCESS: String = "S3_PATH_STYLE_ACCESS"
   private[this] val S3_CHANGE_DETECTION_MODE: String = "S3_CHANGE_DETECTION_MODE"
 
@@ -49,6 +50,9 @@ final case class S3Bucket(path: String, params: StorageProperties) extends Bucke
     }
     if (properties.containsKey(S3_PATH_STYLE_ACCESS)) {
       conf.set("fs.s3a.path.style.access", properties.getString(S3_PATH_STYLE_ACCESS))
+    }
+    if (properties.containsKey(S3_SSL_ENABLED)) {
+      conf.set("fs.s3a.connection.ssl.enabled", properties.getString(S3_SSL_ENABLED))
     }
 
     val mergedProperties = if (properties.hasNamedConnection()) {
