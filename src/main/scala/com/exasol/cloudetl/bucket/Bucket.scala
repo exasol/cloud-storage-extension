@@ -11,7 +11,6 @@ import com.typesafe.scalalogging.LazyLogging
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
-import org.apache.spark.sql.Row
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.delta.DeltaLog
 
@@ -94,12 +93,10 @@ abstract class Bucket extends LazyLogging {
       )
     }
     val latestSnapshot = deltaLog.update()
-
     latestSnapshot.allFiles
-      .select("path")
       .collect()
       .toSeq
-      .map { case Row(path: String) => new Path(s"$strippedBucketPath/$path") }
+      .map(addedFile => new Path(s"$strippedBucketPath/${addedFile.path}"))
   }
 
   private[this] def createSparkSession(): SparkSession = {

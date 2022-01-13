@@ -1,6 +1,6 @@
 # Cloud Storage Extension 2.3.0, released 2022-01-??
 
-Code name: Added support for Parquet timestamp micros reading
+Code name: Added support for Parquet `INT64 (TIMESTAMP_MICROS)` logical type
 
 ## Summary
 
