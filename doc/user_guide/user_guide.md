@@ -632,6 +632,7 @@ If either of the tags are not set, then it is read as a `null` value.
 | int32                | decimal(p, s)         | DECIMAL(p, s)                   |
 | int64                |                       | BIGINT, DECIMAL(36, 0)          |
 | int64                | timestamp_millis      | TIMESTAMP                       |
+| int64                | timestamp_micros      | TIMESTAMP                       |
 | int64                | decimal(p, s)         | DECIMAL(p, s)                   |
 | float                |                       | FLOAT                           |
 | double               |                       | DOUBLE, DOUBLE PRECISION        |

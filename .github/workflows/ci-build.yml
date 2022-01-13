@@ -10,10 +10,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        scala: [ 2.13.7 ]
-        exasol-docker-version: [ "6.2.17-d1", "7.0.14", "7.1.3" ]
+        scala: [ 2.13.8 ]
+        exasol-docker-version: [ "7.0.14", "7.1.4" ]
     env:
-      DEFAULT_DOCKER_DB_VERSION: "7.1.3"
+      DEFAULT_DOCKER_DB_VERSION: "7.1.4"
 
     steps:
       - name: Checkout the Repository
@@ -30,7 +30,7 @@ jobs:
         run: |
           docker pull exasol/docker-db:${{ matrix.exasol-docker-version }}
           docker pull localstack/localstack:0.12.16
-          docker pull alluxio/alluxio:2.7.1
+          docker pull alluxio/alluxio:2.7.2
 
       - name: Cache Local SBT Dependencies
         uses: actions/cache@v2

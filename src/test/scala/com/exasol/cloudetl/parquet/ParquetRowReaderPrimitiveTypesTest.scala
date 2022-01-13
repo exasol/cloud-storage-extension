@@ -32,6 +32,23 @@ class ParquetRowReaderPrimitiveTypesTest extends BaseParquetReaderTest {
     assert(getRecords()(0) === Row(Seq(153L, timestamp)))
   }
 
+  test("reads INT64 (TIMESTAMP_MICROS) as timestamp value") {
+    val schema = MessageTypeParser.parseMessageType(
+      """|message test {
+         |  required int64 col_timestamp (TIMESTAMP_MICROS);
+         |}
+         |""".stripMargin
+    )
+    val timestamp = Timestamp.valueOf("2022-01-12 08:28:53.123456")
+    val micros = timestamp.getTime() * 1000L + (timestamp.getNanos().toLong / 1000) % 1000L
+    withResource(getParquetWriter(schema, false)) { writer =>
+      val record = new SimpleGroup(schema)
+      record.append("col_timestamp", micros)
+      writer.write(record)
+    }
+    assert(getRecords()(0) === Row(Seq(timestamp)))
+  }
+
   test("reads FIXED_LEN_BYTE_ARRAY as string value") {
     val size = 5
     val schema = MessageTypeParser.parseMessageType(
