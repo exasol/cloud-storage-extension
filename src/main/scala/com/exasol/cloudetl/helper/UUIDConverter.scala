@@ -17,7 +17,7 @@ object UUIDConverter {
    */
   def toByteArray(uuid: UUID): Array[Byte] =
     ByteBuffer
-      .allocate(16)
+      .allocate(16) // scalastyle:ignore magic.number
       .order(ByteOrder.BIG_ENDIAN)
       .putLong(uuid.getMostSignificantBits())
       .putLong(uuid.getLeastSignificantBits())

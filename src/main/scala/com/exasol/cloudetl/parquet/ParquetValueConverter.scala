@@ -1,6 +1,7 @@
 package com.exasol.cloudetl.parquet
 
 import java.util.List
+import java.util.UUID
 
 import com.exasol.common.json.JsonMapper
 import com.exasol.parquetio.data.Row
@@ -10,7 +11,6 @@ import org.apache.parquet.schema.MessageType
 import org.apache.parquet.schema.PrimitiveType
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY
 import org.apache.parquet.schema.Type.Repetition
-import java.util.UUID
 
 /**
  * A Parquet value converter class that transforms nested values to JSON strings.
