@@ -6,7 +6,7 @@ set -o errtrace -o nounset -o pipefail -o errexit
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd )"
 cd "$BASE_DIR"
 
-DEFAULT_SCALA_VERSION=2.13.7
+DEFAULT_SCALA_VERSION=2.13.8
 
 if [[ -z "${SCALA_VERSION:-}" ]]; then
   echo "Environment variable SCALA_VERSION is not set."

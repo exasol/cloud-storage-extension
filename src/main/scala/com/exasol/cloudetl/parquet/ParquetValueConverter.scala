@@ -20,7 +20,7 @@ final case class ParquetValueConverter(schema: MessageType) {
   private[this] var convertedValues = Array.ofDim[Object](size)
 
   /**
-   * Converts {@link Row} into array of values.
+   * Converts Parquet Row into array of values.
    *
    * It maps the complex types (e.g, {@code MAP}, {@code LIST}) into JSON strings. The result array is emitted as an
    * Exasol table row.
