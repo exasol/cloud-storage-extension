@@ -37,7 +37,7 @@ object Dependencies {
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.13.1",
     "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.13.1",
     "io.grpc" % "grpc-netty" % "1.43.2",
-    "io.netty" % "netty-all" % "4.1.72.Final",
+    "io.netty" % "netty-all" % "4.1.73.Final",
     "com.exasol" %% "import-export-udf-common-scala" % ImportExportUDFVersion
       exclude ("org.slf4j", "slf4j-simple")
       exclude ("org.apache.avro", "avro")

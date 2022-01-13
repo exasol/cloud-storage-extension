@@ -641,6 +641,7 @@ If either of the tags are not set, then it is read as a `null` value.
 | binary               | decimal(p, s)         | DECIMAL(p, s)                   |
 | fixed_len_byte_array |                       | VARCHAR(n), CHAR(n)             |
 | fixed_len_byte_array | decimal(p, s)         | DECIMAL(p, s)                   |
+| fixed_len_byte_array | uuid                  | VARCHAR(n)                      |
 | int96                |                       | TIMESTAMP                       |
 | group                |                       | VARCHAR(n)                      |
 | group                | LIST                  | VARCHAR(n)                      |
