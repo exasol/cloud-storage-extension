@@ -106,19 +106,34 @@ class ParquetDataImporterIT extends BaseDataImporter {
   test("imports int64 (timestamp millis)") {
     val millis1 = Instant.EPOCH.toEpochMilli()
     val millis2 = System.currentTimeMillis()
-    val zdt1 =
-      ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis1), ZoneId.of("Europe/Berlin"))
-    val zdt2 =
-      ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis2), ZoneId.of("Europe/Berlin"))
+    val zdt1 = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis1), ZoneId.of("Europe/Berlin"))
+    val zdt2 = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis2), ZoneId.of("Europe/Berlin"))
     val expectedTimestamp1 = Timestamp.valueOf(zdt1.toLocalDateTime())
     val expectedTimestamp2 = Timestamp.valueOf(zdt2.toLocalDateTime())
 
-    ParquetChecker("optional int64 column (TIMESTAMP_MILLIS);", "TIMESTAMP", "int64_timestamp")
+    ParquetChecker("optional int64 column (TIMESTAMP_MILLIS);", "TIMESTAMP", "int64_timestamp_millis")
       .withInputValues[Any](List(millis1, millis2, null))
       .assertResultSet(
         table()
           .row(expectedTimestamp1)
           .row(expectedTimestamp2)
+          .row(null)
+          .matches()
+      )
+  }
+
+  test("imports int64 (timestamp micros)") {
+    val timestamp = Timestamp.valueOf("2022-01-12 10:28:53.123456")
+    val millis = timestamp.getTime()
+    val micros = timestamp.getTime() * 1000L + (timestamp.getNanos().toLong / 1000) % 1000L
+    val zdt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.of("Europe/Berlin"))
+    val expectedTimestamp = Timestamp.valueOf(zdt.toLocalDateTime())
+
+    ParquetChecker("optional int64 column (TIMESTAMP_MICROS);", "TIMESTAMP", "int64_timestamp_micros")
+      .withInputValues[Any](List(micros, null))
+      .assertResultSet(
+        table()
+          .row(expectedTimestamp)
           .row(null)
           .matches()
       )
