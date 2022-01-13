@@ -1,13 +1,15 @@
 package com.exasol.cloudetl.parquet
 
 import java.math._
-import java.nio.ByteOrder
 import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.sql.Timestamp
 import java.time._
+import java.util.UUID
 
 import com.exasol.cloudetl.BaseDataImporter
 import com.exasol.cloudetl.helper.DateTimeConverter._
+import com.exasol.cloudetl.helper.UUIDConverter
 import com.exasol.matcher.CellMatcherFactory
 import com.exasol.matcher.ResultSetStructureMatcher.table
 import com.exasol.matcher.TypeMatchMode._
@@ -208,6 +210,20 @@ class ParquetDataImporterIT extends BaseDataImporter {
           .row(new BigDecimal(new BigInteger(decimalValueString), 5, new MathContext(20)))
           .row(java.lang.Double.valueOf(0.00))
           .matches(NO_JAVA_TYPE_CHECK)
+      )
+  }
+
+  test("imports fixed_len_byte_array (uuid)") {
+    val uuid = UUID.randomUUID()
+    val uuidBinary = Binary.fromConstantByteArray(UUIDConverter.toByteArray(uuid))
+    val uuidZeros = Binary.fromConstantByteArray(Array.fill[Byte](16)(0x0), 0, 16)
+    ParquetChecker("required fixed_len_byte_array(16) column (UUID);", "VARCHAR(36)", "fixed_uuid")
+      .withInputValues[Binary](List(uuidBinary, uuidZeros))
+      .assertResultSet(
+        table()
+          .row(uuid.toString())
+          .row("00000000-0000-0000-0000-000000000000")
+          .matches()
       )
   }
 

@@ -5,8 +5,10 @@ import java.math.BigInteger
 import java.math.MathContext
 import java.nio.charset.StandardCharsets.UTF_8
 import java.sql.Timestamp
+import java.util.UUID
 
 import com.exasol.common.data.Row
+import com.exasol.cloudetl.helper.UUIDConverter
 
 import org.apache.parquet.example.data.simple.SimpleGroup
 import org.apache.parquet.io.api.Binary
@@ -137,8 +139,7 @@ class ParquetRowReaderPrimitiveTypesTest extends BaseParquetReaderTest {
         writer.write(record)
       }
     }
-    val expected =
-      new BigDecimal(new BigInteger(decimalValue.getBytes(UTF_8)), 2, new MathContext(30))
+    val expected = new BigDecimal(new BigInteger(decimalValue.getBytes(UTF_8)), 2, new MathContext(30))
     val records = getRecords()
     assert(records.size === 2)
     assert(records(0) === Row(Seq(expected)))
@@ -152,8 +153,7 @@ class ParquetRowReaderPrimitiveTypesTest extends BaseParquetReaderTest {
          |""".stripMargin
     )
     val decimalValue = "12345678901234567890"
-    val decimalBinary =
-      Binary.fromConstantByteArray(new BigDecimal(decimalValue).unscaledValue().toByteArray())
+    val decimalBinary = Binary.fromConstantByteArray(new BigDecimal(decimalValue).unscaledValue().toByteArray())
     val zeros = Binary.fromConstantByteArray(Array.fill[Byte](9)(0x0), 0, 9)
     withResource(getParquetWriter(schema, true)) { writer =>
       Seq(decimalBinary, zeros).foreach { value =>
@@ -167,6 +167,22 @@ class ParquetRowReaderPrimitiveTypesTest extends BaseParquetReaderTest {
     assert(records.size === 2)
     assert(records(0) === Row(Seq(expected)))
     assert(records(1) === Row(Seq(BigDecimal.valueOf(0, 2))))
+  }
+
+  test("reads FIXED_LEN_BYTE_ARRAY (uuid) as string value") {
+    val schema = MessageTypeParser.parseMessageType(
+      """|message test {
+         |  required fixed_len_byte_array(16) column (UUID);
+         |}
+         |""".stripMargin
+    )
+    val uuid = UUID.randomUUID()
+    withResource(getParquetWriter(schema, true)) { writer =>
+      val record = new SimpleGroup(schema)
+      record.append("column", Binary.fromConstantByteArray(UUIDConverter.toByteArray(uuid)))
+      writer.write(record)
+    }
+    assert(getRecords()(0) === Row(Seq(uuid.toString())))
   }
 
 }

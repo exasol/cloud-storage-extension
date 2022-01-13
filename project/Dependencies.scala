@@ -8,7 +8,7 @@ object Dependencies {
 
   // Runtime dependencies versions
   private val ImportExportUDFVersion = "0.2.0"
-  private val ParquetIOVersion = "1.2.1"
+  private val ParquetIOVersion = "1.3.0"
   private val HadoopVersion = "3.3.1"
   private val DeltaVersion = "1.1.0"
   private val OrcVersion = "1.7.2"
