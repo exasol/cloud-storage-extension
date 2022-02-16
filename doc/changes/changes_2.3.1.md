@@ -32,7 +32,7 @@ Code name:
 * Added `org.apache.logging.log4j:log4j-api:2.17.1`
 * Added `org.apache.orc:orc-core:1.7.3`
 * Added `org.apache.spark:spark-sql_2.13:3.2.1`
-* Added `org.scala-lang:scala-library:2.13.7`
+* Added `org.scala-lang:scala-library:2.13.8`
 * Added `org.slf4j:jul-to-slf4j:1.7.36`
 * Added `org.slf4j:slf4j-log4j12:1.7.36`
 
