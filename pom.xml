@@ -635,7 +635,7 @@
                             <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
-                <finalName>NAME_OF_YOUR_JAR</finalName></configuration>
+                    <finalName>exasol-${project.artifactId}-${project.version}</finalName></configuration>
                 <executions>
                     <execution>
                         <id>make-assembly</id>
@@ -876,7 +876,7 @@
                     <dependency>
                         <groupId>com.github.vovapolu</groupId>
                         <artifactId>scaluzzi_${scala.compat.version}</artifactId>
-                        <version>0.1.20</version>
+                        <version>0.1.21</version>
                     </dependency>
                 </dependencies>
                 <configuration>

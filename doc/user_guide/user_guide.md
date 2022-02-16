@@ -141,7 +141,7 @@ downloaded jar file is the same as the checksum provided in the releases.
 To check the SHA256 result of the local jar, run the command:
 
 ```sh
-sha256sum exasol-cloud-storage-extension-<VERSION>.jar
+sha256sum exasol-cloud-storage-extension-2.3.1.jar
 ```
 
 ### Building From Source
@@ -165,7 +165,7 @@ sbt assembly
 ```
 
 The assembled jar file should be located at
-`target/scala-2.12/cloud-storage-extension-<VERSION>.jar`.
+`target/scala-2.12/cloud-storage-extension-2.3.1.jar`.
 
 ### Create an Exasol Bucket
 
@@ -187,8 +187,8 @@ for the HTTP protocol.
 Upload the jar file using curl command:
 
 ```sh
-curl -X PUT -T exasol-cloud-storage-extension-<VERSION>.jar \
-  http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar
+curl -X PUT -T exasol-cloud-storage-extension-2.3.1.jar \
+  http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar
 ```
 
 You can also check out the Exasol [BucketFS Explorer][bucketfs-explorer] as an
@@ -221,7 +221,7 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
@@ -231,12 +231,12 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
   end_index DECIMAL(36, 0)
 ) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar;
 /
 ```
 
@@ -256,7 +256,7 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesImportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
@@ -266,12 +266,12 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
   end_index DECIMAL(36, 0)
 ) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar;
 /
 ```
 
@@ -287,19 +287,19 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.TableDataExporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar;
 /
 ```
 
 Please do not change the UDF script names. The `EXPORT_PATH` is an entry point
 UDF and it will call the `EXPORT_TABLE` script internally.
 
-Make sure you change the `<BUCKET>` name and jar version `<VERSION>`
+Make sure you change the `<BUCKET>` name and jar version `2.3.1`
 accordingly.
 
 #### Setup Export UDF Scripts in Docker
@@ -312,12 +312,12 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerTableExportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerTableDataExporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar;
 /
 ```
 
@@ -439,13 +439,13 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
 ) AS
   %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-<VERSION>.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.1.jar;
 /
 ```
 
