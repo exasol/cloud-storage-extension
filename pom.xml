@@ -11,7 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <scala.version>2.13.7</scala.version>
+        <scala.version>2.13.8</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
         <java.version>11</java.version>
         <hadoop.version>3.3.1</hadoop.version>
@@ -683,19 +683,6 @@
                     <excludedFiles>
                         <excludeFile>.github/workflows/release_droid_upload_github_release_assets.yml</excludeFile>
                     </excludedFiles>
-                    <linkReplacements>
-                        <!--
-                        <linkReplacement>
-                            LICENSE-exasol-jdbc.txt|https://docs.exasol.com/connect_exasol/drivers/jdbc.htm
-                        </linkReplacement>
-                        <linkReplacement>
-                            https://netty.io/netty-all/|https://netty.io/index.html
-                        </linkReplacement>
-                        <linkReplacement>
-                            http://nexus.sonatype.org/oss-repository-hosting.html/scalatest-maven-plugin|https://www.scalatest.org/user_guide/using_the_scalatest_maven_plugin
-                        </linkReplacement>
-                        -->
-                    </linkReplacements>
                 </configuration>
             </plugin>
             <plugin>

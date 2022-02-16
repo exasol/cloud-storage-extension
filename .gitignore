@@ -43,7 +43,6 @@ tmp/
 .classpath
 .project
 .scala_dependencies
-.settings/
 *.sc
 
 # Ensime
