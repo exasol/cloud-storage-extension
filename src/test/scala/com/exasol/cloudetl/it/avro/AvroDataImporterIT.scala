@@ -12,8 +12,8 @@ import com.exasol.matcher.CellMatcherFactory
 import com.exasol.matcher.ResultSetStructureMatcher.table
 import com.exasol.matcher.TypeMatchMode._
 
-import org.apache.avro.file.DataFileWriter
 import org.apache.avro._
+import org.apache.avro.file.DataFileWriter
 import org.apache.avro.generic._
 import org.apache.avro.specific.SpecificDatumWriter
 

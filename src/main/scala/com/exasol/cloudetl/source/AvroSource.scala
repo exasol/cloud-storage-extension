@@ -40,7 +40,7 @@ final case class AvroSource(
       )
     } catch {
       case NonFatal(exception) =>
-        logger.error(s"Could not create avro reader for path: $path", exception);
+        logger.error(s"Could not create avro reader for path: $path", exception)
         throw new SourceValidationException(
           ExaError
             .messageBuilder("E-CSE-26")

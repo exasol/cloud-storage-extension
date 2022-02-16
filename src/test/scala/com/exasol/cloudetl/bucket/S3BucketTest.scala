@@ -1,8 +1,8 @@
 package com.exasol.cloudetl.bucket
 
-import scala.jdk.CollectionConverters.MapHasAsScala
-
 import org.apache.hadoop.fs.s3a.S3AFileSystem
+
+import scala.jdk.CollectionConverters.MapHasAsScala
 
 class S3BucketTest extends AbstractBucketTest {
 

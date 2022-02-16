@@ -9,9 +9,9 @@ import com.exasol.cloudetl.data.ExaColumnInfo
 import com.exasol.cloudetl.helper.ExasolColumnValueProvider
 
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.BeforeAndAfterEach
 
 @SuppressWarnings(Array("org.wartremover.contrib.warts.ExposedTuples"))
 class ExasolColumnValueProviderTest extends AnyFunSuite with BeforeAndAfterEach with MockitoSugar {

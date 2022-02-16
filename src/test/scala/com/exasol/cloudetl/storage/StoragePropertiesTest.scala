@@ -1,6 +1,7 @@
 package com.exasol.cloudetl.storage
 
-import com.exasol.{ExaConnectionInformation, ExaMetadata}
+import com.exasol.ExaConnectionInformation
+import com.exasol.ExaMetadata
 
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach

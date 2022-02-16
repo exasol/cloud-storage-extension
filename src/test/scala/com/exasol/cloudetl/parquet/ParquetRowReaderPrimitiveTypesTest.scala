@@ -7,8 +7,8 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.sql.Timestamp
 import java.util.UUID
 
-import com.exasol.common.data.Row
 import com.exasol.cloudetl.helper.UUIDConverter
+import com.exasol.common.data.Row
 
 import org.apache.parquet.example.data.simple.SimpleGroup
 import org.apache.parquet.io.api.Binary

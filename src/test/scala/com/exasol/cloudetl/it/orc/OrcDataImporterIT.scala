@@ -8,10 +8,10 @@ import com.exasol.matcher.CellMatcherFactory
 import com.exasol.matcher.ResultSetStructureMatcher.table
 import com.exasol.matcher.TypeMatchMode._
 
+import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hive.ql.exec.vector._
 import org.apache.orc.OrcFile
 import org.apache.orc.TypeDescription
-import org.apache.hadoop.conf.Configuration
 
 class OrcDataImporterIT extends BaseDataImporter {
 

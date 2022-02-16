@@ -5,6 +5,7 @@ import java.sql.ResultSet
 import com.exasol.cloudetl.BaseIntegrationTest
 import com.exasol.dbbuilder.dialects.Table
 import com.exasol.matcher.ResultSetStructureMatcher.table
+
 import com.dimafeng.testcontainers.GenericContainer
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat

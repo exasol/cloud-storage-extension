@@ -1,7 +1,8 @@
 package com.exasol.cloudetl.storage
 
 import com.exasol.ExaMetadata
-import com.exasol.common.{AbstractProperties, CommonProperties}
+import com.exasol.common.AbstractProperties
+import com.exasol.common.CommonProperties
 import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.fs.Path

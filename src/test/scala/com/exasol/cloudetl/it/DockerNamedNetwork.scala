@@ -3,7 +3,6 @@ package com.exasol.cloudetl
 import java.util.concurrent.ConcurrentHashMap
 
 import org.apache.spark.internal.Logging
-
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.testcontainers.DockerClientFactory

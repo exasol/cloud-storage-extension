@@ -11,7 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <scala.version>2.13.8</scala.version>
+        <scala.version>2.13.7</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
         <java.version>11</java.version>
         <hadoop.version>3.3.1</hadoop.version>
@@ -832,7 +832,7 @@
             <plugin>
                 <groupId>io.github.evis</groupId>
                 <artifactId>scalafix-maven-plugin_${scala.compat.version}</artifactId>
-                <version>0.1.4_0.9.31</version>
+                <version>0.1.4_0.9.33</version>
                 <dependencies>
                     <dependency>
                         <groupId>com.github.liancheng</groupId>

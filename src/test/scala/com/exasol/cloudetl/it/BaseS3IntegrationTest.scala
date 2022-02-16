@@ -5,13 +5,13 @@ import java.lang.Long
 
 import com.exasol.dbbuilder.dialects.Table
 
-import com.amazonaws.services.s3.model._
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
+import com.amazonaws.services.s3.model._
 import org.apache.hadoop.fs.{Path => HPath}
-import org.testcontainers.utility.DockerImageName
 import org.testcontainers.containers.localstack.LocalStackContainer
 import org.testcontainers.containers.localstack.LocalStackContainer.Service.S3
+import org.testcontainers.utility.DockerImageName
 
 trait BaseS3IntegrationTest extends BaseIntegrationTest {
   val INT_MIN = Integer.MIN_VALUE
