@@ -57,3 +57,18 @@ tmp/
 # Windows
 Desktop.ini
 Thumbs.db
+
+*.swp
+local
+.dbeaver*
+**/*.log
+.directory
+venv/
+.idea
+target
+dependency-reduced-pom.xml
+pom.xml.versionsBackup
+~*
+*.lock
+*.orig
+*.md.html
