@@ -508,6 +508,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
         case v: Double  => record.append("column", v)
         case v: String  => record.append("column", v)
         case v: Binary  => record.append("column", v)
+        case _ => throw new IllegalArgumentException("Unknown Parquet value!")
       }
       ()
     }

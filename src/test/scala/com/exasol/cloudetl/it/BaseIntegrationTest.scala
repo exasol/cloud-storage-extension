@@ -14,9 +14,8 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
 
 trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLogging {
-  private[this] val JAR_DIRECTORY_PATTERN = "scala-"
-  private[this] val JAR_NAME_PATTERN = "cloud-storage-extension-"
-  private[this] val DEFAULT_EXASOL_DOCKER_IMAGE = "7.1.4"
+  private[this] val JAR_NAME_PATTERN = "exasol-cloud-storage-extension-"
+  private[this] val DEFAULT_EXASOL_DOCKER_IMAGE = "7.1.6"
 
   val network = DockerNamedNetwork("it-tests", true)
   val exasolContainer = {
@@ -57,10 +56,8 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   def executeQuery(sql: String): java.sql.ResultSet =
     getConnection().createStatement().executeQuery(sql)
 
-  private[this] def getAssembledJarName(): String = {
-    val jarDir = findFileOrDirectory("target", JAR_DIRECTORY_PATTERN)
-    findFileOrDirectory("target/" + jarDir, JAR_NAME_PATTERN)
-  }
+  private[this] def getAssembledJarName(): String =
+    findFileOrDirectory("target/", JAR_NAME_PATTERN)
 
   private[this] def getConnection(): java.sql.Connection = {
     if (connection == null) {
@@ -120,8 +117,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   }
 
   private[this] def uploadJarToBucket(): Unit = {
-    val jarDir = findFileOrDirectory("target", JAR_DIRECTORY_PATTERN)
-    val jarPath = Paths.get("target", jarDir, assembledJarName)
+    val jarPath = Paths.get("target", assembledJarName)
     exasolContainer.getDefaultBucket.uploadFile(jarPath, assembledJarName)
   }
 
@@ -129,7 +125,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
     val files = listDirectoryFiles(searchDirectory)
     val jarFile = files.find(_.getName.contains(name))
     jarFile match {
-      case Some(jarFilename) => jarFilename.getName
+      case Some(jarFilename) => jarFilename.getName()
       case None =>
         throw new IllegalArgumentException(
           s"Cannot find a file or a directory with pattern '$name' in '$searchDirectory'"

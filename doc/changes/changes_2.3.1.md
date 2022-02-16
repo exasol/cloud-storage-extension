@@ -15,6 +15,7 @@ Code name:
 * Added `com.fasterxml.jackson.module:jackson-module-scala_2.13:2.13.1`
 * Added `com.google.cloud.bigdataoss:gcs-connector:1.9.4-hadoop3`
 * Added `com.google.guava:guava:31.0.1-jre`
+* Added `com.google.protobuf:protobuf-java:3.19.4`
 * Added `com.typesafe.scala-logging:scala-logging_2.13:3.9.4`
 * Added `io.delta:delta-core_2.13:1.1.0`
 * Added `io.grpc:grpc-netty:1.44.0`
@@ -59,7 +60,7 @@ Code name:
 * Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-clean-plugin:3.1.0`
 * Added `org.apache.maven.plugins:maven-compiler-plugin:3.10.0`
-* Added `org.apache.maven.plugins:maven-deploy-plugin:3.0.0-M1`
+* Added `org.apache.maven.plugins:maven-deploy-plugin:2.7`
 * Added `org.apache.maven.plugins:maven-enforcer-plugin:3.0.0`
 * Added `org.apache.maven.plugins:maven-gpg-plugin:3.0.1`
 * Added `org.apache.maven.plugins:maven-install-plugin:2.5.2`
@@ -75,4 +76,3 @@ Code name:
 * Added `org.scalastyle:scalastyle-maven-plugin:1.0.0`
 * Added `org.scalatest:scalatest-maven-plugin:2.0.2`
 * Added `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.2.0`
-* Added `org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8`
