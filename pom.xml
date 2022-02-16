@@ -681,11 +681,7 @@
                         <excludedPlugin>org.apache.maven.plugins:maven-failsafe-plugin</excludedPlugin>
                     </excludedPlugins>
                     <excludedFiles>
-                        <!--
-                        <excludedFile>README.md</excludedFile>
-                        <excludedFile>.github/workflows/ci-build-next-java.yml</excludedFile>
-                        -->
-                        <excludedFile>.github/workflows/release_droid*.yml</excludedFile>
+                        <excludeFile>.github/workflows/release_droid_upload_github_release_assets.yml</excludeFile>
                     </excludedFiles>
                     <linkReplacements>
                         <!--
