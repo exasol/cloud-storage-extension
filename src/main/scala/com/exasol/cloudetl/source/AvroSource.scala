@@ -35,8 +35,8 @@ final case class AvroSource(
 
   private[this] def createReader(): DataFileReader[GenericRecord] =
     try {
-      val input: SeekableInput = new AvroFSInput(
-        fileSystem.open(path), fileSystem.getFileStatus(path).getLen()).asInstanceOf[SeekableInput]
+      val input: SeekableInput =
+        new AvroFSInput(fileSystem.open(path), fileSystem.getFileStatus(path).getLen()).asInstanceOf[SeekableInput]
       new DataFileReader[GenericRecord](input, new GenericDatumReader[GenericRecord]())
     } catch {
       case NonFatal(exception) =>
