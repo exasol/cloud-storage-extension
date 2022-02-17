@@ -1,9 +1,9 @@
 package com.exasol.cloudetl.filesystem
 
 import java.io.FileNotFoundException
-import java.nio.file.{Path => FPath}
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.nio.file.{Path => FPath}
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem

@@ -8,8 +8,8 @@ import com.exasol.cloudetl.source.OrcSource
 import com.exasol.common.data.Row
 
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.{Path => HPath}
 import org.apache.hadoop.fs.FileSystem
+import org.apache.hadoop.fs.{Path => HPath}
 import org.apache.orc.OrcFile
 import org.apache.orc.TypeDescription
 import org.apache.orc.Writer

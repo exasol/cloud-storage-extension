@@ -8,6 +8,7 @@ import com.exasol.errorreporting.ExaError
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.avro.file.DataFileReader
+import org.apache.avro.file.SeekableInput
 import org.apache.avro.generic.GenericDatumReader
 import org.apache.avro.generic.GenericRecord
 import org.apache.hadoop.conf.Configuration
@@ -34,13 +35,12 @@ final case class AvroSource(
 
   private[this] def createReader(): DataFileReader[GenericRecord] =
     try {
-      new DataFileReader[GenericRecord](
-        new AvroFSInput(fileSystem.open(path), fileSystem.getFileStatus(path).getLen),
-        new GenericDatumReader[GenericRecord]()
-      )
+      val input: SeekableInput =
+        new AvroFSInput(fileSystem.open(path), fileSystem.getFileStatus(path).getLen()).asInstanceOf[SeekableInput]
+      new DataFileReader[GenericRecord](input, new GenericDatumReader[GenericRecord]())
     } catch {
       case NonFatal(exception) =>
-        logger.error(s"Could not create avro reader for path: $path", exception);
+        logger.error(s"Could not create avro reader for path: $path", exception)
         throw new SourceValidationException(
           ExaError
             .messageBuilder("E-CSE-26")

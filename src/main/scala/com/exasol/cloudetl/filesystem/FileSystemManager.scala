@@ -5,9 +5,9 @@ import java.nio.file.Path
 
 import com.exasol.errorreporting.ExaError
 
-import org.apache.hadoop.fs.{Path => HadoopPath}
 import org.apache.hadoop.fs.FileStatus
 import org.apache.hadoop.fs.FileSystem
+import org.apache.hadoop.fs.{Path => HadoopPath}
 
 /**
  * A filesystem helper class.

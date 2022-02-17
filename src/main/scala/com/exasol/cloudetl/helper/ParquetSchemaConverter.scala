@@ -5,9 +5,9 @@ import java.util.Locale.ENGLISH
 import com.exasol.cloudetl.data.ExaColumnInfo
 import com.exasol.errorreporting.ExaError
 
-import org.apache.parquet.schema._
 import org.apache.parquet.schema.LogicalTypeAnnotation._
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName._
+import org.apache.parquet.schema._
 
 /**
  * A class that converts Exasol column names to Parquet schema.

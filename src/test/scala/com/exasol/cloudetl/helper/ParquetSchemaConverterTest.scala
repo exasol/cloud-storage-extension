@@ -3,10 +3,10 @@ package com.exasol.cloudetl.util
 import com.exasol.cloudetl.data.ExaColumnInfo
 import com.exasol.cloudetl.helper.ParquetSchemaConverter
 
-import org.apache.parquet.schema._
 import org.apache.parquet.schema.LogicalTypeAnnotation._
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName
 import org.apache.parquet.schema.Type.Repetition
+import org.apache.parquet.schema._
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.mockito.MockitoSugar
 
