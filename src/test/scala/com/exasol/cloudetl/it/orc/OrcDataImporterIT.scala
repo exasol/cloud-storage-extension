@@ -92,11 +92,13 @@ class OrcDataImporterIT extends BaseDataImporter {
       .assertResultSet(table().row(java.lang.Double.valueOf(2.71)).row(null).matches())
   }
 
+  // scalastyle:off nonascii
   test("imports char") {
     OrcChecker("struct<f:char(3)>", "VARCHAR(3)", "char_table")
       .withInputValues(List("a✅a", null))
       .assertResultSet(table().row("a✅a").row(null).matches())
   }
+  // scalastyle:on
 
   test("imports varchar") {
     OrcChecker("struct<f:varchar(5)>", "VARCHAR(5)", "varchar_table")
@@ -104,11 +106,13 @@ class OrcDataImporterIT extends BaseDataImporter {
       .assertResultSet(table().row("hello").row("world").row(null).matches())
   }
 
+  // scalastyle:off nonascii
   test("imports binary") {
     OrcChecker("struct<f:string>", "VARCHAR(10)", "binary_table")
       .withInputValues(List("中文", null))
       .assertResultSet(table().row("中文").row(null).matches())
   }
+  // scalastyle:on
 
   test("imports string") {
     OrcChecker("struct<f:string>", "VARCHAR(10)", "string_table")

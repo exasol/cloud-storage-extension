@@ -179,6 +179,7 @@ class AvroDataImporterIT extends BaseDataImporter {
       )
   }
 
+  // scalastyle:off nonascii
   test("imports string") {
     AvroChecker(getBasicSchema("\"string\""), "VARCHAR(20)", "string_table")
       .withInputValues(List("hello", "worldÜüß"))
@@ -189,6 +190,7 @@ class AvroDataImporterIT extends BaseDataImporter {
           .matches()
       )
   }
+  // scalastyle:on
 
   test("imports enum") {
     val schema = getBasicSchema("""{"type":"enum","name":"lttrs","symbols":["A","B","C"]}""")

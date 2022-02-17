@@ -176,6 +176,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
       )
   }
 
+  // scalastyle:off nonascii
   test("imports binary (utf8)") {
     ParquetChecker("required binary column (UTF8);", "VARCHAR(20)", "binary_utf8_table")
       .withInputValues[String](List("ÄäÖöÜüß / ☺", "world", ""))
@@ -187,6 +188,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
           .matches()
       )
   }
+  // scalastyle:on
 
   test("imports binary (decimal)") {
     val decimal1 = Binary.fromConstantByteArray(new BigDecimal("12345").unscaledValue().toByteArray())
