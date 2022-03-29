@@ -8,10 +8,7 @@ import com.exasol.ExaMetadata
  */
 object DockerFilesImportQueryGenerator {
 
-  def generateSqlForImportSpec(
-    metadata: ExaMetadata,
-    importSpecification: ExaImportSpecification
-  ): String = {
+  def generateSqlForImportSpec(metadata: ExaMetadata, importSpecification: ExaImportSpecification): String = {
     import org.apache.hadoop.security.UserGroupInformation
     UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("exadefusr"))
     FilesImportQueryGenerator.generateSqlForImportSpec(metadata, importSpecification)

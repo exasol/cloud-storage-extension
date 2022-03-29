@@ -573,7 +573,7 @@
                 </executions>
                 <configuration>
                     <charset>UTF-8</charset>
-                    <doclint/>
+                    <doclint />
                     <serialwarn>true</serialwarn>
                     <failOnError>true</failOnError>
                     <failOnWarnings>true</failOnWarnings>
@@ -605,7 +605,8 @@
                             <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
-                    <finalName>exasol-${project.artifactId}-${project.version}</finalName></configuration>
+                    <finalName>exasol-${project.artifactId}-${project.version}</finalName>
+                </configuration>
                 <executions>
                     <execution>
                         <id>make-assembly</id>

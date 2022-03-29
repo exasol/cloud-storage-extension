@@ -479,8 +479,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
   case class ParquetChecker(parquetColumn: String, exaColumn: String, tableName: String)
       extends AbstractChecker(exaColumn, tableName)
       with ParquetTestDataWriter {
-    private val parquetSchema =
-      MessageTypeParser.parseMessageType(s"message test { $parquetColumn }")
+    private val parquetSchema = MessageTypeParser.parseMessageType(s"message test { $parquetColumn }")
 
     def withWriter(block: (ParquetWriter[Group], MessageType) => Unit): ParquetChecker = {
       val writer = getParquetWriter(path, parquetSchema, true)

@@ -4,6 +4,14 @@ Code name:
 
 ## Summary
 
+## Bug Fixes
+
+* #193: Fixed bug reading delta formatted data
+
+## Refactoring
+
+* #177: Migrated to maven based build
+
 ## Dependency Updates
 
 ### Compile Dependency Updates
