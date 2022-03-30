@@ -6,6 +6,7 @@ Code name:
 
 ## Bug Fixes
 
+* #190: Added S3 bucket validation for bucket path that end with number
 * #193: Fixed bug reading delta formatted data
 
 ## Refactoring

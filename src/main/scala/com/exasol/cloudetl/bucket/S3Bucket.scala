@@ -1,8 +1,10 @@
 package com.exasol.cloudetl.bucket
 
 import com.exasol.cloudetl.storage.StorageProperties
+import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.fs.Path
 
 /** A [[Bucket]] implementation for the AWS S3 */
 final case class S3Bucket(path: String, params: StorageProperties) extends Bucket with SecureBucket {
@@ -29,9 +31,21 @@ final case class S3Bucket(path: String, params: StorageProperties) extends Bucke
 
   /** @inheritdoc */
   override def validate(): Unit = {
+    validateBucketPath()
     validateRequiredProperties()
     validateConnectionProperties()
   }
+
+  private[this] def validateBucketPath(): Unit =
+    if (new Path(bucketPath).toUri().getHost() == null) {
+      throw new BucketValidationException(
+        ExaError
+          .messageBuilder("E-CSE-28")
+          .message("The S3 bucket {{bucketPath}} path does not obey bucket naming rules.", bucketPath)
+          .mitigation("Please check that S3 bucket path does not end with a number.")
+          .toString()
+      )
+    }
 
   /**
    * @inheritdoc

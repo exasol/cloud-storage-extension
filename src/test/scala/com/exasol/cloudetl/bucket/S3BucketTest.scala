@@ -124,4 +124,14 @@ class S3BucketTest extends AbstractBucketTest {
     assert(conf.getValByRegex("fs\\.s3a\\.proxy.+").asScala === Map.empty[String, String])
   }
 
+  test("check S3 bucket name validation") {
+    val properties = defaultProperties ++ Map(PATH -> "s3a://my-bucket.test.s3.007")
+    val thrown = intercept[BucketValidationException] {
+      val bucket = bucketWithDefaultConnectionString(properties)
+      bucket.getConfiguration()
+    }
+    assert(thrown.getMessage().startsWith("E-CSE-28"))
+    assert(thrown.getMessage().contains(s"Please check that S3 bucket path does not end with a number."))
+  }
+
 }
