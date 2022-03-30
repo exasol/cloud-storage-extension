@@ -25,13 +25,13 @@ trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach wit
   override final def afterEach(): Unit =
     deletePathFiles(outputDirectory)
 
-  override final def beforeAll(): Unit = {
+  override def beforeAll(): Unit = {
     super.beforeAll()
     prepareExasolDatabase(schemaName)
     createS3ConnectionObject()
   }
 
-  override final def afterAll(): Unit = {
+  override def afterAll(): Unit = {
     executeStmt(s"DROP SCHEMA IF EXISTS $schemaName CASCADE;")
     super.afterAll()
   }

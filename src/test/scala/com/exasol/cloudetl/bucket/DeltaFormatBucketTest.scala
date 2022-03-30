@@ -7,7 +7,6 @@ import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.SparkSession
 import org.scalatest.BeforeAndAfterAll
 
-@SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
 class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with BeforeAndAfterAll {
 
   private[this] var path: String = _
@@ -26,11 +25,6 @@ class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with
     tmpDir = createTemporaryFolder("deltaPath")
     path = tmpDir.toUri.toString
     properties = Map(PATH -> path, FORMAT -> "DELTA")
-    spark = SparkSession
-      .builder()
-      .appName("DeltaFormatTest")
-      .master("local[2]")
-      .getOrCreate()
   }
 
   override final def afterEach(): Unit =

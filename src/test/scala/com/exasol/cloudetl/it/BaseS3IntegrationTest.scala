@@ -52,13 +52,16 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
   }
 
   def createS3ConnectionObject(): Unit = {
-    val credentials = s3Container.getDefaultCredentialsProvider().getCredentials()
-    val awsAccessKey = credentials.getAWSAccessKeyId()
-    val awsSecretKey = credentials.getAWSSecretKey()
-    val secret = s"S3_ACCESS_KEY=$awsAccessKey;S3_SECRET_KEY=$awsSecretKey"
+    val secret = s"S3_ACCESS_KEY=${getAWSAccessKey()};S3_SECRET_KEY=${getAWSSecretKey()}"
     factory.createConnectionDefinition("S3_CONNECTION", "", "dummy_user", secret)
     ()
   }
+
+  def getAWSAccessKey(): String =
+    s3Container.getDefaultCredentialsProvider().getCredentials().getAWSAccessKeyId()
+
+  def getAWSSecretKey(): String =
+    s3Container.getDefaultCredentialsProvider().getCredentials().getAWSSecretKey()
 
   def uploadFileToS3(bucket: String, file: HPath): Unit = {
     createBucket(bucket)

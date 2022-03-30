@@ -29,12 +29,15 @@ final case class FilesMetadataEmitter(properties: StorageProperties, parallelism
 
   override def emit(context: ExaIterator): Unit = {
     logger.info(s"Found total of '${paths.size}' files in path '${bucket.bucketPath}'.")
-    if (fileFormat != FileFormat.PARQUET) {
-      emitRegularFilesMetadata(context)
-    } else {
+    if (isParquetFormat(fileFormat)) {
       emitParquetFilesMetadata(context)
+    } else {
+      emitRegularFilesMetadata(context)
     }
   }
+
+  private[this] def isParquetFormat(fileFormat: FileFormat): Boolean =
+    fileFormat == FileFormat.PARQUET || fileFormat == FileFormat.DELTA
 
   private[this] def emitRegularFilesMetadata(context: ExaIterator): Unit = {
     var index = 0L
