@@ -5,25 +5,31 @@ import java.nio.charset.StandardCharsets.UTF_8
 import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.Path
+import org.apache.hadoop.fs.{Path => HPath}
 import org.apache.hadoop.hive.common.`type`.HiveDecimal
 import org.apache.hadoop.hive.ql.exec.vector._
 import org.apache.orc.OrcFile
+import org.apache.orc.Writer
 import org.apache.orc.TypeDescription
 import org.apache.orc.TypeDescription.Category
 
 /**
  * A helper class that writes Orc types into a file.
  */
-class OrcTestDataWriter(path: Path, conf: Configuration) {
+trait OrcTestDataWriter {
 
   private[this] val ORC_STRIPE_SIZE = 32L * 1024 * 1024
   private[this] val ORC_BLOCK_SIZE = 64L * 1024 * 1024
 
-  final def write[T](schema: TypeDescription, values: List[T]): Unit = {
+  final def getOrcWriter(path: HPath, schema: TypeDescription): Writer = {
+    val conf = new Configuration()
     conf.set("orc.stripe.size", s"$ORC_STRIPE_SIZE")
     conf.set("orc.block.size", s"$ORC_BLOCK_SIZE")
-    val writer = OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(schema))
+    OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(schema))
+  }
+
+  final def writeDataValues[T](values: List[T], path: HPath, schema: TypeDescription): Unit = {
+    val writer = getOrcWriter(path, schema)
     val schemaChildren = schema.getChildren()
     val batch = schema.createRowBatch()
     val columnWriters = Array.ofDim[(Any, Int) => Unit](schemaChildren.size())

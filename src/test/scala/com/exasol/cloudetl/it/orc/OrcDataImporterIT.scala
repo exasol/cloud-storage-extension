@@ -251,17 +251,13 @@ class OrcDataImporterIT extends BaseDataImporter {
   }
 
   case class OrcChecker(orcColumn: String, exaColumn: String, tableName: String)
-      extends AbstractChecker(exaColumn, tableName) {
+      extends AbstractChecker(exaColumn, tableName)
+      with OrcTestDataWriter {
+    val orcSchema = TypeDescription.fromString(orcColumn)
 
-    def withWriter(block: OrcTestDataWriter => Unit): OrcChecker = {
-      val writer = new OrcTestDataWriter(path, conf)
-      block(writer)
+    def withInputValues[T](values: List[T]): OrcChecker = {
+      writeDataValues(values, path, orcSchema)
       this
-    }
-
-    def withInputValues[T](values: List[T]): OrcChecker = withWriter { writer =>
-      val schema = TypeDescription.fromString(orcColumn)
-      writer.write(schema, values)
     }
   }
 
