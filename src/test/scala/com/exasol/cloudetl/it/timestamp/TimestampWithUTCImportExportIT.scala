@@ -10,11 +10,13 @@ import java.time.format.DateTimeFormatter
 
 import com.exasol.cloudetl.BaseS3IntegrationTest
 import com.exasol.cloudetl.TestFileManager
+import com.exasol.cloudetl.avro.AvroTestDataWriter
 import com.exasol.cloudetl.helper.DateTimeConverter._
 import com.exasol.cloudetl.parquet.ParquetTestDataWriter
 import com.exasol.dbbuilder.dialects.Table
 import com.exasol.matcher.ResultSetStructureMatcher.table
 
+import org.apache.avro.Schema
 import org.apache.hadoop.fs.{Path => HPath}
 import org.apache.parquet.io.api.Binary
 import org.apache.parquet.schema.MessageTypeParser
@@ -83,8 +85,7 @@ class TimestampWithUTCImportExportIT extends BaseS3IntegrationTest with BeforeAn
 
     ParquetTimestampWriter("optional int64 column (TIMESTAMP_MILLIS);")
       .withBucketName("int64-timestamp-millis")
-      .withTableColumnType("int64_timestamp_millis", "TIMESTAMP")
-      .withFilePath(path)
+      .withTableColumnType("TIMESTAMP")
       .withInputValues[Any](List(millis1, millis2, null))
       .verify(
         table()
@@ -103,8 +104,7 @@ class TimestampWithUTCImportExportIT extends BaseS3IntegrationTest with BeforeAn
 
     ParquetTimestampWriter("optional int64 column (TIMESTAMP_MICROS);")
       .withBucketName("int64-timestamp-micros")
-      .withTableColumnType("int64_timestamp_micros", "TIMESTAMP")
-      .withFilePath(path)
+      .withTableColumnType("TIMESTAMP")
       .withInputValues[Any](List(micros, null))
       .verify(
         table()
@@ -125,8 +125,7 @@ class TimestampWithUTCImportExportIT extends BaseS3IntegrationTest with BeforeAn
 
     ParquetTimestampWriter("optional int96 column;")
       .withBucketName("int96-timestamp")
-      .withTableColumnType("int96_timestamp", "TIMESTAMP")
-      .withFilePath(path)
+      .withTableColumnType("TIMESTAMP")
       .withInputValues[Any](List(Binary.fromConstantByteArray(buffer.array()), null))
       .verify(
         table()
@@ -165,35 +164,78 @@ class TimestampWithUTCImportExportIT extends BaseS3IntegrationTest with BeforeAn
     )
   }
 
-  case class ParquetTimestampWriter(parquetType: String) extends ParquetTestDataWriter {
-    private val parquetSchema = MessageTypeParser.parseMessageType(s"message test { $parquetType }")
+  test("avro imports long (timestamp-millis)") {
+    val millis1 = System.currentTimeMillis()
+    val millis2 = 0L
+
+    AvroTimestampWriter("""{"type":"long","logicalType":"timestamp-millis"}""")
+      .withBucketName("avro-timestamp")
+      .withTableColumnType("TIMESTAMP")
+      .withInputValues(List(millis1, millis2))
+      .verify(
+        table()
+          .row(new Timestamp(millis1))
+          .row(new Timestamp(millis2))
+          .withUtcCalendar()
+          .matches()
+      )
+  }
+
+  trait BaseTimestampWriter {
     private var bucketName: String = _
-    private var path: HPath = _
     private var table: Table = _
+    val dataFormat: String
+    val filePath: HPath
+
     def withBucketName(bucketName: String): this.type = {
       this.bucketName = bucketName
       this
     }
-    def withFilePath(path: HPath): this.type = {
-      this.path = path
+
+    def withTableColumnType(columnType: String): this.type = {
+      val tableName = this.bucketName.replace("-", "_").toUpperCase(java.util.Locale.ENGLISH)
+      this.table = schema.createTableBuilder(tableName).column("COLUMN", columnType).build()
       this
     }
-    def withTableColumnType(tableName: String, columnType: String): this.type = {
-      this.table = schema
-        .createTableBuilder(tableName.toUpperCase(java.util.Locale.ENGLISH))
-        .column("COLUMN", columnType)
-        .build()
-      this
-    }
-    def withInputValues[T](values: List[T]): this.type = {
-      writeDataValues(values, this.path, this.parquetSchema)
-      this
-    }
+
+    def withInputValues[T](values: List[T]): this.type
+
     def verify(matcher: Matcher[ResultSet]): Unit = {
-      uploadFileToS3(this.bucketName, this.path)
-      importFromS3Bucket(this.table, this.bucketName, "PARQUET")
+      uploadFileToS3(this.bucketName, this.filePath)
+      importFromS3Bucket(this.table, this.bucketName, this.dataFormat)
       verifyTable(s"SELECT * FROM ${this.table.getFullyQualifiedName()}", matcher)
       ()
+    }
+  }
+
+  case class ParquetTimestampWriter(parquetType: String) extends BaseTimestampWriter with ParquetTestDataWriter {
+    private val parquetSchema = MessageTypeParser.parseMessageType(s"message test { $parquetType }")
+    override val dataFormat = "PARQUET"
+    override val filePath = path
+    override def withInputValues[T](values: List[T]): this.type = {
+      writeDataValues(values, this.filePath, this.parquetSchema)
+      this
+    }
+  }
+
+  case class AvroTimestampWriter(avroType: String) extends BaseTimestampWriter with AvroTestDataWriter {
+    private val avroSchema = new Schema.Parser().parse(
+      s"""|{
+          |  "type": "record",
+          |  "namespace": "avrorecord",
+          |  "name": "basictype",
+          |  "fields": [{
+          |    "name": "column",
+          |    "type": $avroType
+          |  }]
+          |}
+       """.stripMargin
+    )
+    override val dataFormat = "AVRO"
+    override val filePath = path
+    def withInputValues[T](values: List[T]): this.type = {
+      writeDataValues(values, this.filePath, this.avroSchema)
+      this
     }
   }
 
