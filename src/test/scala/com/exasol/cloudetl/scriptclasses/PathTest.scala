@@ -16,7 +16,7 @@ trait PathTest extends AnyFunSuite with BeforeAndAfterEach with MockitoSugar {
   private[scriptclasses] val schema = "myDBSchema"
 
   private[scriptclasses] var properties = Map(
-    "BUCKET_PATH" -> "s3a://my_bucket/folder1/*",
+    "BUCKET_PATH" -> "s3a://my-bucket/folder1/*",
     "DATA_FORMAT" -> "PARQUET",
     "S3_ENDPOINT" -> "s3.eu-central-1.com",
     "CONNECTION_NAME" -> "S3_CONNECTION"
