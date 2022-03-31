@@ -286,7 +286,6 @@ sealed abstract class AbstractStructLikeConverter(schema: TypeDescription) {
     converter.readAt(fieldVector.asInstanceOf[T], newRowIndex)
   }
 
-  @SuppressWarnings(Array("org.wartremover.warts.Nothing"))
   final def readFields(fieldVectors: Array[ColumnVector], rowIndex: Int): Map[String, Any] = {
     val values = MMap.empty[String, Any]
     for { fieldIndex <- 0 until size } {

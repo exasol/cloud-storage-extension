@@ -87,7 +87,6 @@ final class BatchSizedSink(
     }
   }
 
-  @SuppressWarnings(Array("org.wartremover.warts.Return"))
   private def shouldRoll(): Boolean = {
     if (writer == null) {
       return true // scalastyle:ignore return

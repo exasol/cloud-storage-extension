@@ -8,7 +8,6 @@ import org.apache.hadoop.hive.ql.exec.vector._
 import org.apache.orc.OrcFile
 import org.apache.orc.TypeDescription._
 
-@SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
 class OrcConverterComplexTypesTest extends BaseOrcConverterTest {
 
   test("reads list of strings as JSON string") {

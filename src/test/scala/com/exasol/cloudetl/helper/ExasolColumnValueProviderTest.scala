@@ -13,7 +13,6 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.mockito.MockitoSugar
 
-@SuppressWarnings(Array("org.wartremover.contrib.warts.ExposedTuples"))
 class ExasolColumnValueProviderTest extends AnyFunSuite with BeforeAndAfterEach with MockitoSugar {
 
   private[this] val START_INDEX = 3
@@ -81,7 +80,6 @@ class ExasolColumnValueProviderTest extends AnyFunSuite with BeforeAndAfterEach 
     val columnInfo = ExaColumnInfo("c_decimal", classOf[BigDecimal], precision = 18, scale = 4)
     when(exasolIterator.getBigDecimal(3)).thenReturn(decimal)
 
-    @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf")) // safe since we set the return value
     val columnValue = columnValueProvider.getColumnValue(3, columnInfo).asInstanceOf[BigDecimal]
     assert(columnValue.toPlainString() === "238316.3800")
   }

@@ -2,7 +2,6 @@ package com.exasol.cloudetl.orc.converter
 
 import org.apache.orc.TypeDescription._
 
-@SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
 class OrcConverterPrimitiveTypesTest extends BaseOrcConverterTest {
 
   test("reads BOOLEAN as long value") {
