@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.3.1, released 2022-02-??
+# Cloud Storage Extension 2.3.1, released 2022-03-??
 
 Code name:
 
@@ -8,6 +8,7 @@ In this release we added a new parameter `TIMEZONE_UTC`, when set to `true`, the
 
 ## Bug Fixes
 
+* #190: Added S3 bucket name validation
 * #193: Fixed bug reading delta formatted data
 
 ## Refactoring
