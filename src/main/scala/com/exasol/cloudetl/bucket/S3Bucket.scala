@@ -42,7 +42,11 @@ final case class S3Bucket(path: String, params: StorageProperties) extends Bucke
         ExaError
           .messageBuilder("E-CSE-28")
           .message("The S3 bucket {{bucketPath}} path does not obey bucket naming rules.", bucketPath)
-          .mitigation("Please check that S3 bucket path does not end with a number.")
+          .mitigation("Please check that S3 bucket name does not contain underscores, end with a number or a hyphen.")
+          .mitigation(
+            "Please read the bucket naming rules " +
+              "'https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html'."
+          )
           .toString()
       )
     }

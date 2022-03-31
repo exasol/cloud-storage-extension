@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.3.1, released 2022-02-??
+# Cloud Storage Extension 2.3.1, released 2022-03-??
 
 Code name:
 
@@ -6,7 +6,7 @@ Code name:
 
 ## Bug Fixes
 
-* #190: Added S3 bucket validation for bucket path that end with number
+* #190: Added S3 bucket name validation
 * #193: Fixed bug reading delta formatted data
 
 ## Refactoring
