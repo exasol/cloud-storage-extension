@@ -16,8 +16,8 @@ import com.exasol.dbbuilder.dialects.Table
 import com.exasol.matcher.ResultSetStructureMatcher.table
 
 import org.apache.hadoop.fs.{Path => HPath}
-import org.apache.parquet.schema.MessageTypeParser
 import org.apache.parquet.io.api.Binary
+import org.apache.parquet.schema.MessageTypeParser
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
 import org.scalatest.BeforeAndAfterEach
