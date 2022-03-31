@@ -16,8 +16,7 @@ sealed trait OrcConverter[T <: ColumnVector] {
   /**
    * Reads the record at provided index from the underlying vector.
    *
-   * @param vector the Orc
-   *        [[org.apache.hadoop.hive.ql.exec.vector.ColumnVector]] vector
+   * @param vector the Orc [[org.apache.hadoop.hive.ql.exec.vector.ColumnVector]] vector
    * @param index the index to read at
    */
   def readAt(vector: T, index: Int): Any
