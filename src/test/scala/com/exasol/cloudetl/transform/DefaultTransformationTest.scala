@@ -1,8 +1,8 @@
 package com.exasol.cloudetl.transform
 
 import com.exasol.cloudetl.constants.Constants.TRUNCATE_STRING
-import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.cloudetl.helper.StringGenerator.getRandomString
+import com.exasol.cloudetl.storage.StorageProperties
 
 import org.scalatest.funsuite.AnyFunSuite
 

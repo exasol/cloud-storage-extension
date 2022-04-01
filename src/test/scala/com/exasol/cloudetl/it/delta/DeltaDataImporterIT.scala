@@ -8,8 +8,8 @@ import com.exasol.cloudetl.helper.StringGenerator
 import com.exasol.matcher.ResultSetStructureMatcher.table
 
 import org.apache.spark.sql.Dataset
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.SQLContext
+import org.apache.spark.sql.SparkSession
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
 
