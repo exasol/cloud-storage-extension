@@ -9,6 +9,7 @@ import com.exasol.errorreporting.ExaError
  */
 final class DefaultTransformation(val properties: StorageProperties) extends Transformation {
   private[this] val MAX_VARCHAR_SIZE = 2000000
+  private[this] val hasTruncateString = properties.isEnabled(TRUNCATE_STRING)
 
   override def transform(values: Array[Object]): Array[Object] = {
     var index = 0
@@ -22,14 +23,11 @@ final class DefaultTransformation(val properties: StorageProperties) extends Tra
     values
   }
 
-  private[this] def hasTruncateString() =
-    properties.containsKey(TRUNCATE_STRING) && properties.isEnabled(TRUNCATE_STRING)
-
   private[this] def transformString(value: String): String = {
     if (value.length() <= MAX_VARCHAR_SIZE) {
       return value
     }
-    if (!hasTruncateString()) {
+    if (!hasTruncateString) {
       throw new IllegalStateException(
         ExaError
           .messageBuilder("E-CSE-29")

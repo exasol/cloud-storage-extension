@@ -14,7 +14,7 @@ class DefaultTransformationTest extends AnyFunSuite {
   test("truncates strings larger than maximum varchar size") {
     val properties = StorageProperties(Map(TRUNCATE_STRING -> "true"))
     val expected = Array(1, 3.14, "abc", longString.substring(0, 2000000)).map(_.asInstanceOf[Object])
-    assert(new DefaultTransformation(properties).transform(values) === expected)
+    assert(new DefaultTransformation(properties).transform(Array.from(values)) === expected)
   }
 
   test("passes if there is no strings larger than maximum varchar size") {
@@ -26,7 +26,7 @@ class DefaultTransformationTest extends AnyFunSuite {
   test("throws strings larger than maximum varchar size if no truncate string parameter") {
     val properties = StorageProperties(Map.empty[String, String])
     val thrown = intercept[IllegalStateException] {
-      new DefaultTransformation(properties).transform(values)
+      new DefaultTransformation(properties).transform(Array.from(values))
     }
     assert(thrown.getMessage().startsWith("E-CSE-29"))
   }
@@ -34,7 +34,7 @@ class DefaultTransformationTest extends AnyFunSuite {
   test("throws strings larger than maximum varchar size if truncate string parameter is false") {
     val properties = StorageProperties(Map(TRUNCATE_STRING -> "false"))
     val thrown = intercept[IllegalStateException] {
-      new DefaultTransformation(properties).transform(values)
+      new DefaultTransformation(properties).transform(Array.from(values))
     }
     assert(thrown.getMessage().startsWith("E-CSE-29"))
   }
