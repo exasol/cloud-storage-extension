@@ -10,18 +10,15 @@ import com.exasol.common.data.Row
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.{Path => HPath}
-import org.apache.orc.OrcFile
 import org.apache.orc.TypeDescription
-import org.apache.orc.Writer
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.funsuite.AnyFunSuite
 
-class BaseOrcConverterTest extends AnyFunSuite with BeforeAndAfterEach with TestFileManager {
+class BaseOrcConverterTest extends AnyFunSuite with BeforeAndAfterEach with OrcTestDataWriter with TestFileManager {
 
   protected var conf: Configuration = _
   protected var fileSystem: FileSystem = _
   protected var path: HPath = _
-  protected var orcWriter: OrcTestDataWriter = _
   private[this] var outputDirectory: Path = _
 
   override final def beforeEach(): Unit = {
@@ -29,7 +26,6 @@ class BaseOrcConverterTest extends AnyFunSuite with BeforeAndAfterEach with Test
     fileSystem = FileSystem.get(conf)
     outputDirectory = createTemporaryFolder("orc-tests-")
     path = new HPath(outputDirectory.toUri.toString, "orc-file.orc")
-    orcWriter = new OrcTestDataWriter(path, conf)
     ()
   }
 
@@ -38,11 +34,8 @@ class BaseOrcConverterTest extends AnyFunSuite with BeforeAndAfterEach with Test
     ()
   }
 
-  protected final def withWriter(schema: TypeDescription)(block: Writer => Unit): Unit = {
-    val writer = OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(schema))
-    block(writer)
-    writer.close()
-  }
+  protected final def write[T](schema: TypeDescription, values: List[T]): Unit =
+    writeDataValues(values, path, schema)
 
   protected final def getRecords(): Seq[Row] = {
     val src = OrcSource(path, conf, fileSystem)

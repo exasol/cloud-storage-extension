@@ -14,6 +14,7 @@ In this release we added a new parameter `TIMEZONE_UTC`, when set to `true`, the
 
 * #190: Added S3 bucket name validation
 * #193: Fixed bug reading delta formatted data
+* #194: Added timezone `UTC` parameter
 
 ## Refactoring
 

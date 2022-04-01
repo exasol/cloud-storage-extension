@@ -15,7 +15,6 @@ class AbstractBucketTest extends AnyFunSuite with BeforeAndAfterEach with Mockit
   private[cloudetl] val FORMAT: String = "DATA_FORMAT"
   private[cloudetl] var properties: Map[String, String] = _
 
-  @SuppressWarnings(Array("org.wartremover.contrib.warts.UnsafeInheritance"))
   override def beforeEach(): Unit = {
     properties = Map.empty[String, String]
     ()

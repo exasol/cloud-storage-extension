@@ -488,30 +488,9 @@ class ParquetDataImporterIT extends BaseDataImporter {
       this
     }
 
-    def withInputValues[T](values: List[T]): ParquetChecker = withWriter { (writer, schema) =>
-      values.foreach { value =>
-        val record = new SimpleGroup(schema)
-        if (!isNull(value)) {
-          appendValue(value, record)
-        }
-        writer.write(record)
-      }
-    }
-
-    private[this] def isNull(obj: Any): Boolean = !Option(obj).isDefined
-
-    private def appendValue(value: Any, record: SimpleGroup): Unit = {
-      value match {
-        case v: Boolean => record.append("column", v)
-        case v: Int     => record.append("column", v)
-        case v: Long    => record.append("column", v)
-        case v: Float   => record.append("column", v)
-        case v: Double  => record.append("column", v)
-        case v: String  => record.append("column", v)
-        case v: Binary  => record.append("column", v)
-        case _          => throw new IllegalArgumentException("Unknown Parquet value!")
-      }
-      ()
+    def withInputValues[T](values: List[T]): ParquetChecker = {
+      writeDataValues(values, path, parquetSchema)
+      this
     }
   }
 

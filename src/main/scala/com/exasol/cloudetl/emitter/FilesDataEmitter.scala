@@ -2,6 +2,7 @@ package com.exasol.cloudetl.emitter
 
 import java.io.IOException
 import java.util.List
+import java.util.TimeZone
 import java.util.function.Consumer
 
 import com.exasol.ExaIterator
@@ -37,11 +38,22 @@ final case class FilesDataEmitter(properties: StorageProperties, files: Map[Stri
   private[this] val fileFormat = properties.getFileFormat()
   private[this] val defaultTransformation = new DefaultTransformation(properties)
 
-  override def emit(context: ExaIterator): Unit = fileFormat match {
-    case FileFormat.PARQUET => emitParquetData(context)
-    case FileFormat.DELTA   => emitParquetData(context)
-    case _                  => emitRegularData(context)
+  override def emit(context: ExaIterator): Unit = {
+    checkIfTimezoneUTC()
+    emitFileFormatData(context)
   }
+
+  private[this] def checkIfTimezoneUTC(): Unit =
+    if (properties.isEnabled("TIMEZONE_UTC")) {
+      TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
+    }
+
+  private[this] def emitFileFormatData(context: ExaIterator): Unit =
+    fileFormat match {
+      case FileFormat.PARQUET => emitParquetData(context)
+      case FileFormat.DELTA   => emitParquetData(context)
+      case _                  => emitRegularData(context)
+    }
 
   private[this] def emitRegularData(context: ExaIterator): Unit =
     files.foreach { case (filename, _) =>

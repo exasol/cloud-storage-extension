@@ -61,7 +61,6 @@ object DateTimeConverter {
    * Returns Julian day and nanoseconds in a day from microseconds since
    * epoch.
    */
-  @SuppressWarnings(Array("org.wartremover.contrib.warts.ExposedTuples"))
   def getJulianDayAndNanos(us: Long): (Int, Long) = {
     val julianMicros = us + JULIAN_DAY_OF_EPOCH * MICROS_PER_DAY
     val day = julianMicros / MICROS_PER_DAY
@@ -79,7 +78,6 @@ object DateTimeConverter {
   }
 
   /** Returns the number of days since unix epoch. */
-  @SuppressWarnings(Array("org.wartremover.contrib.warts.OldTime"))
   def daysSinceEpoch(date: Date): Long = {
     val millisUtc = date.getTime
     val millis = millisUtc + (TimeZone.getTimeZone(ZoneId.systemDefault).getOffset(millisUtc))

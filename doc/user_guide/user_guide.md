@@ -377,6 +377,11 @@ These are optional parameters that have default values.
   in the Import SQL statement. Likewise, the default value is `iproc()` in the
   Export SQL statement.
 
+* ``TIMEZONE_UTC`` - If it is set to `true`, the timezone of timestamp data from
+  data sources will be set to `'UTC'`. Without this parameter, or it is set to
+  `false`, the timestamp values are imported or exported using the datanode
+  timezone (`DBTIMEZONE`).
+
 #### Import Optional Parameters
 
 The following are optional parameters for import statements.
