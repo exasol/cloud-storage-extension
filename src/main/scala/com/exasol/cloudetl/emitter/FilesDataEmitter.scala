@@ -10,6 +10,7 @@ import com.exasol.cloudetl.parquet.ParquetValueConverter
 import com.exasol.cloudetl.source.Source
 import com.exasol.cloudetl.storage.FileFormat
 import com.exasol.cloudetl.storage.StorageProperties
+import com.exasol.cloudetl.transform.DefaultTransformation
 import com.exasol.common.data.{Row => RegularRow}
 import com.exasol.errorreporting.ExaError
 import com.exasol.parquetio.data.ChunkInterval
@@ -34,6 +35,7 @@ final case class FilesDataEmitter(properties: StorageProperties, files: Map[Stri
 
   private[this] val bucket = Bucket(properties)
   private[this] val fileFormat = properties.getFileFormat()
+  private[this] val defaultTransformation = new DefaultTransformation(properties)
 
   override def emit(context: ExaIterator): Unit = fileFormat match {
     case FileFormat.PARQUET => emitParquetData(context)
@@ -45,7 +47,8 @@ final case class FilesDataEmitter(properties: StorageProperties, files: Map[Stri
     files.foreach { case (filename, _) =>
       val source = Source(fileFormat, new Path(filename), bucket.getConfiguration(), bucket.fileSystem)
       source.stream().foreach { row =>
-        context.emit(transformRegularRowValues(row): _*)
+        val values = defaultTransformation.transform(transformRegularRowValues(row))
+        context.emit(values: _*)
       }
       source.close()
     }
@@ -59,8 +62,10 @@ final case class FilesDataEmitter(properties: StorageProperties, files: Map[Stri
       val converter = ParquetValueConverter(RowParquetReader.getSchema(inputFile))
       val source = new RowParquetChunkReader(inputFile, intervals)
       source.read(new Consumer[Row] {
-        override def accept(row: Row): Unit =
-          context.emit(converter.convert(row): _*)
+        override def accept(row: Row): Unit = {
+          val values = defaultTransformation.transform(converter.convert(row))
+          context.emit(values: _*)
+        }
       })
     }
 

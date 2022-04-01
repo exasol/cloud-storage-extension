@@ -83,6 +83,7 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
           |DATA_FORMAT              = '$dataFormat'
           |S3_ENDPOINT              = '$s3Endpoint'
           |S3_CHANGE_DETECTION_MODE = 'none'
+          |TRUNCATE_STRING          = 'true'
           |CONNECTION_NAME          = 'S3_CONNECTION'
           |PARALLELISM              = 'nproc()';
         """.stripMargin
