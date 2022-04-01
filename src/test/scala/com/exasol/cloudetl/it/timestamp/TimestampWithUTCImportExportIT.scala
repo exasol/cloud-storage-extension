@@ -12,12 +12,14 @@ import com.exasol.cloudetl.BaseS3IntegrationTest
 import com.exasol.cloudetl.TestFileManager
 import com.exasol.cloudetl.avro.AvroTestDataWriter
 import com.exasol.cloudetl.helper.DateTimeConverter._
+import com.exasol.cloudetl.orc.OrcTestDataWriter
 import com.exasol.cloudetl.parquet.ParquetTestDataWriter
 import com.exasol.dbbuilder.dialects.Table
 import com.exasol.matcher.ResultSetStructureMatcher.table
 
 import org.apache.avro.Schema
 import org.apache.hadoop.fs.{Path => HPath}
+import org.apache.orc.TypeDescription
 import org.apache.parquet.io.api.Binary
 import org.apache.parquet.schema.MessageTypeParser
 import org.hamcrest.Matcher
@@ -181,6 +183,23 @@ class TimestampWithUTCImportExportIT extends BaseS3IntegrationTest with BeforeAn
       )
   }
 
+  test("orc imports timestamp") {
+    val timestamp1 = new Timestamp(Instant.EPOCH.toEpochMilli())
+    val timestamp2 = new Timestamp(System.currentTimeMillis())
+    OrcTimestampWriter("struct<f:timestamp>")
+      .withBucketName("orc-timestamp")
+      .withTableColumnType("TIMESTAMP")
+      .withInputValues(List(timestamp1, timestamp2, null))
+      .verify(
+        table()
+          .row(timestamp1)
+          .row(timestamp2)
+          .row(null)
+          .withUtcCalendar()
+          .matches()
+      )
+  }
+
   trait BaseTimestampWriter {
     private var bucketName: String = _
     private var table: Table = _
@@ -235,6 +254,16 @@ class TimestampWithUTCImportExportIT extends BaseS3IntegrationTest with BeforeAn
     override val filePath = path
     def withInputValues[T](values: List[T]): this.type = {
       writeDataValues(values, this.filePath, this.avroSchema)
+      this
+    }
+  }
+
+  case class OrcTimestampWriter(orcType: String) extends BaseTimestampWriter with OrcTestDataWriter {
+    private val orcSchema = TypeDescription.fromString(orcType)
+    override val dataFormat = "ORC"
+    override val filePath = path
+    def withInputValues[T](values: List[T]): this.type = {
+      writeDataValues(values, this.filePath, this.orcSchema)
       this
     }
   }

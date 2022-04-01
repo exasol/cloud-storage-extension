@@ -25,7 +25,7 @@ trait OrcTestDataWriter {
     val conf = new Configuration()
     conf.set("orc.stripe.size", s"$ORC_STRIPE_SIZE")
     conf.set("orc.block.size", s"$ORC_BLOCK_SIZE")
-    OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(schema))
+    OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(schema).useUTCTimestamp(true))
   }
 
   final def writeDataValues[T](values: List[T], path: HPath, schema: TypeDescription): Unit = {

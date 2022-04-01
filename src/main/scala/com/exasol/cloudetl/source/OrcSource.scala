@@ -55,7 +55,7 @@ final case class OrcSource(
     }
 
   private[this] def createReader(): Reader = {
-    val options = OrcFile.readerOptions(conf).filesystem(fileSystem)
+    val options = OrcFile.readerOptions(conf).filesystem(fileSystem).useUTCTimestamp(true)
     try {
       OrcFile.createReader(path, options)
     } catch {
