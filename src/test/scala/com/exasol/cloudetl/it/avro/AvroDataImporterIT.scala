@@ -1,6 +1,5 @@
 package com.exasol.cloudetl.avro
 
-import java.io.File
 import java.math._
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets.UTF_8
@@ -13,9 +12,7 @@ import com.exasol.matcher.ResultSetStructureMatcher.table
 import com.exasol.matcher.TypeMatchMode._
 
 import org.apache.avro._
-import org.apache.avro.file.DataFileWriter
 import org.apache.avro.generic._
-import org.apache.avro.specific.SpecificDatumWriter
 
 class AvroDataImporterIT extends BaseDataImporter {
 
@@ -329,27 +326,13 @@ class AvroDataImporterIT extends BaseDataImporter {
   }
 
   case class AvroChecker(avroSchemaStr: String, exaColumn: String, tableName: String)
-      extends AbstractChecker(exaColumn, tableName) {
-    val AVRO_SYNC_INTERVAL_SIZE = 64 * 1024 * 1024
+      extends AbstractChecker(exaColumn, tableName)
+      with AvroTestDataWriter {
     val avroSchema = new Schema.Parser().parse(avroSchemaStr)
 
-    def withWriter(block: DataFileWriter[GenericRecord] => Unit): AvroChecker = {
-      val writer = new DataFileWriter[GenericRecord](new SpecificDatumWriter[GenericRecord]())
-      writer.setFlushOnEveryBlock(false)
-      writer.setSyncInterval(AVRO_SYNC_INTERVAL_SIZE)
-      writer.create(avroSchema, new File(path.toUri))
-      block(writer)
-      writer.close()
+    def withInputValues[T](values: List[T]): AvroChecker = {
+      writeDataValues(values, path, avroSchema)
       this
-    }
-
-    def withInputValues[T](values: List[T]): AvroChecker = withWriter { writer =>
-      values.foreach { value =>
-        val record = new GenericData.Record(avroSchema)
-        record.put("column", value)
-        writer.append(record)
-      }
-      writer.close()
     }
   }
 

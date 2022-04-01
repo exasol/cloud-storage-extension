@@ -54,7 +54,6 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
     mockedIterator
   }
 
-  @SuppressWarnings(Array("org.wartremover.warts.JavaSerializable"))
   final def createMockedMetadata(): ExaMetadata = {
     val mockedMetadata = mock[ExaMetadata]
     when(mockedMetadata.getInputColumnCount()).thenReturn(11L)

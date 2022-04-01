@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.scriptclasses
 
+import java.util.TimeZone
+
 import scala.collection.mutable.ListBuffer
 
 import com.exasol.ExaIterator
@@ -30,7 +32,16 @@ object TableDataExporter extends LazyLogging {
    */
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
     val storageProperties = StorageProperties(iterator.getString(STORAGE_PROPERTIES_INDEX), metadata)
-    val bucket = Bucket(storageProperties)
+    checkIfTimezoneUTC(storageProperties)
+    runExport(metadata, iterator, Bucket(storageProperties))
+  }
+
+  private[this] def checkIfTimezoneUTC(storageProperties: StorageProperties): Unit =
+    if (storageProperties.isEnabled("TIMEZONE_UTC")) {
+      TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
+    }
+
+  private[this] def runExport(metadata: ExaMetadata, iterator: ExaIterator, bucket: Bucket): Unit = {
     val sourceColumnNames = iterator.getString(SOURCE_COLUMNS_INDEX).split("\\.")
     val columns = getColumns(metadata, sourceColumnNames.toSeq)
     val nodeId = metadata.getNodeId()

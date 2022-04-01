@@ -7,7 +7,6 @@ import java.util.Locale
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-@SuppressWarnings(Array("org.wartremover.contrib.warts.OldTime"))
 class DateTimeConverterTest extends AnyFunSuite with Matchers {
 
   final def daysSinceEpochToDate(dt: Date): Unit = {

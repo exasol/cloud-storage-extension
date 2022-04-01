@@ -19,7 +19,6 @@ class SecureBucketTest extends AbstractBucketTest {
     assertForbiddenProperty(BaseSecureBucket(properties).validate())
   }
 
-  @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
   private[this] case class BaseSecureBucket(
     val params: Map[String, String],
     val metadata: ExaMetadata = null

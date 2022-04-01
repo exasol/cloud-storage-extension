@@ -24,7 +24,6 @@ final case class ParquetSourceTest(val path: Path, override val conf: Configurat
   private[this] val valueConverter = ParquetValueConverter(schema)
   override val fileSystem = null
 
-  @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures")) // fine in tests
   override def stream(): Iterator[Row] = {
     val values = ListBuffer.empty[Row]
     recordReader.read(new Consumer[ParquetRow] {
@@ -36,7 +35,6 @@ final case class ParquetSourceTest(val path: Path, override val conf: Configurat
     values.iterator
   }
 
-  @SuppressWarnings(Array("org.wartremover.warts.Throw")) // fine in tests
   private[this] def createReader(): RowParquetChunkReader =
     try {
       new RowParquetChunkReader(getInputFile(path))

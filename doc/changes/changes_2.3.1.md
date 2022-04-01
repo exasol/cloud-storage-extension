@@ -4,10 +4,13 @@ Code name:
 
 ## Summary
 
+In this release we added a new parameter `TIMEZONE_UTC`, when set to `true`, the timestamp data from data sources will be set to `'UTC'` timezone. Without this parameter, or it is set to `false`, the timestamp values are imported or exported using the datanode timezone (`DBTIMEZONE`).
+
 ## Bug Fixes
 
 * #190: Added S3 bucket name validation
 * #193: Fixed bug reading delta formatted data
+* #194: Added timezone `UTC` parameter
 
 ## Refactoring
 

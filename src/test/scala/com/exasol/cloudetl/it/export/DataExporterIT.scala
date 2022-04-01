@@ -188,8 +188,7 @@ class DataExporterIT extends BaseS3IntegrationTest {
       builder.build()
     }
 
-    def getTableName(suffix: String): String =
-      bucket.replace("bucket", suffix).replace("-", "_").toUpperCase
+    def getTableName(suffix: String): String = bucket.replace("bucket", suffix).replace("-", "_").toUpperCase
 
     def getMatcher(typeMatchMode: TypeMatchMode): Matcher[ResultSet] = {
       var matcher = table()
