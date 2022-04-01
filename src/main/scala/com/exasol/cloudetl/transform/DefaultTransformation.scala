@@ -25,7 +25,7 @@ final class DefaultTransformation(val properties: StorageProperties) extends Tra
 
   private[this] def transformString(value: String): String = {
     if (value.length() <= MAX_VARCHAR_SIZE) {
-      return value
+      return value // scalastyle:ignore
     }
     if (!hasTruncateString) {
       throw new IllegalStateException(
