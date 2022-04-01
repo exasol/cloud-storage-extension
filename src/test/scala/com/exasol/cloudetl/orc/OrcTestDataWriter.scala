@@ -9,9 +9,9 @@ import org.apache.hadoop.fs.{Path => HPath}
 import org.apache.hadoop.hive.common.`type`.HiveDecimal
 import org.apache.hadoop.hive.ql.exec.vector._
 import org.apache.orc.OrcFile
-import org.apache.orc.Writer
 import org.apache.orc.TypeDescription
 import org.apache.orc.TypeDescription.Category
+import org.apache.orc.Writer
 
 /**
  * A helper class that writes Orc types into a file.
