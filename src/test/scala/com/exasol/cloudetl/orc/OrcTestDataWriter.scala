@@ -9,9 +9,9 @@ import org.apache.hadoop.fs.{Path => HPath}
 import org.apache.hadoop.hive.common.`type`.HiveDecimal
 import org.apache.hadoop.hive.ql.exec.vector._
 import org.apache.orc.OrcFile
-import org.apache.orc.Writer
 import org.apache.orc.TypeDescription
 import org.apache.orc.TypeDescription.Category
+import org.apache.orc.Writer
 
 /**
  * A helper class that writes Orc types into a file.
@@ -25,7 +25,7 @@ trait OrcTestDataWriter {
     val conf = new Configuration()
     conf.set("orc.stripe.size", s"$ORC_STRIPE_SIZE")
     conf.set("orc.block.size", s"$ORC_BLOCK_SIZE")
-    OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(schema))
+    OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(schema).useUTCTimestamp(true))
   }
 
   final def writeDataValues[T](values: List[T], path: HPath, schema: TypeDescription): Unit = {

@@ -2,6 +2,7 @@ package com.exasol.cloudetl.orc
 
 import java.nio.charset.StandardCharsets.UTF_8
 import java.sql.Timestamp
+import java.time._
 
 import com.exasol.cloudetl.BaseDataImporter
 import com.exasol.matcher.CellMatcherFactory
@@ -145,14 +146,19 @@ class OrcDataImporterIT extends BaseDataImporter {
   }
 
   test("imports timestamp") {
-    val timestamp1 = Timestamp.from(java.time.Instant.EPOCH)
-    val timestamp2 = new Timestamp(System.currentTimeMillis())
+    val millis1 = Instant.EPOCH.toEpochMilli()
+    val millis2 = System.currentTimeMillis()
+    val zdt1 = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis1), ZoneId.of("Europe/Berlin"))
+    val zdt2 = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis2), ZoneId.of("Europe/Berlin"))
+    val expectedTimestamp1 = Timestamp.valueOf(zdt1.toLocalDateTime())
+    val expectedTimestamp2 = Timestamp.valueOf(zdt2.toLocalDateTime())
+
     OrcChecker("struct<f:timestamp>", "TIMESTAMP", "timestamp_table")
-      .withInputValues(List(timestamp1, timestamp2, null))
+      .withInputValues(List(new Timestamp(millis1), new Timestamp(millis2), null))
       .assertResultSet(
         table()
-          .row(timestamp1)
-          .row(timestamp2)
+          .row(expectedTimestamp1)
+          .row(expectedTimestamp2)
           .row(null)
           .matches()
       )
