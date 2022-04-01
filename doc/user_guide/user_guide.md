@@ -390,6 +390,11 @@ The following are optional parameters for import statements.
   will try to virtually splits a file into chunks with specified size, and
   imports each chunk in parallel. By default it is `67108864` (64MB).
 
+* ``TRUNCATE_STRING`` - If it is set to `true`, string values that exceed
+  maximum allowed `VARCHAR` size will be truncated. By default, it is set to
+  `false`, which will throw an exception if string length exceed maximum allowed
+  length.
+
 #### Export Optional Parameters
 
 These optional parameters only apply to the data export statements.

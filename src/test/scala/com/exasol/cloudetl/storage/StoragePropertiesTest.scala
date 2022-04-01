@@ -122,10 +122,7 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     assert(BaseProperties(properties).isParquetLowercaseSchema() === false)
   }
 
-  final def newConnectionInformation(
-    username: String,
-    password: String
-  ): ExaConnectionInformation =
+  final def newConnectionInformation(username: String, password: String): ExaConnectionInformation =
     new ExaConnectionInformation() {
       override def getType(): ExaConnectionInformation.ConnectionType =
         ExaConnectionInformation.ConnectionType.PASSWORD
@@ -158,8 +155,7 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
   test("merge returns with keyForUsername -> connection username overwritted") {
     properties = Map("CONNECTION_NAME" -> "connection_info")
     val metadata = mock[ExaMetadata]
-    val connectionInfo =
-      newConnectionInformation("usernameValue", "KEY1=secret1;usernameKey=newUsername")
+    val connectionInfo = newConnectionInformation("usernameValue", "KEY1=secret1;usernameKey=newUsername")
     when(metadata.getConnection("connection_info")).thenReturn(connectionInfo)
     val storageProperties = StorageProperties(properties, metadata).merge("usernameKey")
     assert(storageProperties.getString("usernameKey") === "newUsername")

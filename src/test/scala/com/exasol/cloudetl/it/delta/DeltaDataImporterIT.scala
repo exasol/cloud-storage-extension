@@ -3,23 +3,27 @@ package com.exasol.cloudetl.it.delta
 import java.lang.Long
 import java.sql.ResultSet
 
-import com.exasol.cloudetl.BaseDataImporter
+import com.exasol.cloudetl.BaseS3IntegrationTest
+import com.exasol.cloudetl.helper.StringGenerator
 import com.exasol.matcher.ResultSetStructureMatcher.table
 
 import org.apache.spark.sql.Dataset
+import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.SparkSession
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
 
-class DeltaDataImporterIT extends BaseDataImporter {
+class DeltaDataImporterIT extends BaseS3IntegrationTest {
 
-  private[this] var spark: SparkSession = _
-  override val schemaName = "DELTA_SCHEMA"
-  override val bucketName = "delta-bucket"
-  override val dataFormat = "delta"
+  @transient private[this] var spark: SparkSession = _
+  @transient private[this] var sqlContext: SQLContext = _
+  private[this] val schemaName = "DELTA_SCHEMA"
+  private[this] val dataFormat = "delta"
 
   override def beforeAll(): Unit = {
     super.beforeAll()
+    prepareExasolDatabase(schemaName)
+    createS3ConnectionObject()
     spark = SparkSession
       .builder()
       .appName("DeltaFormatIT")
@@ -29,6 +33,7 @@ class DeltaDataImporterIT extends BaseDataImporter {
       .config("spark.hadoop.fs.s3a.access.key", getAWSAccessKey())
       .config("spark.hadoop.fs.s3a.secret.key", getAWSSecretKey())
       .getOrCreate()
+    sqlContext = spark.sqlContext
   }
 
   override def afterAll(): Unit = {
@@ -37,9 +42,11 @@ class DeltaDataImporterIT extends BaseDataImporter {
   }
 
   test("imports delta format data") {
-    val testTable = schema.createTable("DELTA_TABLE", "C1", "INTEGER")
+    val bucketName = "delta-table-long"
+    val testTable = schema.createTable("DELTA_TABLE_LONG", "C1", "INTEGER")
+
     createBucket(bucketName)
-    writeSparkDataset(spark.range(1, 4))
+    writeSparkDataset(spark.range(1, 4), bucketName)
     importFromS3IntoExasol(schemaName, testTable, bucketName, "*", dataFormat)
     verifyImport(
       s"SELECT * FROM ${testTable.getFullyQualifiedName()} ORDER BY C1 ASC",
@@ -51,7 +58,26 @@ class DeltaDataImporterIT extends BaseDataImporter {
     )
   }
 
-  private[this] def writeSparkDataset(ds: Dataset[Long]): Unit =
+  test("import truncates long string values") {
+    val sqlContext = this.sqlContext
+    import sqlContext.implicits._
+
+    val bucketName = "delta-table-string"
+    val testTable = schema.createTable("DELTA_TABLE_STRING", "C1", "VARCHAR(2000000)")
+    createBucket(bucketName)
+
+    val longString = StringGenerator.getRandomString(2000005)
+    writeSparkDataset(spark.sparkContext.parallelize(Seq(longString)).toDS(), bucketName)
+    importFromS3IntoExasol(schemaName, testTable, bucketName, "*", dataFormat)
+    verifyImport(
+      s"SELECT * FROM ${testTable.getFullyQualifiedName()}",
+      table()
+        .row(longString.substring(0, 2000000))
+        .matches()
+    )
+  }
+
+  private[this] def writeSparkDataset[T](ds: Dataset[T], bucketName: String): Unit =
     ds.write.format("delta").mode("overwrite").save(s"s3a://$bucketName/")
 
   private[this] def verifyImport(query: String, matcher: Matcher[ResultSet]): Unit = {

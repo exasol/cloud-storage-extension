@@ -1,10 +1,14 @@
-# Cloud Storage Extension 2.3.1, released 2022-03-??
+# Cloud Storage Extension 2.3.1, released 2022-04-??
 
 Code name:
 
 ## Summary
 
-In this release we added a new parameter `TIMEZONE_UTC`, when set to `true`, the timestamp data from data sources will be set to `'UTC'` timezone. Without this parameter, or it is set to `false`, the timestamp values are imported or exported using the datanode timezone (`DBTIMEZONE`).
+In this release we added a new parameter `TIMEZONE_UTC`, when set to `true`, the timestamp data from data sources will be set to `'UTC'` timezone. Without this parameter, or it is set to `false`, the timestamp values are imported or exported using the datanode timezone (`DBTIMEZONE`). Additionally we added another parameter to truncate string values that exceed maximum allowed `VARCHAR` size.
+
+## Features
+
+* #196: Added truncation support if string values exceed Exasol maximum length
 
 ## Bug Fixes
 
