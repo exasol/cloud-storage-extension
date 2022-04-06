@@ -265,6 +265,11 @@
             <version>1.1.0</version>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${scala.compat.version}</artifactId>
             <version>3.2.1</version>
@@ -640,6 +645,18 @@
                 <version>3.2.0</version>
                 <configuration>
                     <skip>${ossindex.skip}</skip>
+                    <!-- Remove these once hadoop.version is 3.4.0 -->
+                    <excludeVulnerabilityIds>
+                        <exclude>3f596fc0-9615-4b93-b30a-d4e0532e667f</exclude>
+                        <exclude>af22d349-929c-41ae-ba6c-2f7b507026f0</exclude>
+                        <exclude>1205a1ec-0837-406f-b081-623b9fb02992</exclude>
+                        <exclude>b85a00e3-7d9b-49cf-9b19-b73f8ee60275</exclude>
+                        <exclude>5113110f-3321-491d-9506-447a3361f9cd</exclude>
+                        <exclude>fc1e8802-77e5-458f-b987-eb778c6ac2fc</exclude>
+                        <exclude>3242fdc1-bfe9-46a6-af0c-0b8f57f56eb7</exclude>
+                        <exclude>6ce886d0-2dfd-4cef-b9a4-2fb400baf5ef</exclude>
+                        <exclude>292c11e9-cf66-4d76-aaf7-b63a091f8891</exclude>
+                    </excludeVulnerabilityIds>
                 </configuration>
                 <executions>
                     <execution>
