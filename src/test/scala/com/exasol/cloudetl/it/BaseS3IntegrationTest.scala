@@ -19,8 +19,7 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
   val LONG_MIN = Long.MIN_VALUE
   val LONG_MAX = Long.MAX_VALUE
 
-  val LOCALSTACK_DOCKER_IMAGE = DockerImageName.parse("localstack/localstack:0.14")
-  val s3Container = new LocalStackContainer(LOCALSTACK_DOCKER_IMAGE)
+  val s3Container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:0.14"))
     .withServices(S3)
     .withReuse(true)
   var s3: AmazonS3 = _
