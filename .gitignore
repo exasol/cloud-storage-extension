@@ -71,3 +71,5 @@ pom.xml.versionsBackup
 *.lock
 *.orig
 *.md.html
+
+*.flattened-pom.xml

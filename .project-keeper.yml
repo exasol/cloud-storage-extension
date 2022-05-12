@@ -1,0 +1,10 @@
+sources:
+  - type: maven
+    path: pom.xml
+    modules:
+      - jar_artifact
+      - integration_tests
+excludes:
+  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build.yml'"
+  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
+  - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_upload_github_release_assets.yml'"
