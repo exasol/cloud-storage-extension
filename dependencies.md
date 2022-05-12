@@ -45,7 +45,7 @@
 | [testcontainers-scala-scalatest][59]       | [The MIT License (MIT)][15]               |
 | [Testcontainers :: Localstack][61]         | [MIT][62]                                 |
 | [Test containers for Exasol on Docker][63] | [MIT][15]                                 |
-| [Test Database Builder for Java][65]       | [MIT][15]                                 |
+| [Test Database Builder for Java][65]       | [MIT License][66]                         |
 | [Matcher for SQL Result Sets][67]          | [MIT][15]                                 |
 
 ## Plugin Dependencies
@@ -98,6 +98,7 @@
 [58]: http://opensource.org/licenses/BSD-3-Clause
 [71]: https://maven.apache.org/plugins/maven-compiler-plugin/
 [111]: https://maven.apache.org/plugins/maven-resources-plugin/
+[66]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
 [101]: https://github.com/itsallcode/openfasttrace-maven-plugin
 [109]: https://maven.apache.org/plugins/maven-clean-plugin/
 [96]: https://www.eclipse.org/legal/epl-2.0/
@@ -126,12 +127,12 @@
 [83]: https://maven.apache.org/plugins/maven-jar-plugin/
 [34]: http://www.apache.org/licenses/LICENSE-2.0
 [59]: https://github.com/testcontainers/testcontainers-scala
+[65]: https://github.com/exasol/test-db-builder-java/
 [4]: https://github.com/google/guava
 [38]: http://www.apache.org/licenses/LICENSE-2.0.html
 [51]: http://www.scalatest.org
 [45]: https://logging.apache.org/log4j/2.x/log4j-api/
 [47]: https://logging.apache.org/log4j/2.x/log4j-1.2-api/
-[65]: https://github.com/exasol/test-db-builder-java
 [2]: https://commons.apache.org/proper/commons-lang/
 [62]: http://opensource.org/licenses/MIT
 [0]: https://www.scala-lang.org/
