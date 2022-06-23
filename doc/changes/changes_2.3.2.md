@@ -14,7 +14,6 @@ Code name:
 
 ### Compile Dependency Updates
 
-* Updated `com.exasol:import-export-udf-common-scala_2.13:0.2.0` to `0.3.1`
 * Updated `com.exasol:parquet-io-java:1.3.0` to `1.3.1`
 * Updated `com.fasterxml.jackson.core:jackson-databind:2.13.2.2` to `2.13.3`
 * Updated `com.fasterxml.jackson.module:jackson-module-scala_2.13:2.13.2` to `2.13.3`
