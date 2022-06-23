@@ -18,6 +18,7 @@ Code name:
 * Updated `com.exasol:parquet-io-java:1.3.0` to `1.3.1`
 * Updated `com.fasterxml.jackson.core:jackson-databind:2.13.2.2` to `2.13.3`
 * Updated `com.fasterxml.jackson.module:jackson-module-scala_2.13:2.13.2` to `2.13.3`
+* Added `com.google.oauth-client:google-oauth-client:1.34.1`
 * Updated `com.google.protobuf:protobuf-java:3.20.0` to `3.21.1`
 * Updated `com.typesafe.scala-logging:scala-logging_2.13:3.9.4` to `3.9.5`
 * Updated `io.delta:delta-core_2.13:1.1.0` to `1.2.1`

@@ -230,6 +230,12 @@
             <artifactId>gcs-connector</artifactId>
             <version>1.9.4-hadoop3</version>
         </dependency>
+        <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2020-7692 and CVE-2021-22573 -->
+        <dependency>
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client</artifactId>
+            <version>1.34.1</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.orc</groupId>
             <artifactId>orc-core</artifactId>
@@ -482,7 +488,7 @@
                 <version>3.4.0</version>
                 <configuration>
                     <charset>UTF-8</charset>
-                    <doclint/>
+                    <doclint />
                     <serialwarn>true</serialwarn>
                     <failOnError>true</failOnError>
                     <failOnWarnings>true</failOnWarnings>
@@ -521,17 +527,33 @@
                 <artifactId>ossindex-maven-plugin</artifactId>
                 <configuration>
                     <skip>${ossindex.skip}</skip>
-                    <!-- Remove these once hadoop.version is 3.4.0 -->
                     <excludeVulnerabilityIds>
-                        <exclude>3f596fc0-9615-4b93-b30a-d4e0532e667f</exclude>
-                        <exclude>af22d349-929c-41ae-ba6c-2f7b507026f0</exclude>
-                        <exclude>1205a1ec-0837-406f-b081-623b9fb02992</exclude>
-                        <exclude>b85a00e3-7d9b-49cf-9b19-b73f8ee60275</exclude>
-                        <exclude>5113110f-3321-491d-9506-447a3361f9cd</exclude>
-                        <exclude>fc1e8802-77e5-458f-b987-eb778c6ac2fc</exclude>
-                        <exclude>3242fdc1-bfe9-46a6-af0c-0b8f57f56eb7</exclude>
-                        <exclude>6ce886d0-2dfd-4cef-b9a4-2fb400baf5ef</exclude>
-                        <exclude>292c11e9-cf66-4d76-aaf7-b63a091f8891</exclude>
+                        <!-- Vulnerabilities in transitive dependency com.squareup.okhttp:okhttp:jar:2.7.5 -->
+                        <!-- CWE-295: Improper Certificate Validation (7.5); https://ossindex.sonatype.org/vulnerability/CVE-2021-0341 -->
+                        <exclude>CVE-2021-0341</exclude>
+                        <!-- CWE-20: Improper Input Validation (5.9); https://ossindex.sonatype.org/vulnerability/sonatype-2018-0035 -->
+                        <exclude>sonatype-2018-0035</exclude>
+
+                        <!-- Vulnerabilities in org.codehaus.jackson:jackson-mapper-asl:1.9.13 -->
+                        <!-- CWE-184: Incomplete Blacklist (9.8); https://ossindex.sonatype.org/vulnerability/CVE-2017-7525 -->
+                        <exclude>CVE-2017-7525</exclude>
+                        <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (7.5); https://ossindex.sonatype.org/vulnerability/CVE-2019-10172 -->
+                        <exclude>CVE-2019-10172</exclude>
+
+                        <!-- Vulnerabilities in io.netty:netty-handler:4.1.78.Final -->
+                        <!-- CWE-300: Channel Accessible by Non-Endpoint ('Man-in-the-Middle') (6.5); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0026 -->
+                        <exclude>sonatype-2020-0026</exclude>
+                        <!-- io.grpc:grpc-core:jar:1.47.0 -->
+                        <!-- CWE-404: Improper Resource Shutdown or Release (6.5); https://ossindex.sonatype.org/vulnerability/sonatype-2021-0818 -->
+                        <exclude>sonatype-2021-0818</exclude>
+
+                        <!-- Vulnerabilities in org.apache.spark:spark-core_2.13:jar:3.3.0 -->
+                        <!-- CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') (8.8); https://ossindex.sonatype.org/vulnerability/sonatype-2022-2430 -->
+                        <exclude>sonatype-2022-2430</exclude>
+
+                        <!-- Vulnerabilities in com.google.guava:guava:jar:31.1-jre -->
+                        <!-- CWE-379: Creation of Temporary File in Directory with Incorrect Permissions (6.2); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0926 -->
+                        <exclude>sonatype-2020-0926</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
