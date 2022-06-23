@@ -1,6 +1,6 @@
-# Cloud Storage Extension 2.3.2, released 2022-??-??
+# Cloud Storage Extension 2.3.2, released 2022-06-23
 
-Code name:
+Code name: Upgrade dependencies
 
 ## Refactorings
 
