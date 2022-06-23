@@ -9,154 +9,154 @@
 | [Apache Commons Lang][2]                   | [Apache License, Version 2.0][3]              |
 | [Guava: Google Core Libraries for Java][4] | [Apache License, Version 2.0][5]              |
 | [jackson-databind][6]                      | [The Apache Software License, Version 2.0][5] |
-| [jackson-module-scala][7]                  | [The Apache Software License, Version 2.0][3] |
-| [io.grpc:grpc-netty][8]                    | [Apache 2.0][9]                               |
-| [Netty/All-in-One][10]                     | [Apache License, Version 2.0][1]              |
-| [import-export-udf-common-scala][11]       | [MIT][12]                                     |
-| [error-reporting-java][13]                 | [MIT][12]                                     |
+| [jackson-module-scala][8]                  | [The Apache Software License, Version 2.0][3] |
+| [io.grpc:grpc-netty][10]                   | [Apache 2.0][11]                              |
+| [Netty/All-in-One][12]                     | [Apache License, Version 2.0][1]              |
+| [import-export-udf-common-scala][14]       | [MIT][15]                                     |
+| [error-reporting-java][16]                 | [MIT][15]                                     |
 | Apache Hadoop Common                       | [Apache License, Version 2.0][3]              |
 | Apache Hadoop Amazon Web Services support  | [Apache License, Version 2.0][3]              |
 | Apache Hadoop Azure support                | [Apache License, Version 2.0][3]              |
 | Apache Hadoop Azure Data Lake support      | [Apache License, Version 2.0][3]              |
 | Apache Hadoop HDFS                         | [Apache License, Version 2.0][3]              |
-| [Alluxio Core - Client - HDFS][14]         | [Apache License][15]                          |
-| [Protocol Buffers [Core]][16]              | [BSD-3-Clause][17]                            |
-| [gcs-connector-hadoop3][18]                | [Apache License, Version 2.0][5]              |
-| [Google OAuth Client Library for Java][19] | [The Apache Software License, Version 2.0][3] |
-| [ORC Core][20]                             | [Apache License, Version 2.0][3]              |
-| [Apache Avro][21]                          | [Apache License, Version 2.0][3]              |
-| [delta-core][22]                           | [Apache-2.0][23]                              |
-| [Data Mapper for Jackson][24]              | [The Apache Software License, Version 2.0][5] |
-| [Spark Project SQL][25]                    | [Apache 2.0 License][26]                      |
-| [Parquet for Java][27]                     | [MIT License][28]                             |
-| [JUL to SLF4J bridge][29]                  | [MIT License][30]                             |
-| [SLF4J LOG4J-12 Binding relocated][29]     | [MIT License][30]                             |
-| [Apache Log4j API][31]                     | [Apache License, Version 2.0][3]              |
-| [Apache Log4j 1.x Compatibility API][32]   | [Apache License, Version 2.0][3]              |
-| [scala-logging][33]                        | [Apache 2.0 License][26]                      |
+| [Alluxio Core - Client - HDFS][23]         | [Apache License][24]                          |
+| [Protocol Buffers [Core]][25]              | [BSD-3-Clause][26]                            |
+| [gcs-connector-hadoop3][27]                | [Apache License, Version 2.0][5]              |
+| [Google OAuth Client Library for Java][29] | [The Apache Software License, Version 2.0][3] |
+| [ORC Core][31]                             | [Apache License, Version 2.0][3]              |
+| [Apache Avro][33]                          | [Apache License, Version 2.0][3]              |
+| [delta-core][35]                           | [Apache-2.0][36]                              |
+| [Data Mapper for Jackson][37]              | [The Apache Software License, Version 2.0][5] |
+| [Spark Project SQL][39]                    | [Apache 2.0 License][40]                      |
+| [Parquet for Java][41]                     | [MIT License][42]                             |
+| [JUL to SLF4J bridge][43]                  | [MIT License][44]                             |
+| [SLF4J LOG4J-12 Binding relocated][43]     | [MIT License][44]                             |
+| [Apache Log4j API][47]                     | [Apache License, Version 2.0][3]              |
+| [Apache Log4j 1.x Compatibility API][49]   | [Apache License, Version 2.0][3]              |
+| [scala-logging][51]                        | [Apache 2.0 License][40]                      |
 
 ## Test Dependencies
 
 | Dependency                                 | License                                   |
 | ------------------------------------------ | ----------------------------------------- |
-| [scalatest][34]                            | [the Apache License, ASL Version 2.0][23] |
-| [scalatestplus-mockito][35]                | [Apache-2.0][23]                          |
-| [mockito-core][36]                         | [The MIT License][37]                     |
-| [Hamcrest][38]                             | [BSD License 3][39]                       |
-| [testcontainers-scala-scalatest][40]       | [The MIT License (MIT)][12]               |
-| [Testcontainers :: Localstack][41]         | [MIT][42]                                 |
-| [Test containers for Exasol on Docker][43] | [MIT][12]                                 |
-| [Test Database Builder for Java][44]       | [MIT License][45]                         |
-| [Matcher for SQL Result Sets][46]          | [MIT][12]                                 |
+| [scalatest][53]                            | [the Apache License, ASL Version 2.0][36] |
+| [scalatestplus-mockito][55]                | [Apache-2.0][36]                          |
+| [mockito-core][57]                         | [The MIT License][58]                     |
+| [Hamcrest][59]                             | [BSD License 3][60]                       |
+| [testcontainers-scala-scalatest][61]       | [The MIT License (MIT)][15]               |
+| [Testcontainers :: Localstack][63]         | [MIT][64]                                 |
+| [Test containers for Exasol on Docker][65] | [MIT][15]                                 |
+| [Test Database Builder for Java][67]       | [MIT License][68]                         |
+| [Matcher for SQL Result Sets][69]          | [MIT][15]                                 |
 
 ## Plugin Dependencies
 
 | Dependency                                              | License                                       |
 | ------------------------------------------------------- | --------------------------------------------- |
-| [SonarQube Scanner for Maven][47]                       | [GNU LGPL 3][48]                              |
-| [Apache Maven Compiler Plugin][49]                      | [Apache License, Version 2.0][3]              |
-| [Apache Maven Enforcer Plugin][50]                      | [Apache License, Version 2.0][3]              |
-| [Maven Flatten Plugin][51]                              | [Apache Software Licenese][5]                 |
-| [org.sonatype.ossindex.maven:ossindex-maven-plugin][52] | [ASL2][5]                                     |
-| [Reproducible Build Maven Plugin][53]                   | [Apache 2.0][5]                               |
-| [scala-maven-plugin][54]                                | [Public domain (Unlicense)][55]               |
-| [ScalaTest Maven Plugin][56]                            | [the Apache License, ASL Version 2.0][23]     |
-| [Apache Maven Javadoc Plugin][57]                       | [Apache License, Version 2.0][3]              |
-| [Maven Surefire Plugin][58]                             | [Apache License, Version 2.0][3]              |
-| [Versions Maven Plugin][59]                             | [Apache License, Version 2.0][3]              |
-| [Apache Maven Assembly Plugin][60]                      | [Apache License, Version 2.0][3]              |
-| [Apache Maven JAR Plugin][61]                           | [Apache License, Version 2.0][3]              |
-| [Artifact reference checker and unifier][62]            | [MIT][12]                                     |
-| [Maven Failsafe Plugin][63]                             | [Apache License, Version 2.0][3]              |
-| [JaCoCo :: Maven Plugin][64]                            | [Eclipse Public License 2.0][65]              |
-| [error-code-crawler-maven-plugin][66]                   | [MIT][12]                                     |
-| [Project keeper maven plugin][67]                       | [The MIT License][68]                         |
-| [OpenFastTrace Maven Plugin][69]                        | [GNU General Public License v3.0][70]         |
-| [Scalastyle Maven Plugin][71]                           | [Apache 2.0][26]                              |
-| [spotless-maven-plugin][72]                             | [The Apache Software License, Version 2.0][3] |
-| [scalafix-maven-plugin][73]                             | [BSD-3-Clause][17]                            |
-| [Maven Clean Plugin][74]                                | [The Apache Software License, Version 2.0][5] |
-| [Maven Resources Plugin][75]                            | [The Apache Software License, Version 2.0][5] |
-| [Maven Install Plugin][76]                              | [The Apache Software License, Version 2.0][5] |
-| [Maven Deploy Plugin][77]                               | [The Apache Software License, Version 2.0][5] |
-| [Maven Site Plugin 3][78]                               | [The Apache Software License, Version 2.0][5] |
+| [SonarQube Scanner for Maven][71]                       | [GNU LGPL 3][72]                              |
+| [Apache Maven Compiler Plugin][73]                      | [Apache License, Version 2.0][3]              |
+| [Apache Maven Enforcer Plugin][75]                      | [Apache License, Version 2.0][3]              |
+| [Maven Flatten Plugin][77]                              | [Apache Software Licenese][5]                 |
+| [org.sonatype.ossindex.maven:ossindex-maven-plugin][79] | [ASL2][5]                                     |
+| [Reproducible Build Maven Plugin][81]                   | [Apache 2.0][5]                               |
+| [scala-maven-plugin][83]                                | [Public domain (Unlicense)][84]               |
+| [ScalaTest Maven Plugin][85]                            | [the Apache License, ASL Version 2.0][36]     |
+| [Apache Maven Javadoc Plugin][87]                       | [Apache License, Version 2.0][3]              |
+| [Maven Surefire Plugin][89]                             | [Apache License, Version 2.0][3]              |
+| [Versions Maven Plugin][91]                             | [Apache License, Version 2.0][3]              |
+| [Apache Maven Assembly Plugin][93]                      | [Apache License, Version 2.0][3]              |
+| [Apache Maven JAR Plugin][95]                           | [Apache License, Version 2.0][3]              |
+| [Artifact reference checker and unifier][97]            | [MIT][15]                                     |
+| [Maven Failsafe Plugin][99]                             | [Apache License, Version 2.0][3]              |
+| [JaCoCo :: Maven Plugin][101]                           | [Eclipse Public License 2.0][102]             |
+| [error-code-crawler-maven-plugin][103]                  | [MIT][15]                                     |
+| [Project keeper maven plugin][105]                      | [The MIT License][106]                        |
+| [OpenFastTrace Maven Plugin][107]                       | [GNU General Public License v3.0][108]        |
+| [Scalastyle Maven Plugin][109]                          | [Apache 2.0][40]                              |
+| [spotless-maven-plugin][111]                            | [The Apache Software License, Version 2.0][3] |
+| [scalafix-maven-plugin][113]                            | [BSD-3-Clause][26]                            |
+| [Maven Clean Plugin][115]                               | [The Apache Software License, Version 2.0][5] |
+| [Maven Resources Plugin][117]                           | [The Apache Software License, Version 2.0][5] |
+| [Maven Install Plugin][119]                             | [The Apache Software License, Version 2.0][5] |
+| [Maven Deploy Plugin][121]                              | [The Apache Software License, Version 2.0][5] |
+| [Maven Site Plugin 3][123]                              | [The Apache Software License, Version 2.0][5] |
 
-[0]: https://www.scala-lang.org/
-[1]: https://www.apache.org/licenses/LICENSE-2.0
-[2]: https://commons.apache.org/proper/commons-lang/
-[3]: https://www.apache.org/licenses/LICENSE-2.0.txt
-[4]: https://github.com/google/guava
+[55]: https://github.com/scalatest/scalatestplus-mockito
+[16]: https://github.com/exasol/error-reporting-java
 [5]: http://www.apache.org/licenses/LICENSE-2.0.txt
+[109]: http://www.scalastyle.org
+[89]: https://maven.apache.org/surefire/maven-surefire-plugin/
+[111]: https://github.com/diffplug/spotless
+[115]: http://maven.apache.org/plugins/maven-clean-plugin/
+[39]: https://spark.apache.org/
+[14]: https://github.com/exasol/import-export-udf-common-scala
+[15]: https://opensource.org/licenses/MIT
+[57]: https://github.com/mockito/mockito
+[8]: https://github.com/FasterXML/jackson-module-scala
+[11]: https://opensource.org/licenses/Apache-2.0
+[42]: https://github.com/exasol/parquet-io-java/blob/main/LICENSE
+[77]: https://www.mojohaus.org/flatten-maven-plugin/
+[35]: https://delta.io/
+[91]: http://www.mojohaus.org/versions-maven-plugin/
+[105]: https://github.com/exasol/project-keeper/
+[37]: https://github.com/codehaus/jackson
+[60]: http://opensource.org/licenses/BSD-3-Clause
+[73]: https://maven.apache.org/plugins/maven-compiler-plugin/
+[68]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
+[107]: https://github.com/itsallcode/openfasttrace-maven-plugin
+[102]: https://www.eclipse.org/legal/epl-2.0/
 [6]: http://github.com/FasterXML/jackson
-[7]: https://github.com/FasterXML/jackson-module-scala
-[8]: https://github.com/grpc/grpc-java
-[9]: https://opensource.org/licenses/Apache-2.0
-[10]: https://netty.io/
-[11]: https://github.com/exasol/import-export-udf-common-scala
-[12]: https://opensource.org/licenses/MIT
-[13]: https://github.com/exasol/error-reporting-java
-[14]: https://www.alluxio.io
-[15]: https://github.com/alluxio/alluxio/blob/master/LICENSE
-[16]: https://github.com/protocolbuffers/protobuf/tree/main/java
-[17]: https://opensource.org/licenses/BSD-3-Clause
-[18]: https://github.com/GoogleCloudDataproc/hadoop-connectors/tree/master/gcs
-[19]: https://github.com/googleapis/google-oauth-java-client
-[20]: https://orc.apache.org/
-[21]: https://avro.apache.org
-[22]: https://delta.io/
-[23]: http://www.apache.org/licenses/LICENSE-2.0
-[24]: https://github.com/codehaus/jackson
-[25]: https://spark.apache.org/
-[26]: http://www.apache.org/licenses/LICENSE-2.0.html
-[27]: https://github.com/exasol/parquet-io-java/
-[28]: https://github.com/exasol/parquet-io-java/blob/main/LICENSE
-[29]: http://www.slf4j.org
-[30]: http://www.opensource.org/licenses/mit-license.php
-[31]: https://logging.apache.org/log4j/2.x/log4j-api/
-[32]: https://logging.apache.org/log4j/2.x/log4j-1.2-api/
-[33]: https://github.com/lightbend/scala-logging
-[34]: http://www.scalatest.org
-[35]: https://github.com/scalatest/scalatestplus-mockito
-[36]: https://github.com/mockito/mockito
-[37]: https://github.com/mockito/mockito/blob/main/LICENSE
-[38]: http://hamcrest.org/JavaHamcrest/
-[39]: http://opensource.org/licenses/BSD-3-Clause
-[40]: https://github.com/testcontainers/testcontainers-scala
-[41]: https://testcontainers.org
-[42]: http://opensource.org/licenses/MIT
-[43]: https://github.com/exasol/exasol-testcontainers
-[44]: https://github.com/exasol/test-db-builder-java/
-[45]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
-[46]: https://github.com/exasol/hamcrest-resultset-matcher
-[47]: http://sonarsource.github.io/sonar-scanner-maven/
-[48]: http://www.gnu.org/licenses/lgpl.txt
-[49]: https://maven.apache.org/plugins/maven-compiler-plugin/
-[50]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
-[51]: https://www.mojohaus.org/flatten-maven-plugin/
-[52]: https://sonatype.github.io/ossindex-maven/maven-plugin/
-[53]: http://zlika.github.io/reproducible-build-maven-plugin
-[54]: http://github.com/davidB/scala-maven-plugin
-[55]: http://unlicense.org/
-[56]: https://github.com/scalatest/scalatest-maven-plugin
-[57]: https://maven.apache.org/plugins/maven-javadoc-plugin/
-[58]: https://maven.apache.org/surefire/maven-surefire-plugin/
-[59]: http://www.mojohaus.org/versions-maven-plugin/
-[60]: https://maven.apache.org/plugins/maven-assembly-plugin/
-[61]: https://maven.apache.org/plugins/maven-jar-plugin/
-[62]: https://github.com/exasol/artifact-reference-checker-maven-plugin
-[63]: https://maven.apache.org/surefire/maven-failsafe-plugin/
-[64]: https://www.jacoco.org/jacoco/trunk/doc/maven.html
-[65]: https://www.eclipse.org/legal/epl-2.0/
-[66]: https://github.com/exasol/error-code-crawler-maven-plugin
-[67]: https://github.com/exasol/project-keeper/
-[68]: https://github.com/exasol/project-keeper/blob/main/LICENSE
-[69]: https://github.com/itsallcode/openfasttrace-maven-plugin
-[70]: https://www.gnu.org/licenses/gpl-3.0.html
-[71]: http://www.scalastyle.org
-[72]: https://github.com/diffplug/spotless
-[73]: https://github.com/evis/scalafix-maven-plugin
-[74]: http://maven.apache.org/plugins/maven-clean-plugin/
-[75]: http://maven.apache.org/plugins/maven-resources-plugin/
-[76]: http://maven.apache.org/plugins/maven-install-plugin/
-[77]: http://maven.apache.org/plugins/maven-deploy-plugin/
-[78]: http://maven.apache.org/plugins/maven-site-plugin/
+[72]: http://www.gnu.org/licenses/lgpl.txt
+[84]: http://unlicense.org/
+[1]: https://www.apache.org/licenses/LICENSE-2.0
+[101]: https://www.jacoco.org/jacoco/trunk/doc/maven.html
+[58]: https://github.com/mockito/mockito/blob/main/LICENSE
+[69]: https://github.com/exasol/hamcrest-resultset-matcher
+[81]: http://zlika.github.io/reproducible-build-maven-plugin
+[44]: http://www.opensource.org/licenses/mit-license.php
+[26]: https://opensource.org/licenses/BSD-3-Clause
+[71]: http://sonarsource.github.io/sonar-scanner-maven/
+[12]: https://netty.io/
+[24]: https://github.com/alluxio/alluxio/blob/master/LICENSE
+[33]: https://avro.apache.org
+[51]: https://github.com/lightbend/scala-logging
+[10]: https://github.com/grpc/grpc-java
+[59]: http://hamcrest.org/JavaHamcrest/
+[43]: http://www.slf4j.org
+[117]: http://maven.apache.org/plugins/maven-resources-plugin/
+[27]: https://github.com/GoogleCloudDataproc/hadoop-connectors/tree/master/gcs
+[97]: https://github.com/exasol/artifact-reference-checker-maven-plugin
+[113]: https://github.com/evis/scalafix-maven-plugin
+[95]: https://maven.apache.org/plugins/maven-jar-plugin/
+[36]: http://www.apache.org/licenses/LICENSE-2.0
+[29]: https://github.com/googleapis/google-oauth-java-client
+[61]: https://github.com/testcontainers/testcontainers-scala
+[67]: https://github.com/exasol/test-db-builder-java/
+[4]: https://github.com/google/guava
+[40]: http://www.apache.org/licenses/LICENSE-2.0.html
+[53]: http://www.scalatest.org
+[47]: https://logging.apache.org/log4j/2.x/log4j-api/
+[99]: https://maven.apache.org/surefire/maven-failsafe-plugin/
+[49]: https://logging.apache.org/log4j/2.x/log4j-1.2-api/
+[2]: https://commons.apache.org/proper/commons-lang/
+[64]: http://opensource.org/licenses/MIT
+[0]: https://www.scala-lang.org/
+[65]: https://github.com/exasol/exasol-testcontainers
+[23]: https://www.alluxio.io
+[106]: https://github.com/exasol/project-keeper/blob/main/LICENSE
+[108]: https://www.gnu.org/licenses/gpl-3.0.html
+[3]: https://www.apache.org/licenses/LICENSE-2.0.txt
+[75]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
+[25]: https://github.com/protocolbuffers/protobuf/tree/main/java
+[119]: http://maven.apache.org/plugins/maven-install-plugin/
+[79]: https://sonatype.github.io/ossindex-maven/maven-plugin/
+[63]: https://testcontainers.org
+[83]: http://github.com/davidB/scala-maven-plugin
+[85]: https://github.com/scalatest/scalatest-maven-plugin
+[41]: https://github.com/exasol/parquet-io-java/
+[121]: http://maven.apache.org/plugins/maven-deploy-plugin/
+[123]: http://maven.apache.org/plugins/maven-site-plugin/
+[87]: https://maven.apache.org/plugins/maven-javadoc-plugin/
+[31]: https://orc.apache.org/
+[103]: https://github.com/exasol/error-code-crawler-maven-plugin
+[93]: https://maven.apache.org/plugins/maven-assembly-plugin/

@@ -45,7 +45,7 @@ Code name:
 
 * Updated `com.diffplug.spotless:spotless-maven-plugin:2.22.0` to `2.22.8`
 * Updated `com.exasol:artifact-reference-checker-maven-plugin:0.4.1` to `0.4.0`
-* Updated `com.exasol:project-keeper-maven-plugin:1.3.4` to `2.5.0`
+* Updated `com.exasol:project-keeper-maven-plugin:1.3.4` to `2.4.6`
 * Updated `net.alchim31.maven:scala-maven-plugin:4.6.1` to `4.6.3`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:3.2.0` to `2.5`
 * Added `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M5`
