@@ -68,7 +68,7 @@ class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with
   test("stream returns records from the latest delta snapshot") {
     saveSparkDataset(spark.range(1, 6), None)
     val bucket = getBucket(properties)
-    val set = collectToSet[Int](bucket)
+    val set = collectToSet(bucket)
     assert(set === Set(1, 2, 3, 4, 5))
   }
 
@@ -76,7 +76,7 @@ class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with
     saveSparkDataset(spark.range(1, 6), None)
     saveSparkDataset(spark.range(10, 13), Option("overwrite"))
     val bucket = getBucket(properties)
-    val set = collectToSet[Int](bucket)
+    val set = collectToSet(bucket)
     assert(set === Set(10, 11, 12))
   }
 
@@ -87,13 +87,13 @@ class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with
       df.write.format("delta").mode(mode).save(path)
     }
 
-  private[this] def collectToSet[T](bucket: Bucket): Set[T] = {
-    val set = scala.collection.mutable.Set[T]()
+  private[this] def collectToSet(bucket: Bucket): Set[Long] = {
+    val set = scala.collection.mutable.Set[Long]()
     val conf = bucket.getConfiguration()
     bucket.getPaths().map { path =>
       val source = ParquetSourceTest(path, conf)
       source.stream().foreach { row =>
-        set.add(row.getAs[T](0))
+        set.add(row.getAs[Long](0))
       }
       source.close()
     }

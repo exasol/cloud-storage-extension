@@ -2,7 +2,7 @@ name: Broken Links Checker
 
 on:
   schedule:
-    - cron: "0 5 * * *"
+    - cron: "0 5 * * 0"
   push:
     branches:
       - main
@@ -19,8 +19,8 @@ jobs:
       - name: Configure broken links checker
         run: |
           mkdir -p ./target
-          echo '{ "aliveStatusCodes": [429, 200] }' > ./target/broken_links_checker.json
-      - uses: gaurav-nelson/github-action-markdown-link-check@1.0.13
+          echo '{ "aliveStatusCodes": [429, 200], "ignorePatterns": [{"pattern": "^https?://(www.)?opensource.org"}] }' > ./target/broken_links_checker.json
+      - uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
           use-quiet-mode: 'yes'
           use-verbose-mode: 'yes'
