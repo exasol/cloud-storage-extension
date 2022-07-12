@@ -5,6 +5,9 @@ import java.lang.Long
 
 import com.exasol.dbbuilder.dialects.Table
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider
+import com.amazonaws.auth.BasicAWSCredentials
+import com.amazonaws.client.builder.AwsClientBuilder
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model._
@@ -40,15 +43,25 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
     s3 = AmazonS3ClientBuilder
       .standard()
       .withPathStyleAccessEnabled(true)
-      .withEndpointConfiguration(s3Container.getEndpointConfiguration(S3))
-      .withCredentials(s3Container.getDefaultCredentialsProvider())
+      .withEndpointConfiguration(getS3EndpointConfiguration())
+      .withCredentials(
+        new AWSStaticCredentialsProvider(
+          new BasicAWSCredentials(s3Container.getAccessKey(), s3Container.getSecretKey())
+        )
+      )
       .disableChunkedEncoding()
       .build()
-    s3Endpoint = s3Container
-      .getEndpointConfiguration(S3)
+
+    s3Endpoint = getS3EndpointConfiguration()
       .getServiceEndpoint()
       .replaceAll("127.0.0.1", getS3ContainerNetworkGatewayAddress())
   }
+
+  private[this] def getS3EndpointConfiguration(): AwsClientBuilder.EndpointConfiguration =
+    new AwsClientBuilder.EndpointConfiguration(
+      s3Container.getEndpointOverride(LocalStackContainer.Service.S3).toString(),
+      s3Container.getRegion()
+    )
 
   def createS3ConnectionObject(): Unit = {
     val secret = s"S3_ACCESS_KEY=${getAWSAccessKey()};S3_SECRET_KEY=${getAWSSecretKey()}"
@@ -56,11 +69,9 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
     ()
   }
 
-  def getAWSAccessKey(): String =
-    s3Container.getDefaultCredentialsProvider().getCredentials().getAWSAccessKeyId()
+  def getAWSAccessKey(): String = s3Container.getAccessKey()
 
-  def getAWSSecretKey(): String =
-    s3Container.getDefaultCredentialsProvider().getCredentials().getAWSSecretKey()
+  def getAWSSecretKey(): String = s3Container.getSecretKey()
 
   def uploadFileToS3(bucket: String, file: HPath): Unit = {
     createBucket(bucket)
