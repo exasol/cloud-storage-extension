@@ -5,8 +5,7 @@ import scala.jdk.CollectionConverters._
 import com.exasol.ExaExportSpecification
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.bucket.Bucket
-import com.exasol.cloudetl.parallelism.FixedUdfCountCalculator
-import com.exasol.cloudetl.parallelism.MemoryUdfCountCalculator
+import com.exasol.cloudetl.helper.ExportParallelismCalculator
 import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.errorreporting.ExaError
 
@@ -30,7 +29,7 @@ object TableExportQueryGenerator {
     deleteBucketPathIfRequired(bucket)
 
     val bucketPath = bucket.bucketPath
-    val parallelism = getParallelism(metadata, storageProperties)
+    val parallelism = ExportParallelismCalculator(metadata, storageProperties).getParallelism()
     val storagePropertiesStr = storageProperties.mkString()
     val scriptSchema = metadata.getScriptSchema()
     val srcColumns = getSourceColumns(exportSpec)
@@ -57,26 +56,6 @@ object TableExportQueryGenerator {
     }
     ()
   }
-
-  private[this] def getParallelism(metadata: ExaMetadata, storageProperties: StorageProperties): String =
-    storageProperties
-      .getParallelism()
-      .fold {
-        val multiplier = getCoresPerNode(metadata, storageProperties)
-        String.format("iproc(), mod(rownum,%d)", multiplier)
-      }(identity)
-
-  private[this] def getCoresPerNode(metadata: ExaMetadata, storageProperties: StorageProperties): Int = {
-    val coresPerNode = Runtime.getRuntime().availableProcessors()
-    math.min(coresPerNode, getCoresLimitedByMemory(metadata, storageProperties))
-  }
-
-  private[this] def getCoresLimitedByMemory(metadata: ExaMetadata, storageProperties: StorageProperties): Int =
-    if (storageProperties.hasUdfMemory()) {
-      MemoryUdfCountCalculator(metadata, storageProperties.getUdfMemory()).getNumberOfCoresLimitedByMemoryPerNode()
-    } else {
-      FixedUdfCountCalculator(metadata).getNumberOfCoresLimitedByMemoryPerNode()
-    }
 
   /** Returns source column names with quotes removed. */
   private[this] def getSourceColumns(spec: ExaExportSpecification): Seq[String] =

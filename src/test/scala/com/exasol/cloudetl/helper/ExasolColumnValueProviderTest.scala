@@ -1,4 +1,4 @@
-package com.exasol.cloudetl.util
+package com.exasol.cloudetl.helper
 
 import java.math.BigDecimal
 import java.sql.Date
