@@ -2,6 +2,7 @@ package com.exasol.cloudetl.scriptclasses
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.sql.ResultSet
 
 import com.exasol.cloudetl.BaseS3IntegrationTest
 import com.exasol.cloudetl.TestFileManager
@@ -11,7 +12,6 @@ import org.apache.hadoop.fs.{Path => HPath}
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
 import org.scalatest.BeforeAndAfterEach
-import java.sql.ResultSet
 
 class FilesMetadataReaderIT extends BaseS3IntegrationTest with BeforeAndAfterEach with TestFileManager {
 

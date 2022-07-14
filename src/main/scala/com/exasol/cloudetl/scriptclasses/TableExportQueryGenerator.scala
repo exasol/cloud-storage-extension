@@ -5,9 +5,9 @@ import scala.jdk.CollectionConverters._
 import com.exasol.ExaExportSpecification
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.bucket.Bucket
-import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.cloudetl.parallelism.FixedUdfCountCalculator
 import com.exasol.cloudetl.parallelism.MemoryUdfCountCalculator
+import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.fs.Path

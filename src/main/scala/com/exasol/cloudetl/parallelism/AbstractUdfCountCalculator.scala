@@ -1,7 +1,8 @@
 package com.exasol.cloudetl.parallelism
 
-import com.exasol.ExaMetadata
 import java.math.BigInteger
+
+import com.exasol.ExaMetadata
 
 /**
  * An implementation of {@link UdfCountCalculator} that uses fixed memory value for an UDF.

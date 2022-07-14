@@ -1,13 +1,13 @@
 package com.exasol.cloudetl.it.scriptclasses
 
 import java.util.List
-import java.util.stream.Stream;
+import java.util.stream.Stream
 
 import com.exasol.cloudetl.BaseS3IntegrationTest
 import com.exasol.dbbuilder.dialects.Table
 
-import org.hamcrest.Matchers.equalTo;
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.equalTo
 import org.scalatest.BeforeAndAfterEach
 
 class ExportParallelismIT extends BaseS3IntegrationTest with BeforeAndAfterEach {

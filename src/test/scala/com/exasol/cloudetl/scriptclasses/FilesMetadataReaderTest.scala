@@ -1,11 +1,11 @@
 package com.exasol.cloudetl.scriptclasses
 
 import java.lang.Long
+import java.math.BigInteger
 
 import com.exasol.ExaMetadata
 
 import org.mockito.Mockito._
-import java.math.BigInteger
 
 class FilesMetadataReaderTest extends StorageTest {
 
