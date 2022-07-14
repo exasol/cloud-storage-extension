@@ -10,7 +10,7 @@ import com.exasol.cloudetl.storage.StorageProperties
  */
 object FilesImportQueryGenerator {
 
-  private[this] val DEFAULT_PARALLELISM = "nproc()"
+  private[this] val DEFAULT_PARALLELISM = "65536"
 
   /**
    * Generates an Exasol SQL for the data import query.

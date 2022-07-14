@@ -79,6 +79,18 @@ class StorageProperties(private val properties: Map[String, String], private val
   final def getParallelism(defaultValue: => String): String =
     get(PARALLELISM).fold(defaultValue)(identity)
 
+  /** Checks if a {@code UDF_MEMORY} property is provided. */
+  final def hasUdfMemory(): Boolean =
+    containsKey(UDF_MEMORY)
+
+  /**
+   * Returns the UDF memory value in MBs.
+   *
+   * If it is not set, returns default value {@code 500}.
+   */
+  final def getUdfMemory(): Long =
+    get(UDF_MEMORY).fold(500L)(_.toLong * 1000000L)
+
   /**
    * Checks if the overwite parameter is set to true.
    *
@@ -149,6 +161,9 @@ object StorageProperties extends CommonProperties {
 
   /** An optional property key name for the parallelism. */
   private[storage] final val PARALLELISM: String = "PARALLELISM"
+
+  /** An optional property key name for the UDF memory. */
+  private[storage] final val UDF_MEMORY: String = "UDF_MEMORY"
 
   /** An optional property key name for the overwite. */
   private[storage] final val OVERWRITE: String = "OVERWRITE"

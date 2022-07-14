@@ -57,6 +57,12 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
       .replaceAll("127.0.0.1", getS3ContainerNetworkGatewayAddress())
   }
 
+  def deleteBucketObjects(bucketName: String): Unit =
+    s3.listObjects(bucketName).getObjectSummaries().forEach(summary => s3.deleteObject(bucketName, summary.getKey()))
+
+  def deleteBucket(bucketName: String): Unit =
+    s3.deleteBucket(bucketName)
+
   private[this] def getS3EndpointConfiguration(): AwsClientBuilder.EndpointConfiguration =
     new AwsClientBuilder.EndpointConfiguration(
       s3Container.getEndpointOverride(LocalStackContainer.Service.S3).toString(),

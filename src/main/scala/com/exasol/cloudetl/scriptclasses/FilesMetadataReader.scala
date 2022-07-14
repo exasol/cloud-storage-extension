@@ -4,6 +4,8 @@ import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.emitter.FilesMetadataEmitter
 import com.exasol.cloudetl.storage.StorageProperties
+import com.exasol.cloudetl.parallelism.FixedUdfCountCalculator
+import com.exasol.cloudetl.parallelism.MemoryUdfCountCalculator
 
 import com.typesafe.scalalogging.LazyLogging
 
@@ -24,11 +26,29 @@ object FilesMetadataReader extends LazyLogging {
    */
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
     val bucketPath = iterator.getString(BUCKET_PATH_INDEX)
-    val parallelism = iterator.getInteger(PARALLELISM_INDEX)
+    val storageProperties = StorageProperties(iterator.getString(STORAGE_PROPERTIES_INDEX), metadata)
+    val parallelism = calculateParallelism(iterator.getInteger(PARALLELISM_INDEX), metadata, storageProperties)
     logger.info(s"Reading metadata from bucket path '$bucketPath' with parallelism '$parallelism'.")
 
-    val storageProperties = StorageProperties(iterator.getString(STORAGE_PROPERTIES_INDEX), metadata)
     FilesMetadataEmitter(storageProperties, parallelism).emit(iterator)
+  }
+
+  private[this] def calculateParallelism(
+    userRequestedParallelism: Int,
+    metadata: ExaMetadata,
+    storageProperties: StorageProperties
+  ): Int = {
+    val calculatedParallelism = getUdfCount(metadata, storageProperties)
+    math.min(userRequestedParallelism, calculatedParallelism)
+  }
+
+  private[this] def getUdfCount(metadata: ExaMetadata, storageProperties: StorageProperties): Int = {
+    val coresPerNode = Runtime.getRuntime().availableProcessors()
+    if (storageProperties.hasUdfMemory()) {
+      MemoryUdfCountCalculator(metadata, storageProperties.getUdfMemory()).getUdfCount(coresPerNode)
+    } else {
+      FixedUdfCountCalculator(metadata).getUdfCount(coresPerNode)
+    }
   }
 
 }
