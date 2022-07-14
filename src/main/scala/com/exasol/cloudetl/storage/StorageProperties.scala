@@ -71,13 +71,9 @@ class StorageProperties(private val properties: Map[String, String], private val
   /** Returns a chunk size for splitting a Parquet file. */
   final def getChunkSize(): Long = get(CHUNK_SIZE).fold(DEFAULT_CHUNK_SIZE)(_.toLong)
 
-  /**
-   * Returns the number of partitions provided as user property.
-   *
-   * If it is not set, returns default value {@code nproc}.
-   */
-  final def getParallelism(defaultValue: => String): String =
-    get(PARALLELISM).fold(defaultValue)(identity)
+  /** Returns the number of partitions provided as user property. */
+  final def getParallelism(): Option[String] =
+    get(PARALLELISM)
 
   /** Checks if a {@code UDF_MEMORY} property is provided. */
   final def hasUdfMemory(): Boolean =

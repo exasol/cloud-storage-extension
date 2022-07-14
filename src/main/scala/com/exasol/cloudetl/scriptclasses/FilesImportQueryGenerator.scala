@@ -25,7 +25,7 @@ object FilesImportQueryGenerator {
 
     val scriptSchema = metadata.getScriptSchema()
     val bucketPath = bucket.bucketPath
-    val parallelism = storageProperties.getParallelism(DEFAULT_PARALLELISM)
+    val parallelism = storageProperties.getParallelism().getOrElse(DEFAULT_PARALLELISM)
     val storagePropertiesAsString = storageProperties.mkString()
 
     s"""|SELECT
