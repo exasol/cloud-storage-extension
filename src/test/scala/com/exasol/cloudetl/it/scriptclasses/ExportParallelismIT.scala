@@ -8,6 +8,7 @@ import com.exasol.dbbuilder.dialects.Table
 
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.lessThanOrEqualTo
 import org.scalatest.BeforeAndAfterEach
 
 class ExportParallelismIT extends BaseS3IntegrationTest with BeforeAndAfterEach {
@@ -45,7 +46,8 @@ class ExportParallelismIT extends BaseS3IntegrationTest with BeforeAndAfterEach 
 
   test("exports using auto parallelism with udf memory parameter") {
     exportData("UDF_MEMORY = '250'")
-    assertThat(listObjects(bucketName).size(), equalTo(5))
+    // export does not have to use all instances, therefore comparing with lessThanOrEqualTo
+    assertThat(listObjects(bucketName).size(): Integer, lessThanOrEqualTo(Integer.valueOf(5)))
   }
 
   def exportData(parallelism: String): Unit =

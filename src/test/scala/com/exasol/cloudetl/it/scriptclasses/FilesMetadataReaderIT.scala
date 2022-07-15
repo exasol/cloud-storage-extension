@@ -112,7 +112,10 @@ class FilesMetadataReaderIT extends BaseS3IntegrationTest with BeforeAndAfterEac
 
   private[this] def runMetadataScript(parallelism: String, properties: String): ResultSet =
     executeQuery(
-      s"SELECT filename, partition_index FROM (SELECT IMPORT_METADATA('$bucketName', '$properties', $parallelism))"
+      s"""|SELECT filename, partition_index
+          |FROM (SELECT IMPORT_METADATA('$bucketName', '$properties', $parallelism))
+          |ORDER BY filename
+       """.stripMargin
     )
 
   private[this] def createAndUploadFiles(numOfFiles: Int): Unit = {
