@@ -83,17 +83,17 @@ class FilesMetadataReaderIT extends BaseS3IntegrationTest with BeforeAndAfterEac
 
   test("partitions files using udf memory parameter value") {
     createAndUploadFiles(6)
-    val properties = getPropertiesString() + ";UDF_MEMORY -> 250"
-    // Memory limit: (1342177280 MB memory per node / 250000000 MB UDF memory = 5).
-    // Calculated parallelism: 1 node * min(6 cores per node, 5 cores limited by memory) = 5
+    val properties = getPropertiesString() + ";UDF_MEMORY -> 750"
+    // Memory limit: (1342177280 MB memory per node / 750000000 MB UDF memory = 1).
+    // Calculated parallelism: 1 node * min(6 cores per node, 1 cores limited by memory) = 1
     verify(
       runMetadataScript("65536", properties),
       table()
         .row("s3a://filesmetadata/part-001", "0")
-        .row("s3a://filesmetadata/part-002", "1")
-        .row("s3a://filesmetadata/part-003", "2")
-        .row("s3a://filesmetadata/part-004", "3")
-        .row("s3a://filesmetadata/part-005", "4")
+        .row("s3a://filesmetadata/part-002", "0")
+        .row("s3a://filesmetadata/part-003", "0")
+        .row("s3a://filesmetadata/part-004", "0")
+        .row("s3a://filesmetadata/part-005", "0")
         .row("s3a://filesmetadata/part-006", "0")
         .matches()
     )
