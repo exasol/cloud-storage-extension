@@ -1,6 +1,6 @@
-# Cloud Storage Extension 2.4.0, released 2022-??-??
+# Cloud Storage Extension 2.4.0, released 2022-07-19
 
-Code name:
+Code name: Support for automatic parallelism
 
 ## Feature
 
