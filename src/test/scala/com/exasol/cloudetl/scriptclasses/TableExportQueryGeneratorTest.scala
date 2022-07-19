@@ -10,13 +10,21 @@ import org.mockito.Mockito._
 
 class TableExportQueryGeneratorTest extends PathTest {
 
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    when(metadata.getNodeCount()).thenReturn(1)
+    when(metadata.getMemoryLimit()).thenReturn(new java.math.BigInteger("2000000000")) // 2GB
+    ()
+  }
+
   test("generateSqlForExportSpec returns SQL statement") {
+    val params = properties ++ Map("PARALLELISM" -> "iproc()")
     when(metadata.getScriptSchema()).thenReturn(schema)
-    when(exportSpec.getParameters()).thenReturn(properties.asJava)
+    when(exportSpec.getParameters()).thenReturn(params.asJava)
     val srcCols = Seq("tbl.col_int", "c_bool", "c_char")
     when(exportSpec.getSourceColumnNames).thenReturn(srcCols.asJava)
 
-    val storageProperties = StorageProperties(properties)
+    val storageProperties = StorageProperties(params)
     val bucketPath = storageProperties.getStoragePath()
     val stringPairs = storageProperties.mkString()
 

@@ -23,7 +23,7 @@ class FilesImportQueryGeneratorTest extends PathTest {
           |)
           |FROM (
           |  SELECT $schema.IMPORT_METADATA(
-          |    '$bucketPath', '$storagePropertyPairs', nproc()
+          |    '$bucketPath', '$storagePropertyPairs', 65536
           |  )
           |)
           |GROUP BY

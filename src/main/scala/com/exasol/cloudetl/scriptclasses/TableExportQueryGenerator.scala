@@ -5,6 +5,7 @@ import scala.jdk.CollectionConverters._
 import com.exasol.ExaExportSpecification
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.bucket.Bucket
+import com.exasol.cloudetl.helper.ExportParallelismCalculator
 import com.exasol.cloudetl.storage.StorageProperties
 import com.exasol.errorreporting.ExaError
 
@@ -28,7 +29,7 @@ object TableExportQueryGenerator {
     deleteBucketPathIfRequired(bucket)
 
     val bucketPath = bucket.bucketPath
-    val parallelism = storageProperties.getParallelism("iproc()")
+    val parallelism = ExportParallelismCalculator(metadata, storageProperties).getParallelism()
     val storagePropertiesStr = storageProperties.mkString()
     val scriptSchema = metadata.getScriptSchema()
     val srcColumns = getSourceColumns(exportSpec)

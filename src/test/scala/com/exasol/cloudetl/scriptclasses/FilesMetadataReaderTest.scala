@@ -1,6 +1,7 @@
 package com.exasol.cloudetl.scriptclasses
 
 import java.lang.Long
+import java.math.BigInteger
 
 import com.exasol.ExaMetadata
 
@@ -21,7 +22,10 @@ class FilesMetadataReaderTest extends StorageTest {
 
     val iter = mockExasolIterator(properties)
     when(iter.getInteger(2)).thenReturn(2)
-    FilesMetadataReader.run(mock[ExaMetadata], iter)
+    val meta = mock[ExaMetadata]
+    when(meta.getNodeCount()).thenReturn(1)
+    when(meta.getMemoryLimit()).thenReturn(new BigInteger("2000000000")) // 2GB
+    FilesMetadataReader.run(meta, iter)
     expectedParquetFiles.foreach { case (filename, partitionId) =>
       verify(iter, times(1)).emit(filename, partitionId, Long.valueOf(0), Long.valueOf(1))
     }

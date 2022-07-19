@@ -12,7 +12,6 @@ Parquet, Avro or Orc.
 - [Deployment](#deployment)
 - [Prepare Exasol Table](#prepare-an-exasol-table-for-import)
 - [UDF Parameters](#parameters)
-- [Parallelism](#parallelism)
 - [Data Mapping](#data-mapping)
 - [Amazon S3](#amazon-s3)
 - [Google Cloud Storage](#google-cloud-storage)
@@ -141,7 +140,7 @@ downloaded jar file is the same as the checksum provided in the releases.
 To check the SHA256 result of the local jar, run the command:
 
 ```sh
-sha256sum exasol-cloud-storage-extension-2.3.2.jar
+sha256sum exasol-cloud-storage-extension-2.4.0.jar
 ```
 
 ### Building From Source
@@ -165,7 +164,7 @@ sbt assembly
 ```
 
 The assembled jar file should be located at
-`target/scala-2.12/cloud-storage-extension-2.3.1.jar`.
+`target/scala-2.12/exasol-cloud-storage-extension-2.4.0.jar`.
 
 ### Create an Exasol Bucket
 
@@ -187,8 +186,8 @@ for the HTTP protocol.
 Upload the jar file using curl command:
 
 ```sh
-curl -X PUT -T exasol-cloud-storage-extension-2.3.2.jar \
-  http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar
+curl -X PUT -T exasol-cloud-storage-extension-2.4.0.jar \
+  http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar
 ```
 
 You can also check out the Exasol [BucketFS Explorer][bucketfs-explorer] as an
@@ -221,7 +220,7 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
@@ -231,12 +230,12 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
   end_index DECIMAL(36, 0)
 ) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar;
 /
 ```
 
@@ -256,7 +255,7 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesImportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
@@ -266,12 +265,12 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
   end_index DECIMAL(36, 0)
 ) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar;
 /
 ```
 
@@ -287,12 +286,12 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.TableDataExporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar;
 /
 ```
 
@@ -312,12 +311,12 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerTableExportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerTableDataExporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar;
 /
 ```
 
@@ -373,9 +372,8 @@ Please note that the parameter values are provided as string literals,
 These are optional parameters that have default values.
 
 * ``PARALLELISM`` - It defines the number of parallel virtual machine instances
-  that will be started to import or export data. The default value is `nproc()`
-  in the Import SQL statement. Likewise, the default value is `iproc()` in the
-  Export SQL statement.
+  that will be started to import or export data. By default it is calculated
+  using number of cores per node and memory reserved for the UDF.
 
 * ``TIMEZONE_UTC`` - If it is set to `true`, the timezone of timestamp data from
   data sources will be set to `'UTC'`. Without this parameter, or it is set to
@@ -449,108 +447,18 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
 ) AS
   %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.3.2.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.4.0.jar;
 /
 ```
 
 The variable names may be different, please check out the Azure storage
 documentation.
-
-## Parallelism
-
-The setting for parallelism is **different** for import and export statements.
-
-### Import Parallelism Parameter
-
-In the import, the number of files in the storage path is distributed to the
-parallel running importer processes. These parallel processes can be controlled
-by setting the `PARALLELISM` parameter.
-
-By default, this parameter is set to the `nproc()`. The `nproc()` is an Exasol
-special SQL command that returns the total number of data nodes in your cluster.
-
-```sql
-IMPORT INTO <schema>.<table>
-FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
-  BUCKET_PATH     = 's3a://<S3_PATH>/*'
-  DATA_FORMAT     = 'ORC'
-  S3_ENDPOINT     = 's3.<REGION>.amazonaws.com'
-  CONNECTION_NAME = 'S3_CONNECTION'
-  PARALLELISM     = 'nproc()';
-```
-
-In the example above, `PARALLELISM` property value is set to `nproc()` which
-returns the number of physical data nodes in the cluster. Thus, the storage
-extension starts `nproc()` many parallel importer processes. The total number of
-files is distributed among these processes in a round-robin fashion and each
-process imports data from their own set of files.
-
-However, you can increase the parallelism by multiplying it with a number. For
-example, in order to start four times more processes, set it:
-
-```sql
-PARALLELISM = 'nproc()*4'
-```
-
-Or to a higher static number as `PARALLELISM = '16'` that will use 16 importer
-processes in total.
-
-We **recommend** to set the parallelism properly depending on the cluster
-resources (number of cores, memory per node), the number of files and the size
-of each file.
-
-### Export Parallelism Parameter
-
-In the export, the parallelism works differently compared to the import SQL
-statement.
-
-In the import statement, we are importing data from many files. Using the user
-provider parallelism number, we distribute these files into that many importer
-processes. For example, simply by taking modulo of file hash by parallelism
-number.
-
-In export, we have a table with many records. When exporting an Exasol table,
-the `PARALLELISM` parameter value is internally used in a `GROUP BY` clause to
-distribute the table records into many exporter processes. The parallelism
-should be something dynamic that Exasol database can understand and use in the
-group by clause.
-
-The default value for parallelism for export is `iproc()` (notice that it is
-different from `nproc()`). It returns the data node id numbers. Therefore,
-by default, it creates as many exporter processes as the number of datanodes.
-
-```sql
-EXPORT <schema>.<table>
-INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
-  BUCKET_PATH     = 's3a://<S3_PATH>/'
-  DATA_FORMAT     = 'PARQUET'
-  S3_ENDPOINT     = 's3.<REGION>.amazonaws.com'
-  CONNECTION_NAME = 'S3_CONNECTION'
-  PARALLELISM     = 'iproc()';
-```
-
-Like in import, you can increase the number of exporter processes. Since we need
-a dynamic number that the Exasol database can understand, you can combine the
-`iproc()` statement with `random()` and `floor()` operations.
-
-For example, to increase the exporter processes four times, set it as below:
-
-```sql
-PARALLELISM = 'iproc(), floor(random()*4)'
-```
-
-Please change this parameter according to your setup.
-
-Each exporter process creates a single file. This can be a problem if the table
-has many records. You can change this behavior by adapting the
-`EXPORT_BATCH_SIZE` parameter. This value is used to further split the number of
-records per process and create several files instead of a single file.
 
 ## Data Mapping
 
@@ -763,8 +671,7 @@ FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   BUCKET_PATH     = 's3a://<S3_PATH>/import/orc/data/*'
   DATA_FORMAT     = 'ORC'
   S3_ENDPOINT     = 's3.<REGION>.amazonaws.com'
-  CONNECTION_NAME = 'S3_CONNECTION'
-  PARALLELISM     = 'nproc()*<MULTIPLIER>';
+  CONNECTION_NAME = 'S3_CONNECTION';
 ```
 
 ### Run Export Statement
@@ -775,8 +682,7 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   BUCKET_PATH     = 's3a://<S3_PATH>/export/parquet/data/'
   DATA_FORMAT     = 'PARQUET'
   S3_ENDPOINT     = 's3.<REGION>.amazonaws.com'
-  CONNECTION_NAME = 'S3_CONNECTION'
-  PARALLELISM     = 'iproc(), floor(random()*<MULTIPLIER>)';
+  CONNECTION_NAME = 'S3_CONNECTION';
 ```
 
 ### S3 Path Style Access
@@ -800,8 +706,7 @@ FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   DATA_FORMAT          = 'PARQUET'
   S3_PATH_STYLE_ACCESS = 'true'
   S3_ENDPOINT          = 's3.<REGION>.amazonaws.com'
-  CONNECTION_NAME      = 'S3_CONNECTION'
-  PARALLELISM          = 'nproc()';
+  CONNECTION_NAME      = 'S3_CONNECTION';
 ```
 
 ## Google Cloud Storage
@@ -860,8 +765,7 @@ FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   BUCKET_PATH      = 'gs://<GCS_STORAGE_PATH>/import/avro/data/*'
   DATA_FORMAT      = 'AVRO'
   GCS_PROJECT_ID   = '<GCP_PORJECT_ID>'
-  GCS_KEYFILE_PATH = '/buckets/bfsdefault/<BUCKET>/gcp-<PROJECT_ID>-service-keyfile.json'
-  PARALLELISM      = 'nproc()*<MULTIPLIER>';
+  GCS_KEYFILE_PATH = '/buckets/bfsdefault/<BUCKET>/gcp-<PROJECT_ID>-service-keyfile.json';
 ```
 
 ### Run Export Statement
@@ -872,8 +776,7 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   BUCKET_PATH      = 'gs://<GCS_STORAGE_PATH>/export/parquet/data/'
   DATA_FORMAT      = 'PARQUET'
   GCS_PROJECT_ID   = '<GCP_PORJECT_ID>'
-  GCS_KEYFILE_PATH = '/buckets/bfsdefault/<BUCKET>/gcp-<PROJECT_ID>-service-keyfile.json'
-  PARALLELISM      = 'iproc(), floor(random()*<MULTIPLIER>)';
+  GCS_KEYFILE_PATH = '/buckets/bfsdefault/<BUCKET>/gcp-<PROJECT_ID>-service-keyfile.json';
 ```
 
 ## Azure Blob Storage
@@ -924,8 +827,7 @@ IMPORT INTO <schema>.<table>
 FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   BUCKET_PATH      = 'wasbs://<AZURE_CONTAINER_NAME>@<AZURE_ACCOUNT_NAME>.blob.core.windows.net/import/orc/data/*'
   DATA_FORMAT      = 'ORC'
-  CONNECTION_NAME  = 'AZURE_BLOB_SECRET_CONNECTION'
-  PARALLELISM      = 'nproc()*<MULTIPLIER>';
+  CONNECTION_NAME  = 'AZURE_BLOB_SECRET_CONNECTION';
 ```
 
 Run an export statement:
@@ -935,8 +837,7 @@ EXPORT <schema>.<table>
 INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   BUCKET_PATH      = 'wasbs://<AZURE_CONTAINER_NAME>@<AZURE_ACCOUNT_NAME>.blob.core.windows.net/export/parquet/'
   DATA_FORMAT      = 'PARQUET'
-  CONNECTION_NAME  = 'AZURE_BLOB_SECRET_CONNECTION'
-  PARALLELISM      = 'iproc(), floor(random()*<MULTIPLIER>)';
+  CONNECTION_NAME  = 'AZURE_BLOB_SECRET_CONNECTION';
 ```
 
 ### Using Azure SAS Token Authentication
@@ -957,8 +858,7 @@ IMPORT INTO <schema>.<table>
 FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   BUCKET_PATH     = 'wasbs://<AZURE_CONTAINER_NAME>@<AZURE_ACCOUNT_NAME>.blob.core.windows.net/import/avro/data/*'
   DATA_FORMAT     = 'AVRO'
-  CONNECTION_NAME = 'AZURE_BLOB_SAS_CONNECTION'
-  PARALLELISM     = 'nproc()*<MULTIPLIER>';
+  CONNECTION_NAME = 'AZURE_BLOB_SAS_CONNECTION';
 ```
 
 Run an export statement:
@@ -968,8 +868,7 @@ EXPORT <schema>.<table>
 INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   BUCKET_PATH     = 'wasbs://<AZURE_CONTAINER_NAME>@<AZURE_ACCOUNT_NAME>.blob.core.windows.net/export/parquet/'
   DATA_FORMAT     = 'PARQUET'
-  CONNECTION_NAME = 'AZURE_BLOB_SAS_CONNECTION'
-  PARALLELISM     = 'iproc(), floor(random()*<MULTIPLIER>)';
+  CONNECTION_NAME = 'AZURE_BLOB_SAS_CONNECTION';
 ```
 
 The Azure Blob Storage container path URI scheme can be `wasbs` or `wasb`.
@@ -1023,8 +922,7 @@ IMPORT INTO <schema>.<table>
 FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   BUCKET_PATH     = 'adl://<AZURE_CONTAINER_NAME>.azuredatalakestore.net/import/avro/data/*'
   DATA_FORMAT     = 'AVRO'
-  CONNECTION_NAME = 'AZURE_ADLS_CONNECTION'
-  PARALLELISM     = 'nproc()*<MULTIPLIER>';
+  CONNECTION_NAME = 'AZURE_ADLS_CONNECTION';
 ```
 
 ### Run Export Statement
@@ -1034,8 +932,7 @@ EXPORT <schema>.<table>
 INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   BUCKET_PATH     = 'adl://<AZURE_CONTAINER_NAME>.azuredatalakestore.net/export/parquet/data/'
   DATA_FORMAT     = 'PARQUET'
-  CONNECTION_NAME = 'AZURE_ADLS_CONNECTION'
-  PARALLELISM     = 'iproc(), floor(random()*<MULTIPLIER>)';
+  CONNECTION_NAME = 'AZURE_ADLS_CONNECTION';
 ```
 
 ## Azure Data Lake Gen2 Storage
@@ -1071,8 +968,7 @@ IMPORT INTO <schema>.<table>
 FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   BUCKET_PATH     = 'abfs://<AZURE_CONTAINER_NAME>@<AZURE_ACCOUNT_NAME>.dfs.core.windows.net/import/orc/data/*'
   DATA_FORMAT     = 'ORC'
-  CONNECTION_NAME = 'AZURE_ABFS_CONNECTION'
-  PARALLELISM     = 'nproc()*<MULTIPLIER>';
+  CONNECTION_NAME = 'AZURE_ABFS_CONNECTION';
 ```
 
 ### Run Export Statement
@@ -1082,8 +978,7 @@ EXPORT <schema>.<table>
 INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   BUCKET_PATH     = 'abfss://<AZURE_CONTAINER_NAME>@<AZURE_ACCOUNT_NAME>.dfs.core.windows.net/export/parquet/data/'
   DATA_FORMAT     = 'PARQUET'
-  CONNECTION_NAME = 'AZURE_ABFS_CONNECTION'
-  PARALLELISM     = 'iproc(), floor(random()*<MULTIPLIER>)';
+  CONNECTION_NAME = 'AZURE_ABFS_CONNECTION';
 ```
 
 The bucket path should start with an `abfs` or `abfss` URI scheme.
@@ -1114,8 +1009,7 @@ FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   BUCKET_PATH     = 's3a://<S3_PATH>/import/delta/data/*'
   DATA_FORMAT     = 'DELTA'
   S3_ENDPOINT     = 's3.<REGION>.amazonaws.com'
-  CONNECTION_NAME = 'S3_CONNECTION'
-  PARALLELISM     = 'nproc()*<MULTIPLIER>';
+  CONNECTION_NAME = 'S3_CONNECTION';
 ```
 
 ### Supported Cloud Storage Systems
@@ -1161,8 +1055,7 @@ For import:
 IMPORT INTO <schema>.<table>
 FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   BUCKET_PATH     = 'hdfs://<HDFS_PATH>/import/orc/data/*.orc'
-  DATA_FORMAT     = 'ORC'
-  PARALLELISM     = 'nproc()*<MULTIPLIER>';
+  DATA_FORMAT     = 'ORC';
 ```
 
 For export:
@@ -1171,8 +1064,7 @@ For export:
 EXPORT <schema>.<table>
 INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   BUCKET_PATH     = 'hdfs://<HDFS_PATH>/export/parquet/data/'
-  DATA_FORMAT     = 'PARQUET'
-  PARALLELISM     = 'iproc(), floor(random()*<MULTIPLIER>)';
+  DATA_FORMAT     = 'PARQUET';
 ```
 
 Because we assume that they are in the same private network, you do not have to
@@ -1193,8 +1085,7 @@ You can import formatted data from Alluxio using the cloud-storage-extension.
 IMPORT INTO <schema>.<table>
 FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   BUCKET_PATH     = 'alluxio://<ALLUXIO_PATH>/import/parquet/data/*'
-  DATA_FORMAT     = 'PARQUET'
-  PARALLELISM     = 'nproc()*<MULTIPLIER>';
+  DATA_FORMAT     = 'PARQUET';
 ```
 
 For this to work, the Alluxio and Exasol clusters should be located in a same

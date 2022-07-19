@@ -97,11 +97,11 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
 
   test("getParallelism returns user provided value") {
     properties = Map(StorageProperties.PARALLELISM -> "2")
-    assert(BaseProperties(properties).getParallelism("default") === "2")
+    assert(BaseProperties(properties).getParallelism().getOrElse("default") === "2")
   }
 
   test("getParallelism returns default value if parallelism is not set") {
-    assert(BaseProperties(properties).getParallelism("nproc()") === "nproc()")
+    assert(BaseProperties(properties).getParallelism().getOrElse("nproc()") === "nproc()")
   }
 
   test("isOverwrite returns true is set") {
