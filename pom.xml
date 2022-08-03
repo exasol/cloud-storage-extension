@@ -380,6 +380,12 @@
             <version>1.5.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>nl.jqno.equalsverifier</groupId>
+            <artifactId>equalsverifier</artifactId>
+            <version>3.10.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -494,7 +500,7 @@
                 <version>3.4.0</version>
                 <configuration>
                     <charset>UTF-8</charset>
-                    <doclint />
+                    <doclint/>
                     <serialwarn>true</serialwarn>
                     <failOnError>true</failOnError>
                     <failOnWarnings>true</failOnWarnings>
@@ -539,24 +545,20 @@
                         <exclude>CVE-2021-0341</exclude>
                         <!-- CWE-20: Improper Input Validation (5.9); https://ossindex.sonatype.org/vulnerability/sonatype-2018-0035 -->
                         <exclude>sonatype-2018-0035</exclude>
-
                         <!-- Vulnerabilities in org.codehaus.jackson:jackson-mapper-asl:1.9.13 -->
                         <!-- CWE-184: Incomplete Blacklist (9.8); https://ossindex.sonatype.org/vulnerability/CVE-2017-7525 -->
                         <exclude>CVE-2017-7525</exclude>
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (7.5); https://ossindex.sonatype.org/vulnerability/CVE-2019-10172 -->
                         <exclude>CVE-2019-10172</exclude>
-
                         <!-- Vulnerabilities in io.netty:netty-handler:4.1.78.Final -->
                         <!-- CWE-300: Channel Accessible by Non-Endpoint ('Man-in-the-Middle') (6.5); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0026 -->
                         <exclude>sonatype-2020-0026</exclude>
                         <!-- io.grpc:grpc-core:jar:1.47.0 -->
                         <!-- CWE-404: Improper Resource Shutdown or Release (6.5); https://ossindex.sonatype.org/vulnerability/sonatype-2021-0818 -->
                         <exclude>sonatype-2021-0818</exclude>
-
                         <!-- Vulnerabilities in org.apache.spark:spark-core_2.13:jar:3.3.0 -->
                         <!-- CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') (8.8); https://ossindex.sonatype.org/vulnerability/sonatype-2022-2430 -->
                         <exclude>sonatype-2022-2430</exclude>
-
                         <!-- Vulnerabilities in com.google.guava:guava:jar:31.1-jre -->
                         <!-- CWE-379: Creation of Temporary File in Directory with Incorrect Permissions (6.2); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0926 -->
                         <exclude>sonatype-2020-0926</exclude>

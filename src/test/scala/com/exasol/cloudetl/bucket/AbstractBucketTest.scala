@@ -23,16 +23,10 @@ class AbstractBucketTest extends AnyFunSuite with BeforeAndAfterEach with Mockit
   protected[this] final def getBucket(params: Map[String, String]): Bucket =
     Bucket(StorageProperties(params))
 
-  protected[this] final def getBucket(
-    params: Map[String, String],
-    exaMetadata: ExaMetadata
-  ): Bucket =
+  protected[this] final def getBucket(params: Map[String, String], exaMetadata: ExaMetadata): Bucket =
     Bucket(StorageProperties(params, exaMetadata))
 
-  protected[this] final def mockConnectionInfo(
-    username: String,
-    password: String
-  ): ExaMetadata = {
+  protected[this] final def mockConnectionInfo(username: String, password: String): ExaMetadata = {
     val metadata = mock[ExaMetadata]
     val connectionInfo: ExaConnectionInformation = new ExaConnectionInformation() {
       override def getType(): ExaConnectionInformation.ConnectionType =
