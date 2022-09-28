@@ -48,6 +48,7 @@ Code name:
 * Updated `com.diffplug.spotless:spotless-maven-plugin:2.23.0` to `2.27.0`
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.1.1` to `1.1.2`
 * Updated `com.exasol:project-keeper-maven-plugin:2.4.6` to `2.8.0`
+* Updated `io.github.evis:scalafix-maven-plugin_2.13:0.1.4_0.9.33` to `0.1.7_0.10.3`
 * Updated `net.alchim31.maven:scala-maven-plugin:4.6.3` to `4.7.1`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.0.0` to `3.1.0`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.4.0` to `3.4.1`
