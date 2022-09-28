@@ -17,7 +17,7 @@
     <parent>
         <artifactId>cloud-storage-extension-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.4.1</version>
+        <version>2.5.0</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <repositories>
@@ -264,7 +264,13 @@
         <dependency>
             <groupId>io.delta</groupId>
             <artifactId>delta-core_${scala.compat.version}</artifactId>
-            <version>1.2.1</version>
+            <version>2.1.0</version>
+        </dependency>
+        <!-- Do not remove until hadoop version 3.4.0, see https://github.com/exasol/cloud-storage-extension/issues/195 -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.13</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -553,6 +559,9 @@
                         <exclude>CVE-2021-0341</exclude>
                         <!-- CWE-20: Improper Input Validation (5.9); https://ossindex.sonatype.org/vulnerability/sonatype-2018-0035 -->
                         <exclude>sonatype-2018-0035</exclude>
+                        <!-- Vulnerabilities in org.codehaus.jackson:jackson-mapper-asl:1.9.13 -->
+                        <!-- CWE-184: Incomplete Blacklist (9.8); https://ossindex.sonatype.org/vulnerability/CVE-2017-7525 -->
+                        <exclude>CVE-2017-7525</exclude>
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (7.5); https://ossindex.sonatype.org/vulnerability/CVE-2019-10172 -->
                         <exclude>CVE-2019-10172</exclude>
                         <!-- Vulnerabilities in io.netty:netty-handler:4.1.78.Final -->
