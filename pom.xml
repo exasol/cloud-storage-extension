@@ -564,9 +564,6 @@
                         <!-- io.grpc:grpc-core:jar:1.47.0 -->
                         <!-- CWE-404: Improper Resource Shutdown or Release (6.5); https://ossindex.sonatype.org/vulnerability/sonatype-2021-0818 -->
                         <exclude>sonatype-2021-0818</exclude>
-                        <!-- Vulnerabilities in org.apache.spark:spark-core_2.13:jar:3.3.0 -->
-                        <!-- CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') (8.8); https://ossindex.sonatype.org/vulnerability/sonatype-2022-2430 -->
-                        <exclude>sonatype-2022-2430</exclude>
                         <!-- Vulnerabilities in com.google.guava:guava:jar:31.1-jre -->
                         <!-- CWE-379: Creation of Temporary File in Directory with Incorrect Permissions (6.2); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0926 -->
                         <exclude>sonatype-2020-0926</exclude>
