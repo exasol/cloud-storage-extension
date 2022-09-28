@@ -10,6 +10,7 @@ Code name:
 ## Refactoring
 
 * #205: Fixed missing source files for Sonar coverage report
+* #219: Fixed HDFS client version mismatch
 
 ## Dependency Updates
 
@@ -26,6 +27,7 @@ Code name:
 * Updated `org.apache.hadoop:hadoop-azure-datalake:3.3.3` to `3.3.4`
 * Updated `org.apache.hadoop:hadoop-azure:3.3.3` to `3.3.4`
 * Updated `org.apache.hadoop:hadoop-common:3.3.3` to `3.3.4`
+* Added `org.apache.hadoop:hadoop-hdfs-client:3.3.4`
 * Updated `org.apache.hadoop:hadoop-hdfs:3.3.3` to `3.3.4`
 * Updated `org.apache.logging.log4j:log4j-1.2-api:2.17.2` to `2.19.0`
 * Updated `org.apache.logging.log4j:log4j-api:2.17.2` to `2.19.0`
