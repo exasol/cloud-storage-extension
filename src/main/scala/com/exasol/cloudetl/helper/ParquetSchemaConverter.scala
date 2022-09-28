@@ -132,12 +132,11 @@ object ParquetSchemaConverter {
   // Maps the precision value into the number of bytes.
   // Adapted from:
   //  - org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe.java
-  val PRECISION_TO_BYTE_SIZE: Seq[Int] = {
+  val PRECISION_TO_BYTE_SIZE: Seq[Int] =
     for {
       prec <- 1 to 38 // [1 .. 38]
       power = Math.pow(10, prec.toDouble) // scalastyle:ignore magic.number
       size = Math.ceil((Math.log(power - 1) / Math.log(2) + 1) / 8)
     } yield size.toInt
-  }
 
 }

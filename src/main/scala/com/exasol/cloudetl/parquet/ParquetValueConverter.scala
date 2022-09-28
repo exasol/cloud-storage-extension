@@ -17,7 +17,7 @@ import org.apache.parquet.schema.Type.Repetition
  */
 final case class ParquetValueConverter(schema: MessageType) {
   private[this] val size = schema.getFields.size()
-  private[this] var convertedValues = Array.ofDim[Object](size)
+  private[this] val convertedValues = Array.ofDim[Object](size)
 
   /**
    * Converts Parquet Row into array of values.

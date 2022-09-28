@@ -156,11 +156,17 @@ git clone https://github.com/exasol/cloud-storage-extension
 cd cloud-storage-extension/
 ```
 
-To create an assembled jar file, [install SBT build
-tool](https://www.scala-sbt.org/download.html) and run the command:
+To create an assembled jar file, [install Maven build
+tool](https://maven.apache.org/) and run the command:
 
 ```sh
-sbt assembly
+mvn clean package
+```
+
+You can also run the packaging phase with unit and integration tests skipped.
+
+```sh
+mvn clean package -DskipTests=true
 ```
 
 The assembled jar file should be located at
