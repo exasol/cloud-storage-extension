@@ -25,8 +25,8 @@ jobs:
         run: mvn --batch-mode clean verify -DskipTests
       - name: Generate sha256sum files
         run: |
-          cd target/
-          find *.jar -exec bash -c 'sha256sum {} > {}.sha256' \;
+          cd target
+          find . -maxdepth 1 -name \*.jar -exec bash -c 'sha256sum {} > {}.sha256' \;
       - name: Upload assets to the GitHub release draft
         uses: shogo82148/actions-upload-release-asset@v1
         with:
