@@ -21,6 +21,8 @@ Code name:
 
 * Updated `com.exasol:error-reporting-java:0.4.1` to `1.0.0`
 * Updated `com.exasol:parquet-io-java:1.3.1` to `1.3.3`
+* Updated `com.fasterxml.jackson.core:jackson-databind:2.13.3` to `2.13.4`
+* Updated `com.fasterxml.jackson.module:jackson-module-scala_2.13:2.13.3` to `2.13.4`
 * Updated `com.google.protobuf:protobuf-java:3.21.2` to `3.21.6`
 * Updated `io.grpc:grpc-netty:1.47.0` to `1.49.1`
 * Updated `io.netty:netty-all:4.1.79.Final` to `4.1.82.Final`
@@ -35,9 +37,10 @@ Code name:
 * Updated `org.apache.logging.log4j:log4j-api:2.17.2` to `2.19.0`
 * Added `org.apache.logging.log4j:log4j-core:2.19.0`
 * Updated `org.apache.orc:orc-core:1.7.5` to `1.8.0`
+* Removed `org.codehaus.jackson:jackson-mapper-asl:1.9.13`
 * Updated `org.scala-lang:scala-library:2.13.8` to `2.13.9`
-* Updated `org.slf4j:jul-to-slf4j:1.7.36` to `2.0.2`
-* Updated `org.slf4j:slf4j-log4j12:1.7.36` to `2.0.2`
+* Updated `org.slf4j:jul-to-slf4j:1.7.36` to `2.0.3`
+* Updated `org.slf4j:slf4j-log4j12:1.7.36` to `2.0.3`
 
 ### Test Dependency Updates
 
