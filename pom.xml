@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>cloud-storage-extension</artifactId>
-    <version>2.4.1</version>
+    <version>2.5.0</version>
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>

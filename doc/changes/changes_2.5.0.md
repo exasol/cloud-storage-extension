@@ -1,6 +1,10 @@
-# Cloud Storage Extension 2.4.1, released 2022-??-??
+# Cloud Storage Extension 2.5.0, released 2022-09-29
 
-Code name:
+Code name: S3 Endpoint Region Support
+
+## Summary
+
+In this release, we added support for accessing S3 buckets using VPC interface endpoints that are behind [PrivateLink](https://docs.aws.amazon.com/AmazonS3/latest/userguide/privatelink-interface-endpoints.html). Moreover, we updated documentation and dependencies.
 
 ## Features
 
