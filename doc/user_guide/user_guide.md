@@ -568,11 +568,11 @@ below.
 
 ![Cluster Resources Example](../images/cluster-resources.png)
 
-The each datanode have:
+Each datanode has:
 - RAM: 376 GiB
-- CPU#: 72
+- Number of CPUs: 72
 
-With this known settings, we can set the parallelism parameter for import and
+With these known settings, we can set the parallelism parameter for import and
 export as follows.
 
 #### Import
