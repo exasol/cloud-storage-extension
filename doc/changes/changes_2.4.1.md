@@ -2,6 +2,10 @@
 
 Code name:
 
+## Features
+
+* #216: Added support for S3 endpoint region
+
 ## Documentation
 
 * #213: Added parallelism parameter examples to user guide
