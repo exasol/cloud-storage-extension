@@ -645,8 +645,13 @@
             <plugin>
                 <groupId>io.github.evis</groupId>
                 <artifactId>scalafix-maven-plugin_${scala.compat.version}</artifactId>
-                <version>0.1.4_0.9.33</version>
+                <version>0.1.7_0.10.3</version>
                 <dependencies>
+                    <dependency>
+                        <groupId>com.geirsson</groupId>
+                        <artifactId>metaconfig-pprint_${scala.compat.version}</artifactId>
+                        <version>0.11.1</version>
+                    </dependency>
                     <dependency>
                         <groupId>com.github.liancheng</groupId>
                         <artifactId>organize-imports_${scala.compat.version}</artifactId>
