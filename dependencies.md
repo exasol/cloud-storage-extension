@@ -19,6 +19,7 @@
 | Apache Hadoop Azure support                | [Apache License, Version 2.0][3]              |
 | Apache Hadoop Azure Data Lake support      | [Apache License, Version 2.0][3]              |
 | Apache Hadoop HDFS                         | [Apache License, Version 2.0][3]              |
+| Apache Hadoop HDFS Client                  | [Apache License, Version 2.0][3]              |
 | [Alluxio Core - Client - HDFS][15]         | [Apache License][16]                          |
 | [Protocol Buffers [Core]][17]              | [BSD-3-Clause][18]                            |
 | [gcs-connector-hadoop3][19]                | [Apache License, Version 2.0][5]              |
