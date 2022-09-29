@@ -515,9 +515,8 @@ In the export, the parallelism works differently compared to the import SQL
 statement.
 
 In the import statement, we are importing data from many files. Using the user
-provider parallelism number, we distribute these files into that many importer
-processes. For example, simply by taking modulo of file hash by parallelism
-number.
+provided parallelism number, we distribute these files into that many importer
+processes.
 
 In export, we have a table with many records. When exporting an Exasol table,
 the `PARALLELISM` parameter value is internally used in a `GROUP BY` clause to
@@ -546,7 +545,7 @@ a dynamic number that the Exasol database can understand, you can combine the
 For example, to increase the exporter processes four times, set it as below:
 
 ```sql
-PARALLELISM = 'iproc(), floor(random()*4)'
+PARALLELISM = 'iproc(), mod(rownum,4)'
 ```
 
 Please change this parameter according to your setup.
@@ -556,7 +555,7 @@ has many records. You can change this behavior by adapting the
 `EXPORT_BATCH_SIZE` parameter. This value is used to further split the number of
 records per process and create several files instead of a single file.
 
-### An Example Settings for Parallelism Parameter
+### Example Settings for Parallelism Parameter
 
 In this section, we are going to show you how to set an optional `PARALLELISM`
 parameter. In usual cases you do not have to set this parameter since it will be
@@ -584,11 +583,12 @@ PARALLELISM = 'nproc()*64'
 #### Export
 
 ```
-PARALLELISM = 'iproc(), floor(random()*64)'
+PARALLELISM = 'iproc(), mod(rownum,64)'
 ```
 
-This will set the maximum number of parallel processes to `64` and each process
-will have around `6 GiB (376 GiB / 64)` of RAM.
+This will set the maximum number of parallel processes to `64`. Additionally,
+there is enough RAM `6 GiB (376 GiB / 64)` to use for importer/exporter and
+other SQL processes.
 
 #### Export Batch Size
 
