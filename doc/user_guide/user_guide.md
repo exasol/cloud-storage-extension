@@ -586,9 +586,8 @@ PARALLELISM = 'nproc()*64'
 PARALLELISM = 'iproc(), mod(rownum,64)'
 ```
 
-This will set the maximum number of parallel processes to `64`. Additionally,
-there is enough RAM `6 GiB (376 GiB / 64)` to use for importer/exporter and
-other SQL processes.
+This will set the maximum number of parallel processes to `64` and each process
+will have up to `6 GiB (376 GiB / 64)` of RAM.
 
 #### Export Batch Size
 
