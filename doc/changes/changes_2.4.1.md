@@ -4,6 +4,7 @@ Code name:
 
 ## Documentation
 
+* #213: Added parallelism parameter examples to user guide
 * #214: Updated build instructions in the user guide
 
 ## Refactoring

@@ -466,6 +466,137 @@ CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
 The variable names may be different, please check out the Azure storage
 documentation.
 
+## Parallelism
+
+The setting for parallelism is **different** for import and export statements.
+
+### Import Parallelism Parameter
+
+In the import, the number of files in the storage path is distributed to the
+parallel running importer processes. These parallel processes can be controlled
+by setting the `PARALLELISM` parameter.
+
+By default, this parameter is set to the `nproc()`. The `nproc()` is an Exasol
+special SQL command that returns the total number of data nodes in your cluster.
+
+```sql
+IMPORT INTO <schema>.<table>
+FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
+  BUCKET_PATH     = 's3a://<S3_PATH>/*'
+  DATA_FORMAT     = 'ORC'
+  S3_ENDPOINT     = 's3.<REGION>.amazonaws.com'
+  CONNECTION_NAME = 'S3_CONNECTION'
+  PARALLELISM     = 'nproc()';
+```
+
+In the example above, `PARALLELISM` property value is set to `nproc()` which
+returns the number of physical data nodes in the cluster. Thus, the storage
+extension starts `nproc()` many parallel importer processes. The total number of
+files is distributed among these processes in a round-robin fashion and each
+process imports data from their own set of files.
+
+However, you can increase the parallelism by multiplying it with a number. For
+example, in order to start four times more processes, set it:
+
+```sql
+PARALLELISM = 'nproc()*4'
+```
+
+Or to a higher static number as `PARALLELISM = '16'` that will use 16 importer
+processes in total.
+
+We **recommend** to set the parallelism properly depending on the cluster
+resources (number of cores, memory per node), the number of files and the size
+of each file.
+
+### Export Parallelism Parameter
+
+In the export, the parallelism works differently compared to the import SQL
+statement.
+
+In the import statement, we are importing data from many files. Using the user
+provided parallelism number, we distribute these files into that many importer
+processes.
+
+In export, we have a table with many records. When exporting an Exasol table,
+the `PARALLELISM` parameter value is internally used in a `GROUP BY` clause to
+distribute the table records into many exporter processes. The parallelism
+should be something dynamic that Exasol database can understand and use in the
+group by clause.
+
+The default value for parallelism for export is `iproc()` (notice that it is
+different from `nproc()`). It returns the data node id numbers. Therefore,
+by default, it creates as many exporter processes as the number of datanodes.
+
+```sql
+EXPORT <schema>.<table>
+INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
+  BUCKET_PATH     = 's3a://<S3_PATH>/'
+  DATA_FORMAT     = 'PARQUET'
+  S3_ENDPOINT     = 's3.<REGION>.amazonaws.com'
+  CONNECTION_NAME = 'S3_CONNECTION'
+  PARALLELISM     = 'iproc()';
+```
+
+Like in import, you can increase the number of exporter processes. Since we need
+a dynamic number that the Exasol database can understand, you can combine the
+`iproc()` statement with `random()` and `floor()` operations.
+
+For example, to increase the exporter processes four times, set it as below:
+
+```sql
+PARALLELISM = 'iproc(), mod(rownum,4)'
+```
+
+Please change this parameter according to your setup.
+
+Each exporter process creates a single file. This can be a problem if the table
+has many records. You can change this behavior by adapting the
+`EXPORT_BATCH_SIZE` parameter. This value is used to further split the number of
+records per process and create several files instead of a single file.
+
+### Example Settings for Parallelism Parameter
+
+In this section, we are going to show you how to set an optional `PARALLELISM`
+parameter. In usual cases you do not have to set this parameter since it will be
+set automatically. However, occasionally it may be required that the users set
+this manually.
+
+Let's assume that we have these database resources, as shown in the picture
+below.
+
+![Cluster Resources Example](../images/cluster-resources.png)
+
+Each datanode has:
+- RAM: 376 GiB
+- Number of CPUs: 72
+
+With these known settings, we can set the parallelism parameter for import and
+export as follows.
+
+#### Import
+
+```
+PARALLELISM = 'nproc()*64'
+```
+
+#### Export
+
+```
+PARALLELISM = 'iproc(), mod(rownum,64)'
+```
+
+This will set the maximum number of parallel processes to `64` and each process
+will have up to `6 GiB (376 GiB / 64)` of RAM.
+
+#### Export Batch Size
+
+When running export process, there is `EXPORT_BATCH_SIZE` parameter with default
+value of `100000`. This parameter defines the number of records that will be
+written from a single export process. However, the default batch size can be too
+much for a single exporter if the table is too wide (with many columns). In that
+case you can set this parameter to a lower value.
+
 ## Data Mapping
 
 This section shows how data types from each format is mapped to the
