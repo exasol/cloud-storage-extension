@@ -91,6 +91,12 @@ class S3BucketTest extends AbstractBucketTest {
     assertConfigurationProperties(bucketWithDefaultConnectionString(properties), extraConfigs)
   }
 
+  test("apply returns S3Bucket with endpoint region") {
+    val properties = defaultProperties ++ Map("S3_ENDPOINT_REGION" -> "eu-central-1")
+    val extraConfigs = configMappings ++ Map("fs.s3a.endpoint.region" -> "eu-central-1")
+    assertConfigurationProperties(bucketWithDefaultConnectionString(properties), extraConfigs)
+  }
+
   test("apply returns S3Bucket with ssl enabled by default") {
     val extraConfigs = configMappings ++ Map("fs.s3a.connection.ssl.enabled" -> "true")
     assertConfigurationProperties(bucketWithDefaultConnectionString(defaultProperties), extraConfigs)

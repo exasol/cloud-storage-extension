@@ -10,6 +10,7 @@ import org.apache.hadoop.fs.Path
 final case class S3Bucket(path: String, params: StorageProperties) extends Bucket with SecureBucket {
 
   private[this] val S3_ENDPOINT: String = "S3_ENDPOINT"
+  private[this] val S3_ENDPOINT_REGION: String = "S3_ENDPOINT_REGION"
   private[this] val S3_ACCESS_KEY: String = "S3_ACCESS_KEY"
   private[this] val S3_SECRET_KEY: String = "S3_SECRET_KEY"
   private[this] val S3_SESSION_TOKEN: String = "S3_SESSION_TOKEN"
@@ -63,6 +64,9 @@ final case class S3Bucket(path: String, params: StorageProperties) extends Bucke
     conf.set("fs.file.impl", classOf[org.apache.hadoop.fs.LocalFileSystem].getName)
     conf.set("fs.s3a.impl", classOf[org.apache.hadoop.fs.s3a.S3AFileSystem].getName)
     conf.set("fs.s3a.endpoint", properties.getString(S3_ENDPOINT))
+    if (properties.containsKey(S3_ENDPOINT_REGION)) {
+      conf.set("fs.s3a.endpoint.region", properties.getString(S3_ENDPOINT_REGION))
+    }
     if (properties.containsKey(S3_CHANGE_DETECTION_MODE)) {
       conf.set("fs.s3a.change.detection.mode", properties.getString(S3_CHANGE_DETECTION_MODE))
     }

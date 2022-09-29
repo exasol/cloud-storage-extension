@@ -1,6 +1,14 @@
-# Cloud Storage Extension 2.4.1, released 2022-??-??
+# Cloud Storage Extension 2.5.0, released 2022-09-29
 
-Code name:
+Code name: S3 Endpoint Region Support
+
+## Summary
+
+In this release, we added support for accessing S3 buckets using VPC interface endpoints that are behind [PrivateLink](https://docs.aws.amazon.com/AmazonS3/latest/userguide/privatelink-interface-endpoints.html). Moreover, we updated documentation and dependencies.
+
+## Features
+
+* #216: Added support for S3 endpoint region
 
 ## Documentation
 
@@ -18,7 +26,10 @@ Code name:
 
 * Updated `com.exasol:error-reporting-java:0.4.1` to `1.0.0`
 * Updated `com.exasol:parquet-io-java:1.3.1` to `1.3.3`
+* Updated `com.fasterxml.jackson.core:jackson-databind:2.13.3` to `2.13.4`
+* Updated `com.fasterxml.jackson.module:jackson-module-scala_2.13:2.13.3` to `2.13.4`
 * Updated `com.google.protobuf:protobuf-java:3.21.2` to `3.21.6`
+* Updated `io.delta:delta-core_2.13:1.2.1` to `2.1.0`
 * Updated `io.grpc:grpc-netty:1.47.0` to `1.49.1`
 * Updated `io.netty:netty-all:4.1.79.Final` to `4.1.82.Final`
 * Updated `org.alluxio:alluxio-core-client-hdfs:2.8.0-2` to `2.8.1`
@@ -34,8 +45,8 @@ Code name:
 * Added `org.apache.logging.log4j:log4j-core:2.19.0`
 * Updated `org.apache.orc:orc-core:1.7.5` to `1.8.0`
 * Updated `org.scala-lang:scala-library:2.13.8` to `2.13.9`
-* Updated `org.slf4j:jul-to-slf4j:1.7.36` to `2.0.2`
-* Updated `org.slf4j:slf4j-log4j12:1.7.36` to `2.0.2`
+* Updated `org.slf4j:jul-to-slf4j:1.7.36` to `2.0.3`
+* Updated `org.slf4j:slf4j-log4j12:1.7.36` to `2.0.3`
 
 ### Test Dependency Updates
 
