@@ -714,7 +714,7 @@
                 <version>3.0.0</version>
                 <executions>
                     <execution>
-                        <id>npm-install</id>
+                        <id>npm-ci</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>exec</goal>
