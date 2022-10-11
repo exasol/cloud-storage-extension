@@ -1,12 +1,14 @@
 # Cloud Storage Extension 2.5.1, released 2022-??-??
 
-Code name:
+Code name: Extension Manager support
 
 ## Summary
 
+In this release we added an extension for the extension manager.
+
 ## Features
 
-* ISSUE_NUMBER: description
+* #215: Added extension for extension manager
 
 ## Dependency Updates
 
