@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>cloud-storage-extension</artifactId>
-    <version>2.5.0</version>
+    <version>2.5.1</version>
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>
     <properties>
-        <scala.version>2.13.9</scala.version>
+        <scala.version>2.13.10</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
         <hadoop.version>3.3.4</hadoop.version>
         <sonar.sources>.</sonar.sources>
@@ -17,7 +17,7 @@
     <parent>
         <artifactId>cloud-storage-extension-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.5.0</version>
+        <version>2.5.1</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <repositories>
@@ -53,9 +53,10 @@
             <version>31.1-jre</version>
         </dependency>
         <dependency>
+            <!-- Upgrade to RC version to fix CWE-502: Deserialization of Untrusted Data (7.5); https://ossindex.sonatype.org/vulnerability/CVE-2022-42003 -->
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.13.4</version>
+            <version>2.14.0-rc2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
@@ -65,7 +66,7 @@
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.49.1</version>
+            <version>1.49.2</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
@@ -75,7 +76,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>import-export-udf-common-scala_${scala.compat.version}</artifactId>
-            <version>0.2.0</version>
+            <version>0.4.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -238,7 +239,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.21.6</version>
+            <version>3.21.7</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
@@ -368,13 +369,13 @@
         <dependency>
             <groupId>com.dimafeng</groupId>
             <artifactId>testcontainers-scala-scalatest_${scala.compat.version}</artifactId>
-            <version>0.40.10</version>
+            <version>0.40.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.17.3</version>
+            <version>1.17.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -386,7 +387,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>test-db-builder-java</artifactId>
-            <version>3.3.4</version>
+            <version>3.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -573,6 +574,12 @@
                         <!-- Vulnerabilities in com.google.guava:guava:jar:31.1-jre -->
                         <!-- CWE-379: Creation of Temporary File in Directory with Incorrect Permissions (6.2); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0926 -->
                         <exclude>sonatype-2020-0926</exclude>
+                        <!-- Vulnerabilities in org.apache.hadoop:hadoop-common:3.3.4 -->
+                        <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (8.6); https://ossindex.sonatype.org/vulnerability/sonatype-2022-5820 -->
+                        <exclude>sonatype-2022-5820</exclude>
+                        <!-- Vulnerabilities in org.apache.hadoop:hadoop-hdfs-client:3.3.4 -->
+                        <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (8.6); https://ossindex.sonatype.org/vulnerability/sonatype-2022-5732 -->
+                        <exclude>sonatype-2022-5732</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
