@@ -145,6 +145,18 @@
                     <groupId>org.codehaus.jettison</groupId>
                     <artifactId>jettison</artifactId>
                 </exclusion>
+                <exclusion>
+                    <!-- Avoid java.lang.NoSuchMethodError: 'void javax.ws.rs.core.MultivaluedMap.addAll(java.lang.Object, java.lang.Object[])' -->
+                    <!-- Prefer newer implementation jakarta.ws.rs:jakarta.ws.rs-api -->
+                    <groupId>javax.ws.rs</groupId>
+                    <artifactId>jsr311-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <!-- Avoid java.lang.AbstractMethodError: Receiver class com.sun.jersey.api.uri.UriBuilderImpl does not define or inherit an implementation of the resolved method 'abstract javax.ws.rs.core.UriBuilder uri(java.lang.String)' of abstract class javax.ws.rs.core.UriBuilder. -->
+                    <!-- Prefer newer implementation org.glassfish.jersey.core:jersey-server -->
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-server</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -188,6 +200,12 @@
                 <exclusion>
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-server</artifactId>
+                </exclusion>
+                <exclusion>
+                    <!-- Avoid java.lang.AbstractMethodError: Receiver class com.sun.jersey.api.uri.UriBuilderImpl does not define or inherit an implementation of the resolved method 'abstract javax.ws.rs.core.UriBuilder uri(java.lang.String)' of abstract class javax.ws.rs.core.UriBuilder. -->
+                    <!-- Prefer newer implementation org.glassfish.jersey.core:jersey-server -->
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-server</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -532,7 +550,7 @@
                 <version>3.4.1</version>
                 <configuration>
                     <charset>UTF-8</charset>
-                    <doclint/>
+                    <doclint />
                     <serialwarn>true</serialwarn>
                     <failOnError>true</failOnError>
                     <failOnWarnings>true</failOnWarnings>
