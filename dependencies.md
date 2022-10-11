@@ -8,7 +8,7 @@
 | [Scala Library][0]                         | [Apache-2.0][1]                               |
 | [Apache Commons Lang][2]                   | [Apache License, Version 2.0][3]              |
 | [Guava: Google Core Libraries for Java][4] | [Apache License, Version 2.0][5]              |
-| [jackson-databind][6]                      | [The Apache Software License, Version 2.0][3] |
+| [jackson-databind][6]                      | [The Apache Software License, Version 2.0][5] |
 | [jackson-module-scala][7]                  | [The Apache Software License, Version 2.0][3] |
 | [io.grpc:grpc-netty][8]                    | [Apache 2.0][9]                               |
 | [Netty/All-in-One][10]                     | [Apache License, Version 2.0][1]              |
@@ -90,7 +90,7 @@
 [3]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [4]: https://github.com/google/guava
 [5]: http://www.apache.org/licenses/LICENSE-2.0.txt
-[6]: https://github.com/FasterXML/jackson
+[6]: http://github.com/FasterXML/jackson
 [7]: https://github.com/FasterXML/jackson-module-scala
 [8]: https://github.com/grpc/grpc-java
 [9]: https://opensource.org/licenses/Apache-2.0
