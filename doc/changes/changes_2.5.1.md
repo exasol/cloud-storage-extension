@@ -12,6 +12,7 @@ Code name:
 
 ### Compile Dependency Updates
 
+* Updated `com.exasol:parquet-io-java:1.3.3` to `2.0.0`
 * Updated `com.google.protobuf:protobuf-java:3.21.6` to `3.21.7`
 * Updated `io.grpc:grpc-netty:1.49.1` to `1.49.2`
 * Updated `org.scala-lang:scala-library:2.13.9` to `2.13.10`
