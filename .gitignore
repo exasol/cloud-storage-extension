@@ -73,3 +73,10 @@ pom.xml.versionsBackup
 *.md.html
 
 *.flattened-pom.xml
+
+# Extension
+/extension/node_modules/
+/extension/dist/
+/extension/src/extension-config.ts
+/extension/coverage/
+/extension-test.properties

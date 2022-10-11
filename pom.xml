@@ -690,6 +690,97 @@
                     <mode>CHECK</mode>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>npm-install</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>extension/</workingDirectory>
+                            <executable>npm</executable>
+                            <commandlineArgs>ci</commandlineArgs>
+                            <useMavenLogger>false</useMavenLogger>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>build-extension</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>extension/</workingDirectory>
+                            <executable>npm</executable>
+                            <commandlineArgs>run build</commandlineArgs>
+                            <useMavenLogger>false</useMavenLogger>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unit-test-extension</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>extension/</workingDirectory>
+                            <executable>npm</executable>
+                            <commandlineArgs>test</commandlineArgs>
+                            <useMavenLogger>false</useMavenLogger>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>lint-extension</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>extension/</workingDirectory>
+                            <executable>npm</executable>
+                            <commandlineArgs>run lint</commandlineArgs>
+                            <useMavenLogger>false</useMavenLogger>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>extension/coverage</directory>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </fileset>
+                        <fileset>
+                            <directory>extension/dist</directory>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </fileset>
+                        <fileset>
+                            <directory>extension/node_modules</directory>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </fileset>
+                        <fileset>
+                            <directory>extension/src</directory>
+                            <includes>
+                                <include>extension-config.ts</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
