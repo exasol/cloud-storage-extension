@@ -14,7 +14,6 @@ In this release we added an extension for the extension manager.
 
 ### Compile Dependency Updates
 
-* Updated `com.exasol:import-export-udf-common-scala_2.13:0.2.0` to `0.4.2`
 * Updated `com.fasterxml.jackson.core:jackson-databind:2.13.4` to `2.14.0-rc2`
 * Updated `com.google.protobuf:protobuf-java:3.21.6` to `3.21.7`
 * Updated `io.grpc:grpc-netty:1.49.1` to `1.49.2`
