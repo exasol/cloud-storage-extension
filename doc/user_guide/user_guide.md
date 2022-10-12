@@ -170,7 +170,7 @@ mvn clean package -DskipTests=true
 ```
 
 The assembled jar file should be located at
-`target/scala-2.12/exasol-cloud-storage-extension-2.5.1.jar`.
+`target/exasol-cloud-storage-extension-2.5.1.jar`.
 
 ### Create an Exasol Bucket
 
@@ -196,10 +196,8 @@ curl -X PUT -T exasol-cloud-storage-extension-2.5.1.jar \
   http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/exasol-cloud-storage-extension-2.5.1.jar
 ```
 
-You can also check out the Exasol [BucketFS Explorer][bucketfs-explorer] as an
+You can also check out the Exasol [BucketFS Client](https://github.com/exasol/bucketfs-client/) as an
 alternative option to upload jar files to buckets in BucketFS.
-
-[bucketfs-explorer]: https://github.com/exasol/bucketfs-explorer
 
 Please ensure that the file is successfully uploaded. Check the bucket contents:
 
