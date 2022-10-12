@@ -7,8 +7,9 @@ import {
     Instance, Parameter, ParameterValues,
     registerExtension
 } from "@exasol/extension-manager-interface";
-import { ExtensionInfo } from "./common";
+import { extendContext, ExtensionInfo } from "./common";
 import { CONFIG } from "./extension-config";
+import { installExtension } from "./install";
 
 function createExtensionInfo(): ExtensionInfo {
     const version = CONFIG.version;
@@ -27,7 +28,7 @@ export function createExtension(): ExasolExtension {
         installableVersions: [{ name: extensionInfo.version, latest: true, deprecated: false }],
         bucketFsUploads: [{ bucketFsFilename: extensionInfo.fileName, downloadUrl, fileSize: CONFIG.fileSizeBytes, name: "Cloud Storage Extension file", licenseUrl, licenseAgreementRequired: false }],
         install(context: Context, version: string) {
-
+            installExtension(extendContext(context, extensionInfo), extensionInfo, version);
         },
         addInstance(context: Context, version: string, params: ParameterValues): Instance {
             throw new BadRequestError("Creating instances not supported")

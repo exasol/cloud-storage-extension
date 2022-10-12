@@ -1,5 +1,6 @@
 package com.exasol.cloudetl.extension;
 
+import static com.exasol.matcher.ResultSetStructureMatcher.table;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -37,8 +38,7 @@ class ExtensionIT {
     }
 
     private static Path getAdapterJar() {
-        final Path jar = Paths.get("target").resolve("exasol-cloud-storage-extension-2.5.1.jar")
-                .toAbsolutePath();
+        final Path jar = Paths.get("target").resolve("exasol-cloud-storage-extension-2.5.1.jar").toAbsolutePath();
         if (Files.exists(jar)) {
             return jar;
         } else {
@@ -70,5 +70,32 @@ class ExtensionIT {
                 () -> assertThat(extensions.get(0).getInstallableVersions().get(0).isDeprecated(), is(false)),
                 () -> assertThat(extensions.get(0).getDescription(),
                         equalTo("Access data formatted with Avro, Orc and Parquet on public cloud storage systems")));
+    }
+
+    @Test
+    void installCreatesScripts() {
+        setup.client().install();
+        setup.exasolMetadata().assertScript(table() //
+                .row(setScript("EXPORT_PATH", "com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator")) //
+                .row(setScript("EXPORT_TABLE", "com.exasol.cloudetl.scriptclasses.TableDataExporter")) //
+                .row(setScript("IMPORT_FILES", "com.exasol.cloudetl.scriptclasses.FilesDataImporter")) //
+                .row(scalarScript("IMPORT_METADATA", "com.exasol.cloudetl.scriptclasses.FilesMetadataReader")) //
+                .row(setScript("IMPORT_PATH", "com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator")) //
+                .matches());
+    }
+
+    private Object[] setScript(final String name, final String scriptClass) {
+        return script(name, "SET", scriptClass);
+    }
+
+    private Object[] scalarScript(final String name, final String scriptClass) {
+        return script(name, "SCALAR", scriptClass);
+    }
+
+    private Object[] script(final String name, final String inputType, final String scriptClass) {
+        final String comment = "Created by extension manager for Cloud Storage Extension " + PROJECT_VERSION;
+        final String jarDirective = "%jar /buckets/bfsdefault/default/" + ADAPTER_JAR.getFileName().toString() + ";";
+        return new Object[] { name, "UDF", inputType, "EMITS",
+                allOf(containsString(jarDirective), containsString("%scriptclass " + scriptClass + ";")), comment };
     }
 }

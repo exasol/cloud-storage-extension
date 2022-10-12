@@ -1,19 +1,20 @@
-
-export const ADAPTER_SCRIPT_NAME = "S3_FILES_ADAPTER";
-export const IMPORT_SCRIPT_NAME = "IMPORT_FROM_S3_DOCUMENT_FILES";
+import { Context } from "@exasol/extension-manager-interface";
 
 export interface ExtensionInfo {
     version: string;
     fileName: string;
 }
 
-export function getConnectionName(virtualSchemaName: string): string {
-    return `${virtualSchemaName}_CONNECTION`;
+export type ExtendedContext = Context & {
+    qualifiedName(name: string): string
 }
 
-function identity(arg: string): string {
-    return arg;
+export function extendContext(context: Context, extensionInfo: ExtensionInfo): ExtendedContext {
+    return {
+        ...context,
+        qualifiedName(name: string) {
+            return `"${context.extensionSchemaName}"."${name}"`;
+        },
+    }
 }
 
-export const convertInstanceIdToSchemaName = identity
-export const convertSchemaNameToInstanceId = identity
