@@ -9,7 +9,7 @@ export type ExtendedContext = Context & {
     qualifiedName(name: string): string
 }
 
-export function extendContext(context: Context, extensionInfo: ExtensionInfo): ExtendedContext {
+export function extendContext(context: Context): ExtendedContext {
     return {
         ...context,
         qualifiedName(name: string) {
