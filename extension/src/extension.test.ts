@@ -104,6 +104,7 @@ describe("Cloud Storage Extension", () => {
         const name = expectedScriptNames[i];
         expect(createScriptStatements[i]).toContain(`CREATE OR REPLACE JAVA`)
         expect(createScriptStatements[i]).toContain(`SCRIPT "ext-schema"."${name}"`)
+        expect(createScriptStatements[i]).toContain(`%scriptclass com.exasol.cloudetl.scriptclasses.`)
         expect(createCommentStatements[i]).toEqual(`COMMENT ON SCRIPT "ext-schema"."${name}" IS '${expectedComment}'`)
       }
     })

@@ -2,13 +2,13 @@ import { BadRequestError } from "@exasol/extension-manager-interface";
 import { ExtendedContext, ExtensionInfo } from "./common";
 
 
-function createComment(context: ExtendedContext, extension: ExtensionInfo, scriptName: string): void {
-    context.sqlClient.execute(`COMMENT ON SCRIPT ${context.qualifiedName(scriptName)} IS 'Created by extension manager for Cloud Storage Extension ${extension.version}'`);
-}
 
 export function installExtension(context: ExtendedContext, extension: ExtensionInfo, versionToInstall: string): void {
     if (extension.version !== versionToInstall) {
         throw new BadRequestError(`Installing version '${versionToInstall}' not supported, try '${extension.version}'.`);
+    }
+    function createComment(scriptName: string): void {
+        context.sqlClient.execute(`COMMENT ON SCRIPT ${context.qualifiedName(scriptName)} IS 'Created by extension manager for Cloud Storage Extension ${extension.version}'`);
     }
     const jarPath = context.bucketFs.resolvePath(extension.fileName);
 
@@ -38,7 +38,5 @@ export function installExtension(context: ExtendedContext, extension: ExtensionI
           %scriptclass com.exasol.cloudetl.scriptclasses.TableDataExporter;
           %jar ${jarPath};`);
 
-    [
-        "IMPORT_PATH", "IMPORT_METADATA", "IMPORT_FILES", "EXPORT_PATH", "EXPORT_TABLE"
-    ].forEach(scriptName => createComment(context, extension, scriptName));
+    ["IMPORT_PATH", "IMPORT_METADATA", "IMPORT_FILES", "EXPORT_PATH", "EXPORT_TABLE"].forEach(createComment);
 }
