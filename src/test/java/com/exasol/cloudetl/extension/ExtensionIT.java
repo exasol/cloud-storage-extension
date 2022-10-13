@@ -210,7 +210,7 @@ class ExtensionIT {
                 + "S3_CHANGE_DETECTION_MODE = 'none'\n" //
                 + "TRUNCATE_STRING          = 'true'\n" //
                 + "CONNECTION_NAME          = '" + S3_CONNECTION + "'\n" //
-                + "PARALLELISM              = 'nproc()'\n");
+                + "PARALLELISM              = 'nproc()'");
     }
 
     private void exportIntoS3(final Table table, final String bucket, final String s3Path) {
