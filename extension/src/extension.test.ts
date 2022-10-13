@@ -120,7 +120,6 @@ describe("Cloud Storage Extension", () => {
     })
   })
 
-
   describe("install()", () => {
     it("executes expected statements", () => {
       const context = createMockContext();
@@ -152,14 +151,42 @@ describe("Cloud Storage Extension", () => {
   })
 
   describe("uninstall()", () => {
-
+    it("executes query to check if schema exists", () => {
+      const context = createMockContext()
+      context.queryMock.mockReturnValue({ columns: [], rows: [] });
+      createExtension().uninstall(context, CONFIG.version)
+      const calls = context.queryMock.mock.calls
+      expect(calls.length).toEqual(1)
+      expect(calls[0]).toEqual(["SELECT 1 FROM SYS.EXA_ALL_SCHEMAS WHERE SCHEMA_NAME=?", "ext-schema"])
+    })
+    it("skips drop statements when schema does not exist", () => {
+      const context = createMockContext()
+      context.queryMock.mockReturnValue({ columns: [], rows: [] });
+      createExtension().uninstall(context, CONFIG.version)
+      expect(context.executeMock.mock.calls.length).toEqual(0)
+    })
+    it("executes expected statements", () => {
+      const context = createMockContext()
+      context.queryMock.mockReturnValue({ columns: [], rows: [[1]] });
+      createExtension().uninstall(context, CONFIG.version)
+      const calls = context.executeMock.mock.calls
+      const expectedScriptNames = ["IMPORT_PATH", "IMPORT_METADATA", "IMPORT_FILES", "EXPORT_PATH", "EXPORT_TABLE"]
+      expect(calls.length).toEqual(expectedScriptNames.length)
+      for (let i = 0; i < expectedScriptNames.length; i++) {
+        expect(calls[i]).toEqual([`DROP SCRIPT "ext-schema"."${expectedScriptNames[i]}"`])
+      }
+    })
+    it("fails for wrong version", () => {
+      expect(() => { createExtension().uninstall(createMockContext(), "wrongVersion") })
+        .toThrow(`Uninstalling version 'wrongVersion' not supported, try '${CONFIG.version}'.`)
+    })
   })
 
 
   describe("getInstanceParameters()", () => {
     it("is not supported", () => {
       expect(() => { createExtension().getInstanceParameters(createMockContext(), "version") })
-        .toThrow("Getting instance parameters not supported")
+        .toThrow("Creating instances not supported")
     })
   })
 
@@ -181,6 +208,13 @@ describe("Cloud Storage Extension", () => {
     it("is not supported", () => {
       expect(() => { createExtension().deleteInstance(createMockContext(), "version", "instId") })
         .toThrow("Deleting instances not supported")
+    })
+  })
+
+  describe("readInstanceParameterValues()", () => {
+    it("is not supported", () => {
+      expect(() => { createExtension().readInstanceParameterValues(createMockContext(), "version", "instId") })
+        .toThrow("Reading instance parameter values not supported")
     })
   })
 })

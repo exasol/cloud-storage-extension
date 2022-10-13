@@ -1,9 +1,11 @@
 package com.exasol.cloudetl.extension;
 
 import static com.exasol.matcher.ResultSetStructureMatcher.table;
+import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.io.FileNotFoundException;
 import java.nio.file.*;
@@ -136,20 +138,58 @@ class ExtensionIT {
     }
 
     @Test
+    void uninstallExtensionWithoutInstallation() throws SQLException {
+        assertDoesNotThrow(() -> client.uninstall());
+    }
+
+    @Test
+    void uninstallExtensionRemovesScripts() throws SQLException {
+        client.install();
+        client.uninstall();
+        setup.exasolMetadata().assertNoScripts();
+    }
+
+    @Test
+    void uninstallWrongVersionFails() {
+        client.assertRequestFails(() -> client.uninstall("wrongVersion"),
+                equalTo("Uninstalling version 'wrongVersion' not supported, try '" + PROJECT_VERSION + "'."),
+                equalTo(404));
+    }
+
+    @Test
     void listingInstancesNotSupported() {
         client.assertRequestFails(() -> client.listInstances(), equalTo("Finding instances not supported"),
                 equalTo(404));
     }
 
+    @Test
+    void creatingInstancesNotSupported() {
+        client.assertRequestFails(() -> client.createInstance(emptyList()), equalTo("Creating instances not supported"),
+                equalTo(404));
+    }
+
+    @Test
+    void deletingInstancesNotSupported() {
+        client.assertRequestFails(() -> client.deleteInstance("inst"), equalTo("Deleting instances not supported"),
+                equalTo(404));
+    }
+
+    @Test
+    void getExtensionDetailsInstancesNotSupported() {
+        client.assertRequestFails(() -> client.getExtensionDetails(PROJECT_VERSION),
+                equalTo("Creating instances not supported"), equalTo(404));
+    }
+
     private void verifyExportImportWorks() throws SQLException {
         final ExasolSchema schema = exasolObjectFactory.createSchema("TESTING_SCHEMA_" + System.currentTimeMillis());
         final String bucket = s3setup.createBucket();
+        final String s3Path = "data";
         try {
-            final Table sourceTable = schema.createTable("SRC_TABLE", "ID", "INTEGER", "NAME", "VARCHAR(10)");
+            final Table sourceTable = schema.createTable("SRC_TABLE", "ID", "INTEGER", "NAME", "VARCHAR(10)")
+                    .insert(1, "a").insert(2, "b").insert(3, "c");
+            exportIntoS3(sourceTable, bucket, s3Path);
             final Table targetTable = schema.createTable("TARGET_TABLE", "ID", "INTEGER", "NAME", "VARCHAR(10)");
-            sourceTable.insert(1, "a").insert(2, "b").insert(3, "c");
-            exportIntoS3(sourceTable, bucket, "data");
-            importFromS3IntoExasol(targetTable, bucket, "data/*");
+            importFromS3IntoExasol(targetTable, bucket, s3Path + "/*");
             try (var statement = connection
                     .prepareStatement("select * from " + targetTable.getFullyQualifiedName() + " order by 1")) {
                 assertThat(statement.executeQuery(),

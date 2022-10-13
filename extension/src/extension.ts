@@ -3,13 +3,14 @@ import {
     Context, ExaMetadata,
     ExasolExtension,
     Installation,
-    Instance, InternalServerError, NotFoundError, Parameter, ParameterValues,
+    Instance, NotFoundError, Parameter, ParameterValues,
     registerExtension
 } from "@exasol/extension-manager-interface";
 import { extendContext, ExtensionInfo } from "./common";
 import { CONFIG } from "./extension-config";
 import { findInstallations } from "./findInstallations";
 import { installExtension } from "./install";
+import { uninstall } from "./uninstall";
 
 function createExtensionInfo(): ExtensionInfo {
     const version = CONFIG.version;
@@ -34,7 +35,7 @@ export function createExtension(): ExasolExtension {
             return findInstallations(metadata.allScripts.rows);
         },
         uninstall(context: Context, version: string): void {
-            throw new InternalServerError("Not yet implemented")
+            uninstall(extendContext(context), extensionInfo, version);
         },
         addInstance(context: Context, version: string, params: ParameterValues): Instance {
             throw new NotFoundError("Creating instances not supported")
@@ -46,7 +47,7 @@ export function createExtension(): ExasolExtension {
             throw new NotFoundError("Deleting instances not supported")
         },
         getInstanceParameters(context: Context, version: string): Parameter[] {
-            throw new NotFoundError("Getting instance parameters not supported")
+            throw new NotFoundError("Creating instances not supported")
         },
         readInstanceParameterValues(_context: Context, _version: string, _instanceId: string): ParameterValues {
             throw new NotFoundError("Reading instance parameter values not supported")
