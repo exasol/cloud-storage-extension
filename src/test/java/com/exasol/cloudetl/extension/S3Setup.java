@@ -1,7 +1,5 @@
 package com.exasol.cloudetl.extension;
 
-import java.util.logging.Logger;
-
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.containers.localstack.LocalStackContainer.Service;
 import org.testcontainers.utility.DockerImageName;
@@ -13,11 +11,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 class S3Setup implements AutoCloseable {
-    private static final Logger LOGGER = Logger.getLogger(S3Setup.class.getName());
     private final LocalStackContainer container;
     private final AmazonS3 client;
 
-    public S3Setup(final LocalStackContainer container) {
+    private S3Setup(final LocalStackContainer container) {
         this.container = container;
         this.client = createS3Client();
     }
@@ -54,13 +51,13 @@ class S3Setup implements AutoCloseable {
         return "S3_ACCESS_KEY=" + this.container.getAccessKey() + ";S3_SECRET_KEY=" + this.container.getSecretKey();
     }
 
-    public String createBucket() {
+    String createBucket() {
         final String uniqueBucketName = "testing-bucket-" + System.currentTimeMillis();
         this.client.createBucket(uniqueBucketName);
         return uniqueBucketName;
     }
 
-    public void deleteBucket(final String bucket) {
+    void deleteBucket(final String bucket) {
         this.client.listObjects(bucket).getObjectSummaries()
                 .forEach(object -> this.client.deleteObject(object.getBucketName(), object.getKey()));
         this.client.deleteBucket(bucket);
