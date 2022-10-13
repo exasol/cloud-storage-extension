@@ -21,6 +21,7 @@ import com.exasol.dbbuilder.dialects.exasol.*;
 import com.exasol.exasoltestsetup.ExasolTestSetup;
 import com.exasol.exasoltestsetup.ExasolTestSetupFactory;
 import com.exasol.extensionmanager.client.model.ExtensionsResponseExtension;
+import com.exasol.extensionmanager.client.model.InstallationsResponseInstallation;
 import com.exasol.extensionmanager.itest.ExtensionManagerClient;
 import com.exasol.extensionmanager.itest.ExtensionManagerSetup;
 import com.exasol.extensionmanager.itest.builder.ExtensionBuilder;
@@ -85,7 +86,7 @@ class ExtensionIT {
 
     @Test
     void listExtensions() {
-        final List<ExtensionsResponseExtension> extensions = setup.client().getExtensions();
+        final List<ExtensionsResponseExtension> extensions = client.getExtensions();
         assertAll(() -> assertThat(extensions, hasSize(1)), //
                 () -> assertThat(extensions.get(0).getName(), equalTo("Cloud Storage Extension")),
                 () -> assertThat(extensions.get(0).getInstallableVersions().get(0).getName(), equalTo(PROJECT_VERSION)),
@@ -93,6 +94,18 @@ class ExtensionIT {
                 () -> assertThat(extensions.get(0).getInstallableVersions().get(0).isDeprecated(), is(false)),
                 () -> assertThat(extensions.get(0).getDescription(),
                         equalTo("Access data formatted with Avro, Orc and Parquet on public cloud storage systems")));
+    }
+
+    @Test
+    void getInstallationsReturnsEmptyList() {
+        assertThat(client.getInstallations(), hasSize(0));
+    }
+
+    @Test
+    void getInstallationsReturnsResult() {
+        client.install();
+        assertThat(client.getInstallations(), contains(
+                new InstallationsResponseInstallation().name("Cloud Storage Extension").version(PROJECT_VERSION)));
     }
 
     @Test
@@ -119,10 +132,16 @@ class ExtensionIT {
     @Test
     void exportImportWorksAfterInstallation() throws SQLException {
         setup.client().install();
-        verfiyExportImportWorks();
+        verifyExportImportWorks();
     }
 
-    private void verfiyExportImportWorks() throws SQLException {
+    @Test
+    void listingInstancesNotSupported() {
+        client.assertRequestFails(() -> client.listInstances(), equalTo("Finding instances not supported"),
+                equalTo(404));
+    }
+
+    private void verifyExportImportWorks() throws SQLException {
         final ExasolSchema schema = exasolObjectFactory.createSchema("TESTING_SCHEMA_" + System.currentTimeMillis());
         final String bucket = s3setup.createBucket();
         try {

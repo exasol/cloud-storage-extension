@@ -8,6 +8,7 @@ import {
 } from "@exasol/extension-manager-interface";
 import { extendContext, ExtensionInfo } from "./common";
 import { CONFIG } from "./extension-config";
+import { findInstallations } from "./findInstallations";
 import { installExtension } from "./install";
 
 function createExtensionInfo(): ExtensionInfo {
@@ -30,7 +31,7 @@ export function createExtension(): ExasolExtension {
             installExtension(extendContext(context), extensionInfo, version);
         },
         findInstallations(_context: Context, metadata: ExaMetadata): Installation[] {
-            return [];
+            return findInstallations(metadata.allScripts.rows);
         },
         uninstall(context: Context, version: string): void {
             throw new InternalServerError("Not yet implemented")
