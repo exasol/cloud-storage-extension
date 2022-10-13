@@ -11,8 +11,11 @@
         <scala.version>2.13.10</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
         <hadoop.version>3.3.4</hadoop.version>
-        <sonar.sources>.</sonar.sources>
-        <sonar.inclusions>src/main/**</sonar.inclusions>
+        <sonar.sources>src/main/,extension/src/</sonar.sources>
+        <sonar.exclusions>extension/src/*.test.ts</sonar.exclusions>
+        <sonar.tests>src/test/,extension/src</sonar.tests>
+        <sonar.test.inclusions>src/test/,*.test.ts</sonar.test.inclusions>
+        <sonar.javascript.lcov.reportPaths>extension/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
     </properties>
     <parent>
         <artifactId>cloud-storage-extension-generated-parent</artifactId>
