@@ -75,8 +75,45 @@ describe("Cloud Storage Extension", () => {
       return installations
     }
 
+    function text(name: string, className: string, version: string): string {
+      return `CREATE ${name} ...
+        %scriptclass ${className};
+        %jar /buckets/bfsdefault/default/exasol-cloud-storage-extension-${version}.jar;`
+    }
+    function script({ schema = "schema", name = "name", inputType, resultType = "EMITS", type = "UDF", text = "", comment }: Partial<ExaScriptsRow>): ExaScriptsRow {
+      return { schema, name, inputType, resultType, type, text, comment }
+    }
+    function setScript(name: string, className: string, version = CONFIG.version): ExaScriptsRow {
+      return script({ name, inputType: "SET", text: text(name, className, version) })
+    }
+    function scalarScript(name: string, className: string, version = CONFIG.version): ExaScriptsRow {
+      return script({ name, inputType: "SCALAR", text: text(name, className, version) })
+    }
+
     it("returns empty list when no adapter script is available", () => {
       expect(findInstallations([])).toHaveLength(0)
+    })
+
+    it("returns single item when all scripts are available", () => {
+      const scripts: ExaScriptsRow[] = [
+        setScript("EXPORT_PATH", "com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator"),
+        setScript("EXPORT_TABLE", "com.exasol.cloudetl.scriptclasses.TableDataExporter"),
+        setScript("IMPORT_FILES", "com.exasol.cloudetl.scriptclasses.FilesDataImporter"),
+        scalarScript("IMPORT_METADATA", "com.exasol.cloudetl.scriptclasses.FilesMetadataReader"),
+        setScript("IMPORT_PATH", "com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator")
+      ]
+      expect(findInstallations(scripts)).toStrictEqual([{ name: "Cloud Storage Extension", version: CONFIG.version }])
+    })
+
+    it("uses version from export path script", () => {
+      const scripts: ExaScriptsRow[] = [
+        setScript("EXPORT_PATH", "com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator"),
+        setScript("EXPORT_TABLE", "com.exasol.cloudetl.scriptclasses.TableDataExporter"),
+        setScript("IMPORT_FILES", "com.exasol.cloudetl.scriptclasses.FilesDataImporter"),
+        scalarScript("IMPORT_METADATA", "com.exasol.cloudetl.scriptclasses.FilesMetadataReader", "0.0.0"),
+        setScript("IMPORT_PATH", "com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator")
+      ]
+      expect(findInstallations(scripts)).toStrictEqual([{ name: "Cloud Storage Extension", version: "0.0.0" }])
     })
 
     describe("returns expected installations", () => {

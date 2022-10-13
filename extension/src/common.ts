@@ -1,12 +1,56 @@
 import { Context } from "@exasol/extension-manager-interface";
 
-export const IMPORT_PATH_SCRIPT = "IMPORT_PATH";
-export const IMPORT_METADATA_SCRIPT = "IMPORT_METADATA";
-export const IMPORT_FILES_SCRIPT = "IMPORT_FILES";
-export const EXPORT_PATH_SCRIPT = "EXPORT_PATH";
-export const EXPORT_TABLE_SCRIPT = "EXPORT_TABLE";
 
-export const ALL_SCRIPTS = [IMPORT_PATH_SCRIPT, IMPORT_METADATA_SCRIPT, IMPORT_FILES_SCRIPT, EXPORT_PATH_SCRIPT, EXPORT_TABLE_SCRIPT];
+export interface ScriptDefinition {
+    name: string
+    type: "SET" | "SCALAR"
+    args: string
+    scriptClass: string
+}
+
+export const SCRIPTS: { [key: string]: ScriptDefinition } = {
+    importPath: {
+        name: "IMPORT_PATH",
+        type: "SET",
+        args: "...",
+        scriptClass: "com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator"
+    },
+    importMetadata: {
+        name: "IMPORT_METADATA",
+        type: "SCALAR",
+        args: `filename VARCHAR(2000), partition_index VARCHAR(100), start_index DECIMAL(36, 0), end_index DECIMAL(36, 0)`,
+        scriptClass: "com.exasol.cloudetl.scriptclasses.FilesMetadataReader"
+    },
+    importFiles: {
+        name: "IMPORT_FILES",
+        type: "SET",
+        args: "...",
+        scriptClass: "com.exasol.cloudetl.scriptclasses.FilesDataImporter"
+    },
+    exportPath: {
+        name: "EXPORT_PATH",
+        type: "SET",
+        args: "...",
+        scriptClass: "com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator"
+    },
+    exportTable: {
+        name: "EXPORT_TABLE",
+        type: "SET",
+        args: "ROWS_AFFECTED INT",
+        scriptClass: "com.exasol.cloudetl.scriptclasses.TableDataExporter"
+    }
+}
+
+export function getAllScripts(): ScriptDefinition[] {
+    return [
+        SCRIPTS.importPath,
+        SCRIPTS.importMetadata,
+        SCRIPTS.importFiles,
+        SCRIPTS.exportPath,
+        SCRIPTS.exportTable,
+    ];
+}
+
 export interface ExtensionInfo {
     version: string;
     fileName: string;
