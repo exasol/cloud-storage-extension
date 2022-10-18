@@ -2,7 +2,9 @@
 
 This guide contains information for developers.
 
-## Working With the Extension
+## Working With the Managed Extension
+
+This describes how to develop the extension for the [Extension Manager](https://github.com/exasol/extension-manager/).
 
 ### Running Unit Tests
 
