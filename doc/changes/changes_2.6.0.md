@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.5.1, released 2022-??-??
+# Cloud Storage Extension 2.6.0, released 2022-10-18
 
 Code name: Extension Manager support
 
