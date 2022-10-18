@@ -7,14 +7,14 @@ import {
     registerExtension
 } from "@exasol/extension-manager-interface";
 import { extendContext, ExtensionInfo } from "./common";
-import { CONFIG } from "./extension-config";
+import { EXTENSION_DESCRIPTION } from "./extension-description";
 import { findInstallations } from "./findInstallations";
 import { installExtension } from "./install";
 import { uninstall } from "./uninstall";
 
 function createExtensionInfo(): ExtensionInfo {
-    const version = CONFIG.version;
-    const fileName = CONFIG.fileName;
+    const version = EXTENSION_DESCRIPTION.version;
+    const fileName = EXTENSION_DESCRIPTION.fileName;
     return { version, fileName };
 }
 
@@ -27,7 +27,7 @@ export function createExtension(): ExasolExtension {
         name: "Cloud Storage Extension",
         description: "Access data formatted with Avro, Orc and Parquet on public cloud storage systems",
         installableVersions: [{ name: extensionInfo.version, latest: true, deprecated: false }],
-        bucketFsUploads: [{ bucketFsFilename: extensionInfo.fileName, downloadUrl, fileSize: CONFIG.fileSizeBytes, name: "Cloud Storage Extension file", licenseUrl, licenseAgreementRequired: false }],
+        bucketFsUploads: [{ bucketFsFilename: extensionInfo.fileName, downloadUrl, fileSize: EXTENSION_DESCRIPTION.fileSizeBytes, name: "Cloud Storage Extension file", licenseUrl, licenseAgreementRequired: false }],
         install(context: Context, version: string) {
             installExtension(extendContext(context), extensionInfo, version);
         },

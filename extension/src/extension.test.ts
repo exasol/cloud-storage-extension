@@ -3,7 +3,7 @@ import { ExaScriptsRow } from '@exasol/extension-manager-interface/dist/exasolSc
 import { describe, expect, it } from '@jest/globals';
 import * as jestMock from "jest-mock";
 import { createExtension } from "./extension";
-import { CONFIG } from './extension-config';
+import { EXTENSION_DESCRIPTION } from './extension-description';
 
 const EXTENSION_SCHEMA_NAME = "ext-schema"
 
@@ -83,10 +83,10 @@ describe("Cloud Storage Extension", () => {
     function script({ schema = "schema", name = "name", inputType, resultType = "EMITS", type = "UDF", text = "", comment }: Partial<ExaScriptsRow>): ExaScriptsRow {
       return { schema, name, inputType, resultType, type, text, comment }
     }
-    function setScript(name: string, className: string, version = CONFIG.version): ExaScriptsRow {
+    function setScript(name: string, className: string, version = EXTENSION_DESCRIPTION.version): ExaScriptsRow {
       return script({ name, inputType: "SET", text: text(name, className, version) })
     }
-    function scalarScript(name: string, className: string, version = CONFIG.version): ExaScriptsRow {
+    function scalarScript(name: string, className: string, version = EXTENSION_DESCRIPTION.version): ExaScriptsRow {
       return script({ name, inputType: "SCALAR", text: text(name, className, version) })
     }
 
@@ -102,7 +102,7 @@ describe("Cloud Storage Extension", () => {
         scalarScript("IMPORT_METADATA", "com.exasol.cloudetl.scriptclasses.FilesMetadataReader"),
         setScript("IMPORT_PATH", "com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator")
       ]
-      expect(findInstallations(scripts)).toStrictEqual([{ name: "Cloud Storage Extension", version: CONFIG.version }])
+      expect(findInstallations(scripts)).toStrictEqual([{ name: "Cloud Storage Extension", version: EXTENSION_DESCRIPTION.version }])
     })
 
     it("uses version from export path script", () => {
@@ -123,7 +123,7 @@ describe("Cloud Storage Extension", () => {
   describe("install()", () => {
     it("executes expected statements", () => {
       const context = createMockContext();
-      createExtension().install(context, CONFIG.version);
+      createExtension().install(context, EXTENSION_DESCRIPTION.version);
       const executeCalls = context.executeMock.mock.calls
       expect(executeCalls.length).toBe(10)
 
@@ -135,7 +135,7 @@ describe("Cloud Storage Extension", () => {
       expect(createScriptStatements).toHaveLength(5)
       expect(createCommentStatements).toHaveLength(5)
 
-      const expectedComment = `Created by extension manager for Cloud Storage Extension ${CONFIG.version}`
+      const expectedComment = `Created by extension manager for Cloud Storage Extension ${EXTENSION_DESCRIPTION.version}`
       for (let i = 0; i < expectedScriptNames.length; i++) {
         const name = expectedScriptNames[i];
         expect(createScriptStatements[i]).toContain(`CREATE OR REPLACE JAVA`)
@@ -146,7 +146,7 @@ describe("Cloud Storage Extension", () => {
     })
     it("fails for wrong version", () => {
       expect(() => { createExtension().install(createMockContext(), "wrongVersion") })
-        .toThrow(`Installing version 'wrongVersion' not supported, try '${CONFIG.version}'.`)
+        .toThrow(`Installing version 'wrongVersion' not supported, try '${EXTENSION_DESCRIPTION.version}'.`)
     })
   })
 
@@ -154,7 +154,7 @@ describe("Cloud Storage Extension", () => {
     it("executes query to check if schema exists", () => {
       const context = createMockContext()
       context.queryMock.mockReturnValue({ columns: [], rows: [] });
-      createExtension().uninstall(context, CONFIG.version)
+      createExtension().uninstall(context, EXTENSION_DESCRIPTION.version)
       const calls = context.queryMock.mock.calls
       expect(calls.length).toEqual(1)
       expect(calls[0]).toEqual(["SELECT 1 FROM SYS.EXA_ALL_SCHEMAS WHERE SCHEMA_NAME=?", "ext-schema"])
@@ -162,13 +162,13 @@ describe("Cloud Storage Extension", () => {
     it("skips drop statements when schema does not exist", () => {
       const context = createMockContext()
       context.queryMock.mockReturnValue({ columns: [], rows: [] });
-      createExtension().uninstall(context, CONFIG.version)
+      createExtension().uninstall(context, EXTENSION_DESCRIPTION.version)
       expect(context.executeMock.mock.calls.length).toEqual(0)
     })
     it("executes expected statements", () => {
       const context = createMockContext()
       context.queryMock.mockReturnValue({ columns: [], rows: [[1]] });
-      createExtension().uninstall(context, CONFIG.version)
+      createExtension().uninstall(context, EXTENSION_DESCRIPTION.version)
       const calls = context.executeMock.mock.calls
       const expectedScriptNames = ["IMPORT_PATH", "IMPORT_METADATA", "IMPORT_FILES", "EXPORT_PATH", "EXPORT_TABLE"]
       expect(calls.length).toEqual(expectedScriptNames.length)
@@ -178,7 +178,7 @@ describe("Cloud Storage Extension", () => {
     })
     it("fails for wrong version", () => {
       expect(() => { createExtension().uninstall(createMockContext(), "wrongVersion") })
-        .toThrow(`Uninstalling version 'wrongVersion' not supported, try '${CONFIG.version}'.`)
+        .toThrow(`Uninstalling version 'wrongVersion' not supported, try '${EXTENSION_DESCRIPTION.version}'.`)
     })
   })
 

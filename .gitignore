@@ -77,6 +77,6 @@ pom.xml.versionsBackup
 # Extension
 /extension/node_modules/
 /extension/dist/
-/extension/src/extension-config.ts
+/extension/src/extension-description.ts
 /extension/coverage/
 /extension-test.properties

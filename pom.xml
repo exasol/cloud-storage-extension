@@ -803,7 +803,7 @@
                         <fileset>
                             <directory>extension/src</directory>
                             <includes>
-                                <include>extension-config.ts</include>
+                                <include>extension-description.ts</include>
                             </includes>
                         </fileset>
                     </filesets>

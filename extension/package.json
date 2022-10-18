@@ -7,7 +7,7 @@
     "scripts": {
         "build": "npm run generate && npm run compile",
         "compile": "tsc --build && esbuild dist/extension.js --bundle --outfile=dist/cloud-storage-extension.js --target=es6",
-        "generate": "bash generate-config.sh",
+        "generate": "bash generate-description.sh",
         "lint": "eslint ./src/",
         "clean": "rm -rf dist/",
         "test": "jest",
