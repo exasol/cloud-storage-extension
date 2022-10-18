@@ -1,11 +1,3 @@
-community-tags:
-  - Apache Avro
-  - Apache Parquet
-  - Apache ORC
-  - Cloud Storage Systems
-  - Open Source
+release-platforms:
   - GitHub
-community-project-name: Cloud Storage Extension
-community-project-description: |
-  The [Exasol Cloud Storage Extension](https://github.com/exasol/cloud-storage-extension) for
-  accessing formatted data Avro, Orc and Parquet, on public cloud storage systems.
+language: Java
