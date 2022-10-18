@@ -39,7 +39,8 @@ For more information please check out the following guides.
 
 ## Information for Contributors
 
-* [Developer Guide][developer-guide]
+* [General Developer Guide for Import-Export UDF][developer-guide]
+* [Project Specific Developer Guide](doc/developers_guide/developers_guide.md)
 * [Dependencies](dependencies.md)
 
 [exasol]: https://www.exasol.com/en/
