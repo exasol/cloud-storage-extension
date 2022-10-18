@@ -17,6 +17,10 @@ jobs:
           distribution: 'temurin'
           java-version: 11
           cache: 'maven'
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
       - name: Enable testcontainer reuse
         run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
       - name: Run tests and build with Maven
