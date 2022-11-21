@@ -8,7 +8,8 @@ Updated dependencies to fix vulnerabilities.
 
 ## Bug Fixes
 
-* #229: Fixed vulnerabilities
+* #229: Fixed vulnerabilities CVE-2022-37865 and CVE-2022-37866 by ugrading transitive dependency to `org.apache.ivy:ivy` required by `spark-sql`.
+
 
 ## Dependency Updates
 
