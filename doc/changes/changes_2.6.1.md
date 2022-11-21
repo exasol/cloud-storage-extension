@@ -6,7 +6,7 @@ Code name: Dependency Upgrade to fix Vulnerabilities
 
 Updated dependencies to fix vulnerabilities.
 
-## Features
+## Bug Fixes
 
 * #229: Fixed vulnerabilities
 
