@@ -124,7 +124,7 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
 
     FilesDataImporter.run(mock[ExaMetadata], importIter)
 
-    verify(importIter, times(2)).emit(Seq(any[Object]): _*)
+    verify(importIter, times(2)).emit(any(), any(), any(), any(), any(), any(), any(), any())
     verify(iterator, times(1)).emit(Long.valueOf(2))
   }
 

@@ -7,6 +7,12 @@
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>
+    <parent>
+        <artifactId>cloud-storage-extension-generated-parent</artifactId>
+        <groupId>com.exasol</groupId>
+        <version>2.6.2</version>
+        <relativePath>pk_generated_parent.pom</relativePath>
+    </parent>
     <properties>
         <scala.version>2.13.10</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
@@ -17,21 +23,6 @@
         <sonar.test.inclusions>src/test/,*.test.ts</sonar.test.inclusions>
         <sonar.javascript.lcov.reportPaths>extension/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
     </properties>
-    <parent>
-        <artifactId>cloud-storage-extension-generated-parent</artifactId>
-        <groupId>com.exasol</groupId>
-        <version>2.6.2</version>
-        <relativePath>pk_generated_parent.pom</relativePath>
-    </parent>
-    <repositories>
-        <repository>
-            <id>maven.exasol.com</id>
-            <url>https://maven.exasol.com/artifactory/exasol-releases</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -51,22 +42,27 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.14.1</version>
+            <version>2.14.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-scala_${scala.compat.version}</artifactId>
-            <version>2.14.1</version>
+            <version>2.14.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
+            <version>6.5.0</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.52.1</version>
+            <version>1.53.0</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.87.Final</version>
+            <version>4.1.89.Final</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -86,12 +82,16 @@
                     <groupId>org.apache.commons</groupId>
                     <artifactId>commons-compress</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.exasol</groupId>
+                    <artifactId>exasol-script-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>error-reporting-java</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -154,6 +154,16 @@
                     <groupId>com.sun.jersey</groupId>
                     <artifactId>jersey-server</artifactId>
                 </exclusion>
+                <!-- excluded to fix CVE-2022-40152 -->
+                <exclusion>
+                    <groupId>com.fasterxml.woodstox</groupId>
+                    <artifactId>woodstox-core</artifactId>
+                </exclusion>
+                <!-- excluded to fix CVE-2021-37533 -->
+                <exclusion>
+                    <groupId>commons-net</groupId>
+                    <artifactId>commons-net</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -214,7 +224,7 @@
         <dependency>
             <groupId>org.alluxio</groupId>
             <artifactId>alluxio-core-client-hdfs</artifactId>
-            <version>2.9.0</version>
+            <version>2.9.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -248,6 +258,16 @@
                     <groupId>org.apache.logging.log4j</groupId>
                     <artifactId>log4j-core</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-core</artifactId>
+                </exclusion>
+                <!-- excluded for CVE-2020-28491 -->
+                <!-- CWE-770: Allocation of Resources Without Limits or Throttling (7.5); -->
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-cbor</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -279,7 +299,7 @@
         <dependency>
             <groupId>io.delta</groupId>
             <artifactId>delta-core_${scala.compat.version}</artifactId>
-            <version>2.2.0</version>
+            <version>2.1.0</version>
         </dependency>
         <!-- Do not remove until hadoop version 3.4.0, see https://github.com/exasol/cloud-storage-extension/issues/195 -->
         <dependency>
@@ -290,7 +310,7 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${scala.compat.version}</artifactId>
-            <version>3.3.1</version>
+            <version>3.3.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.spark-project.spark</groupId>
@@ -331,6 +351,11 @@
             <groupId>com.exasol</groupId>
             <artifactId>parquet-io-java</artifactId>
             <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.exasol</groupId>
+            <artifactId>udf-api-java</artifactId>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -384,7 +409,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.0.0</version>
+            <version>5.1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -408,13 +433,13 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>6.5.0</version>
+            <version>6.5.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>test-db-builder-java</artifactId>
-            <version>3.4.1</version>
+            <version>3.4.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -426,7 +451,7 @@
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.12.3</version>
+            <version>3.13.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -444,7 +469,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>extension-manager-integration-test-java</artifactId>
-            <version>0.2.0</version>
+            <version>0.2.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -453,7 +478,7 @@
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
-                <version>4.7.1</version>
+                <version>4.8.0</version>
                 <executions>
                     <execution>
                         <id>scala-compile-first</id>
@@ -523,7 +548,7 @@
             <plugin>
                 <groupId>org.scalatest</groupId>
                 <artifactId>scalatest-maven-plugin</artifactId>
-                <version>2.0.2</version>
+                <version>2.2.0</version>
                 <configuration>
                     <junitxml>.</junitxml>
                     <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
@@ -557,7 +582,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.5.0</version>
                 <configuration>
                     <charset>UTF-8</charset>
                     <doclint/>
@@ -597,21 +622,18 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
-                        <!-- Vulnerabilities in transitive dependency com.squareup.okhttp:okhttp:jar:2.7.5 -->
-                        <!-- CWE-295: Improper Certificate Validation (7.5); https://ossindex.sonatype.org/vulnerability/CVE-2021-0341 -->
-                        <exclude>CVE-2021-0341</exclude>
-                        <!-- CWE-20: Improper Input Validation (5.9); https://ossindex.sonatype.org/vulnerability/sonatype-2018-0035 -->
-                        <exclude>sonatype-2018-0035</exclude>
                         <!-- Vulnerabilities in org.codehaus.jackson:jackson-mapper-asl:1.9.13 -->
                         <!-- CWE-184: Incomplete Blacklist (9.8); https://ossindex.sonatype.org/vulnerability/CVE-2017-7525 -->
                         <exclude>CVE-2017-7525</exclude>
-                        <!-- Vulnerabilities in com.fasterxml.jackson.core:jackson-databind:jar:2.13.4 -->
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (7.5); https://ossindex.sonatype.org/vulnerability/CVE-2019-10172 -->
                         <exclude>CVE-2019-10172</exclude>
-                        <!-- Vulnerabilities in io.netty:netty-handler:4.1.78.Final -->
+                        <!-- Vulnerabilities in com.fasterxml.jackson.core:jackson-core:jar:2.14.2 -->
+                        <!-- CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion') from jackson-core:2.13.4 -->
+                        <exclude>sonatype-2022-6438</exclude>
+                        <!-- Vulnerabilities in io.netty:netty-all:4.1.89.Final -->
                         <!-- CWE-300: Channel Accessible by Non-Endpoint ('Man-in-the-Middle') (6.5); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0026 -->
                         <exclude>sonatype-2020-0026</exclude>
-                        <!-- io.grpc:grpc-core:jar:1.47.0 -->
+                        <!-- io.grpc:grpc-core:jar:1.53.0 -->
                         <!-- CWE-404: Improper Resource Shutdown or Release (6.5); https://ossindex.sonatype.org/vulnerability/sonatype-2021-0818 -->
                         <exclude>sonatype-2021-0818</exclude>
                         <!-- Vulnerabilities in com.google.guava:guava:jar:31.1-jre -->
@@ -623,13 +645,17 @@
                         <!-- Vulnerabilities in org.apache.hadoop:hadoop-hdfs-client:3.3.4 -->
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (8.6); https://ossindex.sonatype.org/vulnerability/sonatype-2022-5732 -->
                         <exclude>sonatype-2022-5732</exclude>
+                        <!-- Vulnerabilities in fr.turri:aXMLRPC:1.13.0:test -->
+                        <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (9.8); -->
+                        <!-- Used in tests only. -->
+                        <exclude>CVE-2020-36641</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>2.9.1</version>
+                <version>2.9.3</version>
                 <executions>
                     <execution>
                         <goals>
@@ -682,7 +708,7 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.27.0</version>
+                <version>2.33.0</version>
                 <configuration>
                     <scala>
                         <scalafmt>
@@ -726,7 +752,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>npm-ci</id>
