@@ -154,11 +154,6 @@
                     <groupId>com.sun.jersey</groupId>
                     <artifactId>jersey-server</artifactId>
                 </exclusion>
-                <!-- excluded to fix CVE-2022-40152 -->
-                <exclusion>
-                    <groupId>com.fasterxml.woodstox</groupId>
-                    <artifactId>woodstox-core</artifactId>
-                </exclusion>
                 <!-- excluded to fix CVE-2021-37533 -->
                 <exclusion>
                     <groupId>commons-net</groupId>

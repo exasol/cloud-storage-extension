@@ -11,7 +11,6 @@ import com.exasol.ExaMetadata
 import com.exasol.cloudetl.DataRecords
 import com.exasol.cloudetl.TestFileManager
 
-import org.mockito.ArgumentMatchers.any
 import org.mockito.ExtraMockito
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -124,7 +123,7 @@ class TableDataExporterTest extends StorageTest with BeforeAndAfterEach with Dat
 
     FilesDataImporter.run(mock[ExaMetadata], importIter)
 
-    verify(importIter, times(2)).emit(any(), any(), any(), any(), any(), any(), any(), any())
+    verify(importIter, times(2)).emit(anyObjects)
     verify(iterator, times(1)).emit(Long.valueOf(2))
   }
 
