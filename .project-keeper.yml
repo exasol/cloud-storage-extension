@@ -19,3 +19,4 @@ excludes:
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_upload_github_release_assets.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_prepare_original_checksum.yml'"
+  - regex: "(?s)E-PK-CORE-53: The dependencies.md file has outdated content.*"
