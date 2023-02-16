@@ -16,6 +16,8 @@ class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with
   override final def beforeAll(): Unit =
     spark = SparkSession
       .builder()
+      .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+      .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
       .appName("DeltaFormatTest")
       .master("local[2]")
       .getOrCreate()

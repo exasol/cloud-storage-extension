@@ -102,8 +102,10 @@ abstract class Bucket extends LazyLogging {
   private[this] def createSparkSession(): SparkSession = {
     lazy val spark = SparkSession
       .builder()
-      .master("local[*]")
+      .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+      .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
       .config("spark.delta.logStore.class", properties.getDeltaFormatLogStoreClassName())
+      .master("local[*]")
       .getOrCreate()
 
     getConfiguration().iterator().asScala.foreach { entry =>

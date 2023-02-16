@@ -3,7 +3,6 @@ package com.exasol.cloudetl.scriptclasses
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
 
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 
 class FilesDataImporterTest extends StorageTest {
@@ -35,7 +34,7 @@ class FilesDataImporterTest extends StorageTest {
     when(iter.getLong(4)).thenReturn(1L, 1L)
 
     FilesDataImporter.run(mock[ExaMetadata], iter)
-    verify(iter, times(expectedNumberOfRecords)).emit(Seq(any[Object]): _*)
+    verify(iter, times(expectedNumberOfRecords)).emit(anyObjects())
   }
 
   /**
@@ -84,7 +83,7 @@ class FilesDataImporterTest extends StorageTest {
       seq.map(_.asInstanceOf[AnyRef])
     }
 
-    verify(iter, times(totalRecords)).emit(Seq(any[Object]): _*)
+    verify(iter, times(totalRecords)).emit(anyObjects())
     records.foreach { case rows =>
       verify(iter, times(1)).emit(rows: _*)
     }

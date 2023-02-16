@@ -6,6 +6,7 @@ import java.nio.file.Paths
 import com.exasol.ExaIterator
 import com.exasol.cloudetl.storage.StorageProperties
 
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.mockito.MockitoSugar
@@ -34,5 +35,8 @@ trait StorageTest extends AnyFunSuite with MockitoSugar {
     when(mockedIterator.getString(1)).thenReturn(storageProperties.mkString())
     mockedIterator
   }
+
+  final def anyObjects(): Array[Object] =
+    any(classOf[Array[Object]])
 
 }
