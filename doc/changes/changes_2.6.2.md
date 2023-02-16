@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.6.2, released 2023-02-16
+# Cloud Storage Extension 2.6.2, released 2023-??-??
 
 Code name: Dependency Upgrade on top of 2.6.1
 
