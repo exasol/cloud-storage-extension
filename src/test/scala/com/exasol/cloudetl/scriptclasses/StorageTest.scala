@@ -36,8 +36,7 @@ trait StorageTest extends AnyFunSuite with MockitoSugar {
     mockedIterator
   }
 
-  final def anyObjects(): Array[Object] = {
+  final def anyObjects(): Array[Object] =
     any(classOf[Array[Object]])
-  }
 
 }
