@@ -18,8 +18,8 @@ Updated dependencies to remove references to discontinued repository maven.exaso
 * Added `com.exasol:udf-api-java:1.0.2`
 * Updated `com.fasterxml.jackson.core:jackson-databind:2.14.0-rc2` to `2.14.2`
 * Updated `com.fasterxml.jackson.module:jackson-module-scala_2.13:2.14.0-rc2` to `2.14.2`
+* Added `com.fasterxml.woodstox:woodstox-core:6.5.0`
 * Updated `com.google.protobuf:protobuf-java:3.21.7` to `3.21.12`
-* Updated `io.delta:delta-core_2.13:2.1.0` to `2.2.0`
 * Updated `io.grpc:grpc-netty:1.50.0` to `1.53.0`
 * Updated `io.netty:netty-all:4.1.84.Final` to `4.1.89.Final`
 * Updated `org.alluxio:alluxio-core-client-hdfs:2.8.1` to `2.9.1`
