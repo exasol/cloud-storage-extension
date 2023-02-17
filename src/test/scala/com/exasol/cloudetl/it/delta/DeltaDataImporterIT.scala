@@ -26,12 +26,13 @@ class DeltaDataImporterIT extends BaseS3IntegrationTest {
     createS3ConnectionObject()
     spark = SparkSession
       .builder()
-      .appName("DeltaFormatIT")
-      .master("local[2]")
       .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+      .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
       .config("spark.hadoop.fs.s3a.endpoint", s3Endpoint)
       .config("spark.hadoop.fs.s3a.access.key", getAWSAccessKey())
       .config("spark.hadoop.fs.s3a.secret.key", getAWSSecretKey())
+      .appName("DeltaFormatIT")
+      .master("local[2]")
       .getOrCreate()
     sqlContext = spark.sqlContext
   }
