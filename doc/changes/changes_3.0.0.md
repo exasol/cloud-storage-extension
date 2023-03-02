@@ -25,7 +25,7 @@ Updated dependencies to remove references to the discontinued repository `maven.
 * Updated `com.fasterxml.jackson.core:jackson-databind:2.14.0-rc2` to `2.14.2`
 * Updated `com.fasterxml.jackson.module:jackson-module-scala_2.13:2.14.0-rc2` to `2.14.2`
 * Added `com.fasterxml.woodstox:woodstox-core:6.5.0`
-* Updated `com.google.protobuf:protobuf-java:3.21.7` to `3.22.0`
+* Updated `com.google.protobuf:protobuf-java:3.21.7` to `3.21.12`
 * Updated `io.delta:delta-core_2.13:2.1.0` to `2.2.0`
 * Updated `io.grpc:grpc-netty:1.50.0` to `1.53.0`
 * Updated `io.netty:netty-all:4.1.84.Final` to `4.1.89.Final`
@@ -42,7 +42,7 @@ Updated dependencies to remove references to the discontinued repository `maven.
 
 * Updated `com.dimafeng:testcontainers-scala-scalatest_2.13:0.40.11` to `0.40.12`
 * Updated `com.exasol:exasol-testcontainers:6.2.0` to `6.5.1`
-* Updated `com.exasol:extension-manager-integration-test-java:0.1.0` to `0.2.2`
+* Updated `com.exasol:extension-manager-integration-test-java:0.1.0` to `0.2.1`
 * Updated `com.exasol:test-db-builder-java:3.4.0` to `3.4.2`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.10.1` to `3.14`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.9.1` to `5.9.2`
