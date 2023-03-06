@@ -122,8 +122,8 @@ In this integration project, we do not support `CSV` format. However, Exasol
 provides optimized `CSV` loader. Please check the [Exasol CSV loader official
 documentation](https://docs.exasol.com/db/latest/sql/import.htm).
 
-We recommend to use the `CSV` loader if your data in the `CSV` format, since
-importing it is optimized and it is substantially fast compared to binary
+We recommend to use the `CSV` loader if your data is in the `CSV` format, since
+importing it is optimized and it is substantially faster compared to binary
 formats such as `Parquet`, `Avro` or `ORC`.
 
 ### Supported Cloud Storage Systems
