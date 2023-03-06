@@ -60,7 +60,7 @@ class ExtensionIT {
     }
 
     private static Path getAdapterJar() {
-        final Path jar = Paths.get("target").resolve("exasol-cloud-storage-extension-3.0.0.jar").toAbsolutePath();
+        final Path jar = Paths.get("target").resolve("exasol-cloud-storage-extension-2.6.2.jar").toAbsolutePath();
         if (Files.exists(jar)) {
             return jar;
         } else {
