@@ -14,6 +14,7 @@ linkReplacements:
   - "https://orc.apache.org/orc-core|https://orc.apache.org/"
   - "http://jackson.codehaus.org|https://github.com/codehaus/jackson"
   - "http://nexus.sonatype.org/oss-repository-hosting.html/scalatest-maven-plugin|https://github.com/scalatest/scalatest-maven-plugin"
+  - "https://logging.apache.org/log4j/2.x/log4j-1.2-api/|https://logging.apache.org/log4j/2.x/"
 excludes:
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"

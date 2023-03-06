@@ -116,6 +116,16 @@ We support the Parquet, Avro and Orc formats when importing data from cloud
 storages into an Exasol table. However, we export Exasol tables only as Parquet
 data to storage systems.
 
+### CSV Format Not Supported
+
+In this integration project, we do not support `CSV` format. However, Exasol
+provides optimized `CSV` loader. Please check the [Exasol CSV loader official
+documentation](https://docs.exasol.com/db/latest/sql/import.htm).
+
+We recommend to use the `CSV` loader if your data is in the `CSV` format, since
+importing it is optimized and it is substantially faster compared to binary
+formats such as `Parquet`, `Avro` or `ORC`.
+
 ### Supported Cloud Storage Systems
 
 Exasol Cloud Storage Extension can access Amazon S3, Google Cloud Storage (GCP),
@@ -566,6 +576,7 @@ below.
 ![Cluster Resources Example](../images/cluster-resources.png)
 
 Each datanode has:
+
 - RAM: 376 GiB
 - Number of CPUs: 72
 
@@ -606,7 +617,7 @@ column types when preparing the table.
 ### Avro Data Mapping
 
 | Avro Data Type | Avro Logical Attribute | Recommended Exasol Column Types |
-|:---------------|:-----------------------|:--------------------------------|
+| :------------- | :--------------------- | :------------------------------ |
 | boolean        |                        | BOOLEAN                         |
 | int            |                        | INT, INTEGER, DECIMAL(18, 0)    |
 | int            | date                   | DATE                            |
@@ -628,26 +639,26 @@ column types when preparing the table.
 
 ### Orc Data Mapping
 
-| Orc Data Type        | Orc Logical Type  | Recommended Exasol Column Types |
-|:---------------------|:------------------|:--------------------------------|
-| boolean              |                   | BOOLEAN                         |
-| short                |                   | INT, INTEGER, DECIMAL(18, 0)    |
-| int                  |                   | INT, INTEGER, DECIMAL(18, 0)    |
-| byte                 |                   | BIGINT, DECIMAL(36, 0)          |
-| long                 |                   | BIGINT, DECIMAL(36, 0)          |
-| float                |                   | FLOAT                           |
-| double               |                   | DOUBLE, DOUBLE PRECISION        |
-| binary               |                   | VARCHAR(n), CHAR(n)             |
-| char                 |                   | VARCHAR(n), CHAR(n)             |
-| string               |                   | VARCHAR(n), CHAR(n)             |
-| varchar              |                   | VARCHAR(n), CHAR(n)             |
-| decimal              |                   | DECIMAL(p, s)                   |
-| date                 |                   | DATE                            |
-| timestamp            |                   | TIMESTAMP                       |
-| list                 |                   | VARCHAR(n), CHAR(n)             |
-| map                  |                   | VARCHAR(n), CHAR(n)             |
-| struct               |                   | VARCHAR(n), CHAR(n)             |
-| union                |                   | VARCHAR(n), CHAR(n)             |
+| Orc Data Type | Orc Logical Type | Recommended Exasol Column Types |
+| :------------ | :--------------- | :------------------------------ |
+| boolean       |                  | BOOLEAN                         |
+| short         |                  | INT, INTEGER, DECIMAL(18, 0)    |
+| int           |                  | INT, INTEGER, DECIMAL(18, 0)    |
+| byte          |                  | BIGINT, DECIMAL(36, 0)          |
+| long          |                  | BIGINT, DECIMAL(36, 0)          |
+| float         |                  | FLOAT                           |
+| double        |                  | DOUBLE, DOUBLE PRECISION        |
+| binary        |                  | VARCHAR(n), CHAR(n)             |
+| char          |                  | VARCHAR(n), CHAR(n)             |
+| string        |                  | VARCHAR(n), CHAR(n)             |
+| varchar       |                  | VARCHAR(n), CHAR(n)             |
+| decimal       |                  | DECIMAL(p, s)                   |
+| date          |                  | DATE                            |
+| timestamp     |                  | TIMESTAMP                       |
+| list          |                  | VARCHAR(n), CHAR(n)             |
+| map           |                  | VARCHAR(n), CHAR(n)             |
+| struct        |                  | VARCHAR(n), CHAR(n)             |
+| union         |                  | VARCHAR(n), CHAR(n)             |
 
 #### Orc Union Type
 
@@ -677,33 +688,33 @@ If either of the tags are not set, then it is read as a `null` value.
 
 ### Parquet Data Mapping
 
-| Parquet Data Type    | Parquet Logical Type  | Recommended Exasol Column Types |
-|:---------------------|:----------------------|:--------------------------------|
-| boolean              |                       | BOOLEAN                         |
-| int32                |                       | INT, INTEGER, DECIMAL(18, 0)    |
-| int32                | date                  | DATE                            |
-| int32                | decimal(p, s)         | DECIMAL(p, s)                   |
-| int64                |                       | BIGINT, DECIMAL(36, 0)          |
-| int64                | timestamp_millis      | TIMESTAMP                       |
-| int64                | timestamp_micros      | TIMESTAMP                       |
-| int64                | decimal(p, s)         | DECIMAL(p, s)                   |
-| float                |                       | FLOAT                           |
-| double               |                       | DOUBLE, DOUBLE PRECISION        |
-| binary               |                       | VARCHAR(n), CHAR(n)             |
-| binary               | utf8                  | VARCHAR(n), CHAR(n)             |
-| binary               | decimal(p, s)         | DECIMAL(p, s)                   |
-| fixed_len_byte_array |                       | VARCHAR(n), CHAR(n)             |
-| fixed_len_byte_array | decimal(p, s)         | DECIMAL(p, s)                   |
-| fixed_len_byte_array | uuid                  | VARCHAR(n)                      |
-| int96                |                       | TIMESTAMP                       |
-| group                |                       | VARCHAR(n)                      |
-| group                | LIST                  | VARCHAR(n)                      |
-| group                | MAP                   | VARCHAR(n)                      |
-| group                | REPEATED              | VARCHAR(n)                      |
+| Parquet Data Type    | Parquet Logical Type | Recommended Exasol Column Types |
+| :------------------- | :------------------- | :------------------------------ |
+| boolean              |                      | BOOLEAN                         |
+| int32                |                      | INT, INTEGER, DECIMAL(18, 0)    |
+| int32                | date                 | DATE                            |
+| int32                | decimal(p, s)        | DECIMAL(p, s)                   |
+| int64                |                      | BIGINT, DECIMAL(36, 0)          |
+| int64                | timestamp_millis     | TIMESTAMP                       |
+| int64                | timestamp_micros     | TIMESTAMP                       |
+| int64                | decimal(p, s)        | DECIMAL(p, s)                   |
+| float                |                      | FLOAT                           |
+| double               |                      | DOUBLE, DOUBLE PRECISION        |
+| binary               |                      | VARCHAR(n), CHAR(n)             |
+| binary               | utf8                 | VARCHAR(n), CHAR(n)             |
+| binary               | decimal(p, s)        | DECIMAL(p, s)                   |
+| fixed_len_byte_array |                      | VARCHAR(n), CHAR(n)             |
+| fixed_len_byte_array | decimal(p, s)        | DECIMAL(p, s)                   |
+| fixed_len_byte_array | uuid                 | VARCHAR(n)                      |
+| int96                |                      | TIMESTAMP                       |
+| group                |                      | VARCHAR(n)                      |
+| group                | LIST                 | VARCHAR(n)                      |
+| group                | MAP                  | VARCHAR(n)                      |
+| group                | REPEATED             | VARCHAR(n)                      |
 
 #### Parquet Repeated Types
 
-Parquet data type can repeat a single field or the group of fields.  The
+Parquet data type can repeat a single field or the group of fields. The
 cloud-storage-extension imports repeated fields and repeated groups with a
 single field as a JSON array string.
 
@@ -793,6 +804,7 @@ TO ''
 USER ''
 IDENTIFIED BY 'S3_ACCESS_KEY=<AWS_ACCESS_KEY>;S3_SECRET_KEY=<AWS_SECRET_KEY>;S3_SESSION_TOKEN=<AWS_SESSION_TOKEN>';
 ```
+
 A user that will run IMPORT or EXPORT UDF will need ACCESS privilige on this connection directly or via role. See [Privileges][exa-docs-privileges] and [Details on Rights Management][exa-docs-privileges-det] sections in the Exasol documentation for more details.
 
 [exa-docs-privileges]: https://docs.exasol.com/database_concepts/privileges.htm
@@ -943,7 +955,6 @@ and using [shared access signatures (SAS)][azure-blob-sas].
 You should use either one of these options when using
 exasol-cloud-storage-extension to access the Azure Blob Storage containers.
 
-
 ### Using Azure Secret Key Authentication
 
 Create a named connection containing an Azure secret key:
@@ -1048,6 +1059,7 @@ TO ''
 USER ''
 IDENTIFIED BY 'AZURE_CLIENT_ID=<AZURE_CLIENT_ID>;AZURE_CLIENT_SECRET=<AZURE_CLIENT_SECRET>;AZURE_DIRECTORY_ID=<AZURE_DIRECTORY_ID>';
 ```
+
 A user that will run IMPORT or EXPORT UDF will need ACCESS privilige on this connection directly or via role. See [Privileges][exa-docs-privileges] and [Details on Rights Management][exa-docs-privileges-det] sections in the Exasol documentation for more details.
 
 ### Run Import Statement
@@ -1094,6 +1106,7 @@ TO ''
 USER ''
 IDENTIFIED BY 'AZURE_SECRET_KEY=<AZURE_SECRET_KEY>';
 ```
+
 A user that will run IMPORT or EXPORT UDF will need ACCESS privilige on this connection directly or via role. See [Privileges][exa-docs-privileges] and [Details on Rights Management][exa-docs-privileges-det] sections in the Exasol documentation for more details.
 
 ### Run Import Statement

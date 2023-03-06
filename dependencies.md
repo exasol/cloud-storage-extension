@@ -130,7 +130,7 @@
 [35]: http://www.slf4j.org
 [36]: http://www.opensource.org/licenses/mit-license.php
 [37]: https://logging.apache.org/log4j/2.x/log4j-api/
-[38]: https://logging.apache.org/log4j/2.x/log4j-1.2-api/
+[38]: https://logging.apache.org/log4j/2.x/
 [39]: https://logging.apache.org/log4j/2.x/log4j-core/
 [40]: https://github.com/lightbend/scala-logging
 [41]: http://www.scalatest.org
