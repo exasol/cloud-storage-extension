@@ -108,24 +108,24 @@ class RowWriteSupport(schema: MessageType) extends WriteSupport[Row] {
 
     typeName match {
       case PrimitiveTypeName.BOOLEAN =>
-        (row: Row, index: Int) => recordConsumer.addBoolean(row.getAs[Boolean](index))
+        (row: Row, index: Int) => recordConsumer.addBoolean(row.getAs[java.lang.Boolean](index))
 
       case PrimitiveTypeName.INT32 =>
         originalType match {
           case OriginalType.DATE =>
             makeDateWriter()
           case _ =>
-            (row: Row, index: Int) => recordConsumer.addInteger(row.getAs[Integer](index))
+            (row: Row, index: Int) => recordConsumer.addInteger(row.getAs[java.lang.Integer](index))
         }
 
       case PrimitiveTypeName.INT64 =>
-        (row: Row, index: Int) => recordConsumer.addLong(row.getAs[Long](index))
+        (row: Row, index: Int) => recordConsumer.addLong(row.getAs[java.lang.Long](index))
 
       case PrimitiveTypeName.FLOAT =>
-        (row: Row, index: Int) => recordConsumer.addFloat(row.getAs[Double](index).floatValue)
+        (row: Row, index: Int) => recordConsumer.addFloat(row.getAs[java.lang.Double](index).floatValue)
 
       case PrimitiveTypeName.DOUBLE =>
-        (row: Row, index: Int) => recordConsumer.addDouble(row.getAs[Double](index))
+        (row: Row, index: Int) => recordConsumer.addDouble(row.getAs[java.lang.Double](index))
 
       case PrimitiveTypeName.BINARY =>
         (row: Row, index: Int) =>

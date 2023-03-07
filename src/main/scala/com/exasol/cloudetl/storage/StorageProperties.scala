@@ -2,7 +2,7 @@ package com.exasol.cloudetl.storage
 
 import com.exasol.ExaMetadata
 import com.exasol.common.AbstractProperties
-import com.exasol.common.CommonProperties
+import com.exasol.common.PropertiesParser
 import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.fs.Path
@@ -140,14 +140,20 @@ class StorageProperties(private val properties: Map[String, String], private val
    * The returned string is sorted by keys ordering.
    */
   final def mkString(): String =
-    mkString(KEY_VALUE_SEPARATOR, PROPERTY_SEPARATOR)
+    mkString(STORAGE_KEY_VALUE_SEPARATOR, STORAGE_PROPERTY_SEPARATOR)
 
 }
 
 /**
  * A companion object for [[StorageProperties]] class.
  */
-object StorageProperties extends CommonProperties {
+object StorageProperties {
+  /** A separator string used for concatenate keys and values, {@code "k1 -> v1"}. */
+  final val STORAGE_PROPERTY_SEPARATOR = " -> "
+  /** A separator string used for concatenating key-value property pairs, {@code "k1 -> v1;k2 -> v2"}. */
+  final val STORAGE_KEY_VALUE_SEPARATOR = ";"
+
+  private[this] final val parser = PropertiesParser(STORAGE_KEY_VALUE_SEPARATOR, STORAGE_PROPERTY_SEPARATOR)
 
   /** A required property key name for a bucket path. */
   private[storage] final val BUCKET_PATH: String = "BUCKET_PATH"
@@ -211,10 +217,10 @@ object StorageProperties extends CommonProperties {
    * [[ExaMetadata]] metadata object.
    */
   def apply(string: String, metadata: ExaMetadata): StorageProperties =
-    apply(mapFromString(string), metadata)
+    apply(parser.mapFromString(string), metadata)
 
   /** Returns [[StorageProperties]] from properly separated string. */
   def apply(string: String): StorageProperties =
-    apply(mapFromString(string))
+    apply(parser.mapFromString(string))
 
 }

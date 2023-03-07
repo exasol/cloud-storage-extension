@@ -5,7 +5,7 @@ import com.exasol.cloudetl.bucket.Bucket
 /**
  * An abstract sink representation.
  */
-abstract class Sink[T] {
+abstract class Sink[T] extends AutoCloseable {
 
   /**
    * The specific [[com.exasol.cloudetl.bucket.Bucket]] where the files
@@ -27,17 +27,12 @@ abstract class Sink[T] {
    */
   def write(value: T): Unit
 
-  /**
-   * Finally close the resource used for this sink.
-   */
-  def close(): Unit
-
 }
 
 /**
  * An interface for data writers.
  */
-trait Writer[T] {
+trait Writer[T] extends AutoCloseable {
 
   /**
    * Writes the provided value to the path.
@@ -45,8 +40,5 @@ trait Writer[T] {
    * @param value The value to write
    */
   def write(value: T): Unit
-
-  /** Closes the writer. */
-  def close(): Unit
 
 }

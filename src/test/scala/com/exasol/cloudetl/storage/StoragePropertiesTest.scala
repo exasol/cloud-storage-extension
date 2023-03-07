@@ -27,7 +27,7 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     val thrown = intercept[IllegalArgumentException] {
       BaseProperties(properties).getStoragePath()
     }
-    assert(thrown.getMessage() === s"Please provide a value for the ${StorageProperties.BUCKET_PATH} property!")
+    assert(thrown.getMessage().contains(s"provide key-value pairs for '${StorageProperties.BUCKET_PATH}' property."))
   }
 
   test("getStoragePathScheme returns path scheme value") {
@@ -170,7 +170,7 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     val thrown = intercept[IllegalArgumentException] {
       StorageProperties(properties, metadata).merge("")
     }
-    assert(thrown.getMessage() === "Connection object password does not contain key=value pairs!")
+    assert(thrown.getMessage().contains("does not contain key-value assignment '='"))
   }
 
   test("mkString returns empty string by default") {
@@ -202,7 +202,7 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     val thrown = intercept[IllegalArgumentException] {
       StorageProperties("")
     }
-    assert(thrown.getMessage() === s"The input string is not separated by ';'!")
+    assert(thrown.getMessage().contains("does not contain key-value assignment ' -> '"))
   }
 
   test("apply(string) returns correct StorageProperties") {
