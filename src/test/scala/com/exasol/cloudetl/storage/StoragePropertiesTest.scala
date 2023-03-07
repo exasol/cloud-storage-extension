@@ -27,7 +27,8 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     val thrown = intercept[IllegalArgumentException] {
       BaseProperties(properties).getStoragePath()
     }
-    assert(thrown.getMessage().contains(s"provide key-value pairs for '${StorageProperties.BUCKET_PATH}' property."))
+    assert(thrown.getMessage().startsWith("E-IEUCS-2"))
+    assert(thrown.getMessage().contains(s"Failed to get value for '${StorageProperties.BUCKET_PATH}' property"))
   }
 
   test("getStoragePathScheme returns path scheme value") {
@@ -202,6 +203,7 @@ class StoragePropertiesTest extends AnyFunSuite with BeforeAndAfterEach with Moc
     val thrown = intercept[IllegalArgumentException] {
       StorageProperties("")
     }
+    assert(thrown.getMessage().startsWith("E-IEUCS-4"))
     assert(thrown.getMessage().contains("does not contain key-value assignment ' -> '"))
   }
 
