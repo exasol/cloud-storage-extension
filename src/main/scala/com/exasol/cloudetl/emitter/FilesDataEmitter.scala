@@ -5,6 +5,8 @@ import java.util.List
 import java.util.TimeZone
 import java.util.function.Consumer
 
+import scala.util.Using
+
 import com.exasol.ExaIterator
 import com.exasol.cloudetl.bucket.Bucket
 import com.exasol.cloudetl.parquet.ParquetValueConverter
@@ -57,12 +59,12 @@ final case class FilesDataEmitter(properties: StorageProperties, files: Map[Stri
 
   private[this] def emitRegularData(context: ExaIterator): Unit =
     files.foreach { case (filename, _) =>
-      val source = Source(fileFormat, new Path(filename), bucket.getConfiguration(), bucket.fileSystem)
-      source.stream().foreach { row =>
-        val values = defaultTransformation.transform(transformRegularRowValues(row))
-        context.emit(values: _*)
+      Using(Source(fileFormat, new Path(filename), bucket.getConfiguration(), bucket.fileSystem)) { source =>
+        source.stream().foreach { row =>
+          val values = defaultTransformation.transform(transformRegularRowValues(row))
+          context.emit(values: _*)
+        }
       }
-      source.close()
     }
 
   private[this] def transformRegularRowValues(row: RegularRow): Array[Object] =

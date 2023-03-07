@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.bucket
 
+import scala.util.Using
+
 import com.exasol.cloudetl.TestFileManager
 import com.exasol.cloudetl.parquet.ParquetSourceTest
 
@@ -93,11 +95,11 @@ class DeltaFormatBucketTest extends AbstractBucketTest with TestFileManager with
     val set = scala.collection.mutable.Set[Long]()
     val conf = bucket.getConfiguration()
     bucket.getPaths().map { path =>
-      val source = ParquetSourceTest(path, conf)
-      source.stream().foreach { row =>
-        set.add(row.getAs[Long](0))
+      Using(ParquetSourceTest(path, conf)) { source =>
+        source.stream().foreach { row =>
+          set.add(row.getAs[java.lang.Long](0))
+        }
       }
-      source.close()
     }
     set.toSet
   }

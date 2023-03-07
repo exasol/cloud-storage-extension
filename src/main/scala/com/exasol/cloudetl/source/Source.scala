@@ -13,7 +13,7 @@ import org.apache.hadoop.fs.Path
  * An abstract representation of a distributed Hadoop compatible file
  * system source.
  */
-abstract class Source {
+abstract class Source extends AutoCloseable {
 
   /**
    * The file [[org.apache.hadoop.fs.Path]] paths in the file system.
@@ -33,11 +33,6 @@ abstract class Source {
    * iterators per each paths file.
    */
   def stream(): Iterator[Row]
-
-  /**
-   * Finally close the resource used for this source.
-   */
-  def close(): Unit
 
 }
 
