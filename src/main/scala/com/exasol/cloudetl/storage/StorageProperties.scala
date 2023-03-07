@@ -148,8 +148,10 @@ class StorageProperties(private val properties: Map[String, String], private val
  * A companion object for [[StorageProperties]] class.
  */
 object StorageProperties {
+
   /** A separator string used for concatenate keys and values, {@code "k1 -> v1"}. */
   final val STORAGE_PROPERTY_SEPARATOR = " -> "
+
   /** A separator string used for concatenating key-value property pairs, {@code "k1 -> v1;k2 -> v2"}. */
   final val STORAGE_KEY_VALUE_SEPARATOR = ";"
 
