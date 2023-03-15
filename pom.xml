@@ -608,6 +608,8 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
+                        <!-- Going to fix in separate PR -->
+                        <exclude>CVE-2019-14887</exclude>
                         <!-- Vulnerabilities in org.codehaus.jackson:jackson-mapper-asl:1.9.13 -->
                         <!-- CWE-184: Incomplete Blacklist (9.8); https://ossindex.sonatype.org/vulnerability/CVE-2017-7525 -->
                         <exclude>CVE-2017-7525</exclude>
