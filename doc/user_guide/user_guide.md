@@ -150,7 +150,7 @@ downloaded jar file is the same as the checksum provided in the releases.
 To check the SHA256 result of the local jar, run the command:
 
 ```sh
-sha256sum exasol-cloud-storage-extension-2.7.0.jar
+sha256sum exasol-cloud-storage-extension-2.7.1.jar
 ```
 
 ### Building From Source
@@ -180,7 +180,7 @@ mvn clean package -DskipTests=true
 ```
 
 The assembled jar file should be located at
-`target/exasol-cloud-storage-extension-2.7.0.jar`.
+`target/exasol-cloud-storage-extension-2.7.1.jar`.
 
 ### Create an Exasol Bucket
 
@@ -202,8 +202,8 @@ for the HTTP protocol.
 Upload the jar file using curl command:
 
 ```sh
-curl -X PUT -T exasol-cloud-storage-extension-2.7.0.jar \
-  http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar
+curl -X PUT -T exasol-cloud-storage-extension-2.7.1.jar \
+  http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar
 ```
 
 You can also check out the Exasol [BucketFS Client](https://github.com/exasol/bucketfs-client/) as an
@@ -234,7 +234,7 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
@@ -244,12 +244,12 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
   end_index DECIMAL(36, 0)
 ) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
 /
 ```
 
@@ -269,7 +269,7 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesImportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
@@ -279,12 +279,12 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
   end_index DECIMAL(36, 0)
 ) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
 /
 ```
 
@@ -300,12 +300,12 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.TableDataExporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
 /
 ```
 
@@ -325,12 +325,12 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerTableExportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.DockerTableDataExporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
 /
 ```
 
@@ -371,25 +371,25 @@ Please note that the parameter values are provided as string literals,
 
 ### Required Parameters
 
-* ``BUCKET_PATH`` - It specifies a path to the cloud storage filesystem. It
+- `BUCKET_PATH` - It specifies a path to the cloud storage filesystem. It
   should start with a storage-specific schema, such as `s3a` or `adl`.
 
-* ``DATA_FORMAT`` - It defines the data file format in the provided path. We
+- `DATA_FORMAT` - It defines the data file format in the provided path. We
   support importing data from **Avro**, **Orc** and **Parquet** file formats and
   exporting to **Parquet** format.
 
-* Additional storage-specific properties that enable accessing storage
+- Additional storage-specific properties that enable accessing storage
   filesystems.
 
 ### Optional Parameters
 
 These are optional parameters that have default values.
 
-* ``PARALLELISM`` - It defines the number of parallel virtual machine instances
+- `PARALLELISM` - It defines the number of parallel virtual machine instances
   that will be started to import or export data. By default it is calculated
   using number of cores per node and memory reserved for the UDF.
 
-* ``TIMEZONE_UTC`` - If it is set to `true`, the timezone of timestamp data from
+- `TIMEZONE_UTC` - If it is set to `true`, the timezone of timestamp data from
   data sources will be set to `'UTC'`. Without this parameter, or it is set to
   `false`, the timestamp values are imported or exported using the datanode
   timezone (`DBTIMEZONE`).
@@ -398,11 +398,11 @@ These are optional parameters that have default values.
 
 The following are optional parameters for import statements.
 
-* ``CHUNK_SIZE`` - It specifies a file chunk size in bytes. The importer then
+- `CHUNK_SIZE` - It specifies a file chunk size in bytes. The importer then
   will try to virtually splits a file into chunks with specified size, and
   imports each chunk in parallel. By default it is `67108864` (64MB).
 
-* ``TRUNCATE_STRING`` - If it is set to `true`, string values that exceed
+- `TRUNCATE_STRING` - If it is set to `true`, string values that exceed
   maximum allowed `VARCHAR` size will be truncated. By default, it is set to
   `false`, which will throw an exception if string length exceed maximum allowed
   length.
@@ -411,18 +411,18 @@ The following are optional parameters for import statements.
 
 These optional parameters only apply to the data export statements.
 
-* ``OVERWRITE`` - If it is set to `true`, the UDF deletes all the files in the
+- `OVERWRITE` - If it is set to `true`, the UDF deletes all the files in the
   export path. By default it is set to `false`. Please keep in mind the delete
   operation is blocking, it can take time to finish at least proportional to the
   number of files. If the delete operation is interrupted, the filesystem is
   left in an intermediate state.
 
-* ``PARQUET_COMPRESSION_CODEC`` - It defines the compression codec to use when
+- `PARQUET_COMPRESSION_CODEC` - It defines the compression codec to use when
   exporting data into Parquet formatted files. The default value is
   **uncompressed**. Other compression options are **snappy**, **gzip** and
   **lzo**.
 
-* ``EXPORT_BATCH_SIZE`` - It defines the number of records per file from each
+- `EXPORT_BATCH_SIZE` - It defines the number of records per file from each
   virtual machine (VM). The default value is **100000**. That is, if a single VM
   gets `1M` rows to export, it will create 10 files with default 100000 records
   in each file.
@@ -432,16 +432,16 @@ These optional parameters only apply to the data export statements.
 If access to the cloud storage is restricted by a proxy, the IMPORT and EXPORT
 statements can be configured with:
 
-* ``PROXY_HOST`` - Configures a proxy host that is used to access the bucket if
+- `PROXY_HOST` - Configures a proxy host that is used to access the bucket if
   this is required.
 
-* ``PROXY_PORT`` - Configures the port to use for the proxy defined with
+- `PROXY_PORT` - Configures the port to use for the proxy defined with
   `PROXY_HOST`.
 
-* ``PROXY_USERNAME`` - Configures the username to use for the proxy defined with
+- `PROXY_USERNAME` - Configures the username to use for the proxy defined with
   `PROXY_HOST`.
 
-* ``PROXY_PASSWORD`` - Configures the port to use for the proxy defined with
+- `PROXY_PASSWORD` - Configures the port to use for the proxy defined with
   `PROXY_HOST`.
 
 These parameters are only available for S3 and GCP buckets.
@@ -461,13 +461,13 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
 ) AS
   %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.0.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
 /
 ```
 
@@ -484,8 +484,8 @@ In the import, the number of files in the storage path is distributed to the
 parallel running importer processes. These parallel processes can be controlled
 by setting the `PARALLELISM` parameter.
 
-By default, this parameter is set to the `nproc()`. The `nproc()` is an Exasol
-special SQL command that returns the total number of data nodes in your cluster.
+If you do not know how to properly set this parameter, please leave it out,
+since the importer will calculate it automatically.
 
 ```sql
 IMPORT INTO <schema>.<table>
@@ -510,8 +510,8 @@ example, in order to start four times more processes, set it:
 PARALLELISM = 'nproc()*4'
 ```
 
-Or to a higher static number as `PARALLELISM = '16'` that will use 16 importer
-processes in total.
+Or set it to a higher static number as `PARALLELISM = '16'` that will use 16
+importer processes in total.
 
 We **recommend** to set the parallelism properly depending on the cluster
 resources (number of cores, memory per node), the number of files and the size
@@ -532,9 +532,9 @@ distribute the table records into many exporter processes. The parallelism
 should be something dynamic that Exasol database can understand and use in the
 group by clause.
 
-The default value for parallelism for export is `iproc()` (notice that it is
-different from `nproc()`). It returns the data node id numbers. Therefore,
-by default, it creates as many exporter processes as the number of datanodes.
+Similar to import parallelism, if you do not know how to properly set this
+parameter, please leave it out, since the importer will calculate it
+automatically.
 
 ```sql
 EXPORT <schema>.<table>
@@ -546,9 +546,10 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   PARALLELISM     = 'iproc()';
 ```
 
-Like in import, you can increase the number of exporter processes. Since we need
-a dynamic number that the Exasol database can understand, you can combine the
-`iproc()` statement with `random()` and `floor()` operations.
+You can also yourself set this `PARALLELISM` parameter. In the example above, we
+used `iproc()` command for it. Since we need a dynamic number that the Exasol
+database can understand, you can combine the `iproc()` statement with `random()`
+and `floor()` operations.
 
 For example, to increase the exporter processes four times, set it as below:
 
