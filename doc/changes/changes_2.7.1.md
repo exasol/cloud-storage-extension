@@ -4,9 +4,13 @@ Code name:
 
 ## Summary
 
-## Features
+## Documentation
 
 * #238: Updated `parallelism` information in user guide
+
+## Refactoring
+
+* #237: Fixed vulnerabilities in transitive dependencies
 
 ## Dependency Updates
 
