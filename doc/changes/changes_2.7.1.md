@@ -12,7 +12,7 @@ In this release, we removed obsolete setup instructions that are only relevant t
 
 ## Refactoring
 
-* #228: Removed setup instructions that are only related to dockerized setup
+* #228: Removed obsolete setup instructions that are only related to dockerized setup
 * #237: Fixed vulnerabilities in transitive dependencies
 
 ## Dependency Updates
