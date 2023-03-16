@@ -259,38 +259,6 @@ be used as an entry point when running the import UDF. It will execute the
 cloud storage path. Then each file will be imported by `IMPORT_FILES` UDF
 script.
 
-#### Setup Import UDF Scripts in Docker
-
-If you are using Exasol Docker installation, the UDF scripts require slightly
-different deployment.
-
-```sql
-OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
-
-CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesImportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
-/
-
-CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
-  filename VARCHAR(2000),
-  partition_index VARCHAR(100),
-  start_index DECIMAL(36, 0),
-  end_index DECIMAL(36, 0)
-) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
-/
-
-CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.DockerFilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
-/
-```
-
-Please notice that we use different class names for the `%scriptclasses`
-parameter.
-
 #### Setup Export UDF Scripts
 
 Run these statements to create export UDF scripts:
@@ -314,28 +282,6 @@ UDF and it will call the `EXPORT_TABLE` script internally.
 
 Make sure you change the `<BUCKET>` name and jar version `2.3.1`
 accordingly.
-
-#### Setup Export UDF Scripts in Docker
-
-Similar to import, the UDF scripts require slightly different deployment for
-Exasol Docker installations.
-
-```sql
-OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
-
-CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.DockerTableExportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
-/
-
-CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
-  %scriptclass com.exasol.cloudetl.scriptclasses.DockerTableDataExporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar;
-/
-```
-
-Please notice that we use different class names for the `%scriptclasses`
-parameter.
 
 ## Prepare an Exasol Table for Import
 

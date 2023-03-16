@@ -73,7 +73,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
       .language(UdfScript.Language.JAVA)
       .inputType(UdfScript.InputType.SET)
       .emits()
-      .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerFilesImportQueryGenerator", jarPath)
+      .bucketFsContent("com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator", jarPath)
       .build()
     schema
       .createUdfBuilder("IMPORT_METADATA")
@@ -85,14 +85,14 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
         new Column("start_index", "DECIMAL(36, 0)"),
         new Column("end_index", "DECIMAL(36, 0)")
       )
-      .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerFilesMetadataReader", jarPath)
+      .bucketFsContent("com.exasol.cloudetl.scriptclasses.FilesMetadataReader", jarPath)
       .build()
     schema
       .createUdfBuilder("IMPORT_FILES")
       .language(UdfScript.Language.JAVA)
       .inputType(UdfScript.InputType.SET)
       .emits()
-      .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerFilesDataImporter", jarPath)
+      .bucketFsContent("com.exasol.cloudetl.scriptclasses.FilesDataImporter", jarPath)
       .build()
     ()
   }
@@ -104,14 +104,14 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
       .language(UdfScript.Language.JAVA)
       .inputType(UdfScript.InputType.SET)
       .emits()
-      .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerTableExportQueryGenerator", jarPath)
+      .bucketFsContent("com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator", jarPath)
       .build()
     schema
       .createUdfBuilder("EXPORT_TABLE")
       .language(UdfScript.Language.JAVA)
       .inputType(UdfScript.InputType.SET)
       .emits(new Column("rows_affected", "INT"))
-      .bucketFsContent("com.exasol.cloudetl.scriptclasses.DockerTableDataExporter", jarPath)
+      .bucketFsContent("com.exasol.cloudetl.scriptclasses.TableDataExporter", jarPath)
       .build()
     ()
   }
