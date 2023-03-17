@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.7.1, released 2023-03-16
+# Cloud Storage Extension 2.7.1, released 2023-03-17
 
 Code name: Various Refactorings
 
@@ -19,12 +19,14 @@ In this release, we removed obsolete setup instructions that are only relevant t
 
 ### Compile Dependency Updates
 
+* Updated `com.exasol:parquet-io-java:2.0.0` to `2.0.1`
 * Updated `com.google.protobuf:protobuf-java:3.22.0` to `3.22.2`
 * Updated `io.netty:netty-all:4.1.89.Final` to `4.1.90.Final`
 * Updated `org.apache.orc:orc-core:1.8.2` to `1.8.3`
 
 ### Test Dependency Updates
 
+* Updated `nl.jqno.equalsverifier:equalsverifier:3.14` to `3.14.1`
 * Updated `org.mockito:mockito-core:5.1.1` to `5.2.0`
 
 ### Plugin Dependency Updates

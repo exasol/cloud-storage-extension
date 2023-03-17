@@ -360,7 +360,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>parquet-io-java</artifactId>
-            <version>2.0.0</version>
+            <version>2.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -456,7 +456,7 @@
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.14</version>
+            <version>3.14.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
