@@ -3,20 +3,20 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>cloud-storage-extension</artifactId>
-    <version>2.7.1</version>
+    <version>2.7.2</version>
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>
     <parent>
         <artifactId>cloud-storage-extension-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.7.1</version>
+        <version>2.7.2</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
         <scala.version>2.13.10</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
-        <hadoop.version>3.3.4</hadoop.version>
+        <hadoop.version>3.3.5</hadoop.version>
         <log4j.version>2.20.0</log4j.version>
         <sonar.sources>src/main/,extension/src/</sonar.sources>
         <sonar.exclusions>extension/src/*.test.ts</sonar.exclusions>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.53.0</version>
+            <version>1.54.0</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
@@ -234,7 +234,7 @@
         <dependency>
             <groupId>org.alluxio</groupId>
             <artifactId>alluxio-core-client-hdfs</artifactId>
-            <version>2.9.2</version>
+            <version>2.9.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -365,12 +365,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>2.0.6</version>
+            <version>2.0.7</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>2.0.6</version>
+            <version>2.0.7</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -426,7 +426,7 @@
         <dependency>
             <groupId>com.dimafeng</groupId>
             <artifactId>testcontainers-scala-scalatest_${scala.compat.version}</artifactId>
-            <version>0.40.12</version>
+            <version>0.40.14</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -450,7 +450,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>hamcrest-resultset-matcher</artifactId>
-            <version>1.5.2</version>
+            <version>1.5.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -627,8 +627,6 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
-                        <!-- Going to fix in separate PR -->
-                        <exclude>CVE-2019-14887</exclude>
                         <!-- Vulnerabilities in org.codehaus.jackson:jackson-mapper-asl:1.9.13 -->
                         <!-- CWE-184: Incomplete Blacklist (9.8); https://ossindex.sonatype.org/vulnerability/CVE-2017-7525 -->
                         <exclude>CVE-2017-7525</exclude>
@@ -637,18 +635,12 @@
                         <!-- Vulnerabilities in com.fasterxml.jackson.core:jackson-core:jar:2.14.2 -->
                         <!-- CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion') from jackson-core:2.13.4 -->
                         <exclude>sonatype-2022-6438</exclude>
-                        <!-- Vulnerabilities in io.netty:netty-all:4.1.89.Final -->
+                        <!-- Vulnerabilities in io.netty:netty-all:4.1.90.Final -->
                         <!-- CWE-300: Channel Accessible by Non-Endpoint ('Man-in-the-Middle') (6.5); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0026 -->
                         <exclude>sonatype-2020-0026</exclude>
-                        <!-- io.grpc:grpc-core:jar:1.53.0 -->
-                        <!-- CWE-404: Improper Resource Shutdown or Release (6.5); https://ossindex.sonatype.org/vulnerability/sonatype-2021-0818 -->
-                        <exclude>sonatype-2021-0818</exclude>
                         <!-- Vulnerabilities in com.google.guava:guava:jar:31.1-jre -->
                         <!-- CWE-379: Creation of Temporary File in Directory with Incorrect Permissions (6.2); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0926 -->
                         <exclude>sonatype-2020-0926</exclude>
-                        <!-- Vulnerabilities in org.apache.hadoop:hadoop-common:3.3.4 -->
-                        <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (8.6); https://ossindex.sonatype.org/vulnerability/sonatype-2022-5820 -->
-                        <exclude>sonatype-2022-5820</exclude>
                         <!-- Vulnerabilities in org.apache.hadoop:hadoop-hdfs-client:3.3.4 -->
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (8.6); https://ossindex.sonatype.org/vulnerability/sonatype-2022-5732 -->
                         <exclude>sonatype-2022-5732</exclude>
@@ -662,7 +654,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>2.9.4</version>
+                <version>2.9.6</version>
                 <executions>
                     <execution>
                         <goals>
@@ -674,7 +666,7 @@
             <plugin>
                 <groupId>org.itsallcode</groupId>
                 <artifactId>openfasttrace-maven-plugin</artifactId>
-                <version>1.6.1</version>
+                <version>1.6.2</version>
                 <executions>
                     <execution>
                         <id>trace-requirements</id>
