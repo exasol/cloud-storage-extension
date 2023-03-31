@@ -203,7 +203,7 @@ Upload the jar file using curl command:
 
 ```sh
 curl -X PUT -T exasol-cloud-storage-extension-2.7.1.jar \
-  http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/exasol-cloud-storage-extension-2.7.1.jar
+  http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/
 ```
 
 You can also check out the Exasol [BucketFS Client](https://github.com/exasol/bucketfs-client/) as an
@@ -842,7 +842,7 @@ Upload a GCP service account key file to a BucketFS bucket:
 
 ```bash
 curl -X PUT -T gcp-<PROJECT_ID>-service-keyfile.json \
-  http://w:<PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/gcp-<PROJECT_ID>-service-keyfile.json
+  http://w:<PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/
 ```
 
 Make sure that the bucket is **secure** and only **readable by users** who run
