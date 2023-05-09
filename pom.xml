@@ -43,12 +43,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.14.2</version>
+            <version>2.15.0</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-scala_${scala.compat.version}</artifactId>
-            <version>2.14.2</version>
+            <version>2.15.0</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.woodstox</groupId>
@@ -329,7 +329,7 @@
         <dependency>
             <groupId>io.delta</groupId>
             <artifactId>delta-core_${scala.compat.version}</artifactId>
-            <version>2.2.0</version>
+            <version>2.3.0</version>
         </dependency>
         <!-- Do not remove until hadoop version 3.4.0, see https://github.com/exasol/cloud-storage-extension/issues/195 -->
         <dependency>
@@ -357,10 +357,6 @@
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
                     <artifactId>commons-compress</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.netty</groupId>
-                    <artifactId>netty-all</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -655,9 +651,6 @@
                         <!-- Vulnerabilities in com.fasterxml.jackson.core:jackson-core:jar:2.14.2 -->
                         <!-- CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion') from jackson-core:2.13.4 -->
                         <exclude>sonatype-2022-6438</exclude>
-                        <!-- Vulnerabilities in io.netty:netty-all:4.1.90.Final -->
-                        <!-- CWE-300: Channel Accessible by Non-Endpoint ('Man-in-the-Middle') (6.5); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0026 -->
-                        <exclude>sonatype-2020-0026</exclude>
                         <!-- Vulnerabilities in com.google.guava:guava:jar:31.1-jre -->
                         <!-- CWE-379: Creation of Temporary File in Directory with Incorrect Permissions (6.2); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0926 -->
                         <exclude>CVE-2020-8908</exclude>
