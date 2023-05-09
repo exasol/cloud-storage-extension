@@ -53,17 +53,17 @@
         <dependency>
             <groupId>com.fasterxml.woodstox</groupId>
             <artifactId>woodstox-core</artifactId>
-            <version>6.5.0</version>
+            <version>6.5.1</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.54.0</version>
+            <version>1.55.1</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.90.Final</version>
+            <version>4.1.92.Final</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -155,6 +155,11 @@
                     <groupId>commons-net</groupId>
                     <artifactId>commons-net</artifactId>
                 </exclusion>
+                <!-- excluded to fix vulnerabilities CVE-2023-26048 -->
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-util</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -182,6 +187,11 @@
                 <exclusion>
                     <groupId>org.wildfly.openssl</groupId>
                     <artifactId>wildfly-openssl</artifactId>
+                </exclusion>
+                <!-- excluded to fix vulnerabilities CVE-2023-26048 -->
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-util</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -224,6 +234,11 @@
                     <groupId>com.sun.jersey</groupId>
                     <artifactId>jersey-server</artifactId>
                 </exclusion>
+                <!-- excluded to fix vulnerabilities CVE-2023-26048 -->
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-util</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -234,7 +249,7 @@
         <dependency>
             <groupId>org.alluxio</groupId>
             <artifactId>alluxio-core-client-hdfs</artifactId>
-            <version>2.9.3</version>
+            <version>294</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -278,12 +293,17 @@
                     <groupId>com.fasterxml.jackson.dataformat</groupId>
                     <artifactId>jackson-dataformat-cbor</artifactId>
                 </exclusion>
+                <!-- excluded to fix vulnerabilities CVE-2023-26048 -->
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-util</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.22.2</version>
+            <version>3.23.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
@@ -360,7 +380,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>parquet-io-java</artifactId>
-            <version>2.0.1</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -414,7 +434,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.2.0</version>
+            <version>5.3.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -426,19 +446,19 @@
         <dependency>
             <groupId>com.dimafeng</groupId>
             <artifactId>testcontainers-scala-scalatest_${scala.compat.version}</artifactId>
-            <version>0.40.14</version>
+            <version>0.40.15</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.17.6</version>
+            <version>1.18.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>6.5.1</version>
+            <version>6.5.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -450,7 +470,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>hamcrest-resultset-matcher</artifactId>
-            <version>1.5.3</version>
+            <version>1.6.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -462,7 +482,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.9.2</version>
+            <version>5.9.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -640,7 +660,10 @@
                         <exclude>sonatype-2020-0026</exclude>
                         <!-- Vulnerabilities in com.google.guava:guava:jar:31.1-jre -->
                         <!-- CWE-379: Creation of Temporary File in Directory with Incorrect Permissions (6.2); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0926 -->
-                        <exclude>sonatype-2020-0926</exclude>
+                        <exclude>CVE-2020-8908</exclude>
+                        <!-- org.apache.spark:spark-core_2.12:jar:3.3.2: CWE-269: Improper Privilege Management (6.4); https://ossindex.sonatype.org/vulnerability/CVE-2023-22946 -->
+                        <!-- This from the spark-code_2.12 version, which we release using profiles below. -->
+                        <exclude>CVE-2023-22946</exclude>
                         <!-- Vulnerabilities in org.apache.hadoop:hadoop-hdfs-client:3.3.4 -->
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (8.6); https://ossindex.sonatype.org/vulnerability/sonatype-2022-5732 -->
                         <exclude>sonatype-2022-5732</exclude>
@@ -654,7 +677,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>2.9.6</version>
+                <version>2.9.7</version>
                 <executions>
                     <execution>
                         <goals>
@@ -707,7 +730,7 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.35.0</version>
+                <version>2.36.0</version>
                 <configuration>
                     <scala>
                         <scalafmt>
