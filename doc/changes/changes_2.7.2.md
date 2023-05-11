@@ -17,8 +17,8 @@ Code name:
 ### Compile Dependency Updates
 
 * Updated `com.exasol:parquet-io-java:2.0.1` to `2.0.3`
-* Updated `com.fasterxml.jackson.core:jackson-databind:2.14.2` to `2.15.0`
-* Updated `com.fasterxml.jackson.module:jackson-module-scala_2.13:2.14.2` to `2.15.0`
+* Removed `com.fasterxml.jackson.core:jackson-databind:2.14.2`
+* Removed `com.fasterxml.jackson.module:jackson-module-scala_2.13:2.14.2`
 * Updated `com.fasterxml.woodstox:woodstox-core:6.5.0` to `6.5.1`
 * Updated `com.google.protobuf:protobuf-java:3.22.2` to `3.23.0`
 * Updated `io.delta:delta-core_2.13:2.2.0` to `2.3.0`
