@@ -41,16 +41,6 @@
             <version>31.1-jre</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.15.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-scala_${scala.compat.version}</artifactId>
-            <version>2.15.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.woodstox</groupId>
             <artifactId>woodstox-core</artifactId>
             <version>6.5.1</version>
@@ -160,6 +150,39 @@
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-util</artifactId>
                 </exclusion>
+                <!-- exluded because of duplicate-finder-maven-plugin -->
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-transport-native-epoll</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop.thirdparty</groupId>
+                    <artifactId>hadoop-shaded-guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop.thirdparty</groupId>
+                    <artifactId>hadoop-shaded-protobuf_3_7</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.reload4j</groupId>
+                    <artifactId>reload4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -192,6 +215,11 @@
                 <exclusion>
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-util</artifactId>
+                </exclusion>
+                <!-- exluded because of duplicate-finder-maven-plugin -->
+                <exclusion>
+                    <groupId>org.apache.hadoop.thirdparty</groupId>
+                    <artifactId>hadoop-shaded-guava</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -239,12 +267,36 @@
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-util</artifactId>
                 </exclusion>
+                <!-- exluded because of duplicate-finder-maven-plugin -->
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop.thirdparty</groupId>
+                    <artifactId>hadoop-shaded-guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.reload4j</groupId>
+                    <artifactId>reload4j</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-hdfs-client</artifactId>
             <version>${hadoop.version}</version>
+            <exclusions>
+                <!-- exluded because of duplicate-finder-maven-plugin -->
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.alluxio</groupId>
@@ -298,6 +350,39 @@
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-util</artifactId>
                 </exclusion>
+                <!-- exluded because of duplicate-finder-maven-plugin -->
+                <exclusion>
+                    <groupId>javax.inject</groupId>
+                    <artifactId>javax.inject</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.amazonaws</groupId>
+                    <artifactId>aws-java-sdk-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop.thirdparty</groupId>
+                    <artifactId>hadoop-shaded-guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop.thirdparty</groupId>
+                    <artifactId>hadoop-shaded-protobuf_3_7</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>aopalliance</groupId>
+                    <artifactId>aopalliance</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -320,11 +405,29 @@
             <groupId>org.apache.orc</groupId>
             <artifactId>orc-core</artifactId>
             <version>1.8.3</version>
+            <exclusions>
+                <!-- exluded because of duplicate-finder-maven-plugin -->
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
             <version>1.11.1</version>
+            <exclusions>
+                <!-- exluded because of duplicate-finder-maven-plugin -->
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.delta</groupId>
@@ -357,6 +460,19 @@
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
                     <artifactId>commons-compress</artifactId>
+                </exclusion>
+                <!-- exluded because of duplicate-finder-maven-plugin -->
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-client-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -391,6 +507,11 @@
                 <exclusion>
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
+                </exclusion>
+                <!-- exluded because of duplicate-finder-maven-plugin -->
+                <exclusion>
+                    <groupId>ch.qos.reload4j</groupId>
+                    <artifactId>reload4j</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -665,6 +786,20 @@
                         <!-- Used in tests only. -->
                         <exclude>CVE-2020-36641</exclude>
                     </excludeVulnerabilityIds>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.basepom.maven</groupId>
+                <artifactId>duplicate-finder-maven-plugin</artifactId>
+                <configuration>
+                    <printEqualFiles>false</printEqualFiles>
+                    <failBuildInCaseOfEqualContentConflict>false</failBuildInCaseOfEqualContentConflict>
+                    <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
+                    <ignoredResourcePatterns>
+                        <ignoredResourcePattern>git.properties</ignoredResourcePattern>
+                        <ignoredResourcePattern>arrow-git.properties</ignoredResourcePattern>
+                        <ignoredResourcePattern>.*\.properties$</ignoredResourcePattern>
+                    </ignoredResourcePatterns>
                 </configuration>
             </plugin>
             <plugin>
