@@ -34,7 +34,6 @@ Code name:
 * Updated `org.apache.hadoop:hadoop-common:3.3.4` to `3.3.5`
 * Updated `org.apache.hadoop:hadoop-hdfs-client:3.3.4` to `3.3.5`
 * Updated `org.apache.hadoop:hadoop-hdfs:3.3.4` to `3.3.5`
-* Updated `org.scala-lang:scala-library:2.13.10` to `2.13.11`
 * Updated `org.slf4j:jul-to-slf4j:2.0.6` to `2.0.7`
 * Updated `org.slf4j:slf4j-log4j12:2.0.6` to `2.0.7`
 
