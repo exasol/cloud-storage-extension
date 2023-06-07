@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>31.1-jre</version>
+            <version>32.0.0-jre</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.woodstox</groupId>
@@ -53,12 +53,12 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.92.Final</version>
+            <version>4.1.93.Final</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>import-export-udf-common-scala_${scala.compat.version}</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -301,7 +301,7 @@
         <dependency>
             <groupId>org.alluxio</groupId>
             <artifactId>alluxio-core-client-hdfs</artifactId>
-            <version>294</version>
+            <version>300</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -388,7 +388,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.23.0</version>
+            <version>3.23.2</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
@@ -563,19 +563,19 @@
         <dependency>
             <groupId>com.dimafeng</groupId>
             <artifactId>testcontainers-scala-scalatest_${scala.compat.version}</artifactId>
-            <version>0.40.15</version>
+            <version>0.40.16</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.18.0</version>
+            <version>1.18.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>6.5.2</version>
+            <version>6.6.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -593,7 +593,7 @@
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.14.1</version>
+            <version>3.14.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -772,12 +772,11 @@
                         <!-- Vulnerabilities in com.fasterxml.jackson.core:jackson-core:jar:2.14.2 -->
                         <!-- CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion') from jackson-core:2.13.4 -->
                         <exclude>sonatype-2022-6438</exclude>
-                        <!-- Vulnerabilities in com.google.guava:guava:jar:31.1-jre -->
-                        <!-- CWE-379: Creation of Temporary File in Directory with Incorrect Permissions (6.2); https://ossindex.sonatype.org/vulnerability/sonatype-2020-0926 -->
-                        <exclude>CVE-2020-8908</exclude>
-                        <!-- org.apache.spark:spark-core_2.12:jar:3.3.2: CWE-269: Improper Privilege Management (6.4); https://ossindex.sonatype.org/vulnerability/CVE-2023-22946 -->
-                        <!-- This from the spark-code_2.12 version, which we release using profiles below. -->
+                        <!-- org.apache.spark:spark-core_2.13:jar:3.3.2: CWE-269: Improper Privilege Management (6.4); https://ossindex.sonatype.org/vulnerability/CVE-2023-22946 -->
+                        <!-- This from the spark-code_2.13 version, which we release using profiles below. -->
                         <exclude>CVE-2023-22946</exclude>
+                        <!-- org.apache.spark:spark-sql_2.13.jar:3.4.0: CWE-269: Improper Privilege Management (9.9); https://ossindex.sonatype.org/vulnerability/CVE-2023-22946 -->
+                        <exclude>CVE-2023-33546</exclude>
                         <!-- Vulnerabilities in org.apache.hadoop:hadoop-hdfs-client:3.3.4 -->
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (8.6); https://ossindex.sonatype.org/vulnerability/sonatype-2022-5732 -->
                         <exclude>sonatype-2022-5732</exclude>

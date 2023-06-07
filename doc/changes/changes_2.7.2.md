@@ -1,8 +1,10 @@
-# Cloud Storage Extension 2.7.2, released 2023-??-??
+# Cloud Storage Extension 2.7.2, released 2023-06-07
 
-Code name:
+Code name: vulnerability Fixes and Dependency Updates
 
 ## Summary
+
+With this release we update user guide. Additionally, we fixed vulnerability findings in the transitive dependencies and updated dependency versions.
 
 ## Documentation
 
@@ -11,20 +13,23 @@ Code name:
 ## Security
 
 * #245: Fixed dependency check vulnerability findings
+* #247: Fixed dependency check vulnerability findings
 
 ## Dependency Updates
 
 ### Compile Dependency Updates
 
+* Updated `com.exasol:import-export-udf-common-scala_2.13:1.1.0` to `1.1.1`
 * Updated `com.exasol:parquet-io-java:2.0.1` to `2.0.3`
 * Removed `com.fasterxml.jackson.core:jackson-databind:2.14.2`
 * Removed `com.fasterxml.jackson.module:jackson-module-scala_2.13:2.14.2`
 * Updated `com.fasterxml.woodstox:woodstox-core:6.5.0` to `6.5.1`
-* Updated `com.google.protobuf:protobuf-java:3.22.2` to `3.23.0`
+* Updated `com.google.guava:guava:31.1-jre` to `32.0.0-jre`
+* Updated `com.google.protobuf:protobuf-java:3.22.2` to `3.23.2`
 * Updated `io.delta:delta-core_2.13:2.2.0` to `2.3.0`
 * Updated `io.grpc:grpc-netty:1.53.0` to `1.55.1`
-* Updated `io.netty:netty-all:4.1.90.Final` to `4.1.92.Final`
-* Updated `org.alluxio:alluxio-core-client-hdfs:2.9.2` to `294`
+* Updated `io.netty:netty-all:4.1.90.Final` to `4.1.93.Final`
+* Updated `org.alluxio:alluxio-core-client-hdfs:2.9.2` to `300`
 * Updated `org.apache.hadoop:hadoop-aws:3.3.4` to `3.3.5`
 * Updated `org.apache.hadoop:hadoop-azure-datalake:3.3.4` to `3.3.5`
 * Updated `org.apache.hadoop:hadoop-azure:3.3.4` to `3.3.5`
@@ -36,12 +41,13 @@ Code name:
 
 ### Test Dependency Updates
 
-* Updated `com.dimafeng:testcontainers-scala-scalatest_2.13:0.40.12` to `0.40.15`
-* Updated `com.exasol:exasol-testcontainers:6.5.1` to `6.5.2`
+* Updated `com.dimafeng:testcontainers-scala-scalatest_2.13:0.40.12` to `0.40.16`
+* Updated `com.exasol:exasol-testcontainers:6.5.1` to `6.6.0`
 * Updated `com.exasol:hamcrest-resultset-matcher:1.5.2` to `1.6.0`
+* Updated `nl.jqno.equalsverifier:equalsverifier:3.14.1` to `3.14.2`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.9.2` to `5.9.3`
 * Updated `org.mockito:mockito-core:5.2.0` to `5.3.1`
-* Updated `org.testcontainers:localstack:1.17.6` to `1.18.0`
+* Updated `org.testcontainers:localstack:1.17.6` to `1.18.3`
 
 ### Plugin Dependency Updates
 
