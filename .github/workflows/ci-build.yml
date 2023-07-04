@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        exasol-docker-version: [ "7.0.22", "7.1.21" ]
+        exasol-docker-version: [ "7.1.21" ]
     env:
       DEFAULT_DOCKER_DB_VERSION: "7.1.21"
     steps:
