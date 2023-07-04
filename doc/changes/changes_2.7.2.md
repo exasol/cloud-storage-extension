@@ -70,7 +70,6 @@ With this release we update user guide. Additionally, we fixed vulnerability fin
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.2.1` to `3.3.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M8` to `3.0.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M8` to `3.0.0`
-* Added `org.apache.maven.plugins:maven-toolchains-plugin:3.1.0`
 * Added `org.basepom.maven:duplicate-finder-maven-plugin:1.5.1`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.3.0` to `1.4.1`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.14.2` to `2.15.0`
