@@ -28,6 +28,7 @@ With this release we update user guide. Additionally, we fixed vulnerability fin
 * Updated `com.google.guava:guava:31.1-jre` to `32.1.1-jre`
 * Updated `com.google.protobuf:protobuf-java:3.22.2` to `3.23.3`
 * Updated `io.delta:delta-core_2.13:2.2.0` to `2.4.0`
+* Added `io.dropwizard.metrics:metrics-core:4.2.19`
 * Updated `io.grpc:grpc-netty:1.53.0` to `1.56.1`
 * Removed `io.netty:netty-all:4.1.90.Final`
 * Added `io.netty:netty-handler:4.1.94.Final`
