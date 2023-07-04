@@ -1,6 +1,6 @@
-# Cloud Storage Extension 2.7.2, released 2023-06-07
+# Cloud Storage Extension 2.7.2, released 2023-07-04
 
-Code name: vulnerability Fixes and Dependency Updates
+Code name: Dependency upgrade on top of 2.7.1 version
 
 ## Summary
 
@@ -14,6 +14,7 @@ With this release we update user guide. Additionally, we fixed vulnerability fin
 
 * #245: Fixed dependency check vulnerability findings
 * #247: Fixed dependency check vulnerability findings
+* #253: Fixed dependency check vulnerability findings
 
 ## Dependency Updates
 

@@ -14,9 +14,9 @@
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
-        <scala.version>2.13.10</scala.version>
+        <scala.version>2.13.11</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
-        <hadoop.version>3.3.5</hadoop.version>
+        <hadoop.version>3.3.6</hadoop.version>
         <log4j.version>2.20.0</log4j.version>
         <sonar.sources>src/main/,extension/src/</sonar.sources>
         <sonar.exclusions>extension/src/*.test.ts</sonar.exclusions>
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>32.0.0-jre</version>
+            <version>32.1.1-jre</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.woodstox</groupId>
@@ -48,12 +48,17 @@
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.55.1</version>
+            <version>1.56.1</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.93.Final</version>
+            <artifactId>netty-handler</artifactId>
+            <version>4.1.94.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+            <version>1.1.10.1</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -140,17 +145,6 @@
                     <groupId>com.sun.jersey</groupId>
                     <artifactId>jersey-server</artifactId>
                 </exclusion>
-                <!-- excluded to fix CVE-2021-37533 -->
-                <exclusion>
-                    <groupId>commons-net</groupId>
-                    <artifactId>commons-net</artifactId>
-                </exclusion>
-                <!-- excluded to fix vulnerabilities CVE-2023-26048 -->
-                <exclusion>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-util</artifactId>
-                </exclusion>
-                <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
                     <groupId>io.netty</groupId>
                     <artifactId>netty-transport-native-epoll</artifactId>
@@ -189,13 +183,6 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-aws</artifactId>
             <version>${hadoop.version}</version>
-            <exclusions>
-                <!-- excluded to fix CVE-2019-14887 -->
-                <exclusion>
-                    <groupId>org.wildfly.openssl</groupId>
-                    <artifactId>wildfly-openssl</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -205,16 +192,6 @@
                 <exclusion>
                     <groupId>org.codehaus.jackson</groupId>
                     <artifactId>jackson-mapper-asl</artifactId>
-                </exclusion>
-                <!-- excluded to fix CVE-2019-14887 -->
-                <exclusion>
-                    <groupId>org.wildfly.openssl</groupId>
-                    <artifactId>wildfly-openssl</artifactId>
-                </exclusion>
-                <!-- excluded to fix vulnerabilities CVE-2023-26048 -->
-                <exclusion>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-util</artifactId>
                 </exclusion>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -227,13 +204,6 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-azure-datalake</artifactId>
             <version>${hadoop.version}</version>
-            <exclusions>
-                <!-- excluded to fix CVE-2019-14887 -->
-                <exclusion>
-                    <groupId>org.wildfly.openssl</groupId>
-                    <artifactId>wildfly-openssl</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -261,11 +231,6 @@
                     <!-- Prefer newer implementation org.glassfish.jersey.core:jersey-server -->
                     <groupId>com.sun.jersey</groupId>
                     <artifactId>jersey-server</artifactId>
-                </exclusion>
-                <!-- excluded to fix vulnerabilities CVE-2023-26048 -->
-                <exclusion>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-util</artifactId>
                 </exclusion>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -339,17 +304,6 @@
                     <groupId>io.grpc</groupId>
                     <artifactId>grpc-core</artifactId>
                 </exclusion>
-                <!-- excluded for CVE-2020-28491 -->
-                <!-- CWE-770: Allocation of Resources Without Limits or Throttling (7.5); -->
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.dataformat</groupId>
-                    <artifactId>jackson-dataformat-cbor</artifactId>
-                </exclusion>
-                <!-- excluded to fix vulnerabilities CVE-2023-26048 -->
-                <exclusion>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-util</artifactId>
-                </exclusion>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
                     <groupId>javax.inject</groupId>
@@ -388,7 +342,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.23.2</version>
+            <version>3.23.3</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
@@ -404,7 +358,7 @@
         <dependency>
             <groupId>org.apache.orc</groupId>
             <artifactId>orc-core</artifactId>
-            <version>1.8.3</version>
+            <version>1.9.0</version>
             <exclusions>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -416,7 +370,7 @@
         <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
-            <version>1.11.1</version>
+            <version>1.11.2</version>
             <exclusions>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -432,18 +386,12 @@
         <dependency>
             <groupId>io.delta</groupId>
             <artifactId>delta-core_${scala.compat.version}</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-        <!-- Do not remove until hadoop version 3.4.0, see https://github.com/exasol/cloud-storage-extension/issues/195 -->
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.13</version>
+            <version>2.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${scala.compat.version}</artifactId>
-            <version>3.3.2</version>
+            <version>3.4.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.spark-project.spark</groupId>
@@ -476,23 +424,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- Upgrade transitive dependency of spark-sql to fix CVE-2022-37865 and CVE-2022-37866 -->
-        <dependency>
-            <groupId>org.apache.ivy</groupId>
-            <artifactId>ivy</artifactId>
-            <version>2.5.1</version>
-        </dependency>
-        <dependency>
-            <!-- Upgrade transitive dependency of spark-sql to fix
-                CWE-94: Improper Control of Generation of Code ('Code Injection') (9.8); https://ossindex.sonatype.org/vulnerability/CVE-2022-42889 -->
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.10.0</version>
-        </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>parquet-io-java</artifactId>
-            <version>2.0.3</version>
+            <version>2.0.4</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -551,7 +486,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.3.1</version>
+            <version>5.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -563,7 +498,7 @@
         <dependency>
             <groupId>com.dimafeng</groupId>
             <artifactId>testcontainers-scala-scalatest_${scala.compat.version}</artifactId>
-            <version>0.40.16</version>
+            <version>0.40.17</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -593,7 +528,7 @@
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.14.2</version>
+            <version>3.14.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -611,12 +546,31 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>extension-manager-integration-test-java</artifactId>
-            <version>0.2.2</version>
+            <version>0.4.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>toolchain</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <toolchains>
+                        <jdk>
+                            <version>11</version>
+                        </jdk>
+                    </toolchains>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
@@ -682,7 +636,7 @@
                         <compilerPlugin>
                             <groupId>org.scalameta</groupId>
                             <artifactId>semanticdb-scalac_${scala.version}</artifactId>
-                            <version>4.5.13</version>
+                            <version>4.8.0</version>
                         </compilerPlugin>
                     </compilerPlugins>
                 </configuration>
@@ -764,22 +718,14 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
-                        <!-- Vulnerabilities in org.codehaus.jackson:jackson-mapper-asl:1.9.13 -->
-                        <!-- CWE-184: Incomplete Blacklist (9.8); https://ossindex.sonatype.org/vulnerability/CVE-2017-7525 -->
-                        <exclude>CVE-2017-7525</exclude>
-                        <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (7.5); https://ossindex.sonatype.org/vulnerability/CVE-2019-10172 -->
-                        <exclude>CVE-2019-10172</exclude>
-                        <!-- Vulnerabilities in com.fasterxml.jackson.core:jackson-core:jar:2.14.2 -->
-                        <!-- CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion') from jackson-core:2.13.4 -->
-                        <exclude>sonatype-2022-6438</exclude>
-                        <!-- org.apache.spark:spark-core_2.13:jar:3.3.2: CWE-269: Improper Privilege Management (6.4); https://ossindex.sonatype.org/vulnerability/CVE-2023-22946 -->
-                        <!-- This from the spark-code_2.13 version, which we release using profiles below. -->
-                        <exclude>CVE-2023-22946</exclude>
-                        <!-- org.apache.spark:spark-sql_2.13.jar:3.4.0: CWE-269: Improper Privilege Management (9.9); https://ossindex.sonatype.org/vulnerability/CVE-2023-22946 -->
+                        <!-- Vulnerability in org.apache.spark:spark-sql_2.13.jar:3.4.1 -->
+                        <!-- From transitive org.codehaus.janino:janino:3.1.9 dependency -->
+                        <!-- CWE-787: Out-of-bounds Write (5.5); https://ossindex.sonatype.org/vulnerability/CVE-2023-33546 -->
                         <exclude>CVE-2023-33546</exclude>
-                        <!-- Vulnerabilities in org.apache.hadoop:hadoop-hdfs-client:3.3.4 -->
-                        <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (8.6); https://ossindex.sonatype.org/vulnerability/sonatype-2022-5732 -->
-                        <exclude>sonatype-2022-5732</exclude>
+                        <!-- Vulnerability in org.alluxio:alluxio-core-common:jar:300 -->
+                        <!-- CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (6.1); -->
+                        <!-- https://ossindex.sonatype.org/vulnerability/CVE-2020-21485 -->
+                        <exclude>CVE-2020-21485</exclude>
                         <!-- Vulnerabilities in fr.turri:aXMLRPC:1.13.0:test -->
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (9.8); -->
                         <!-- Used in tests only. -->
@@ -857,7 +803,7 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.36.0</version>
+                <version>2.37.0</version>
                 <configuration>
                     <scala>
                         <scalafmt>
@@ -959,7 +905,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.1</version>
                 <configuration>
                     <filesets>
                         <fileset>
