@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.7.2, released 2023-07-04
+# Cloud Storage Extension 2.7.2, released 2023-??-??
 
 Code name: Dependency upgrade on top of 2.7.1 version
 
