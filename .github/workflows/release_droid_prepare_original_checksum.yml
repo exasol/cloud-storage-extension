@@ -3,6 +3,9 @@ name: Release Droid - Prepare Original Checksum
 on:
   workflow_dispatch:
 
+env:
+  DEFAULT_DOCKER_DB_VERSION: "7.1.21"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,7 +27,13 @@ jobs:
       - name: Enable testcontainer reuse
         run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
       - name: Run tests and build with Maven
-        run: mvn --batch-mode clean verify --file pom.xml
+        run: |
+          mvn --batch-mode clean verify --file pom.xml \
+              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+              -DtrimStackTrace=false \
+              -Dcom.exasol.dockerdb.image=${{ env.DEFAULT_DOCKER_DB_VERSION }}
+        env:
+          EXASOL_DOCKER_VERSION: ${{ env.DEFAULT_DOCKER_DB_VERSION }}
       - name: Prepare checksum
         run: find target -maxdepth 1 -name *.jar -exec sha256sum "{}" + > original_checksum
       - name: Upload checksum to the artifactory
