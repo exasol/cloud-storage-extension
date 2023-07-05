@@ -779,11 +779,47 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   CONNECTION_NAME = 'S3_CONNECTION';
 ```
 
+### S3 Endpoint Parameter
+
+For `S3_ENDPOINT` parameter, you should provide the S3 region endpoint, for example, `s3.eu-central-1.amazonaws.com` for the regular AWS S3 buckets.
+
+However, if you are using S3 API complaint storage service such Minio, you should set this parameter accordingly.
+
+Here are some of the S3 API complaint services and corresponding endpoint examples:
+
+| Service            | Endpoint Example                            |
+|--------------------|---------------------------------------------|
+| LocalStack S3      | `http://localhost:4566`                     |
+| Minio              | `http://miniodomain.tld:9000`               |
+| Palantir Foundry   | `https://subdomain.palantircloud.com/io/s3` |
+| IBM Spectrum Scale | `'http://spectrumscaladomain.tld:8080`      |
+
+### S3 Endpoint Region Parameter
+
+When using [AWS PrivateLink](https://docs.aws.amazon.com/AmazonS3/latest/userguide/privatelink-interface-endpoints.html) endpoint instead of standard S3 endpoint, you will get the following `Authorization Header is Malformed` error.
+
+```
+com.amazonaws.services.s3.model.AmazonS3Exception: The authorization header is malformed; the region 'vpce' is wrong; expecting 'ca-central-1'
+(Service: Amazon S3; Status Code: 400; Error Code: AuthorizationHeaderMalformed; Request ID: req-id; S3 Extended Request ID: req-id-2), S3 Extended Request ID: req-id-2:AuthorizationHeaderMalformed: The authorization
+header is malformed; the region 'vpce' is wrong; expecting 'ca-central-1' (Service: Amazon S3; Status Code: 400; Error Code: AuthorizationHeaderMalformed; Request ID: req-id;
+```
+
+Since with PrivateLink, the endpoint will be as following:
+
+```
+S3_ENDPOINT = 'https://bucket.vpce-<some-string-value>.s3.us-east-1.vpce.amazonaws.com'
+```
+
+As you can see the region is not second value (after delimiting with `.`). To support PrivateLink S3 access, please also provide region value separately using `S3_ENDPOINT_REGION` parameter.
+
+```
+S3_ENDPOINT = 'https://bucket.vpce-<some-string-value>.s3.eu-central-1.vpce.amazonaws.com'
+S3_ENDPOINT_REGION = 'eu-central-1'
+```
+
 ### S3 Path Style Access
 
-Amazon S3 [deprecated the path][s3-path-style-deprecation1] [style
-access][s3-path-style-deprecation2] to the buckets at the end of the 2020. This
-breaks the access to the bucket that contain dot (`.`) in their names.
+Amazon S3 [deprecated the path][s3-path-style-deprecation1] [style access][s3-path-style-deprecation2] to the buckets at the end of the 2020. This breaks the access to the bucket that contain dot (`.`) in their names.
 
 [s3-path-style-deprecation1]: https://aws.amazon.com/blogs/aws/amazon-s3-path-deprecation-plan-the-rest-of-the-story/
 [s3-path-style-deprecation2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#path-style-access

@@ -1,14 +1,15 @@
-# Cloud Storage Extension 2.7.2, released 2023-??-??
+# Cloud Storage Extension 2.7.2, released 2023-07-05
 
-Code name: Dependency upgrade on top of 2.7.1 version
+Code name: Documentation and dependency updates
 
 ## Summary
 
-With this release we update user guide. Additionally, we fixed vulnerability findings in the transitive dependencies and updated dependency versions.
+With this release we updated user guide documentation and upgraded dependency versions. We also fixed vulnerability findings in the transitive dependencies and updated their versions.
 
 ## Documentation
 
 * #243: Removed target file name from `curl` commands in user guide
+* #250: Added `S3_ENDPOINT_REGION` parameter description to user guide
 
 ## Security
 
