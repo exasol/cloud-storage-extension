@@ -783,9 +783,9 @@ INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
 
 For `S3_ENDPOINT` parameter, you should provide the S3 region endpoint, for example, `s3.eu-central-1.amazonaws.com` for the regular AWS S3 buckets.
 
-However, if you are using S3 API complaint storage service such Minio, you should set this parameter accordingly.
+However, if you are using S3 API compliant storage service such Minio, you should set this parameter accordingly.
 
-Here are some of the S3 API complaint services and corresponding endpoint examples:
+Here are some of the S3 API compliant services and corresponding endpoint examples:
 
 | Service            | Endpoint Example                            |
 |--------------------|---------------------------------------------|

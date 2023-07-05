@@ -4,7 +4,7 @@ Code name: Documentation and dependency updates
 
 ## Summary
 
-With this release we updated user guide documentation and upgraded dependency versions. We also fixed vulnerability findings in the transitive dependencies and updated their versions.
+With this release we updated the user guide documentation and upgraded dependency versions. We also fixed vulnerability findings in the transitive dependencies and updated their versions.
 
 ## Documentation
 
