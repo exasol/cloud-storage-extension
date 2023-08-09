@@ -23,7 +23,6 @@ This release updates the extension so that it supports categories and upgrading 
 
 * Updated `com.google.guava:guava:32.1.1-jre` to `32.1.2-jre`
 * Updated `com.google.protobuf:protobuf-java:3.23.3` to `3.24.0`
-* Added `com.squareup.okio:okio:3.5.0`
 * Updated `io.grpc:grpc-netty:1.56.1` to `1.57.1`
 * Updated `io.netty:netty-handler:4.1.94.Final` to `4.1.96.Final`
 * Updated `org.alluxio:alluxio-core-client-hdfs:300` to `302`
