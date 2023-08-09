@@ -1,12 +1,15 @@
 # Cloud Storage Extension 2.7.3, released 2023-??-??
 
-Code name:
+Code name: Upgrade Extension
 
 ## Summary
 
+This release updates the extension so that it supports categories and upgrading an installed cloud storage extension to the latest version.
+
 ## Features
 
-* ISSUE_NUMBER: description
+* #252: Implemented upgrading installed extension
+* #251: Added category to extension
 
 ## Dependency Updates
 
