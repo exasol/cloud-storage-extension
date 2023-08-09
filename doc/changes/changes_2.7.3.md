@@ -25,7 +25,6 @@ Code name:
 ### Test Dependency Updates
 
 * Updated `com.exasol:exasol-testcontainers:6.6.0` to `6.6.1`
-* Updated `com.exasol:extension-manager-integration-test-java:0.4.0` to `0.5.0`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.14.3` to `3.15.1`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.9.3` to `5.10.0`
 * Updated `org.scalatestplus:scalatestplus-mockito_2.13:1.0.0-M2` to `1.0.0-SNAP5`
