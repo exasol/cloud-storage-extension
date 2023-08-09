@@ -10,7 +10,7 @@
         "generate": "bash generate-description.sh",
         "lint": "eslint ./src/",
         "clean": "rm -rf dist/",
-        "test": "jest",
+        "test": "jest --silent",
         "test-watch": "jest --watch"
     },
     "dependencies": {

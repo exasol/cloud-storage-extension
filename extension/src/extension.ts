@@ -12,6 +12,7 @@ import { EXTENSION_DESCRIPTION } from "./extension-description";
 import { findInstallations } from "./findInstallations";
 import { installExtension } from "./install";
 import { uninstall } from "./uninstall";
+import { upgrade } from "./upgrade";
 
 function createExtensionInfo(): ExtensionInfo {
     const version = EXTENSION_DESCRIPTION.version;
@@ -43,7 +44,7 @@ export function createExtension(): ExasolExtension {
             throw new NotFoundError("Creating instances not supported")
         },
         upgrade(context: Context): UpgradeResult {
-            return upgrade(context, extensionInfo);
+            return upgrade(extendContext(context), extensionInfo);
         },
         findInstances(context: Context, version: string): Instance[] {
             throw new NotFoundError("Finding instances not supported")
