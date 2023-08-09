@@ -6,7 +6,11 @@ Code name:
 
 ## Features
 
-* ISSUE_NUMBER: description
+* #252: Added support to allow updating installed extensions
+
+## Security
+
+* #260: Updated dependencies to fix security vulnerabilities
 
 ## Dependency Updates
 

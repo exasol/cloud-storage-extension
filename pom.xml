@@ -7,6 +7,12 @@
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>
+    <parent>
+        <artifactId>cloud-storage-extension-generated-parent</artifactId>
+        <groupId>com.exasol</groupId>
+        <version>2.7.3</version>
+        <relativePath>pk_generated_parent.pom</relativePath>
+    </parent>
     <properties>
         <scala.version>2.13.11</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
@@ -38,6 +44,11 @@
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
             <version>1.57.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler</artifactId>
+            <version>4.1.96.Final</version>
         </dependency>
             <dependency>
                 <!-- Upgrade nettty-handler to fix CVE-2023-34462-->
@@ -259,6 +270,10 @@
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
                     <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.squareup.okio</groupId>
+                    <artifactId>okio</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -950,10 +965,4 @@
             </plugin>
         </plugins>
     </build>
-    <parent>
-        <artifactId>cloud-storage-extension-generated-parent</artifactId>
-        <groupId>com.exasol</groupId>
-        <version>2.7.3</version>
-        <relativePath>pk_generated_parent.pom</relativePath>
-    </parent>
 </project>
