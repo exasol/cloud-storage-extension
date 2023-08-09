@@ -28,6 +28,8 @@ This release updates the extension so that it supports categories and upgrading 
 * Updated `org.alluxio:alluxio-core-client-hdfs:300` to `302`
 * Updated `org.apache.commons:commons-lang3:3.12.0` to `3.13.0`
 * Added `org.jetbrains.kotlin:kotlin-stdlib:1.9.0`
+* Removed `org.slf4j:slf4j-log4j12:2.0.7`
+* Added `org.slf4j:slf4j-reload4j:2.0.7`
 * Updated `org.xerial.snappy:snappy-java:1.1.10.1` to `1.1.10.3`
 
 #### Test Dependency Updates
