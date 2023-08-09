@@ -282,7 +282,7 @@
         <dependency>
             <groupId>org.alluxio</groupId>
             <artifactId>alluxio-core-client-hdfs</artifactId>
-            <version>302</version>
+            <version>300</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>

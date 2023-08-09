@@ -25,7 +25,6 @@ This release updates the extension so that it supports categories and upgrading 
 * Updated `com.google.protobuf:protobuf-java:3.23.3` to `3.24.0`
 * Updated `io.grpc:grpc-netty:1.56.1` to `1.57.1`
 * Updated `io.netty:netty-handler:4.1.94.Final` to `4.1.96.Final`
-* Updated `org.alluxio:alluxio-core-client-hdfs:300` to `302`
 * Updated `org.apache.commons:commons-lang3:3.12.0` to `3.13.0`
 * Added `org.jetbrains.kotlin:kotlin-stdlib:1.9.0`
 * Removed `org.slf4j:slf4j-log4j12:2.0.7`
