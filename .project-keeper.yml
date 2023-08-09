@@ -4,6 +4,10 @@ sources:
     modules:
       - jar_artifact
       - integration_tests
+  - type: npm
+    path: extension/package.json
+version:
+  fromSource: pom.xml
 linkReplacements:
   - "http://wiki.fasterxml.com/JacksonModuleScala|https://github.com/FasterXML/jackson-module-scala"
   - "https://netty.io/netty-all/|https://netty.io/"
@@ -20,4 +24,3 @@ excludes:
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_upload_github_release_assets.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_prepare_original_checksum.yml'"
-  - regex: "(?s)E-PK-CORE-53: The dependencies.md file has outdated content.*"
