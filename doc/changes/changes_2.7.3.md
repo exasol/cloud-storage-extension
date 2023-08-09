@@ -11,6 +11,10 @@ This release updates the extension so that it supports categories and upgrading 
 * #252: Implemented upgrading installed extension
 * #251: Added category to extension
 
+## Security
+
+* #260: Updated dependencies to fix security vulnerabilities
+
 ## Dependency Updates
 
 ### Cloud Storage Extension
