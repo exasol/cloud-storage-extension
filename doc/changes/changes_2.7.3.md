@@ -60,6 +60,7 @@ This release updates the extension so that it supports categories and upgrading 
 #### Development Dependency Updates
 
 * Updated `eslint:^8.20.0` to `^8.46.0`
+* Added `@types/node:^20.4.9`
 * Updated `@typescript-eslint/parser:^5.31.0` to `^6.3.0`
 * Updated `ts-jest:^28.0.7` to `^29.1.1`
 * Updated `@types/jest:^28.1.6` to `^29.5.3`
