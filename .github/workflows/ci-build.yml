@@ -52,6 +52,8 @@ jobs:
         run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
       - name: Run scalafix linting
         run: mvn --batch-mode clean compile test-compile scalastyle:check scalafix:scalafix
+      - name: Git hash
+        run: git rev-parse HEAD
       - name: Run tests and build with Maven
         run: |
           mvn --batch-mode clean verify \
