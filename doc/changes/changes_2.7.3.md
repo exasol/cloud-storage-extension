@@ -25,6 +25,7 @@ This release updates the extension so that it supports categories and upgrading 
 * Updated `com.google.protobuf:protobuf-java:3.23.3` to `3.24.0`
 * Updated `io.grpc:grpc-netty:1.56.1` to `1.57.1`
 * Updated `io.netty:netty-handler:4.1.94.Final` to `4.1.96.Final`
+* Added `io.netty:netty-transport-native-unix-common:4.1.96.Final`
 * Added `io.netty:netty-transport:4.1.96.Final`
 * Updated `org.apache.commons:commons-lang3:3.12.0` to `3.13.0`
 * Added `org.jetbrains.kotlin:kotlin-stdlib:1.9.0`
