@@ -58,8 +58,10 @@ With this release we updated the user guide documentation and upgraded dependenc
 * Updated `com.exasol:extension-manager-integration-test-java:0.2.2` to `0.4.0`
 * Updated `com.exasol:hamcrest-resultset-matcher:1.5.2` to `1.6.0`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.14.1` to `3.14.3`
-* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.2` to `5.9.3`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.2` to `5.10.0`
 * Updated `org.mockito:mockito-core:5.2.0` to `5.4.0`
+* Updated `org.scalatestplus:scalatestplus-mockito_2.13:1.0.0-M2` to `1.0.0-SNAP5`
+* Updated `org.scalatest:scalatest_2.13:3.2.10` to `3.3.0-SNAP4`
 * Updated `org.testcontainers:localstack:1.17.6` to `1.18.3`
 
 ### Plugin Dependency Updates
