@@ -54,7 +54,7 @@ With this release we updated the user guide documentation and upgraded dependenc
 ### Test Dependency Updates
 
 * Updated `com.dimafeng:testcontainers-scala-scalatest_2.13:0.40.12` to `0.40.17`
-* Updated `com.exasol:exasol-testcontainers:6.5.1` to `6.6.0`
+* Updated `com.exasol:exasol-testcontainers:6.5.1` to `6.6.1`
 * Updated `com.exasol:extension-manager-integration-test-java:0.2.2` to `0.4.0`
 * Updated `com.exasol:hamcrest-resultset-matcher:1.5.2` to `1.6.0`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.14.1` to `3.14.3`
