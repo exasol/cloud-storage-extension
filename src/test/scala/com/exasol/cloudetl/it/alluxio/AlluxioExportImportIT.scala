@@ -92,6 +92,15 @@ class AlluxioExportImportIT extends BaseIntegrationTest {
         s"Could not change '$bucket' folder permissions in Alluxio container."
       )
     }
+    val mainIPv4Address = getContainerIPv4Address(alluxioMainContainer)
+    exitCode = exasolContainer.execInContainer(
+      "/bin/sh",
+      "-c",
+      s"echo '$mainIPv4Address alluxio-main' >> /etc/hosts"
+    )
+    if (exitCode.getExitCode() != 0) {
+      throw new RuntimeException("Failed to update `/etc/hosts` file in Exasol container with Alluxio main IPv4 address.")
+    }
     val workerIPv4Address = getContainerIPv4Address(alluxioWorkerContainer)
     exitCode = exasolContainer.execInContainer(
       "/bin/sh",
@@ -99,7 +108,7 @@ class AlluxioExportImportIT extends BaseIntegrationTest {
       s"echo '$workerIPv4Address alluxio-worker' >> /etc/hosts"
     )
     if (exitCode.getExitCode() != 0) {
-      throw new RuntimeException("Could not update `/etc/hosts` file in Exasol container.")
+      throw new RuntimeException("Failed to update `/etc/hosts` file in Exasol container with Alluxio worker IPv4 address.")
     }
   }
 
