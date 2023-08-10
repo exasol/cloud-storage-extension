@@ -57,6 +57,7 @@ jobs:
           mvn --batch-mode clean verify \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false \
+              -Dossindex.skip=true -Dproject-keeper.skip=true \
               -Dcom.exasol.dockerdb.image=${{ matrix.exasol-docker-version }}
         env:
           EXASOL_DOCKER_VERSION: ${{ matrix.exasol-docker-version }}
