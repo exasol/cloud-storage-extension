@@ -16,7 +16,6 @@ linkReplacements:
   - "http://nexus.sonatype.org/oss-repository-hosting.html/scalatest-maven-plugin|https://github.com/scalatest/scalatest-maven-plugin"
   - "https://logging.apache.org/log4j/2.x/log4j-1.2-api/|https://logging.apache.org/log4j/2.x/"
 excludes:
-  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_upload_github_release_assets.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_prepare_original_checksum.yml'"

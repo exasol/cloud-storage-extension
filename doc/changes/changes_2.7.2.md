@@ -46,6 +46,7 @@ With this release we updated the user guide documentation and upgraded dependenc
 * Updated `org.apache.orc:orc-core:1.8.3` to `1.9.0`
 * Updated `org.apache.spark:spark-sql_2.13:3.3.2` to `3.4.1`
 * Removed `org.codehaus.jackson:jackson-mapper-asl:1.9.13`
+* Added `org.jetbrains.kotlin:kotlin-stdlib:1.9.0`
 * Updated `org.scala-lang:scala-library:2.13.10` to `2.13.11`
 * Updated `org.slf4j:jul-to-slf4j:2.0.6` to `2.0.7`
 * Updated `org.slf4j:slf4j-log4j12:2.0.6` to `2.0.7`
@@ -57,7 +58,7 @@ With this release we updated the user guide documentation and upgraded dependenc
 * Updated `com.exasol:exasol-testcontainers:6.5.1` to `6.6.1`
 * Updated `com.exasol:extension-manager-integration-test-java:0.2.2` to `0.4.0`
 * Updated `com.exasol:hamcrest-resultset-matcher:1.5.2` to `1.6.0`
-* Updated `nl.jqno.equalsverifier:equalsverifier:3.14.1` to `3.14.3`
+* Updated `nl.jqno.equalsverifier:equalsverifier:3.14.1` to `3.15.1`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.9.2` to `5.10.0`
 * Updated `org.mockito:mockito-core:5.2.0` to `5.4.0`
 * Updated `org.scalatestplus:scalatestplus-mockito_2.13:1.0.0-M2` to `1.0.0-SNAP5`

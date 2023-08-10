@@ -33,14 +33,10 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
       - name: Enable testcontainer reuse
         run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
-      - name: Run scalafix linting
-        run: |
-          JAVA_HOME=$JAVA_HOME_11_X64 mvn --batch-mode clean compile test-compile scalastyle:check scalafix:scalafix
       - name: Run tests and build with Maven
         run: |
           JAVA_HOME=$JAVA_HOME_11_X64 mvn --batch-mode clean verify \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
-              -Dossindex.skip=true \
               -DtrimStackTrace=false
       - name: Publish Test Report
         uses: scacap/action-surefire-report@v1
