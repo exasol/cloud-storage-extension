@@ -26,7 +26,7 @@ export function upgrade(context: ExtendedContext, extensionInfo: ExtensionInfo):
     }
     const newVersion = extensionInfo.version
     if (previousVersion.result === newVersion) {
-        throw new PreconditionFailedError(`Current version ${newVersion} already installed`)
+        throw new PreconditionFailedError(`Extension is already installed in latest version ${newVersion}`)
     }
     installExtension(context, extensionInfo, newVersion)
     return { previousVersion: previousVersion.result, newVersion };
