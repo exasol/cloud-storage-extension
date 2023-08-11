@@ -33,7 +33,7 @@ With this release we updated the user guide documentation and upgraded dependenc
 * Updated `io.grpc:grpc-netty:1.53.0` to `1.56.1`
 * Removed `io.netty:netty-all:4.1.90.Final`
 * Added `io.netty:netty-handler:4.1.96.Final`
-* Updated `org.alluxio:alluxio-core-client-hdfs:2.9.2` to `302`
+* Updated `org.alluxio:alluxio-core-client-hdfs:2.9.2` to `300`
 * Updated `org.apache.avro:avro:1.11.1` to `1.11.2`
 * Updated `org.apache.commons:commons-lang3:3.12.0` to `3.13.0`
 * Removed `org.apache.commons:commons-text:1.10.0`
