@@ -27,7 +27,7 @@ With this release we updated the user guide documentation and upgraded dependenc
 * Removed `com.fasterxml.jackson.module:jackson-module-scala_2.13:2.14.2`
 * Removed `com.fasterxml.woodstox:woodstox-core:6.5.0`
 * Updated `com.google.guava:guava:31.1-jre` to `32.1.1-jre`
-* Updated `com.google.protobuf:protobuf-java:3.22.2` to `3.23.3`
+* Updated `com.google.protobuf:protobuf-java:3.22.2` to `3.24.0`
 * Updated `io.delta:delta-core_2.13:2.2.0` to `2.4.0`
 * Added `io.dropwizard.metrics:metrics-core:4.2.19`
 * Updated `io.grpc:grpc-netty:1.53.0` to `1.56.1`
@@ -35,6 +35,7 @@ With this release we updated the user guide documentation and upgraded dependenc
 * Added `io.netty:netty-handler:4.1.94.Final`
 * Updated `org.alluxio:alluxio-core-client-hdfs:2.9.2` to `300`
 * Updated `org.apache.avro:avro:1.11.1` to `1.11.2`
+* Updated `org.apache.commons:commons-lang3:3.12.0` to `3.13.0`
 * Removed `org.apache.commons:commons-text:1.10.0`
 * Updated `org.apache.hadoop:hadoop-aws:3.3.4` to `3.3.6`
 * Updated `org.apache.hadoop:hadoop-azure-datalake:3.3.4` to `3.3.6`
@@ -50,7 +51,7 @@ With this release we updated the user guide documentation and upgraded dependenc
 * Updated `org.scala-lang:scala-library:2.13.10` to `2.13.11`
 * Updated `org.slf4j:jul-to-slf4j:2.0.6` to `2.0.7`
 * Updated `org.slf4j:slf4j-log4j12:2.0.6` to `2.0.7`
-* Added `org.xerial.snappy:snappy-java:1.1.10.1`
+* Added `org.xerial.snappy:snappy-java:1.1.10.3`
 
 ### Test Dependency Updates
 
