@@ -26,13 +26,13 @@ With this release we updated the user guide documentation and upgraded dependenc
 * Removed `com.fasterxml.jackson.core:jackson-databind:2.14.2`
 * Removed `com.fasterxml.jackson.module:jackson-module-scala_2.13:2.14.2`
 * Removed `com.fasterxml.woodstox:woodstox-core:6.5.0`
-* Updated `com.google.guava:guava:31.1-jre` to `32.1.1-jre`
+* Updated `com.google.guava:guava:31.1-jre` to `32.1.2-jre`
 * Updated `com.google.protobuf:protobuf-java:3.22.2` to `3.24.0`
 * Updated `io.delta:delta-core_2.13:2.2.0` to `2.4.0`
 * Added `io.dropwizard.metrics:metrics-core:4.2.19`
 * Updated `io.grpc:grpc-netty:1.53.0` to `1.56.1`
 * Removed `io.netty:netty-all:4.1.90.Final`
-* Added `io.netty:netty-handler:4.1.94.Final`
+* Added `io.netty:netty-handler:4.1.96.Final`
 * Updated `org.alluxio:alluxio-core-client-hdfs:2.9.2` to `300`
 * Updated `org.apache.avro:avro:1.11.1` to `1.11.2`
 * Updated `org.apache.commons:commons-lang3:3.12.0` to `3.13.0`
