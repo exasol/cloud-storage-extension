@@ -25,7 +25,6 @@ export class AdapterScript {
 const adapterScriptFileNamePattern = /.*%jar\s+[\w-/]+\/([^/]+.jar)\s*;.*/
 const jarNameVersionPattern = /exasol-cloud-storage-extension-(\d+\.\d+\.\d+).jar/
 
-
 function extractVersion(adapterScriptText: string): string | undefined {
     const jarNameMatch = adapterScriptFileNamePattern.exec(adapterScriptText)
     if (!jarNameMatch) {

@@ -4,8 +4,8 @@ import { createExtension } from './extension';
 import { EXTENSION_DESCRIPTION } from './extension-description';
 import { createMockContext, scriptWithVersion } from './test-utils';
 
-
 const currentVersion = EXTENSION_DESCRIPTION.version
+
 describe("upgrade()", () => {
     const version = "1.2.3"
     const importPath = scriptWithVersion("IMPORT_PATH", version)

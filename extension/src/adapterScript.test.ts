@@ -2,8 +2,6 @@ import { describe, expect, it } from '@jest/globals';
 import { AdapterScript } from './adapterScript';
 import { script } from './test-utils';
 
-
-
 describe("AdapterScript", () => {
     describe("properties", () => {
         it("name", () => {

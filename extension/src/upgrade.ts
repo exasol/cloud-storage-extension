@@ -5,13 +5,16 @@ import {
 import { ExtendedContext, ExtensionInfo, SCRIPTS, validateInstalledScripts, validateVersions } from "./common";
 import { installExtension } from "./install";
 
-
+/**
+ * Assertion and filter function to verify a value is really defined and not {@code undefined} or {@code null}.
+ * @param value the value to check
+ * @returns {@code true} if the value is not null or undefined.
+ */
 function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
     return value !== null && value !== undefined;
 }
 
 export function upgrade(context: ExtendedContext, extensionInfo: ExtensionInfo): UpgradeResult {
-
     const scriptList = Object.entries(SCRIPTS).map(([_key, value]) => value.name)
         .map(scriptName => context.metadata.getScriptByName(scriptName))
         .filter(notEmpty);

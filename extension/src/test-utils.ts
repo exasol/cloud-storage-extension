@@ -3,7 +3,6 @@ import { Context, QueryResult, SqlClient } from '@exasol/extension-manager-inter
 import { ExaScriptsRow } from '@exasol/extension-manager-interface/dist/exasolSchema';
 import * as jestMock from "jest-mock";
 
-
 const EXTENSION_SCHEMA_NAME = "ext-schema"
 
 export function getInstalledExtension(): any {
