@@ -35,7 +35,7 @@ describe("upgrade()", () => {
                         scriptWithVersion("IMPORT_PATH", currentVersion), scriptWithVersion("IMPORT_METADATA", currentVersion),
                         scriptWithVersion("IMPORT_FILES", currentVersion), scriptWithVersion("EXPORT_PATH", currentVersion), scriptWithVersion("EXPORT_TABLE", currentVersion)
                     ],
-                    expectedMessage: "Current version 2.7.3 already installed"
+                    expectedMessage: "Extension is already installed in latest version 2.7.3"
                 },
             ]
             tests.forEach(test => it(test.name, () => {
