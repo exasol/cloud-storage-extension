@@ -24,7 +24,7 @@ export function createMockContext(): ContextMock {
     const execute = jestMock.fn<(query: string, ...args: any) => void>().mockName("sqlClient.execute()")
     const query = jestMock.fn<(query: string, ...args: any) => QueryResult>().mockName("sqlClient.query()")
     const getScriptByName = jestMock.fn<(scriptName: string) => ExaScriptsRow | null>().mockName("metadata.getScriptByName()")
-    getScriptByName.mockImplementation((scriptName) => mockedScripts.get(scriptName) || null)
+    getScriptByName.mockImplementation((scriptName) => mockedScripts.get(scriptName) ?? null)
     const sqlClient: SqlClient = {
         execute: execute,
         query: query
