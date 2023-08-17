@@ -20,8 +20,9 @@ jobs:
       - name: Set up Node 18
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: "16"
           cache: "npm"
+          cache-dependency-path: "extension/package-lock.json"
       - name: Install dependencies
         run: cd extension && npm ci
       - name: Run tests
