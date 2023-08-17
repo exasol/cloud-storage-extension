@@ -1,0 +1,32 @@
+name: Extension CI Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Node 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "npm"
+      - name: Install dependencies
+        run: cd extension && npm ci
+      - name: Run tests
+        run: cd extension && npm test
+      - name: Run build
+        run: cd extension && npm run build
+      - name: Run linter
+        run: cd extension && npm run lint
