@@ -41,9 +41,10 @@
             <version>32.1.2-jre</version>
         </dependency>
         <dependency>
+            <!-- Upgrading this will cause failing integration tests -->
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.57.2</version>
+            <version>1.56.1</version>
         </dependency>
         <dependency>
             <!-- Upgrade nettty-handler to fix CVE-2023-34462-->
@@ -280,9 +281,10 @@
             <version>1.9.0</version>
         </dependency>
         <dependency>
+            <!-- Upgrading this will cause failing integration tests -->
             <groupId>org.alluxio</groupId>
             <artifactId>alluxio-core-client-hdfs</artifactId>
-            <version>302</version>
+            <version>300</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
