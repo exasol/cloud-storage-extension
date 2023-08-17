@@ -206,9 +206,9 @@ class ExtensionIT {
         previousVersion.prepare();
         previousVersion.install();
         verifyExportImportWorks();
-        assertInstalledVersion("EXA_EXTENSIONS.S3_FILES_ADAPTER", PREVIOUS_VERSION);
+        assertInstalledVersion("Cloud Storage Extension", PREVIOUS_VERSION);
         previousVersion.upgrade();
-        assertInstalledVersion("EXA_EXTENSIONS.S3_FILES_ADAPTER", PROJECT_VERSION);
+        assertInstalledVersion("Cloud Storage Extension", PROJECT_VERSION);
         verifyExportImportWorks();
     }
 
