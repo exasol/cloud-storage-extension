@@ -25,16 +25,13 @@ jobs:
           cache-dependency-path: "extension/package-lock.json"
       - name: Install dependencies
         run: cd extension && npm ci
-      - name: Run tests
+      - name: Prepare dummy jar file
         run: |
-          cd extension
-          echo 'export const EXTENSION_DESCRIPTION = {' \
-               '  fileName: "exasol-cloud-storage-extension-2.7.3.jar",' \
-               '  fileSizeBytes: 572096955,' \
-               '  version: "2.7.3"' \
-               '}' >> src/extension-description.ts
-          npm test
+          mkdir target
+          echo "dummy jar content" > target/exasol-cloud-storage-extension-2.7.3.jar
       - name: Run build
         run: cd extension && npm run build
+      - name: Run tests
+        run: cd extension && npm test
       - name: Run linter
         run: cd extension && npm run lint
