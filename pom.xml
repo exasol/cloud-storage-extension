@@ -41,11 +41,13 @@
             <version>32.1.2-jre</version>
         </dependency>
         <dependency>
+            <!-- Upgrading this will cause failing integration tests -->
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.57.1</version>
+            <version>1.56.1</version>
         </dependency>
         <dependency>
+            <!-- Upgrade nettty-handler to fix CVE-2023-34462-->
             <groupId>io.netty</groupId>
             <artifactId>netty-handler</artifactId>
             <version>4.1.96.Final</version>
@@ -266,15 +268,23 @@
                     <artifactId>jackson-annotations</artifactId>
                 </exclusion>
                 <exclusion>
+                    <!-- Exclude to fix CVE-2023-3635 -->
                     <groupId>com.squareup.okio</groupId>
                     <artifactId>okio</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
+            <!-- Upgrade transitive dependency of hadoop-hdfs-client to fix CVE-2022-24329 -->
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+        <dependency>
+            <!-- Upgrading this will cause failing integration tests -->
             <groupId>org.alluxio</groupId>
             <artifactId>alluxio-core-client-hdfs</artifactId>
-            <version>302</version>
+            <version>300</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -359,7 +369,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.23.4</version>
+            <version>3.24.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
@@ -375,7 +385,7 @@
         <dependency>
             <groupId>org.apache.orc</groupId>
             <artifactId>orc-core</artifactId>
-            <version>1.9.0</version>
+            <version>1.9.1</version>
             <exclusions>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -457,7 +467,7 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <artifactId>slf4j-reload4j</artifactId>
             <version>2.0.7</version>
             <exclusions>
                 <exclusion>
@@ -495,13 +505,13 @@
         <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_${scala.compat.version}</artifactId>
-            <version>3.2.10</version>
+            <version>3.3.0-SNAP4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.scalatestplus</groupId>
             <artifactId>scalatestplus-mockito_${scala.compat.version}</artifactId>
-            <version>1.0.0-M2</version>
+            <version>1.0.0-SNAP5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -567,7 +577,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>extension-manager-integration-test-java</artifactId>
-            <version>0.4.0</version>
+            <version>0.5.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

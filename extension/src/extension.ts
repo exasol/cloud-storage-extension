@@ -4,13 +4,15 @@ import {
     ExasolExtension,
     Installation,
     Instance, NotFoundError, Parameter, ParameterValues,
+    UpgradeResult,
     registerExtension
 } from "@exasol/extension-manager-interface";
-import { extendContext, ExtensionInfo } from "./common";
+import { ExtensionInfo, extendContext } from "./common";
 import { EXTENSION_DESCRIPTION } from "./extension-description";
 import { findInstallations } from "./findInstallations";
 import { installExtension } from "./install";
 import { uninstall } from "./uninstall";
+import { upgrade } from "./upgrade";
 
 function createExtensionInfo(): ExtensionInfo {
     const version = EXTENSION_DESCRIPTION.version;
@@ -26,6 +28,7 @@ export function createExtension(): ExasolExtension {
     return {
         name: "Cloud Storage Extension",
         description: "Access data formatted with Avro, Orc and Parquet on public cloud storage systems",
+        category: "cloud-storage-importer",
         installableVersions: [{ name: extensionInfo.version, latest: true, deprecated: false }],
         bucketFsUploads: [{ bucketFsFilename: extensionInfo.fileName, downloadUrl, fileSize: EXTENSION_DESCRIPTION.fileSizeBytes, name: "Cloud Storage Extension file", licenseUrl, licenseAgreementRequired: false }],
         install(context: Context, version: string) {
@@ -39,6 +42,9 @@ export function createExtension(): ExasolExtension {
         },
         addInstance(context: Context, version: string, params: ParameterValues): Instance {
             throw new NotFoundError("Creating instances not supported")
+        },
+        upgrade(context: Context): UpgradeResult {
+            return upgrade(extendContext(context), extensionInfo);
         },
         findInstances(context: Context, version: string): Instance[] {
             throw new NotFoundError("Finding instances not supported")

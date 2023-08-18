@@ -22,7 +22,7 @@ class S3Setup implements AutoCloseable {
     static S3Setup create() {
         @SuppressWarnings("resource")
         final LocalStackContainer container = new LocalStackContainer(
-                DockerImageName.parse("localstack/localstack:1.2.0")).withServices(Service.S3).withReuse(true);
+                DockerImageName.parse("localstack/localstack:2.2")).withServices(Service.S3).withReuse(true);
         container.start();
         return new S3Setup(container);
     }

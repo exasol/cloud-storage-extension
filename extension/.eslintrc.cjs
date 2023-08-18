@@ -8,4 +8,7 @@ module.exports = {
     plugins: ['@typescript-eslint'],
     extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:@typescript-eslint/recommended-requiring-type-checking'],
     ignorePatterns: ["src/**/*.test.ts"],
+    rules: {
+        "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }]
+    }
 };

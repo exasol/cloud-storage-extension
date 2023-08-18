@@ -44,6 +44,8 @@ tmp/
 .project
 .scala_dependencies
 *.sc
+/.settings/org.eclipse.core.resources.prefs
+/.settings/org.eclipse.jdt.apt.core.prefs
 
 # Ensime
 .ensime
