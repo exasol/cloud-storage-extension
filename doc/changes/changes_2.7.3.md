@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.7.3, released 2023-??-??
+# Cloud Storage Extension 2.7.3, released 2023-08-18
 
 Code name: Upgrade Extension
 
