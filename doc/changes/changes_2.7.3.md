@@ -55,18 +55,13 @@ This release updates the extension so that it supports categories and upgrading 
 
 ### Extension
 
-#### Compile Dependency Updates
-
-* Updated `@exasol/extension-manager-interface:0.1.15` to `0.3.0`
-
 #### Development Dependency Updates
 
-* Updated `eslint:^8.20.0` to `^8.46.0`
-* Added `@types/node:^20.4.9`
-* Updated `@typescript-eslint/parser:^5.31.0` to `^6.3.0`
-* Updated `ts-jest:^28.0.7` to `^29.1.1`
-* Updated `@types/jest:^28.1.6` to `^29.5.3`
-* Updated `typescript:^4.7.4` to `^5.1.6`
-* Updated `@typescript-eslint/eslint-plugin:^5.31.0` to `^6.3.0`
-* Updated `jest:28.1.3` to `29.6.2`
-* Updated `esbuild:^0.14.50` to `^0.19.0`
+* Updated `eslint:^8.46.0` to `^8.47.0`
+* Added `@jest/globals:^29.6.3`
+* Updated `@types/node:^20.4.9` to `^20.5.3`
+* Updated `@typescript-eslint/parser:^6.3.0` to `^6.4.1`
+* Updated `@typescript-eslint/eslint-plugin:^6.3.0` to `^6.4.1`
+* Updated `jest:29.6.2` to `29.6.3`
+* Updated `esbuild:^0.19.0` to `^0.19.2`
+* Removed `@types/jest:^29.5.3`

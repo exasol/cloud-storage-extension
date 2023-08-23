@@ -1,9 +1,8 @@
-
 /*
  * For a detailed explanation regarding each configuration property and type check, visit:
  * https://jestjs.io/docs/configuration
  */
-const config = {
+export default {
     clearMocks: true,
     collectCoverage: true,
     coverageDirectory: "coverage",
@@ -17,5 +16,3 @@ const config = {
         "**/?(*.)+(spec|test).ts"
     ],
 };
-
-export default config;
