@@ -11,7 +11,6 @@ export default {
     preset: 'ts-jest',
     testEnvironment: 'node',
     injectGlobals: false,
-    modulePathIgnorePatterns: ['<rootDir>/dist/'],
     testMatch: [
         "**/?(*.)+(spec|test).ts"
     ],
