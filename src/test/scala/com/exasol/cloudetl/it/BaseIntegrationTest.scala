@@ -19,7 +19,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
 
   val network = DockerNamedNetwork("it-tests", true)
   val exasolContainer = {
-    val c: ExasolContainer[_] = new ExasolContainer(getExasolDockerImageVersion())
+    val c: ExasolContainer[_] = new ExasolContainer(DEFAULT_EXASOL_DOCKER_IMAGE)
     c.withNetwork(network)
     c.withReuse(true)
     c
@@ -141,19 +141,4 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
       List.empty[File]
     }
   }
-
-  private[this] def getExasolDockerImageVersion(): String = {
-    val dockerVersion = System.getenv("EXASOL_DOCKER_VERSION")
-    if (dockerVersion == null) {
-      logger.info(
-        s"No 'EXASOL_DOCKER_VERSION' environment variable is not set, " +
-          s"using default '$DEFAULT_EXASOL_DOCKER_IMAGE' version."
-      )
-      DEFAULT_EXASOL_DOCKER_IMAGE
-    } else {
-      logger.info(s"Using docker '$dockerVersion' version from environment.")
-      dockerVersion
-    }
-  }
-
 }
