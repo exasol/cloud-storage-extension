@@ -81,9 +81,13 @@ class ExtensionIT {
         if (setup != null) {
             setup.close();
         }
-        exasolTestSetup.getDefaultBucket().deleteFileNonBlocking(ADAPTER_JAR.getFileName().toString());
-        exasolTestSetup.close();
-        s3setup.close();
+        if(exasolTestSetup!=null) {
+            exasolTestSetup.getDefaultBucket().deleteFileNonBlocking(ADAPTER_JAR.getFileName().toString());
+            exasolTestSetup.close();
+        }
+        if(s3setup!=null) {
+            s3setup.close();
+        }
     }
 
     @AfterEach
