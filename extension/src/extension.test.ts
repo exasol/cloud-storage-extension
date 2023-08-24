@@ -5,6 +5,8 @@ import { createExtension } from "./extension";
 import { EXTENSION_DESCRIPTION } from './extension-description';
 import { createMockContext, getInstalledExtension } from './test-utils';
 
+const currentVersion = EXTENSION_DESCRIPTION.version
+
 describe("Cloud Storage Extension", () => {
 
     describe("installableVersions", () => {
@@ -85,7 +87,7 @@ describe("Cloud Storage Extension", () => {
                 scalarScript("IMPORT_METADATA", "com.exasol.cloudetl.scriptclasses.FilesMetadataReader", "0.0.0"),
                 setScript("IMPORT_PATH", "com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator")
             ]
-            expect(() => findInstallations(scripts)).toThrowError(new PreconditionFailedError("Not all scripts use the same version. Found 2 different versions: '2.7.3, 0.0.0'"))
+            expect(() => findInstallations(scripts)).toThrowError(new PreconditionFailedError(`Not all scripts use the same version. Found 2 different versions: '${currentVersion}, 0.0.0'`))
         })
 
         describe("returns expected installations", () => {
