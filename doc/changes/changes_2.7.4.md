@@ -18,7 +18,15 @@ The release also updates the extension to use common code from `@exasol/extensio
 
 #### Compile Dependency Updates
 
+* Updated `com.google.protobuf:protobuf-java:3.24.0` to `3.24.1`
+* Updated `io.netty:netty-handler:4.1.96.Final` to `4.1.97.Final`
 * Added `org.apache.ivy:ivy:2.5.2`
+* Updated `org.jetbrains.kotlin:kotlin-stdlib:1.9.0` to `1.9.10`
+
+#### Test Dependency Updates
+
+* Updated `org.mockito:mockito-core:5.4.0` to `5.5.0`
+* Updated `org.testcontainers:localstack:1.18.3` to `1.19.0`
 
 ### Extension
 

@@ -147,7 +147,7 @@
 [44]: http://opensource.org/licenses/BSD-3-Clause
 [45]: https://github.com/testcontainers/testcontainers-scala
 [46]: https://opensource.org/licenses/MIT
-[47]: https://testcontainers.org
+[47]: https://java.testcontainers.org
 [48]: http://opensource.org/licenses/MIT
 [49]: https://github.com/exasol/exasol-testcontainers/
 [50]: https://github.com/exasol/exasol-testcontainers/blob/main/LICENSE
