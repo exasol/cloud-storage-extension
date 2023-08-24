@@ -82,3 +82,5 @@ pom.xml.versionsBackup
 /extension/src/extension-description.ts
 /extension/coverage/
 /extension-test.properties
+
+/.testcontainers-tmp-*
