@@ -1,6 +1,5 @@
 import { ExasolExtension, registerExtension } from "@exasol/extension-manager-interface";
-import { JavaBaseExtension, convertBaseExtension, jarFileVersionExtractor } from "@exasol/extension-manager-interface/dist/base";
-import { ScriptDefinition } from "./common";
+import { JavaBaseExtension, ScriptDefinition, convertBaseExtension, jarFileVersionExtractor } from "@exasol/extension-manager-interface/dist/base";
 import { EXTENSION_DESCRIPTION } from "./extension-description";
 
 /** Script definitions for the required scripts. */
