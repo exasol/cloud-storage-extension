@@ -1,14 +1,16 @@
 # Cloud Storage Extension 2.7.4, released 2023-??-??
 
-Code name:
+Code name: Upgrade Dependencies
 
 ## Summary
 
-This release also fixes vulnerability CVE-2022-46751 in transitive dependency `org.apache.ivy:ivy` by upgrading it to the latest version.
+This release fixes vulnerability CVE-2022-46751 in transitive dependency `org.apache.ivy:ivy` by upgrading it to the latest version.
 
-## Features
+The release also updates the extension to use common code from `@exasol/extension-manager-interface`.
 
-* ISSUE_NUMBER: description
+## Security
+
+* #269: Fixed CVE-2022-46751 in `org.apache.ivy:ivy`
 
 ## Dependency Updates
 
