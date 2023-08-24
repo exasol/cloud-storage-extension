@@ -29,7 +29,7 @@ describe("upgrade()", () => {
             const tests: { name: string; scripts: ExaScriptsRow[], expectedMessage: string }[] = [
                 { name: "no script", scripts: [], expectedMessage: "Not all required scripts are installed: Validation failed: Script 'IMPORT_PATH' is missing, Script 'IMPORT_METADATA' is missing, Script 'IMPORT_FILES' is missing, Script 'EXPORT_PATH' is missing, Script 'EXPORT_TABLE' is missing" },
                 { name: "one missing script", scripts: [importPath, importMetadata, importFiles, exportPath], expectedMessage: "Not all required scripts are installed: Validation failed: Script 'EXPORT_TABLE' is missing" },
-                { name: "inconsistent versions", scripts: [importPath, importMetadata, importFiles, exportPath, scriptWithVersion("EXPORT_TABLE", "1.2.4")], expectedMessage: "Installed script use inconsistent versions: Not all scripts use the same version. Found versions: '1.2.3, 1.2.4'" },
+                { name: "inconsistent versions", scripts: [importPath, importMetadata, importFiles, exportPath, scriptWithVersion("EXPORT_TABLE", "1.2.4")], expectedMessage: "Failed to validate script versions: Not all scripts use the same version. Found 2 different versions: '1.2.3, 1.2.4'" },
                 {
                     name: "version already up-to-date", scripts: [
                         scriptWithVersion("IMPORT_PATH", currentVersion), scriptWithVersion("IMPORT_METADATA", currentVersion),

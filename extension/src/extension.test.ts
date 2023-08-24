@@ -1,4 +1,4 @@
-import { ExaMetadata, Installation } from '@exasol/extension-manager-interface';
+import { ExaMetadata, Installation, PreconditionFailedError } from '@exasol/extension-manager-interface';
 import { ExaScriptsRow } from '@exasol/extension-manager-interface/dist/exasolSchema';
 import { describe, expect, it } from '@jest/globals';
 import { createExtension } from "./extension";
@@ -77,7 +77,7 @@ describe("Cloud Storage Extension", () => {
             expect(findInstallations(scripts)).toStrictEqual([{ name: "Cloud Storage Extension", version: EXTENSION_DESCRIPTION.version }])
         })
 
-        it("uses version from export path script", () => {
+        it("fails for inconsistent version", () => {
             const scripts: ExaScriptsRow[] = [
                 setScript("EXPORT_PATH", "com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator"),
                 setScript("EXPORT_TABLE", "com.exasol.cloudetl.scriptclasses.TableDataExporter"),
@@ -85,7 +85,7 @@ describe("Cloud Storage Extension", () => {
                 scalarScript("IMPORT_METADATA", "com.exasol.cloudetl.scriptclasses.FilesMetadataReader", "0.0.0"),
                 setScript("IMPORT_PATH", "com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator")
             ]
-            expect(findInstallations(scripts)).toStrictEqual([{ name: "Cloud Storage Extension", version: "0.0.0" }])
+            expect(() => findInstallations(scripts)).toThrowError(new PreconditionFailedError("Not all scripts use the same version. Found 2 different versions: '2.7.3, 0.0.0'"))
         })
 
         describe("returns expected installations", () => {
@@ -107,7 +107,7 @@ describe("Cloud Storage Extension", () => {
             expect(createScriptStatements).toHaveLength(5)
             expect(createCommentStatements).toHaveLength(5)
 
-            const expectedComment = `Created by extension manager for Cloud Storage Extension ${EXTENSION_DESCRIPTION.version}`
+            const expectedComment = `Created by Extension Manager for Cloud Storage Extension ${EXTENSION_DESCRIPTION.version}`
             for (let i = 0; i < expectedScriptNames.length; i++) {
                 const name = expectedScriptNames[i];
                 expect(createScriptStatements[i]).toContain(`CREATE OR REPLACE JAVA`)
