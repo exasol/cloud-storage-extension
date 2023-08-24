@@ -22,13 +22,13 @@ This release also fixes vulnerability CVE-2022-46751 in transitive dependency `o
 
 #### Compile Dependency Updates
 
-* Updated `@exasol/extension-manager-interface:0.3.0` to `file:../../extension-manager-interface`
+* Updated `@exasol/extension-manager-interface:0.3.0` to `0.3.1`
 
 #### Development Dependency Updates
 
 * Updated `eslint:^8.46.0` to `^8.47.0`
 * Added `@jest/globals:^29.6.3`
-* Updated `@types/node:^20.4.9` to `^20.5.3`
+* Updated `@types/node:^20.4.9` to `^20.5.4`
 * Updated `@typescript-eslint/parser:^6.3.0` to `^6.4.1`
 * Updated `@typescript-eslint/eslint-plugin:^6.3.0` to `^6.4.1`
 * Updated `jest:29.6.2` to `29.6.3`
