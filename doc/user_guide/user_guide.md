@@ -1219,6 +1219,6 @@ FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   DATA_FORMAT     = 'PARQUET';
 ```
 
-For this to work, the Alluxio and Exasol clusters should be located in a same
+For this to work, the Alluxio and Exasol clusters must be located in a same
 (virtual) network. It is not possible to import if they are not within the same
 private network.
