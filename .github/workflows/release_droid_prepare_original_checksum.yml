@@ -32,8 +32,6 @@ jobs:
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false \
               -Dcom.exasol.dockerdb.image=${{ env.DEFAULT_DOCKER_DB_VERSION }}
-        env:
-          EXASOL_DOCKER_VERSION: ${{ env.DEFAULT_DOCKER_DB_VERSION }}
       - name: Prepare checksum
         run: find target -maxdepth 1 -name *.jar -exec sha256sum "{}" + > original_checksum
       - name: Upload checksum to the artifactory

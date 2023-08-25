@@ -81,9 +81,13 @@ class ExtensionIT {
         if (setup != null) {
             setup.close();
         }
-        exasolTestSetup.getDefaultBucket().deleteFileNonBlocking(ADAPTER_JAR.getFileName().toString());
-        exasolTestSetup.close();
-        s3setup.close();
+        if(exasolTestSetup!=null) {
+            exasolTestSetup.getDefaultBucket().deleteFileNonBlocking(ADAPTER_JAR.getFileName().toString());
+            exasolTestSetup.close();
+        }
+        if(s3setup!=null) {
+            s3setup.close();
+        }
     }
 
     @AfterEach
@@ -303,7 +307,7 @@ class ExtensionIT {
     }
 
     private Object[] script(final String name, final String inputType, final String scriptClass) {
-        final String comment = "Created by extension manager for Cloud Storage Extension " + PROJECT_VERSION;
+        final String comment = "Created by Extension Manager for Cloud Storage Extension " + PROJECT_VERSION;
         final String jarPath = "/buckets/bfsdefault/default/" + ADAPTER_JAR.getFileName().toString();
         return new Object[] { name, "UDF", inputType, "EMITS", allOf(//
                 containsString("%jar " + jarPath + ";"), //

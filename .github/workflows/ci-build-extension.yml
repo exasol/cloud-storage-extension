@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node 18
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "20"
           cache: "npm"
           cache-dependency-path: "extension/package-lock.json"
       - name: Install dependencies
@@ -28,7 +28,7 @@ jobs:
       - name: Prepare dummy jar file
         run: |
           mkdir target
-          echo "dummy jar content" > target/exasol-cloud-storage-extension-2.7.3.jar
+          echo "dummy jar content" > target/exasol-cloud-storage-extension-2.7.4.jar
       - name: Run build
         run: cd extension && npm run build
       - name: Run tests

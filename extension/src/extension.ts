@@ -1,64 +1,52 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-    Context, ExaMetadata,
-    ExasolExtension,
-    Installation,
-    Instance, NotFoundError, Parameter, ParameterValues,
-    UpgradeResult,
-    registerExtension
-} from "@exasol/extension-manager-interface";
-import { ExtensionInfo, extendContext } from "./common";
+import { ExasolExtension, registerExtension } from "@exasol/extension-manager-interface";
+import { JavaBaseExtension, ScriptDefinition, convertBaseExtension, jarFileVersionExtractor } from "@exasol/extension-manager-interface/dist/base";
 import { EXTENSION_DESCRIPTION } from "./extension-description";
-import { findInstallations } from "./findInstallations";
-import { installExtension } from "./install";
-import { uninstall } from "./uninstall";
-import { upgrade } from "./upgrade";
 
-function createExtensionInfo(): ExtensionInfo {
-    const version = EXTENSION_DESCRIPTION.version;
-    const fileName = EXTENSION_DESCRIPTION.fileName;
-    return { version, fileName };
-}
+/** Script definitions for the required scripts. */
+const SCRIPTS: ScriptDefinition[] = [
+    {
+        name: "IMPORT_PATH",
+        type: "SET",
+        args: "...",
+        scriptClass: "com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator"
+    },
+    {
+        name: "IMPORT_METADATA",
+        type: "SCALAR",
+        args: `filename VARCHAR(2000), partition_index VARCHAR(100), start_index DECIMAL(36, 0), end_index DECIMAL(36, 0)`,
+        scriptClass: "com.exasol.cloudetl.scriptclasses.FilesMetadataReader"
+    },
+    {
+        name: "IMPORT_FILES",
+        type: "SET",
+        args: "...",
+        scriptClass: "com.exasol.cloudetl.scriptclasses.FilesDataImporter"
+    },
+    {
+        name: "EXPORT_PATH",
+        type: "SET",
+        args: "...",
+        scriptClass: "com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator"
+    },
+    {
+        name: "EXPORT_TABLE",
+        type: "SET",
+        args: "ROWS_AFFECTED INT",
+        scriptClass: "com.exasol.cloudetl.scriptclasses.TableDataExporter"
+    }
+]
 
 export function createExtension(): ExasolExtension {
-    const extensionInfo = createExtensionInfo()
-    const repoBaseUrl = "https://github.com/exasol/cloud-storage-extension"
-    const downloadUrl = `${repoBaseUrl}/releases/download/${extensionInfo.version}/${extensionInfo.fileName}`;
-    const licenseUrl = `${repoBaseUrl}/blob/main/LICENSE`;
-    return {
+    const baseExtension: JavaBaseExtension = {
         name: "Cloud Storage Extension",
         description: "Access data formatted with Avro, Orc and Parquet on public cloud storage systems",
         category: "cloud-storage-importer",
-        installableVersions: [{ name: extensionInfo.version, latest: true, deprecated: false }],
-        bucketFsUploads: [{ bucketFsFilename: extensionInfo.fileName, downloadUrl, fileSize: EXTENSION_DESCRIPTION.fileSizeBytes, name: "Cloud Storage Extension file", licenseUrl, licenseAgreementRequired: false }],
-        install(context: Context, version: string) {
-            installExtension(extendContext(context), extensionInfo, version);
-        },
-        findInstallations(_context: Context, metadata: ExaMetadata): Installation[] {
-            return findInstallations(metadata.allScripts.rows);
-        },
-        uninstall(context: Context, version: string): void {
-            uninstall(extendContext(context), extensionInfo, version);
-        },
-        addInstance(context: Context, version: string, params: ParameterValues): Instance {
-            throw new NotFoundError("Creating instances not supported")
-        },
-        upgrade(context: Context): UpgradeResult {
-            return upgrade(extendContext(context), extensionInfo);
-        },
-        findInstances(context: Context, version: string): Instance[] {
-            throw new NotFoundError("Finding instances not supported")
-        },
-        deleteInstance(context: Context, version: string, instanceId: string): void {
-            throw new NotFoundError("Deleting instances not supported")
-        },
-        getInstanceParameters(context: Context, version: string): Parameter[] {
-            throw new NotFoundError("Creating instances not supported")
-        },
-        readInstanceParameterValues(_context: Context, _version: string, _instanceId: string): ParameterValues {
-            throw new NotFoundError("Reading instance parameter values not supported")
-        }
+        version: EXTENSION_DESCRIPTION.version,
+        file: { name: EXTENSION_DESCRIPTION.fileName, size: EXTENSION_DESCRIPTION.fileSizeBytes },
+        scripts: SCRIPTS,
+        scriptVersionExtractor: jarFileVersionExtractor(/exasol-cloud-storage-extension-(\d+\.\d+\.\d+).jar/)
     }
+    return convertBaseExtension(baseExtension)
 }
 
 registerExtension(createExtension())

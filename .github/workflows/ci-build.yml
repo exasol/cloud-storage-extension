@@ -20,6 +20,17 @@ jobs:
     env:
       DEFAULT_DOCKER_DB_VERSION: "7.1.22"
     steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: false
+
       - name: Checkout the repository
         uses: actions/checkout@v3
         with:
@@ -65,8 +76,6 @@ jobs:
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false \
               -Dcom.exasol.dockerdb.image=${{ matrix.exasol-docker-version }}
-        env:
-          EXASOL_DOCKER_VERSION: ${{ matrix.exasol-docker-version }}
       - name: Publish Test Report
         uses: scacap/action-surefire-report@v1
         if: ${{ always() && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
