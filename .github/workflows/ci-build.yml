@@ -27,7 +27,8 @@ jobs:
           android: true
           dotnet: true
           haskell: true
-          large-packages: true
+          # temporary fix for https://github.com/jlumbroso/free-disk-space/issues/17
+          large-packages: false
           docker-images: false
           swap-storage: false
 
