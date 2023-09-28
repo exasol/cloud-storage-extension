@@ -754,6 +754,9 @@
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (9.8); -->
                         <!-- Used in tests only. -->
                         <exclude>CVE-2020-36641</exclude>
+                        <!-- Vulnerabilities in io.netty:netty-handler:jar:4.1.99.Final -->
+                        <!-- CWE-300: Channel Accessible by Non-Endpoint ('Man-in-the-Middle') (6.5); -->
+                        <exclude>CVE-2023-4586</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
