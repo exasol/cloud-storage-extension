@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build with Exasol ${{ matrix.exasol-docker-version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04 # UDFs fail with "VM error: Internal error: VM crashed" on ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-exasol-${{ matrix.exasol-docker-version }}
       cancel-in-progress: true
@@ -27,7 +27,8 @@ jobs:
           android: true
           dotnet: true
           haskell: true
-          large-packages: true
+          # temporary fix for https://github.com/jlumbroso/free-disk-space/issues/17
+          large-packages: false
           docker-images: false
           swap-storage: false
 
