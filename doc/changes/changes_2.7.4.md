@@ -11,6 +11,7 @@ The release also updates the extension to use common code from `@exasol/extensio
 ## Security
 
 * #269: Fixed CVE-2022-46751 in `org.apache.ivy:ivy`
+* #272: Fixed CVE-CVE-2023-42503 in `org.apache.commons:commons-compress`
 
 ## Dependency Updates
 
