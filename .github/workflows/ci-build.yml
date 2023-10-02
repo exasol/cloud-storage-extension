@@ -72,8 +72,8 @@ jobs:
       - name: Run scalafix linting
         run: mvn --batch-mode clean compile test-compile scalastyle:check scalafix:scalafix
       - name: Run tests and build with Maven
+        #          JAVA_HOME=$JAVA_HOME_11_X64
         run: |
-#          JAVA_HOME=$JAVA_HOME_11_X64
           mvn --batch-mode clean verify --file pom.xml \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false \
