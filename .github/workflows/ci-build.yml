@@ -61,6 +61,8 @@ jobs:
 
       - name: Enable testcontainer reuse
         run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
+      - name: Run scalafix linting
+        run: mvn --batch-mode clean compile test-compile scalastyle:check scalafix:scalafix
       - name: Run tests and build with Maven
         run: |
           JAVA_HOME=$JAVA_HOME_11_X64 mvn --batch-mode clean verify \
@@ -72,7 +74,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Sonar analysis
-        if: ${{ env.SONAR_TOKEN != null }}
+        if: ${{ env.SONAR_TOKEN != null && matrix.exasol-docker-version == env.DEFAULT_DOCKER_DB_VERSION }}
         run: |
           JAVA_HOME=$JAVA_HOME_17_X64 mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
