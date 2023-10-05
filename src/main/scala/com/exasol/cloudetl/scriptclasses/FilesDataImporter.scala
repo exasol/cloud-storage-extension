@@ -39,7 +39,7 @@ object FilesDataImporter extends LazyLogging {
     FilesDataEmitter(storageProperties, files).emit(iterator)
   }
 
-  private[this] def collectFiles(iterator: ExaIterator): Map[String, List[ChunkInterval]] = {
+  def collectFiles(iterator: ExaIterator): Map[String, List[ChunkInterval]] = {
     val files = new HashMap[String, List[ChunkInterval]]()
     do {
       val filename = iterator.getString(FILENAME_STARTING_INDEX)
