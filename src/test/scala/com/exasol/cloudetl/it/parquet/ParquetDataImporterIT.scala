@@ -476,6 +476,24 @@ class ParquetDataImporterIT extends BaseDataImporter {
       )
   }
 
+  test("imports multiple columns") {
+    MultiParquetChecker(
+      "required binary name (UTF8); required int32 age;",
+      Map("NAME" -> "VARCHAR(60)", "AGE" -> "INTEGER"),
+      "multi_col"
+    )
+      .withWriter { case (writer, schema) =>
+        writer.write(new SimpleGroup(schema).append("name", "John").append("age", 24))
+        writer.write(new SimpleGroup(schema).append("name", "Jane").append("age", 22))
+      }
+      .assertResultSet(
+        table()
+          .row("John", 24)
+          .row("Jane", 22)
+          .matches()
+      )
+  }
+
   case class ParquetChecker(parquetColumn: String, exaColumn: String, tableName: String)
       extends AbstractChecker(exaColumn, tableName)
       with ParquetTestDataWriter {
@@ -489,6 +507,24 @@ class ParquetDataImporterIT extends BaseDataImporter {
     }
 
     def withInputValues[T](values: List[T]): ParquetChecker = {
+      writeDataValues(values, path, parquetSchema)
+      this
+    }
+  }
+
+  case class MultiParquetChecker(parquetColumn: String, exaColumns: Map[String, String], tableName: String)
+      extends AbstractMultiColChecker(exaColumns, tableName)
+      with ParquetTestDataWriter {
+    private val parquetSchema = MessageTypeParser.parseMessageType(s"message test { $parquetColumn }")
+
+    def withWriter(block: (ParquetWriter[Group], MessageType) => Unit): MultiParquetChecker = {
+      val writer = getParquetWriter(path, parquetSchema, true)
+      block(writer, parquetSchema)
+      writer.close()
+      this
+    }
+
+    def withInputValues[T](values: List[T]): MultiParquetChecker = {
       writeDataValues(values, path, parquetSchema)
       this
     }

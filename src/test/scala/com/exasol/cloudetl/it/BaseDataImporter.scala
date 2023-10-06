@@ -36,13 +36,19 @@ trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach wit
     super.afterAll()
   }
 
-  abstract class AbstractChecker(exaColumnType: String, tableName: String) {
+  abstract class AbstractChecker(exaColumnType: String, tableName: String)
+      extends AbstractMultiColChecker(Map("COLUMN" -> exaColumnType), tableName)
+
+  abstract class AbstractMultiColChecker(columns: Map[String, String], tableName: String) {
     def withResultSet(block: ResultSet => Unit): this.type = {
       uploadFileToS3(bucketName, path)
-      val table = schema
+      val tableBuilder = schema
         .createTableBuilder(tableName.toUpperCase(java.util.Locale.ENGLISH))
-        .column("COLUMN", exaColumnType)
-        .build()
+      columns.foreach { case (colName, colType) =>
+        tableBuilder.column(colName, colType)
+      }
+
+      val table = tableBuilder.build()
       importFromS3IntoExasol(schemaName, table, bucketName, path.getName(), dataFormat)
       val rs = executeQuery(s"SELECT * FROM ${table.getFullyQualifiedName()}")
       block(rs)
