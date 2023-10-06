@@ -41,6 +41,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   def prepareExasolDatabase(schemaName: String): Unit = {
     executeStmt(s"DROP SCHEMA IF EXISTS $schemaName CASCADE;")
     factory = new ExasolObjectFactory(getConnection())
+    logger.info("Creating schema " + schemaName)
     schema = factory.createSchema(schemaName)
     createImportDeploymentScripts()
     createExportDeploymentScripts()
@@ -117,6 +118,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
 
   private[this] def uploadJarToBucket(): Unit = {
     val jarPath = Paths.get("target", assembledJarName)
+    logger.info("Uploading JAR " + jarPath + " to bucket " + assembledJarName + "...")
     exasolContainer.getDefaultBucket.uploadFile(jarPath, assembledJarName)
   }
 
