@@ -17,8 +17,8 @@ trait DataRecords {
   val TIMESTAMP_VALUE2: Timestamp = new Timestamp(System.currentTimeMillis())
 
   val rawRecords: Seq[Seq[Object]] = Seq(
-    Seq(1, 3L, BIG_DECIMAL_VALUE1, 3.14d, "xyz", true, DATE_VALUE1, TIMESTAMP_VALUE1),
-    Seq(2, 4L, BIG_DECIMAL_VALUE2, 0.13d, "abc", false, DATE_VALUE2, TIMESTAMP_VALUE2)
+    Seq[Any](1, 3L, BIG_DECIMAL_VALUE1, 3.14d, "xyz", true, DATE_VALUE1, TIMESTAMP_VALUE1),
+    Seq[Any](2, 4L, BIG_DECIMAL_VALUE2, 0.13d, "abc", false, DATE_VALUE2, TIMESTAMP_VALUE2)
   ).map { seq =>
     seq.map(_.asInstanceOf[AnyRef])
   }

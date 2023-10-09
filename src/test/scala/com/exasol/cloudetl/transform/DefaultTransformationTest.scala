@@ -9,11 +9,11 @@ import org.scalatest.funsuite.AnyFunSuite
 class DefaultTransformationTest extends AnyFunSuite {
 
   val longString = getRandomString(2000010)
-  val values = Array(1, 3.14, "abc", longString).map(_.asInstanceOf[Object])
+  val values = Array[Any](1, 3.14, "abc", longString).map(_.asInstanceOf[Object])
 
   test("truncates strings larger than maximum varchar size") {
     val properties = StorageProperties(Map(TRUNCATE_STRING -> "true"))
-    val expected = Array(1, 3.14, "abc", longString.substring(0, 2000000)).map(_.asInstanceOf[Object])
+    val expected = Array[Any](1, 3.14, "abc", longString.substring(0, 2000000)).map(_.asInstanceOf[Object])
     assert(new DefaultTransformation(properties).transform(Array.from(values)) === expected)
   }
 

@@ -43,7 +43,7 @@ trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach wit
     val fileCounter = String.format("%04d", paths.length)
     val newPath = new HPath(outputDirectory.toUri.toString, s"$baseFileName$fileCounter.$dataFormat")
     paths = paths.appended(newPath)
-    return newPath
+    newPath
   }
 
   abstract class AbstractChecker(exaColumnType: String, tableName: String)
