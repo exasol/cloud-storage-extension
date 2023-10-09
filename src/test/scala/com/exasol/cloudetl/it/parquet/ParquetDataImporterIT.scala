@@ -500,6 +500,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
     private val parquetSchema = MessageTypeParser.parseMessageType(s"message test { $parquetColumn }")
 
     def withWriter(block: (ParquetWriter[Group], MessageType) => Unit): ParquetChecker = {
+      val path = addFile()
       val writer = getParquetWriter(path, parquetSchema, true)
       block(writer, parquetSchema)
       writer.close()
@@ -527,6 +528,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
     }
 
     def withInputValues[T](values: List[T]): MultiParquetChecker = {
+      val path = addFile()
       writeDataValues(values, path, parquetSchema)
       this
     }
