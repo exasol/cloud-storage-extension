@@ -70,5 +70,21 @@ trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach wit
       withResultSet(assertThat(_, matcher))
       ()
     }
+
+    def assertFails(errorMessageMatcher: Matcher[String]): Unit = {
+      paths.foreach(path => uploadFileToS3(bucketName, path))
+      val tableBuilder = schema
+        .createTableBuilder(tableName.toUpperCase(java.util.Locale.ENGLISH))
+      columns.foreach { case (colName, colType) =>
+        tableBuilder.column(colName, colType)
+      }
+
+      val table = tableBuilder.build()
+      val exception = intercept[IllegalStateException] {
+        importFromS3IntoExasol(schemaName, table, bucketName, s"$baseFileName*", dataFormat)
+      }
+      assertThat(exception.getCause().getMessage(), errorMessageMatcher)
+      ()
+    }
   }
 }
