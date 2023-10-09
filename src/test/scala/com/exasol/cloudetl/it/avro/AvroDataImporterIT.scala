@@ -331,6 +331,7 @@ class AvroDataImporterIT extends BaseDataImporter {
     val avroSchema = new Schema.Parser().parse(avroSchemaStr)
 
     def withInputValues[T](values: List[T]): AvroChecker = {
+      val path = addFile()
       writeDataValues(values, path, avroSchema)
       this
     }

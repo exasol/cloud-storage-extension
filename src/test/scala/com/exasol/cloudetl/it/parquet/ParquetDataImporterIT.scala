@@ -482,12 +482,12 @@ class ParquetDataImporterIT extends BaseDataImporter {
       Map("NAME" -> "VARCHAR(60)", "AGE" -> "INTEGER"),
       "multi_col"
     )
-      .withWriter { case (writer, schema) =>
+      .addParquetFile { case (writer, schema) =>
         writer.write(new SimpleGroup(schema).append("name", "John").append("age", 24))
         writer.write(new SimpleGroup(schema).append("name", "Jane").append("age", 22))
       }
       .assertResultSet(
-        table()
+        table("VARCHAR", "DECIMAL")
           .row("John", 24)
           .row("Jane", 22)
           .matches()
@@ -507,6 +507,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
     }
 
     def withInputValues[T](values: List[T]): ParquetChecker = {
+      val path = addFile()
       writeDataValues(values, path, parquetSchema)
       this
     }
@@ -517,7 +518,8 @@ class ParquetDataImporterIT extends BaseDataImporter {
       with ParquetTestDataWriter {
     private val parquetSchema = MessageTypeParser.parseMessageType(s"message test { $parquetColumn }")
 
-    def withWriter(block: (ParquetWriter[Group], MessageType) => Unit): MultiParquetChecker = {
+    def addParquetFile(block: (ParquetWriter[Group], MessageType) => Unit): MultiParquetChecker = {
+      val path = addFile()
       val writer = getParquetWriter(path, parquetSchema, true)
       block(writer, parquetSchema)
       writer.close()

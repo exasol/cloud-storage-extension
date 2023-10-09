@@ -10,7 +10,6 @@ import com.exasol.dbbuilder.dialects.exasol.ExasolSchema
 import com.exasol.dbbuilder.dialects.exasol.udf.UdfScript
 
 import com.typesafe.scalalogging.LazyLogging
-import org.apache.derby.client.am.SqlException
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
 

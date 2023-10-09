@@ -230,6 +230,7 @@ class OrcDataImporterIT extends BaseDataImporter {
   test("imports union") {
     val orcType = "struct<f:uniontype<int,string>>"
     val orcSchema = TypeDescription.fromString(orcType)
+    val path = addFile()
     val writer = OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(orcSchema))
     val batch = orcSchema.createRowBatch()
     batch.size = 3
@@ -262,6 +263,7 @@ class OrcDataImporterIT extends BaseDataImporter {
     val orcSchema = TypeDescription.fromString(orcColumn)
 
     def withInputValues[T](values: List[T]): OrcChecker = {
+      val path = addFile()
       writeDataValues(values, path, orcSchema)
       this
     }
