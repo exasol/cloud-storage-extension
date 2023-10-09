@@ -53,7 +53,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
       getConnection().createStatement().execute(sql)
     } catch {
       case exception: Exception =>
-        throw new AssertionError("Failed executing SQL '" + sql + "': " + exception.getMessage(), exception)
+        throw new AssertionError(s"Failed executing SQL '$sql': ${exception.getMessage()}", exception)
     }
     ()
   }
