@@ -515,7 +515,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
       )
   }
 
-  test("imports from file with missing field") {
+  test("import with missing field fails") {
     MultiParquetChecker(
       "required binary name (UTF8); required int32 age;",
       Map("NAME" -> "VARCHAR(60)", "AGE" -> "INTEGER"),
@@ -524,14 +524,10 @@ class ParquetDataImporterIT extends BaseDataImporter {
       .addParquetFile { case (writer, schema) =>
         writer.write(new SimpleGroup(schema).append("name", "John"))
       }
-      .addParquetFile { case (writer, schema) =>
-        writer.write(new SimpleGroup(schema).append("name", "Jane").append("age", 22))
-      }
-      .assertResultSet(
-        table("VARCHAR", "BIGINT")
-          .row("John", null)
-          .row("Jane", 22L)
-          .matches()
+      .assertFails(
+        Matchers.containsString(
+          "ParquetDecodingException: Can't read value in column [age] required int32 age"
+        )
       )
   }
 
