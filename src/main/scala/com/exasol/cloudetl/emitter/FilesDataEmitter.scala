@@ -57,31 +57,47 @@ final case class FilesDataEmitter(properties: StorageProperties, files: Map[Stri
       case _                  => emitRegularData(context)
     }
 
-  private[this] def emitRegularData(context: ExaIterator): Unit =
+  private[this] def emitRegularData(context: ExaIterator): Unit = {
+    var totalRowCount = 0
     files.foreach { case (filename, _) =>
       Using(Source(fileFormat, new Path(filename), bucket.getConfiguration(), bucket.fileSystem)) { source =>
+        var rowCount = 0
         source.stream().foreach { row =>
           val values = defaultTransformation.transform(transformRegularRowValues(row))
           context.emit(values: _*)
+          rowCount += 1
         }
+        totalRowCount += rowCount
+        logger.info(s"Imported file $filename with $rowCount rows ($totalRowCount until now)")
       }
     }
+    logger.info(s"Imported ${files.size} files with $totalRowCount rows in total")
+  }
 
   private[this] def transformRegularRowValues(row: RegularRow): Array[Object] =
     row.getValues().map(_.asInstanceOf[Object]).toArray
 
-  private[this] def emitParquetData(context: ExaIterator): Unit =
+  private[this] def emitParquetData(context: ExaIterator): Unit = {
+    var totalRowCount = 0
     files.foreach { case (filename, intervals) =>
       val inputFile = getInputFile(filename)
       val converter = ParquetValueConverter(RowParquetReader.getSchema(inputFile))
       val source = new RowParquetChunkReader(inputFile, intervals)
+      var rowCount = 0
       source.read(new Consumer[Row] {
         override def accept(row: Row): Unit = {
           val values = defaultTransformation.transform(converter.convert(row))
           context.emit(values: _*)
+          rowCount += 1
         }
       })
+      totalRowCount += rowCount
+      logger.info(
+        s"Imported file $inputFile with $rowCount rows and ${intervals.size()} intervals ($totalRowCount rows until now)"
+      )
     }
+    logger.info(s"Imported ${files.size} files with $totalRowCount rows in total")
+  }
 
   private[this] def getInputFile(filename: String): InputFile =
     try {
