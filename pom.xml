@@ -746,10 +746,6 @@
                         <!-- From transitive org.codehaus.janino:janino:3.1.9 dependency -->
                         <!-- CWE-787: Out-of-bounds Write (5.5); https://ossindex.sonatype.org/vulnerability/CVE-2023-33546 -->
                         <exclude>CVE-2023-33546</exclude>
-                        <!-- Vulnerability in org.alluxio:alluxio-core-common:jar:300 -->
-                        <!-- CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (6.1); -->
-                        <!-- https://ossindex.sonatype.org/vulnerability/CVE-2020-21485 -->
-                        <exclude>CVE-2020-21485</exclude>
                         <!-- Vulnerabilities in fr.turri:aXMLRPC:1.13.0:test -->
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (9.8); -->
                         <!-- Used in tests only. -->
