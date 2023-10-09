@@ -481,7 +481,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
     MultiParquetChecker(
       "required binary name (UTF8); required int32 age;",
       Map("NAME" -> "VARCHAR(60)", "AGE" -> "INTEGER"),
-      "multi_col"
+      "multi_col_single_file"
     )
       .addParquetFile { case (writer, schema) =>
         writer.write(new SimpleGroup(schema).append("name", "John").append("age", 24))
@@ -499,7 +499,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
     MultiParquetChecker(
       "required binary name (UTF8); required int32 age;",
       Map("NAME" -> "VARCHAR(60)", "AGE" -> "INTEGER"),
-      "multi_col"
+      "multi_col_multi_file"
     )
       .addParquetFile { case (writer, schema) =>
         writer.write(new SimpleGroup(schema).append("name", "John").append("age", 24))
@@ -519,7 +519,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
     MultiParquetChecker(
       "required binary name (UTF8); required int32 age;",
       Map("NAME" -> "VARCHAR(60)", "AGE" -> "INTEGER"),
-      "multi_col"
+      "missing_field"
     )
       .addParquetFile { case (writer, schema) =>
         writer.write(new SimpleGroup(schema).append("name", "John"))
@@ -539,7 +539,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
     MultiParquetChecker(
       "required binary name (UTF8);",
       Map("NAME" -> "VARCHAR(60)", "AGE" -> "INTEGER"),
-      "multi_col"
+      "missing_column"
     )
       .addParquetFileWithSchema(
         MessageTypeParser.parseMessageType("message test { required binary name (UTF8); required int32 age; }"),
