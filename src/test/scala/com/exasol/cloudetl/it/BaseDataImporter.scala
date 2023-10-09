@@ -59,7 +59,7 @@ trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach wit
       }
 
       val table = tableBuilder.build()
-      importFromS3IntoExasol(schemaName, table, bucketName, baseFileName, dataFormat)
+      importFromS3IntoExasol(schemaName, table, bucketName, s"$baseFileName*", dataFormat)
       val rs = executeQuery(s"SELECT * FROM ${table.getFullyQualifiedName()}")
       block(rs)
       rs.close()
