@@ -83,6 +83,9 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
   def getAWSSecretKey(): String = s3Container.getSecretKey()
 
   def uploadFileToS3(bucket: String, file: HPath): Unit = {
+    if (!s3.doesBucketExistV2(bucket)) {
+      createBucket(bucket)
+    }
     logger.debug(s"Uploading file $file to bucket $bucket")
     val request = new PutObjectRequest(bucket, file.getName(), new File(file.toUri()))
     s3.putObject(request)
