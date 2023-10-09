@@ -83,7 +83,7 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
   def getAWSSecretKey(): String = s3Container.getSecretKey()
 
   def uploadFileToS3(bucket: String, file: HPath): Unit = {
-    logger.info(s"Uploading file $file to bucket $bucket")
+    logger.debug(s"Uploading file $file to bucket $bucket")
     val request = new PutObjectRequest(bucket, file.getName(), new File(file.toUri()))
     s3.putObject(request)
     ()
@@ -102,7 +102,7 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
     dataFormat: String
   ): Unit = {
     val bucketPath = s"s3a://$bucket/$file"
-    logger.info(s"Importing $bucketPath of format $dataFormat into table ${table.getFullyQualifiedName()}...")
+    logger.debug(s"Importing $bucketPath of format $dataFormat into table ${table.getFullyQualifiedName()}...")
     executeStmt(
       s"""|IMPORT INTO ${table.getFullyQualifiedName()}
           |FROM SCRIPT $schemaName.IMPORT_PATH WITH
