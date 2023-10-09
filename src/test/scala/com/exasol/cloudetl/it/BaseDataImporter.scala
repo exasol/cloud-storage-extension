@@ -14,7 +14,7 @@ trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach wit
   val dataFormat: String
 
   var outputDirectory: Path = _
-  val paths: List[HPath] = List()
+  var paths: List[HPath] = List()
   val baseFileName = "part-"
 
   override final def beforeEach(): Unit = {
@@ -22,11 +22,14 @@ trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach wit
     ()
   }
 
-  override final def afterEach(): Unit =
+  override final def afterEach(): Unit = {
+    paths = List()
     deletePathFiles(outputDirectory)
+  }
 
   override def beforeAll(): Unit = {
     super.beforeAll()
+    createBucket(bucketName)
     prepareExasolDatabase(schemaName)
     createS3ConnectionObject()
   }
@@ -39,7 +42,7 @@ trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach wit
   def addFile(): HPath = {
     val fileCounter = String.format("%04d", paths.length)
     val newPath = new HPath(outputDirectory.toUri.toString, s"$baseFileName$fileCounter.$dataFormat")
-    paths.appended(newPath)
+    paths = paths.appended(newPath)
     return newPath
   }
 
@@ -68,5 +71,4 @@ trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach wit
       ()
     }
   }
-
 }

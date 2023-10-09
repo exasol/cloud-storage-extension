@@ -476,7 +476,7 @@ class ParquetDataImporterIT extends BaseDataImporter {
       )
   }
 
-  test("imports multiple columns") {
+  test("imports multiple columns from single file") {
     MultiParquetChecker(
       "required binary name (UTF8); required int32 age;",
       Map("NAME" -> "VARCHAR(60)", "AGE" -> "INTEGER"),
@@ -487,9 +487,9 @@ class ParquetDataImporterIT extends BaseDataImporter {
         writer.write(new SimpleGroup(schema).append("name", "Jane").append("age", 22))
       }
       .assertResultSet(
-        table("VARCHAR", "DECIMAL")
-          .row("John", 24)
-          .row("Jane", 22)
+        table("VARCHAR", "BIGINT")
+          .row("John", 24L)
+          .row("Jane", 22L)
           .matches()
       )
   }

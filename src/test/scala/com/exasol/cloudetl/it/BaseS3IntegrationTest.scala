@@ -83,7 +83,7 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
   def getAWSSecretKey(): String = s3Container.getSecretKey()
 
   def uploadFileToS3(bucket: String, file: HPath): Unit = {
-    createBucket(bucket)
+    logger.info(s"Uploading file $file to bucket $bucket")
     val request = new PutObjectRequest(bucket, file.getName(), new File(file.toUri()))
     s3.putObject(request)
     ()
@@ -94,19 +94,28 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
     ()
   }
 
-  def importFromS3IntoExasol(schemaName: String, table: Table, bucket: String, file: String, dataFormat: String): Unit =
+  def importFromS3IntoExasol(
+    schemaName: String,
+    table: Table,
+    bucket: String,
+    file: String,
+    dataFormat: String
+  ): Unit = {
+    val bucketPath = s"s3a://$bucket/$file"
+    logger.info(s"Importing $bucketPath of format $dataFormat into table ${table.getFullyQualifiedName()}...")
     executeStmt(
       s"""|IMPORT INTO ${table.getFullyQualifiedName()}
           |FROM SCRIPT $schemaName.IMPORT_PATH WITH
-          |BUCKET_PATH              = 's3a://$bucket/$file'
+          |BUCKET_PATH              = '$bucketPath'
           |DATA_FORMAT              = '$dataFormat'
           |S3_ENDPOINT              = '$s3Endpoint'
           |S3_CHANGE_DETECTION_MODE = 'none'
           |TRUNCATE_STRING          = 'true'
           |CONNECTION_NAME          = 'S3_CONNECTION'
           |PARALLELISM              = 'nproc()';
-        """.stripMargin
+          """.stripMargin
     )
+  }
 
   def exportIntoS3(schemaName: String, tableName: String, bucket: String): Unit =
     executeStmt(
