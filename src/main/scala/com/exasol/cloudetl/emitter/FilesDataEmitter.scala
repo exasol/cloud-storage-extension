@@ -68,7 +68,7 @@ final case class FilesDataEmitter(properties: StorageProperties, files: Map[Stri
           rowCount += 1
         }
         totalRowCount += rowCount
-        logger.info(s"Imported file $filename with $rowCount rows ($totalRowCount until now)")
+        logger.info(s"Imported file $filename with $rowCount rows")
       }
     }
     logger.info(s"Imported ${files.size} files with $totalRowCount rows in total")
@@ -79,6 +79,7 @@ final case class FilesDataEmitter(properties: StorageProperties, files: Map[Stri
 
   private[this] def emitParquetData(context: ExaIterator): Unit = {
     var totalRowCount = 0
+    var totalIntervalCount = 0
     files.foreach { case (filename, intervals) =>
       val inputFile = getInputFile(filename)
       val converter = ParquetValueConverter(RowParquetReader.getSchema(inputFile))
@@ -92,11 +93,12 @@ final case class FilesDataEmitter(properties: StorageProperties, files: Map[Stri
         }
       })
       totalRowCount += rowCount
+      totalIntervalCount += intervals.size()
       logger.info(
-        s"Imported file $inputFile with $rowCount rows and ${intervals.size()} intervals ($totalRowCount rows until now)"
+        s"Imported file $inputFile with $rowCount rows and ${intervals.size()} intervals"
       )
     }
-    logger.info(s"Imported ${files.size} files with $totalRowCount rows in total")
+    logger.info(s"Imported ${files.size} files with $totalIntervalCount intervals and $totalRowCount rows in total")
   }
 
   private[this] def getInputFile(filename: String): InputFile =

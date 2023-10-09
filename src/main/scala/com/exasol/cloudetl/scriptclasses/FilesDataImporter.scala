@@ -35,7 +35,9 @@ object FilesDataImporter extends LazyLogging {
     val vmId = metadata.getVmId()
     var intervalCount = 0
     files.foreach { case (filename, intervals) =>
-      logger.info(s"Intervals '${getIntervalString(intervals)}' for file $filename on node '$nodeId' and vm '$vmId'.")
+      logger.info(
+        s"Importing intervals '${getIntervalString(intervals)}' for file $filename on node '$nodeId' and vm '$vmId'."
+      )
       intervalCount += intervals.size()
     }
     logger.info(s"Importing ${files.size} files with $intervalCount intervals")
