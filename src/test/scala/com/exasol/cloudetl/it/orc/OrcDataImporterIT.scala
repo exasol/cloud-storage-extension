@@ -23,7 +23,7 @@ class OrcDataImporterIT extends BaseDataImporter {
 
   test("imports boolean") {
     OrcChecker("struct<f:boolean>", "BOOLEAN", "boolean_table")
-      .withInputValues(List(true, false, null))
+      .withInputValues(List[Any](true, false, null))
       .assertResultSet(
         table()
           .row(java.lang.Boolean.TRUE)
@@ -35,7 +35,7 @@ class OrcDataImporterIT extends BaseDataImporter {
 
   test("imports byte") {
     OrcChecker("struct<f:tinyint>", "DECIMAL(3,0)", "byte_table")
-      .withInputValues(List(11, null))
+      .withInputValues(List[Any](11, null))
       .assertResultSet(
         table().row(java.lang.Byte.valueOf("11")).row(null).matches(NO_JAVA_TYPE_CHECK)
       )
@@ -43,7 +43,7 @@ class OrcDataImporterIT extends BaseDataImporter {
 
   test("imports short") {
     OrcChecker("struct<f:smallint>", "DECIMAL(9,0)", "short_table")
-      .withInputValues(List(13, null))
+      .withInputValues(List[Any](13, null))
       .assertResultSet(
         table().row(java.lang.Short.valueOf("13")).row(null).matches(NO_JAVA_TYPE_CHECK)
       )
@@ -51,7 +51,7 @@ class OrcDataImporterIT extends BaseDataImporter {
 
   test("imports int") {
     OrcChecker("struct<f:int>", "DECIMAL(10,0)", "int_table")
-      .withInputValues(List(INT_MIN, 999, null, INT_MAX))
+      .withInputValues(List[Any](INT_MIN, 999, null, INT_MAX))
       .assertResultSet(
         table()
           .row(java.lang.Integer.valueOf(INT_MIN))
@@ -64,7 +64,7 @@ class OrcDataImporterIT extends BaseDataImporter {
 
   test("imports long") {
     OrcChecker("struct<f:bigint>", "DECIMAL(19,0)", "long_table")
-      .withInputValues(List(LONG_MIN, 1234L, null, LONG_MAX))
+      .withInputValues(List[Any](LONG_MIN, 1234L, null, LONG_MAX))
       .assertResultSet(
         table()
           .row(java.lang.Long.valueOf(LONG_MIN))
@@ -78,7 +78,7 @@ class OrcDataImporterIT extends BaseDataImporter {
   test("imports float") {
     val EPS = java.math.BigDecimal.valueOf(0.0001)
     OrcChecker("struct<f:float>", "FLOAT", "float_table")
-      .withInputValues(List(3.14f, null))
+      .withInputValues(List[Any](3.14f, null))
       .assertResultSet(
         table()
           .row(CellMatcherFactory.cellMatcher(3.14, STRICT, EPS))
@@ -89,7 +89,7 @@ class OrcDataImporterIT extends BaseDataImporter {
 
   test("imports double") {
     OrcChecker("struct<f:double>", "DOUBLE", "double_table")
-      .withInputValues(List(2.71, null))
+      .withInputValues(List[Any](2.71, null))
       .assertResultSet(table().row(java.lang.Double.valueOf(2.71)).row(null).matches())
   }
 
@@ -135,7 +135,7 @@ class OrcDataImporterIT extends BaseDataImporter {
 
   test("imports date") {
     OrcChecker("struct<f:date>", "DATE", "date_table")
-      .withInputValues(List(0, 1, null))
+      .withInputValues(List[Any](0, 1, null))
       .assertResultSet(
         table()
           .row(java.sql.Date.valueOf("1970-01-01"))
@@ -172,7 +172,7 @@ class OrcDataImporterIT extends BaseDataImporter {
 
   test("imports list of doubles") {
     OrcChecker("struct<f:array<double>>", "VARCHAR(20)", "list_doubles")
-      .withInputValues(List(Seq(1.11, 2.22, null)))
+      .withInputValues(List(Seq[Any](1.11, 2.22, null)))
       .assertResultSet(table().row("[1.11,2.22,null]").matches())
   }
 
@@ -230,6 +230,7 @@ class OrcDataImporterIT extends BaseDataImporter {
   test("imports union") {
     val orcType = "struct<f:uniontype<int,string>>"
     val orcSchema = TypeDescription.fromString(orcType)
+    val path = addFile()
     val writer = OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(orcSchema))
     val batch = orcSchema.createRowBatch()
     batch.size = 3
@@ -262,6 +263,7 @@ class OrcDataImporterIT extends BaseDataImporter {
     val orcSchema = TypeDescription.fromString(orcColumn)
 
     def withInputValues[T](values: List[T]): OrcChecker = {
+      val path = addFile()
       writeDataValues(values, path, orcSchema)
       this
     }

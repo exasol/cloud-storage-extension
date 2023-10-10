@@ -33,13 +33,18 @@ object FilesDataImporter extends LazyLogging {
     val files = collectFiles(iterator)
     val nodeId = metadata.getNodeId()
     val vmId = metadata.getVmId()
+    var intervalCount = 0
     files.foreach { case (filename, intervals) =>
-      logger.info(s"Intervals '${getIntervalString(intervals)}' for file $filename on node '$nodeId' and vm '$vmId'.")
+      logger.info(
+        s"Importing intervals '${getIntervalString(intervals)}' for file $filename on node '$nodeId' and vm '$vmId'."
+      )
+      intervalCount += intervals.size()
     }
+    logger.info(s"Importing ${files.size} files with $intervalCount intervals")
     FilesDataEmitter(storageProperties, files).emit(iterator)
   }
 
-  private[this] def collectFiles(iterator: ExaIterator): Map[String, List[ChunkInterval]] = {
+  def collectFiles(iterator: ExaIterator): Map[String, List[ChunkInterval]] = {
     val files = new HashMap[String, List[ChunkInterval]]()
     do {
       val filename = iterator.getString(FILENAME_STARTING_INDEX)
@@ -60,11 +65,14 @@ object FilesDataImporter extends LazyLogging {
   private[this] def getIntervalString(intervals: List[ChunkInterval]): String = {
     val sb = new StringBuilder()
     for { i <- 0 until intervals.size() } {
+      if (i > 0) {
+        sb.append(", ")
+      }
       sb.append("[")
         .append(intervals.get(i).getStartPosition())
         .append(",")
         .append(intervals.get(i).getEndPosition())
-        .append("), ")
+        .append(")")
     }
     sb.toString()
   }

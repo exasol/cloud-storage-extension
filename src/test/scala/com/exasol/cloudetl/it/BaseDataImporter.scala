@@ -14,19 +14,22 @@ trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach wit
   val dataFormat: String
 
   var outputDirectory: Path = _
-  var path: HPath = _
+  var paths: List[HPath] = List()
+  val baseFileName = "part-"
 
   override final def beforeEach(): Unit = {
     outputDirectory = createTemporaryFolder(s"$dataFormat-tests-")
-    path = new HPath(outputDirectory.toUri.toString, s"part-00000.$dataFormat")
     ()
   }
 
-  override final def afterEach(): Unit =
+  override final def afterEach(): Unit = {
+    paths = List()
     deletePathFiles(outputDirectory)
+  }
 
   override def beforeAll(): Unit = {
     super.beforeAll()
+    createBucket(bucketName)
     prepareExasolDatabase(schemaName)
     createS3ConnectionObject()
   }
@@ -36,14 +39,27 @@ trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach wit
     super.afterAll()
   }
 
-  abstract class AbstractChecker(exaColumnType: String, tableName: String) {
+  def addFile(): HPath = {
+    val fileCounter = String.format("%04d", paths.length)
+    val newPath = new HPath(outputDirectory.toUri.toString, s"$baseFileName$fileCounter.$dataFormat")
+    paths = paths.appended(newPath)
+    newPath
+  }
+
+  abstract class AbstractChecker(exaColumnType: String, tableName: String)
+      extends AbstractMultiColChecker(Map("COLUMN" -> exaColumnType), tableName)
+
+  abstract class AbstractMultiColChecker(columns: Map[String, String], tableName: String) {
     def withResultSet(block: ResultSet => Unit): this.type = {
-      uploadFileToS3(bucketName, path)
-      val table = schema
+      paths.foreach(path => uploadFileToS3(bucketName, path))
+      val tableBuilder = schema
         .createTableBuilder(tableName.toUpperCase(java.util.Locale.ENGLISH))
-        .column("COLUMN", exaColumnType)
-        .build()
-      importFromS3IntoExasol(schemaName, table, bucketName, path.getName(), dataFormat)
+      columns.foreach { case (colName, colType) =>
+        tableBuilder.column(colName, colType)
+      }
+
+      val table = tableBuilder.build()
+      importFromS3IntoExasol(schemaName, table, bucketName, s"$baseFileName*", dataFormat)
       val rs = executeQuery(s"SELECT * FROM ${table.getFullyQualifiedName()}")
       block(rs)
       rs.close()
@@ -54,6 +70,21 @@ trait BaseDataImporter extends BaseS3IntegrationTest with BeforeAndAfterEach wit
       withResultSet(assertThat(_, matcher))
       ()
     }
-  }
 
+    def assertFails(errorMessageMatcher: Matcher[String]): Unit = {
+      paths.foreach(path => uploadFileToS3(bucketName, path))
+      val tableBuilder = schema
+        .createTableBuilder(tableName.toUpperCase(java.util.Locale.ENGLISH))
+      columns.foreach { case (colName, colType) =>
+        tableBuilder.column(colName, colType)
+      }
+
+      val table = tableBuilder.build()
+      val exception = intercept[IllegalStateException] {
+        importFromS3IntoExasol(schemaName, table, bucketName, s"$baseFileName*", dataFormat)
+      }
+      assertThat(exception.getCause().getMessage(), errorMessageMatcher)
+      ()
+    }
+  }
 }

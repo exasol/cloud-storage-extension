@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>cloud-storage-extension</artifactId>
-    <version>2.7.4</version>
+    <version>2.7.5</version>
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>
     <parent>
         <artifactId>cloud-storage-extension-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.7.4</version>
+        <version>2.7.5</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
@@ -369,7 +369,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.24.3</version>
+            <version>3.24.4</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
@@ -424,7 +424,7 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${scala.compat.version}</artifactId>
-            <version>3.4.1</version>
+            <version>3.4.1</version> <!-- Upgrading will let unit tests fail -->
             <exclusions>
                 <exclusion>
                     <groupId>org.spark-project.spark</groupId>
@@ -529,7 +529,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.5.0</version>
+            <version>5.6.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -547,7 +547,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.19.0</version>
+            <version>1.19.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -746,10 +746,6 @@
                         <!-- From transitive org.codehaus.janino:janino:3.1.9 dependency -->
                         <!-- CWE-787: Out-of-bounds Write (5.5); https://ossindex.sonatype.org/vulnerability/CVE-2023-33546 -->
                         <exclude>CVE-2023-33546</exclude>
-                        <!-- Vulnerability in org.alluxio:alluxio-core-common:jar:300 -->
-                        <!-- CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (6.1); -->
-                        <!-- https://ossindex.sonatype.org/vulnerability/CVE-2020-21485 -->
-                        <exclude>CVE-2020-21485</exclude>
                         <!-- Vulnerabilities in fr.turri:aXMLRPC:1.13.0:test -->
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (9.8); -->
                         <!-- Used in tests only. -->
@@ -838,7 +834,7 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.39.0</version>
+                <version>2.40.0</version>
                 <configuration>
                     <scala>
                         <scalafmt>
@@ -862,7 +858,7 @@
                     <dependency>
                         <groupId>com.geirsson</groupId>
                         <artifactId>metaconfig-pprint_${scala.compat.version}</artifactId>
-                        <version>0.11.1</version>
+                        <version>0.12.0</version>
                     </dependency>
                     <dependency>
                         <groupId>com.github.liancheng</groupId>
