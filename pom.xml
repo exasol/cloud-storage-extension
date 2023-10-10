@@ -424,7 +424,7 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${scala.compat.version}</artifactId>
-            <version>3.5.0</version>
+            <version>3.4.1</version> <!-- Upgrading will let unit tests fail -->
             <exclusions>
                 <exclusion>
                     <groupId>org.spark-project.spark</groupId>

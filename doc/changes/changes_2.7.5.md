@@ -16,7 +16,6 @@ This release adds log messages to allow debugging issues during import.
 #### Compile Dependency Updates
 
 * Updated `com.google.protobuf:protobuf-java:3.24.3` to `3.24.4`
-* Updated `org.apache.spark:spark-sql_2.13:3.4.1` to `3.5.0`
 
 #### Test Dependency Updates
 
