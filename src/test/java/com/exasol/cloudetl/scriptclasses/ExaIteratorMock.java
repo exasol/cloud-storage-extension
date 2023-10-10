@@ -3,6 +3,8 @@ package com.exasol.cloudetl.scriptclasses;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.exasol.ExaIterator;
 
@@ -10,18 +12,23 @@ public class ExaIteratorMock implements ExaIterator {
 
     private int currentRow = 0;
     private final Object[][] values;
+    private final List<Object[]> emittedRows = new ArrayList<>();
 
     public static ExaIteratorMock empty() {
         return new ExaIteratorMock(new Object[0][0]);
     }
 
-    public ExaIteratorMock(final Object[][] values) {
+    public ExaIteratorMock(final Object[]... values) {
         this.values = values;
     }
 
     @Override
     public void emit(final Object... args) {
-        throw new UnsupportedOperationException("Unimplemented method 'emit'");
+        emittedRows.add(args);
+    }
+
+    public List<Object[]> getEmittedRows() {
+        return emittedRows;
     }
 
     @Override
