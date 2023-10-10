@@ -14,7 +14,7 @@
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
-        <scala.version>2.13.11</scala.version>
+        <scala.version>2.13.12</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
         <hadoop.version>3.3.6</hadoop.version>
         <log4j.version>2.20.0</log4j.version>
@@ -369,7 +369,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.24.3</version>
+            <version>3.24.4</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
@@ -424,7 +424,7 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${scala.compat.version}</artifactId>
-            <version>3.4.1</version>
+            <version>3.5.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.spark-project.spark</groupId>
@@ -529,7 +529,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.5.0</version>
+            <version>5.6.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -547,7 +547,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.19.0</version>
+            <version>1.19.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -589,7 +589,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>extension-manager-integration-test-java</artifactId>
-            <version>0.5.1</version>
+            <version>0.5.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -834,7 +834,7 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.39.0</version>
+                <version>2.40.0</version>
                 <configuration>
                     <scala>
                         <scalafmt>
@@ -858,7 +858,7 @@
                     <dependency>
                         <groupId>com.geirsson</groupId>
                         <artifactId>metaconfig-pprint_${scala.compat.version}</artifactId>
-                        <version>0.11.1</version>
+                        <version>0.12.0</version>
                     </dependency>
                     <dependency>
                         <groupId>com.github.liancheng</groupId>

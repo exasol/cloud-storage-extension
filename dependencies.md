@@ -47,7 +47,7 @@
 | ------------------------------------------ | ----------------------------------------- |
 | [scalatest][40]                            | [the Apache License, ASL Version 2.0][27] |
 | [scalatestplus-mockito][41]                | [Apache-2.0][27]                          |
-| [mockito-core][42]                         | [The MIT License][43]                     |
+| [mockito-core][42]                         | [MIT][43]                                 |
 | [Hamcrest][44]                             | [BSD License 3][45]                       |
 | [testcontainers-scala-scalatest][46]       | [The MIT License (MIT)][47]               |
 | [Testcontainers :: Localstack][48]         | [MIT][49]                                 |
