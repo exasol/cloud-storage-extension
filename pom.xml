@@ -14,7 +14,7 @@
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
-        <scala.version>2.13.12</scala.version>
+        <scala.version>2.13.11</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
         <hadoop.version>3.3.6</hadoop.version>
         <log4j.version>2.20.0</log4j.version>
