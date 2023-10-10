@@ -21,7 +21,6 @@ This release adds log messages to allow debugging issues during import.
 
 #### Test Dependency Updates
 
-* Updated `com.exasol:extension-manager-integration-test-java:0.5.1` to `0.5.2`
 * Updated `org.mockito:mockito-core:5.5.0` to `5.6.0`
 * Updated `org.testcontainers:localstack:1.19.0` to `1.19.1`
 
