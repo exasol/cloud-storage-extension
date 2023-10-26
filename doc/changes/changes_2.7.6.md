@@ -20,6 +20,7 @@ This release fixes vulnerabilities
 
 * Updated `com.exasol:parquet-io-java:2.0.5` to `2.0.6`
 * Updated `com.google.guava:guava:32.1.2-jre` to `32.1.3-jre`
+* Added `com.rabbitmq:amqp-client:5.19.0`
 * Updated `io.dropwizard.metrics:metrics-core:4.2.20` to `4.2.21`
 * Updated `io.grpc:grpc-netty:1.56.1` to `1.59.0`
 * Updated `io.netty:netty-handler:4.1.99.Final` to `4.1.100.Final`
