@@ -1,14 +1,16 @@
 # Cloud Storage Extension 2.7.6, released 2023-10-26
 
-Code name: Fix Vulnerability CVE-2023-44981
+Code name: Fix Vulnerabilities CVE-2023-44981 and CVE-2023-46120
 
 ## Summary
 
-This release fixes vulnerability CVE-2023-42503 in transitive dependency to `org.apache.zookeeper:zookeeper` via `org.apache.hadoop:hadoop-common` by updating dependencies.
+This release fixes vulnerabilities
+* CVE-2023-42503 by overriding version `3.6.3` of transitive dependency `org.apache.zookeeper:zookeeper` via `org.apache.hadoop:hadoop-common`
+* CVE-2023-46120 by excluding transitive dependency `com.rabbitmq:amqp-client` via `org.alluxio:alluxio-core-client-hdfs`
 
 ## Security
 
-* #281: Fixed vulnerability CVE-2023-44981 in dependency `org.apache.zookeeper:zookeeper`
+* #281: Fixed vulnerabilities CVE-2023-44981 and CVE-2023-46120
 
 ## Dependency Updates
 

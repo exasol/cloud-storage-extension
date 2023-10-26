@@ -1,13 +1,10 @@
 *.sh text eol=lf
-
 .github/workflows/broken_links_checker.yml                      linguist-generated=true
 .github/workflows/dependencies_check.yml                        linguist-generated=true
 .github/workflows/release_droid_print_quick_checksum.yml        linguist-generated=true
-
-dependencies.md             linguist-generated=true
-pk_generated_parent.pom     linguist-generated=true
-doc/changes/changelog.md    linguist-generated=true
-extension/package-lock.json linguist-generated=true
-
-.settings/org.eclipse.jdt.core.prefs linguist-generated=true
-.settings/org.eclipse.jdt.ui.prefs   linguist-generated=true
+.settings/org.eclipse.jdt.core.prefs                            linguist-generated=true
+.settings/org.eclipse.jdt.ui.prefs                              linguist-generated=true
+dependencies.md                                                 linguist-generated=true
+doc/changes/changelog.md                                        linguist-generated=true
+extension/package-lock.json                                     linguist-generated=true
+pk_generated_parent.pom                                         linguist-generated=true
