@@ -368,12 +368,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <!-- Upgrade transitive dependency of org.alluxio:alluxio-core-client-hdfs to fix CVE-2023-46120 -->
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>5.19.0</version> <!-- was 5.5.3 -->
-        </dependency>
-        <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
             <version>4.2.21</version>
@@ -763,9 +757,12 @@
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (9.8); -->
                         <!-- Used in tests only. -->
                         <exclude>CVE-2020-36641</exclude>
-                        <!-- Vulnerabilities in io.netty:netty-handler:jar:4.1.99.Final -->
+                        <!-- Vulnerabilities in io.netty:netty-handler:jar:4.1.100.Final -->
                         <!-- CWE-300: Channel Accessible by Non-Endpoint ('Man-in-the-Middle') (6.5); -->
                         <exclude>CVE-2023-4586</exclude>
+                        <!-- Vulnerabilities in transitive dependency com.rabbitmq:amqp-client:5.5.3
+                             via org.alluxio:alluxio-core-client-hdfs -->
+                        <exclude>CVE-2023-46120</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
