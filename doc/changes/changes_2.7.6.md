@@ -23,7 +23,6 @@ This release fixes vulnerabilities
 * Updated `io.dropwizard.metrics:metrics-core:4.2.20` to `4.2.21`
 * Updated `io.grpc:grpc-netty:1.56.1` to `1.59.0`
 * Updated `io.netty:netty-handler:4.1.99.Final` to `4.1.100.Final`
-* Updated `org.alluxio:alluxio-core-client-hdfs:300` to `304`
 * Updated `org.apache.logging.log4j:log4j-1.2-api:2.20.0` to `2.21.1`
 * Updated `org.apache.logging.log4j:log4j-api:2.20.0` to `2.21.1`
 * Updated `org.apache.logging.log4j:log4j-core:2.20.0` to `2.21.1`

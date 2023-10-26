@@ -290,7 +290,7 @@
             <!-- Upgrading this will cause failing integration tests -->
             <groupId>org.alluxio</groupId>
             <artifactId>alluxio-core-client-hdfs</artifactId>
-            <version>304</version>
+            <version>300</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -327,6 +327,11 @@
                 <exclusion>
                     <groupId>io.grpc</groupId>
                     <artifactId>grpc-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <!-- ignore to avoid vulnerability CVE-2023-46120 in version 5.5.3-->
+                    <groupId>com.rabbitmq</groupId>
+                    <artifactId>amqp-client</artifactId>
                 </exclusion>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
