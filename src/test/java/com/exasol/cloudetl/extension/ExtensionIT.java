@@ -53,7 +53,7 @@ class ExtensionIT {
     @BeforeAll
     static void setup() throws FileNotFoundException, BucketAccessException, TimeoutException, SQLException {
         exasolTestSetup = new ExasolTestSetupFactory(Paths.get("no-cloud-setup")).getTestSetup();
-	ExasolVersionCheck.assumeExasolVersion8(exasolTestSetup);
+        ExasolVersionCheck.assumeExasolVersion8(exasolTestSetup);
         setup = ExtensionManagerSetup.create(exasolTestSetup, ExtensionBuilder.createDefaultNpmBuilder(
                 EXTENSION_SOURCE_DIR, EXTENSION_SOURCE_DIR.resolve("dist").resolve(EXTENSION_ID)));
         exasolTestSetup.getDefaultBucket().uploadFile(ADAPTER_JAR, ADAPTER_JAR.getFileName().toString());
@@ -82,11 +82,11 @@ class ExtensionIT {
         if (setup != null) {
             setup.close();
         }
-        if(exasolTestSetup!=null) {
+        if (exasolTestSetup != null) {
             exasolTestSetup.getDefaultBucket().deleteFileNonBlocking(ADAPTER_JAR.getFileName().toString());
             exasolTestSetup.close();
         }
-        if(s3setup!=null) {
+        if (s3setup != null) {
             s3setup.close();
         }
     }
@@ -116,8 +116,10 @@ class ExtensionIT {
     @Test
     void getInstallationsReturnsResult() {
         client.install();
-        assertThat(client.getInstallations(), contains(
-                new InstallationsResponseInstallation().name("Cloud Storage Extension").version(PROJECT_VERSION)));
+        assertThat(client.getInstallations(), contains(new InstallationsResponseInstallation() //
+                .id("cloud-storage-extension.js") //
+                .name("Cloud Storage Extension") //
+                .version(PROJECT_VERSION)));
     }
 
     @Test
@@ -148,11 +150,13 @@ class ExtensionIT {
     }
 
     @Test
+    @Disabled("Blocked by https://github.com/exasol/extension-manager/issues/155")
     void uninstallExtensionWithoutInstallation() throws SQLException {
         assertDoesNotThrow(() -> client.uninstall());
     }
 
     @Test
+    @Disabled("Blocked by https://github.com/exasol/extension-manager/issues/155")
     void uninstallExtensionRemovesScripts() throws SQLException {
         client.install();
         client.uninstall();
@@ -160,6 +164,7 @@ class ExtensionIT {
     }
 
     @Test
+    @Disabled("Blocked by https://github.com/exasol/extension-manager/issues/155")
     void uninstallWrongVersionFails() {
         client.assertRequestFails(() -> client.uninstall("wrongVersion"),
                 equalTo("Uninstalling version 'wrongVersion' not supported, try '" + PROJECT_VERSION + "'."),
@@ -211,20 +216,21 @@ class ExtensionIT {
         previousVersion.prepare();
         previousVersion.install();
         verifyExportImportWorks();
-        assertInstalledVersion("Cloud Storage Extension", PREVIOUS_VERSION);
+        assertInstalledVersion("Cloud Storage Extension", PREVIOUS_VERSION, previousVersion);
         previousVersion.upgrade();
-        assertInstalledVersion("Cloud Storage Extension", PROJECT_VERSION);
+        assertInstalledVersion("Cloud Storage Extension", PROJECT_VERSION, previousVersion);
         verifyExportImportWorks();
     }
 
-    private void assertInstalledVersion(final String expectedName, final String expectedVersion) {
-        final List<InstallationsResponseInstallation> installations = setup.client().getInstallations();
-        final InstallationsResponseInstallation expectedInstallation = new InstallationsResponseInstallation()
-                .name(expectedName).version(expectedVersion);
-        // The extension is installed twice (previous and current version), so each one returns the same installation.
-        assertAll(() -> assertThat(installations, hasSize(2)),
-                () -> assertThat(installations.get(0), equalTo(expectedInstallation)),
-                () -> assertThat(installations.get(1), equalTo(expectedInstallation)));
+    private void assertInstalledVersion(final String expectedName, final String expectedVersion,
+            final PreviousExtensionVersion previousVersion) {
+        // The extension is installed twice (previous and current version), so each one returns one installation.
+        assertThat(setup.client().getInstallations(),
+                containsInAnyOrder(
+                        new InstallationsResponseInstallation().name(expectedName).version(expectedVersion)
+                                .id(EXTENSION_ID), //
+                        new InstallationsResponseInstallation().name(expectedName).version(expectedVersion)
+                                .id(previousVersion.getExtensionId())));
     }
 
     private PreviousExtensionVersion createPreviousVersion() {
