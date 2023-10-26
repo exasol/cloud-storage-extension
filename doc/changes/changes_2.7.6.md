@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.7.6, released 2023-10-26
+# Cloud Storage Extension 2.7.6, released 2023-10-27
 
 Code name: Fix Vulnerabilities CVE-2023-44981 and CVE-2023-46120
 
