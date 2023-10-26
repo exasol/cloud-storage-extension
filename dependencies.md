@@ -118,11 +118,11 @@
 [17]: https://www.alluxio.io/alluxio-dora/alluxio-core/alluxio-core-client/alluxio-core-client-hdfs/
 [18]: https://github.com/alluxio/alluxio/blob/master/LICENSE
 [19]: https://metrics.dropwizard.io/metrics-core
-[20]: https://github.com/protocolbuffers/protobuf/tree/main/java
+[20]: https://developers.google.com/protocol-buffers/protobuf-java/
 [21]: https://opensource.org/licenses/BSD-3-Clause
-[22]: https://github.com/GoogleCloudDataproc/hadoop-connectors/tree/master/gcs
-[23]: https://github.com/googleapis/google-oauth-java-client
-[24]: https://orc.apache.org/
+[22]: https://github.com/GoogleCloudPlatform/BigData-interop/gcs-connector/
+[23]: https://github.com/googleapis/google-oauth-java-client/google-oauth-client
+[24]: https://orc.apache.org/orc-core
 [25]: https://avro.apache.org
 [26]: https://commons.apache.org/proper/commons-compress/
 [27]: https://delta.io/

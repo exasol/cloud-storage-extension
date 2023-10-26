@@ -28,7 +28,6 @@ This release fixes vulnerabilities
 * Updated `org.apache.logging.log4j:log4j-api:2.20.0` to `2.21.1`
 * Updated `org.apache.logging.log4j:log4j-core:2.20.0` to `2.21.1`
 * Added `org.apache.zookeeper:zookeeper:3.9.1`
-* Updated `org.scala-lang:scala-library:2.13.11` to `2.13.12`
 
 #### Test Dependency Updates
 

@@ -14,7 +14,7 @@
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
-        <scala.version>2.13.12</scala.version>
+        <scala.version>2.13.11</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
         <hadoop.version>3.3.6</hadoop.version>
         <log4j.version>2.21.1</log4j.version>
@@ -191,6 +191,7 @@
             <version>${hadoop.version}</version>
         </dependency>
         <dependency>
+            <!-- override version 3.6.3 to fix vulnerability CVE-2023-42503 -->
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
             <version>3.9.1</version>
@@ -328,6 +329,7 @@
                     <artifactId>grpc-core</artifactId>
                 </exclusion>
                 <exclusion>
+                    <!-- exclude to avoid vulnerability CVE-2023-46120 in version 5.5.3 -->
                     <groupId>com.rabbitmq</groupId>
                     <artifactId>amqp-client</artifactId>
                 </exclusion>
