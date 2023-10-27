@@ -117,7 +117,7 @@ class ExtensionIT {
     void getInstallationsReturnsResult() {
         client.install();
         assertThat(client.getInstallations(), contains(new InstallationsResponseInstallation() //
-                .id("cloud-storage-extension.js") //
+                .id(EXTENSION_ID) //
                 .name("Cloud Storage Extension") //
                 .version(PROJECT_VERSION)));
     }
