@@ -9,16 +9,6 @@ sources:
 version:
   fromSource: pom.xml
 linkReplacements:
-  - "http://wiki.fasterxml.com/JacksonModuleScala|https://github.com/FasterXML/jackson-module-scala"
-  - "https://netty.io/netty-all/|https://netty.io/"
-  - "https://www.alluxio.io/alluxio-core/alluxio-core-client/alluxio-core-client-hdfs/|https://www.alluxio.io"
-  - "https://developers.google.com/protocol-buffers/protobuf-java/|https://github.com/protocolbuffers/protobuf/tree/main/java"
-  - "https://github.com/GoogleCloudPlatform/BigData-interop/gcs-connector/|https://github.com/GoogleCloudDataproc/hadoop-connectors/tree/master/gcs"
-  - "https://github.com/googleapis/google-oauth-java-client/google-oauth-client|https://github.com/googleapis/google-oauth-java-client"
-  - "https://orc.apache.org/orc-core|https://orc.apache.org/"
-  - "http://jackson.codehaus.org|https://github.com/codehaus/jackson"
-  - "http://nexus.sonatype.org/oss-repository-hosting.html/scalatest-maven-plugin|https://github.com/scalatest/scalatest-maven-plugin"
-  - "https://logging.apache.org/log4j/2.x/log4j-1.2-api/|https://logging.apache.org/log4j/2.x/"
 excludes:
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
