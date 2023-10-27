@@ -72,7 +72,7 @@ jobs:
           -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
         env:
           # Passing system property via -Dcom.exasol.dockerdb.image does not work because the scalatest plugin does
-          # not forward it to the test. So we use this environment variable, 
+          # not forward it to the test. So we use this environment variable,
           # see BaseIntegrationTest.scala.getExasolDockerImageVersion()
           EXASOL_DB_VERSION: ${{ matrix.exasol_db_version }}
       - name: Publish Test Report
@@ -84,12 +84,12 @@ jobs:
         if: ${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}
         run: >
           JAVA_HOME=$JAVA_HOME_17_X64
-              mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-              -DtrimStackTrace=false
-              -Dsonar.organization=exasol
-              -Dsonar.host.url=https://sonarcloud.io
-              -Dsonar.token=$SONAR_TOKEN
+          mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+          -DtrimStackTrace=false
+          -Dsonar.organization=exasol
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.token=$SONAR_TOKEN
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
