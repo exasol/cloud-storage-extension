@@ -34,7 +34,7 @@ import junit.framework.AssertionFailedError;
 
 class ExtensionIT {
     private static final Logger LOGGER = Logger.getLogger(ExtensionIT.class.getName());
-    private static final String PREVIOUS_VERSION = "2.7.2";
+    private static final String PREVIOUS_VERSION = "2.7.6";
     private static final String PREVIOUS_VERSION_JAR_FILE = "exasol-cloud-storage-extension-" + PREVIOUS_VERSION
             + ".jar";
     private static final String EXTENSION_ID = "cloud-storage-extension.js";
@@ -52,6 +52,9 @@ class ExtensionIT {
 
     @BeforeAll
     static void setup() throws FileNotFoundException, BucketAccessException, TimeoutException, SQLException {
+        if (System.getProperty("com.exasol.dockerdb.image") == null) {
+            System.setProperty("com.exasol.dockerdb.image", "8.23.0");
+        }
         exasolTestSetup = new ExasolTestSetupFactory(Paths.get("no-cloud-setup")).getTestSetup();
         ExasolVersionCheck.assumeExasolVersion8(exasolTestSetup);
         setup = ExtensionManagerSetup.create(exasolTestSetup, ExtensionBuilder.createDefaultNpmBuilder(
@@ -150,13 +153,11 @@ class ExtensionIT {
     }
 
     @Test
-    @Disabled("Blocked by https://github.com/exasol/extension-manager/issues/155")
     void uninstallExtensionWithoutInstallation() throws SQLException {
         assertDoesNotThrow(() -> client.uninstall());
     }
 
     @Test
-    @Disabled("Blocked by https://github.com/exasol/extension-manager/issues/155")
     void uninstallExtensionRemovesScripts() throws SQLException {
         client.install();
         client.uninstall();
@@ -164,7 +165,6 @@ class ExtensionIT {
     }
 
     @Test
-    @Disabled("Blocked by https://github.com/exasol/extension-manager/issues/155")
     void uninstallWrongVersionFails() {
         client.assertRequestFails(() -> client.uninstall("wrongVersion"),
                 equalTo("Uninstalling version 'wrongVersion' not supported, try '" + PROJECT_VERSION + "'."),
