@@ -1,51 +1,45 @@
 package com.exasol.cloudetl.extension;
 
 import static com.exasol.matcher.ResultSetStructureMatcher.table;
-import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 
 import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 import com.exasol.bucketfs.BucketAccessException;
 import com.exasol.dbbuilder.dialects.Table;
 import com.exasol.dbbuilder.dialects.exasol.*;
 import com.exasol.exasoltestsetup.ExasolTestSetup;
 import com.exasol.exasoltestsetup.ExasolTestSetupFactory;
-import com.exasol.extensionmanager.client.model.ExtensionsResponseExtension;
-import com.exasol.extensionmanager.client.model.InstallationsResponseInstallation;
-import com.exasol.extensionmanager.itest.*;
+import com.exasol.extensionmanager.itest.ExasolVersionCheck;
+import com.exasol.extensionmanager.itest.ExtensionManagerSetup;
+import com.exasol.extensionmanager.itest.base.AbstractScriptExtensionIT;
+import com.exasol.extensionmanager.itest.base.ExtensionITConfig;
 import com.exasol.extensionmanager.itest.builder.ExtensionBuilder;
 import com.exasol.matcher.TypeMatchMode;
 import com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter;
 
 import junit.framework.AssertionFailedError;
 
-class ExtensionIT {
+class ExtensionIT extends AbstractScriptExtensionIT {
     private static final Logger LOGGER = Logger.getLogger(ExtensionIT.class.getName());
-    private static final String PREVIOUS_VERSION = "2.7.6";
-    private static final String PREVIOUS_VERSION_JAR_FILE = "exasol-cloud-storage-extension-" + PREVIOUS_VERSION
-            + ".jar";
     private static final String EXTENSION_ID = "cloud-storage-extension.js";
+    private static final String PREVIOUS_VERSION = "2.7.6";
     private static final Path EXTENSION_SOURCE_DIR = Paths.get("extension").toAbsolutePath();
     private static final String PROJECT_VERSION = MavenProjectVersionGetter.getCurrentProjectVersion();
     private static final String S3_CONNECTION = "S3_CONNECTION";
     private static final Path ADAPTER_JAR = getAdapterJar();
-
     private static ExasolTestSetup exasolTestSetup;
     private static ExtensionManagerSetup setup;
-    private static ExtensionManagerClient client;
     private static S3Setup s3setup;
     private static Connection connection;
     private static ExasolObjectFactory exasolObjectFactory;
@@ -60,7 +54,7 @@ class ExtensionIT {
         setup = ExtensionManagerSetup.create(exasolTestSetup, ExtensionBuilder.createDefaultNpmBuilder(
                 EXTENSION_SOURCE_DIR, EXTENSION_SOURCE_DIR.resolve("dist").resolve(EXTENSION_ID)));
         exasolTestSetup.getDefaultBucket().uploadFile(ADAPTER_JAR, ADAPTER_JAR.getFileName().toString());
-        client = setup.client();
+
         s3setup = S3Setup.create();
         connection = exasolTestSetup.createConnection();
         exasolObjectFactory = new ExasolObjectFactory(connection, ExasolObjectConfiguration.builder().build());
@@ -94,153 +88,26 @@ class ExtensionIT {
         }
     }
 
-    @AfterEach
-    void cleanup() throws SQLException {
-        setup.cleanup();
+    @Override
+    protected ExtensionManagerSetup getSetup() {
+        return setup;
     }
 
-    @Test
-    void listExtensions() {
-        final List<ExtensionsResponseExtension> extensions = client.getExtensions();
-        assertAll(() -> assertThat(extensions, hasSize(1)), //
-                () -> assertThat(extensions.get(0).getName(), equalTo("Cloud Storage Extension")),
-                () -> assertThat(extensions.get(0).getInstallableVersions().get(0).getName(), equalTo(PROJECT_VERSION)),
-                () -> assertThat(extensions.get(0).getInstallableVersions().get(0).isLatest(), is(true)),
-                () -> assertThat(extensions.get(0).getInstallableVersions().get(0).isDeprecated(), is(false)),
-                () -> assertThat(extensions.get(0).getDescription(),
-                        equalTo("Access data formatted with Avro, Orc and Parquet on public cloud storage systems")));
-    }
-
-    @Test
-    void getInstallationsReturnsEmptyList() {
-        assertThat(client.getInstallations(), hasSize(0));
-    }
-
-    @Test
-    void getInstallationsReturnsResult() {
-        client.install();
-        assertThat(client.getInstallations(), contains(new InstallationsResponseInstallation() //
-                .id(EXTENSION_ID) //
-                .name("Cloud Storage Extension") //
-                .version(PROJECT_VERSION)));
-    }
-
-    @Test
-    void installingWrongVersionFails() {
-        client.assertRequestFails(() -> client.install("wrongVersion"),
-                equalTo("Version 'wrongVersion' not supported, can only use '" + PROJECT_VERSION + "'."), equalTo(404));
-        setup.exasolMetadata().assertNoScripts();
-    }
-
-    @Test
-    void installCreatesScripts() {
-        setup.client().install();
-        assertScriptsInstalled();
-    }
-
-    @Test
-    void installingTwiceCreatesScripts() {
-        setup.client().install();
-        setup.client().install();
-        assertScriptsInstalled();
-    }
-
-    @Test
-    void exportImportWorksAfterInstallation() throws SQLException {
-        setup.client().install();
-        verifyExportImportWorks();
-    }
-
-    @Test
-    void uninstallExtensionWithoutInstallation() throws SQLException {
-        assertDoesNotThrow(() -> client.uninstall());
-    }
-
-    @Test
-    void uninstallExtensionRemovesScripts() throws SQLException {
-        client.install();
-        client.uninstall();
-        setup.exasolMetadata().assertNoScripts();
-    }
-
-    @Test
-    void uninstallWrongVersionFails() {
-        client.assertRequestFails(() -> client.uninstall("wrongVersion"),
-                equalTo("Version 'wrongVersion' not supported, can only use '" + PROJECT_VERSION + "'."), equalTo(404));
-    }
-
-    @Test
-    void listingInstancesNotSupported() {
-        client.assertRequestFails(() -> client.listInstances(), equalTo("Finding instances not supported"),
-                equalTo(404));
-    }
-
-    @Test
-    void creatingInstancesNotSupported() {
-        client.assertRequestFails(() -> client.createInstance(emptyList()), equalTo("Creating instances not supported"),
-                equalTo(404));
-    }
-
-    @Test
-    void deletingInstancesNotSupported() {
-        client.assertRequestFails(() -> client.deleteInstance("inst"), equalTo("Deleting instances not supported"),
-                equalTo(404));
-    }
-
-    @Test
-    void getExtensionDetailsInstancesNotSupported() {
-        client.assertRequestFails(() -> client.getExtensionDetails(PROJECT_VERSION),
-                equalTo("Creating instances not supported"), equalTo(404));
-    }
-
-    @Test
-    void upgradeFailsWhenNotInstalled() {
-        setup.client().assertRequestFails(() -> setup.client().upgrade(),
-                "Not all required scripts are installed: Validation failed: Script 'IMPORT_PATH' is missing, Script 'IMPORT_METADATA' is missing, Script 'IMPORT_FILES' is missing, Script 'EXPORT_PATH' is missing, Script 'EXPORT_TABLE' is missing",
-                412);
-    }
-
-    @Test
-    void upgradeFailsWhenAlreadyUpToDate() {
-        setup.client().install();
-        setup.client().assertRequestFails(() -> setup.client().upgrade(),
-                "Extension is already installed in latest version " + PROJECT_VERSION, 412);
-    }
-
-    @Test
-    void upgradeFromPreviousVersion() throws InterruptedException, BucketAccessException, TimeoutException,
-            FileNotFoundException, URISyntaxException, SQLException {
-        final PreviousExtensionVersion previousVersion = createPreviousVersion();
-        previousVersion.prepare();
-        previousVersion.install();
-        verifyExportImportWorks();
-        assertInstalledVersion("Cloud Storage Extension", PREVIOUS_VERSION, previousVersion);
-        previousVersion.upgrade();
-        assertInstalledVersion("Cloud Storage Extension", PROJECT_VERSION, previousVersion);
-        verifyExportImportWorks();
-    }
-
-    private void assertInstalledVersion(final String expectedName, final String expectedVersion,
-            final PreviousExtensionVersion previousVersion) {
-        // The extension is installed twice (previous and current version), so each one returns one installation.
-        assertThat(setup.client().getInstallations(),
-                containsInAnyOrder(
-                        new InstallationsResponseInstallation().name(expectedName).version(expectedVersion)
-                                .id(EXTENSION_ID), //
-                        new InstallationsResponseInstallation().name(expectedName).version(expectedVersion)
-                                .id(previousVersion.getExtensionId())));
-    }
-
-    private PreviousExtensionVersion createPreviousVersion() {
-        return setup.previousVersionManager().newVersion().currentVersion(PROJECT_VERSION) //
-                .previousVersion(PREVIOUS_VERSION) //
-                .adapterFileName(PREVIOUS_VERSION_JAR_FILE) //
-                .extensionFileName(EXTENSION_ID) //
-                .project("cloud-storage-extension") //
+    @Override
+    protected ExtensionITConfig createConfig() {
+        return ExtensionITConfig.builder() //
+                .projectName("cloud-storage-extension").extensionId(EXTENSION_ID).currentVersion(PROJECT_VERSION)
+                .extensionName("Cloud Storage Extension")
+                .extensionDescription(
+                        "Access data formatted with Avro, Orc and Parquet on public cloud storage systems")
+                .previousVersion(PREVIOUS_VERSION)
+                .previousVersionJarFile("exasol-cloud-storage-extension-" + PREVIOUS_VERSION + ".jar") //
+                .expectedParameterCount(-1) //
                 .build();
     }
 
-    private void verifyExportImportWorks() throws SQLException {
+    @Override
+    protected void assertScriptsWork() {
         final ExasolSchema schema = exasolObjectFactory.createSchema("TESTING_SCHEMA_" + System.currentTimeMillis());
         final String bucket = s3setup.createBucket();
         final String s3Path = "data";
@@ -255,6 +122,8 @@ class ExtensionIT {
                 assertThat(statement.executeQuery(),
                         table().row(1, "a").row(2, "b").row(3, "c").matches(TypeMatchMode.NO_JAVA_TYPE_CHECK));
             }
+        } catch (final SQLException exception) {
+            throw new IllegalStateException("Failed to run scripts: " + exception.getMessage(), exception);
         } finally {
             schema.drop();
             s3setup.deleteBucket(bucket);
@@ -293,7 +162,8 @@ class ExtensionIT {
         }
     }
 
-    private void assertScriptsInstalled() {
+    @Override
+    protected void assertScriptsExist() {
         setup.exasolMetadata().assertScript(table() //
                 .row(setScript("EXPORT_PATH", "com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator")) //
                 .row(setScript("EXPORT_TABLE", "com.exasol.cloudetl.scriptclasses.TableDataExporter")) //
