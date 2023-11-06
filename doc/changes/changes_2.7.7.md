@@ -23,6 +23,7 @@ Code name:
 * Updated `com.exasol:extension-manager-integration-test-java:0.5.4` to `0.5.5`
 * Updated `com.exasol:hamcrest-resultset-matcher:1.6.1` to `1.6.2`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.2` to `3.15.3`
+* Added `org.glassfish.jersey.core:jersey-common:2.41`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.10.0` to `5.10.1`
 * Updated `org.mockito:mockito-core:5.6.0` to `5.7.0`
 
