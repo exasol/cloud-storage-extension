@@ -4,9 +4,9 @@ Code name:
 
 ## Summary
 
-## Features
+## Refactoring
 
-* ISSUE_NUMBER: description
+* #284: Used shared extension integration tests
 
 ## Dependency Updates
 
