@@ -1,8 +1,10 @@
-# Cloud Storage Extension 2.7.7, released 2023-??-??
+# Cloud Storage Extension 2.7.7, released 2023-11-07
 
-Code name:
+Code name: Refactoring of Extension
 
 ## Summary
+
+This release refactors the extension to use shared integration tests to simplify the source code.
 
 ## Refactoring
 
