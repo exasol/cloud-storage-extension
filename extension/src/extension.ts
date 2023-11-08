@@ -7,31 +7,36 @@ const SCRIPTS: ScriptDefinition[] = [
     {
         name: "IMPORT_PATH",
         type: "SET",
-        args: "...",
+        parameters: "...",
+        emitParameters: "...",
         scriptClass: "com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator"
     },
     {
         name: "IMPORT_METADATA",
         type: "SCALAR",
-        args: `filename VARCHAR(2000), partition_index VARCHAR(100), start_index DECIMAL(36, 0), end_index DECIMAL(36, 0)`,
+        parameters: "...",
+        emitParameters: `filename VARCHAR(2000), partition_index VARCHAR(100), start_index DECIMAL(36, 0), end_index DECIMAL(36, 0)`,
         scriptClass: "com.exasol.cloudetl.scriptclasses.FilesMetadataReader"
     },
     {
         name: "IMPORT_FILES",
         type: "SET",
-        args: "...",
+        parameters: "...",
+        emitParameters: "...",
         scriptClass: "com.exasol.cloudetl.scriptclasses.FilesDataImporter"
     },
     {
         name: "EXPORT_PATH",
         type: "SET",
-        args: "...",
+        parameters: "...",
+        emitParameters: "...",
         scriptClass: "com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator"
     },
     {
         name: "EXPORT_TABLE",
         type: "SET",
-        args: "ROWS_AFFECTED INT",
+        parameters: "...",
+        emitParameters: "ROWS_AFFECTED INT",
         scriptClass: "com.exasol.cloudetl.scriptclasses.TableDataExporter"
     }
 ]

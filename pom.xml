@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>cloud-storage-extension</artifactId>
-    <version>2.7.6</version>
+    <version>2.7.7</version>
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>
     <parent>
         <artifactId>cloud-storage-extension-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.7.6</version>
+        <version>2.7.7</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
@@ -284,7 +284,7 @@
             <!-- Upgrade transitive dependency of hadoop-hdfs-client to fix CVE-2022-24329 -->
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
-            <version>1.9.10</version>
+            <version>1.9.20</version>
         </dependency>
         <dependency>
             <!-- Upgrading this will cause failing integration tests -->
@@ -375,12 +375,12 @@
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
-            <version>4.2.21</version>
+            <version>4.2.22</version>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.24.4</version>
+            <version>3.25.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
@@ -541,7 +541,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.6.0</version>
+            <version>5.7.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -565,7 +565,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>6.6.2</version>
+            <version>6.6.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -577,19 +577,19 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>hamcrest-resultset-matcher</artifactId>
-            <version>1.6.1</version>
+            <version>1.6.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.15.2</version>
+            <version>3.15.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.10.0</version>
+            <version>5.10.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -601,7 +601,14 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>extension-manager-integration-test-java</artifactId>
-            <version>0.5.4</version>
+            <version>0.5.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>2.41</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -714,7 +721,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.6.2</version>
                 <configuration>
                     <charset>UTF-8</charset>
                     <doclint/>
@@ -765,9 +772,6 @@
                         <!-- Vulnerabilities in io.netty:netty-handler:jar:4.1.100.Final -->
                         <!-- CWE-300: Channel Accessible by Non-Endpoint ('Man-in-the-Middle') (6.5); -->
                         <exclude>CVE-2023-4586</exclude>
-                        <!-- Vulnerabilities in transitive dependency com.rabbitmq:amqp-client:5.5.3
-                             via org.alluxio:alluxio-core-client-hdfs -->
-                        <exclude>CVE-2023-46120</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
@@ -796,7 +800,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>2.9.14</version>
+                <version>2.9.15</version>
                 <executions>
                     <execution>
                         <goals>
@@ -951,7 +955,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.3.2</version>
                 <configuration>
                     <filesets>
                         <fileset>
