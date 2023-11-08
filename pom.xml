@@ -772,9 +772,6 @@
                         <!-- Vulnerabilities in io.netty:netty-handler:jar:4.1.100.Final -->
                         <!-- CWE-300: Channel Accessible by Non-Endpoint ('Man-in-the-Middle') (6.5); -->
                         <exclude>CVE-2023-4586</exclude>
-                        <!-- Vulnerabilities in transitive dependency com.rabbitmq:amqp-client:5.5.3
-                             via org.alluxio:alluxio-core-client-hdfs -->
-                        <exclude>CVE-2023-46120</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
