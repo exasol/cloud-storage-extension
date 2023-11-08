@@ -52,6 +52,9 @@ final case class S3Bucket(path: String, params: StorageProperties) extends Bucke
       )
     }
 
+  private[this] def isAnonymousAWSParams(properties: StorageProperties): Boolean =
+    properties.getString(S3_ACCESS_KEY).isEmpty && properties.getString(S3_SECRET_KEY).isEmpty
+
   /**
    * @inheritdoc
    *
@@ -83,15 +86,22 @@ final case class S3Bucket(path: String, params: StorageProperties) extends Bucke
       properties
     }
 
-    conf.set("fs.s3a.access.key", mergedProperties.getString(S3_ACCESS_KEY))
-    conf.set("fs.s3a.secret.key", mergedProperties.getString(S3_SECRET_KEY))
-
-    if (mergedProperties.containsKey(S3_SESSION_TOKEN)) {
+    if (isAnonymousAWSParams(mergedProperties)) {
       conf.set(
         "fs.s3a.aws.credentials.provider",
-        classOf[org.apache.hadoop.fs.s3a.TemporaryAWSCredentialsProvider].getName()
+        classOf[org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider].getName()
       )
-      conf.set("fs.s3a.session.token", mergedProperties.getString(S3_SESSION_TOKEN))
+    } else {
+      conf.set("fs.s3a.access.key", mergedProperties.getString(S3_ACCESS_KEY))
+      conf.set("fs.s3a.secret.key", mergedProperties.getString(S3_SECRET_KEY))
+
+      if (mergedProperties.containsKey(S3_SESSION_TOKEN)) {
+        conf.set(
+          "fs.s3a.aws.credentials.provider",
+          classOf[org.apache.hadoop.fs.s3a.TemporaryAWSCredentialsProvider].getName()
+        )
+        conf.set("fs.s3a.session.token", mergedProperties.getString(S3_SESSION_TOKEN))
+      }
     }
 
     properties.getProxyHost().foreach { proxyHost =>
