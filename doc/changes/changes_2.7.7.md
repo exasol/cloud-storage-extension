@@ -33,6 +33,7 @@ This release refactors the extension to use shared integration tests to simplify
 
 * Updated `com.exasol:project-keeper-maven-plugin:2.9.14` to `2.9.15`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:3.3.1` to `3.3.2`
+* Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.6.0` to `3.6.2`
 
 ### Extension
 
