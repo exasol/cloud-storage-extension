@@ -123,7 +123,7 @@ class ExtensionIT extends AbstractScriptExtensionIT {
                         table().row(1, "a").row(2, "b").row(3, "c").matches(TypeMatchMode.NO_JAVA_TYPE_CHECK));
             }
         } catch (final SQLException exception) {
-            throw new IllegalStateException("Failed to run scripts: " + exception.getMessage(), exception);
+            throw new AssertionError("Failed to assert scripts execution: " + exception.getMessage(), exception);
         } finally {
             schema.drop();
             s3setup.deleteBucket(bucket);
