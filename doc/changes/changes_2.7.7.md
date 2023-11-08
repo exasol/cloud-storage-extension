@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.7.7, released 2023-11-07
+# Cloud Storage Extension 2.7.7, released 2023-11-08
 
 Code name: Refactoring of Extension
 
@@ -22,6 +22,7 @@ This release refactors the extension to use shared integration tests to simplify
 
 #### Test Dependency Updates
 
+* Updated `com.exasol:exasol-testcontainers:6.6.2` to `6.6.3`
 * Updated `com.exasol:extension-manager-integration-test-java:0.5.4` to `0.5.5`
 * Updated `com.exasol:hamcrest-resultset-matcher:1.6.1` to `1.6.2`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.2` to `3.15.3`
