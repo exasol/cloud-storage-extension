@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.7.8, released 2023-??-??
+# Cloud Storage Extension 2.7.8, released 2023-11-10
 
 Code name: Access to public S3 buckets without credentials
 
