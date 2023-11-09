@@ -722,6 +722,10 @@ S3_SESSION_TOKEN
 Please follow the [Amazon credentials management best practices][aws-creds] when
 creating credentials.
 
+If you are accessing the public bucket, you don't need credentials. In such case,
+you need to set `S3_ACCESS_KEY` and `S3_SECRET_KEY` to empty values:
+`S3_ACCESS_KEY=;S3_SECRET_KEY=`.
+
 [aws-creds]: https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html
 
 Another required parameter is the S3 endpoint, `S3_ENDPOINT`. An endpoint is the
