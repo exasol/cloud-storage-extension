@@ -62,7 +62,7 @@ class S3BucketTest extends AbstractBucketTest {
     assertConfigurationProperties(bucket, configMappings - "fs.s3a.session.token")
   }
 
-  test(testName = "apply return specific credentials provider for public access configuration") {
+  test(testName = "apply returns specific credentials provider for public access configuration") {
     val exaMetadata = mockConnectionInfo("access", "S3_ACCESS_KEY=;S3_SECRET_KEY=")
     val bucket = getBucket(defaultProperties, exaMetadata)
     assert(
