@@ -21,10 +21,18 @@ This release fixes vulnerability CVE-2023-6378 (CWE-502: Deserialization of Untr
 
 ### Cloud Storage Extension
 
+#### Compile Dependency Updates
+
+* Removed `org.slf4j:slf4j-reload4j:2.0.9`
+
 #### Runtime Dependency Updates
 
 * Added `ch.qos.logback:logback-classic:1.2.13`
 * Added `ch.qos.logback:logback-core:1.2.13`
+
+#### Test Dependency Updates
+
+* Updated `com.exasol:test-db-builder-java:3.5.1` to `3.5.3`
 
 #### Plugin Dependency Updates
 

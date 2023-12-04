@@ -504,22 +504,6 @@
             <version>2.0.9</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-reload4j</artifactId>
-            <version>2.0.9</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <!-- exluded because of duplicate-finder-maven-plugin -->
-                <exclusion>
-                    <groupId>ch.qos.reload4j</groupId>
-                    <artifactId>reload4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>${log4j.version}</version>
@@ -585,7 +569,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>test-db-builder-java</artifactId>
-            <version>3.5.1</version>
+            <version>3.5.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
