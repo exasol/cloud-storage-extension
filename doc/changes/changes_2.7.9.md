@@ -23,7 +23,6 @@ This release fixes vulnerability CVE-2023-6378 (CWE-502: Deserialization of Untr
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:import-export-udf-common-scala_2.13:1.1.1` to `1.1.2`
 * Updated `com.google.protobuf:protobuf-java:3.25.0` to `3.25.1`
 * Updated `io.grpc:grpc-netty:1.59.0` to `1.59.1`
 * Updated `io.netty:netty-handler:4.1.100.Final` to `4.1.101.Final`
@@ -32,8 +31,6 @@ This release fixes vulnerability CVE-2023-6378 (CWE-502: Deserialization of Untr
 * Updated `org.apache.logging.log4j:log4j-1.2-api:2.21.1` to `2.22.0`
 * Updated `org.apache.logging.log4j:log4j-api:2.21.1` to `2.22.0`
 * Updated `org.apache.logging.log4j:log4j-core:2.21.1` to `2.22.0`
-* Updated `org.apache.orc:orc-core:1.9.1` to `1.9.2`
-* Updated `org.jetbrains.kotlin:kotlin-stdlib:1.9.20` to `1.9.21`
 
 #### Runtime Dependency Updates
 
