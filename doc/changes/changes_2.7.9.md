@@ -8,9 +8,14 @@ This release fixes vulnerability CVE-2023-6378 (CWE-502: Deserialization of Untr
 * `ch.qos.logback:logback-classic:jar:1.2.10:compile`
 * `ch.qos.logback:logback-core:jar:1.2.10:compile`
 
-## Features
+## Security
 
-* ISSUE_NUMBER: description
+* #288: Fixed CVE-2023-6378 in `ch.qos.logback:logback-core:jar:1.2.10:compile`
+* #289: Fixed CVE-2023-6378 in `ch.qos.logback:logback-classic:jar:1.2.10:compile`
+
+## Refactoring
+
+* #290: Added tests to verify importing many files works
 
 ## Dependency Updates
 
