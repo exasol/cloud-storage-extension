@@ -105,7 +105,7 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
     dataFormat: String
   ): Unit = {
     val bucketPath = s"s3a://$bucket/$file"
-    logger.debug(s"Importing $bucketPath of format $dataFormat into table ${table.getFullyQualifiedName()}...")
+    logger.info(s"Importing $bucketPath of format $dataFormat into table ${table.getFullyQualifiedName()}...")
     executeStmt(
       s"""|IMPORT INTO ${table.getFullyQualifiedName()}
           |FROM SCRIPT $schemaName.IMPORT_PATH WITH

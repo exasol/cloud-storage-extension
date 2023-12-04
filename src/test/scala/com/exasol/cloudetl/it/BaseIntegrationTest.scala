@@ -55,7 +55,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   }
 
   def prepareExasolDatabase(schemaName: String): Unit = {
-    executeStmt(s"DROP SCHEMA IF EXISTS $schemaName CASCADE;")
+    executeStmt(s"DROP SCHEMA IF EXISTS $schemaName CASCADE")
     factory = new ExasolObjectFactory(getConnection())
     logger.info("Creating schema " + schemaName)
     schema = factory.createSchema(schemaName)
@@ -65,6 +65,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   }
 
   def executeStmt(sql: String): Unit = {
+    logger.info(s"Executing statement $sql...")
     try {
       getConnection().createStatement().execute(sql)
     } catch {
