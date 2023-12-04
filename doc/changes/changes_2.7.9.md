@@ -25,7 +25,6 @@ Code name:
 * Updated `org.apache.logging.log4j:log4j-core:2.21.1` to `2.22.0`
 * Updated `org.apache.orc:orc-core:1.9.1` to `1.9.2`
 * Updated `org.jetbrains.kotlin:kotlin-stdlib:1.9.20` to `1.9.21`
-* Updated `org.scala-lang:scala-library:2.13.11` to `2.13.12`
 
 #### Test Dependency Updates
 
