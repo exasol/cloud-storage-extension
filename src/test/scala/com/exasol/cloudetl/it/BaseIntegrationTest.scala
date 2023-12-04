@@ -16,7 +16,7 @@ import org.scalatest.funsuite.AnyFunSuite
 trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLogging {
   private[this] val JAR_NAME_PATTERN = "exasol-cloud-storage-extension-"
 
-  val DEFAULT_EXASOL_DOCKER_IMAGE = "7.1.24"
+  val DEFAULT_EXASOL_DOCKER_IMAGE = "8.23.1"
   val network = DockerNamedNetwork("it-tests", true)
   val exasolContainer = {
     val c: ExasolContainer[_] = new ExasolContainer(getExasolDockerImageVersion())
@@ -29,8 +29,23 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   var connection: java.sql.Connection = null
   val assembledJarName = getAssembledJarName()
 
-  override def beforeAll(): Unit =
+  override def beforeAll(): Unit = {
     exasolContainer.start()
+    configureUdfRemoteLog()
+  }
+
+  def configureUdfRemoteLog(): Unit = {
+    val host = System.getProperty("com.exasol.virtualschema.debug.host")
+    val port = System.getProperty("com.exasol.virtualschema.debug.port")
+    if (host != null && port != null) {
+      val stmt = s"ALTER SESSION SET SCRIPT_OUTPUT_ADDRESS='$host:$port'"
+      logger.info(s"Enabling remote log by executing '$stmt'")
+      val _ = exasolContainer
+        .createConnection()
+        .createStatement()
+        .execute(stmt)
+    }
+  }
 
   override def afterAll(): Unit = {
     if (connection != null) {
@@ -123,9 +138,10 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   }
 
   private[this] def uploadJarToBucket(): Unit = {
-    val jarPath = Paths.get("target", assembledJarName)
-    logger.info("Uploading JAR " + jarPath + " to bucket...")
+    val jarPath = Paths.get("target", assembledJarName).toAbsolutePath()
+    logger.info(s"Uploading JAR $jarPath to bucket at $assembledJarName...")
     exasolContainer.getDefaultBucket.uploadFile(jarPath, assembledJarName)
+    logger.info(s"Upload to $assembledJarName finished.")
   }
 
   private[this] def findFileOrDirectory(searchDirectory: String, name: String): String = {
