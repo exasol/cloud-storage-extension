@@ -9,6 +9,7 @@ This release adds log messages to allow debugging issues during import.
 ## Features
 
 * #280: Improved log messages for import
+
 ## Dependency Updates
 
 ### Cloud Storage Extension
