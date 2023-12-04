@@ -8,17 +8,28 @@ import java.util.List;
 
 import com.exasol.ExaIterator;
 
+import scala.collection.JavaConverters;
+import scala.collection.Seq;
+
 public class ExaIteratorMock implements ExaIterator {
 
-    private int currentRow = 0;
     private final Object[][] values;
     private final List<Object[]> emittedRows = new ArrayList<>();
+    private int currentRow = 0;
 
     public static ExaIteratorMock empty() {
         return new ExaIteratorMock(new Object[0][0]);
     }
 
-    public ExaIteratorMock(final Object[]... values) {
+    public static ExaIteratorMock fromSeq(final Seq<Object[]> values) {
+        return fromList(JavaConverters.asJava(values));
+    }
+
+    public static ExaIteratorMock fromList(final List<Object[]> values) {
+        return new ExaIteratorMock(values.toArray(new Object[0][0]));
+    }
+
+    private ExaIteratorMock(final Object[][] values) {
         this.values = values;
     }
 
@@ -29,6 +40,33 @@ public class ExaIteratorMock implements ExaIterator {
 
     public List<Object[]> getEmittedRows() {
         return emittedRows;
+    }
+
+    @Override
+    public Long getLong(final int col) {
+        return get(Long.class, col);
+    }
+
+    @Override
+    public String getString(final int col) {
+        return get(String.class, col);
+    }
+
+    private <T> T get(final Class<T> type, final int col) {
+        if (values.length > currentRow) {
+            return type.cast(values[currentRow][col]);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean next() {
+        if (currentRow + 1 >= values.length) {
+            return false;
+        }
+        currentRow++;
+        return true;
     }
 
     @Override
@@ -82,11 +120,6 @@ public class ExaIteratorMock implements ExaIterator {
     }
 
     @Override
-    public Long getLong(final int col) {
-        return get(Long.class, col);
-    }
-
-    @Override
     public Long getLong(final String col) {
         throw new UnsupportedOperationException("Unimplemented method 'getLong'");
     }
@@ -102,19 +135,6 @@ public class ExaIteratorMock implements ExaIterator {
     }
 
     @Override
-    public String getString(final int col) {
-        return get(String.class, col);
-    }
-
-    private <T> T get(final Class<T> type, final int col) {
-        if (values.length > currentRow) {
-            return type.cast(values[currentRow][col]);
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     public String getString(final String col) {
         throw new UnsupportedOperationException("Unimplemented method 'getString'");
     }
@@ -127,15 +147,6 @@ public class ExaIteratorMock implements ExaIterator {
     @Override
     public Timestamp getTimestamp(final int col) {
         throw new UnsupportedOperationException("Unimplemented method 'getTimestamp'");
-    }
-
-    @Override
-    public boolean next() {
-        if (currentRow + 1 >= values.length) {
-            return false;
-        }
-        currentRow++;
-        return true;
     }
 
     @Override
