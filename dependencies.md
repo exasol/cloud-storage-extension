@@ -83,7 +83,7 @@
 | [JaCoCo :: Maven Plugin][85]                            | [Eclipse Public License 2.0][86]              |
 | [error-code-crawler-maven-plugin][87]                   | [MIT License][88]                             |
 | [Reproducible Build Maven Plugin][89]                   | [Apache 2.0][5]                               |
-| [Project keeper maven plugin][90]                       | [The MIT License][91]                         |
+| [Project Keeper Maven plugin][90]                       | [The MIT License][91]                         |
 | [OpenFastTrace Maven Plugin][92]                        | [GNU General Public License v3.0][93]         |
 | [Scalastyle Maven Plugin][94]                           | [Apache 2.0][30]                              |
 | [spotless-maven-plugin][95]                             | [The Apache Software License, Version 2.0][3] |

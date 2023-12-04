@@ -14,3 +14,9 @@ excludes:
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_upload_github_release_assets.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_prepare_original_checksum.yml'"
+build:
+  runnerOs: ubuntu-20.04
+  freeDiskSpace: false
+  exasolDbVersions:
+    - "8.23.1"
+    - "7.1.24"
