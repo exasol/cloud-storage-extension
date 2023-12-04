@@ -17,7 +17,7 @@
         <scala.version>2.13.11</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
         <hadoop.version>3.3.6</hadoop.version>
-        <log4j.version>2.22.0</log4j.version>
+        <log4j.version>2.21.1</log4j.version>
         <sonar.sources>src/main/,extension/src/</sonar.sources>
         <sonar.exclusions>extension/src/*.test.ts</sonar.exclusions>
         <sonar.tests>src/test/,extension/src</sonar.tests>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.14.0</version>
+            <version>3.13.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -44,13 +44,13 @@
             <!-- Upgrading this will cause failing integration tests -->
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.59.1</version>
+            <version>1.59.0</version>
         </dependency>
         <dependency>
             <!-- Upgrade nettty-handler to fix CVE-2023-34462 and CVE-2023-4586 -->
             <groupId>io.netty</groupId>
             <artifactId>netty-handler</artifactId>
-            <version>4.1.101.Final</version>
+            <version>4.1.100.Final</version>
         </dependency>
         <dependency>
             <groupId>org.xerial.snappy</groupId>
@@ -191,7 +191,7 @@
             <version>${hadoop.version}</version>
         </dependency>
         <dependency>
-            <!-- Upgrade transitive dependency of org.apache.hadoop:hadoop-common from default version 3.6.3 to fix CVE-2023-42503 -->
+            <!-- override version 3.6.3 to fix vulnerability CVE-2023-42503 -->
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
             <version>3.9.1</version>
@@ -394,7 +394,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.25.1</version>
+            <version>3.25.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
@@ -439,7 +439,7 @@
             <!-- Upgrade transitive dependency of org.apache.avro:avro to fix CVE-2023-42503 -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.25.0</version>
+            <version>1.24.0</version>
         </dependency>
         <dependency>
             <groupId>io.delta</groupId>
@@ -555,7 +555,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.8.0</version>
+            <version>5.7.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -573,31 +573,31 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.19.3</version>
+            <version>1.19.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>7.0.0</version>
+            <version>6.6.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>test-db-builder-java</artifactId>
-            <version>3.5.3</version>
+            <version>3.5.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>hamcrest-resultset-matcher</artifactId>
-            <version>1.6.3</version>
+            <version>1.6.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.15.4</version>
+            <version>3.15.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -615,7 +615,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>extension-manager-integration-test-java</artifactId>
-            <version>0.5.7</version>
+            <version>0.5.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -801,9 +801,6 @@
                         <ignoredResourcePattern>arrow-git.properties</ignoredResourcePattern>
                         <ignoredResourcePattern>.*\.properties$</ignoredResourcePattern>
                         <ignoredResourcePattern>.*\.proto$</ignoredResourcePattern>
-                        <ignoredResourcePattern>core-default.xml</ignoredResourcePattern>
-                        <ignoredResourcePattern>mapred-default.xml</ignoredResourcePattern>
-                        <ignoredResourcePattern>yarn-default.xml</ignoredResourcePattern>
                     </ignoredResourcePatterns>
                     <ignoredDependencies>
                         <dependency>

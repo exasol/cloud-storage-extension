@@ -21,31 +21,10 @@ This release fixes vulnerability CVE-2023-6378 (CWE-502: Deserialization of Untr
 
 ### Cloud Storage Extension
 
-#### Compile Dependency Updates
-
-* Updated `com.google.protobuf:protobuf-java:3.25.0` to `3.25.1`
-* Updated `io.grpc:grpc-netty:1.59.0` to `1.59.1`
-* Updated `io.netty:netty-handler:4.1.100.Final` to `4.1.101.Final`
-* Updated `org.apache.commons:commons-compress:1.24.0` to `1.25.0`
-* Updated `org.apache.commons:commons-lang3:3.13.0` to `3.14.0`
-* Updated `org.apache.logging.log4j:log4j-1.2-api:2.21.1` to `2.22.0`
-* Updated `org.apache.logging.log4j:log4j-api:2.21.1` to `2.22.0`
-* Updated `org.apache.logging.log4j:log4j-core:2.21.1` to `2.22.0`
-
 #### Runtime Dependency Updates
 
 * Added `ch.qos.logback:logback-classic:1.2.13`
 * Added `ch.qos.logback:logback-core:1.2.13`
-
-#### Test Dependency Updates
-
-* Updated `com.exasol:exasol-testcontainers:6.6.3` to `7.0.0`
-* Updated `com.exasol:extension-manager-integration-test-java:0.5.5` to `0.5.7`
-* Updated `com.exasol:hamcrest-resultset-matcher:1.6.2` to `1.6.3`
-* Updated `com.exasol:test-db-builder-java:3.5.1` to `3.5.3`
-* Updated `nl.jqno.equalsverifier:equalsverifier:3.15.3` to `3.15.4`
-* Updated `org.mockito:mockito-core:5.7.0` to `5.8.0`
-* Updated `org.testcontainers:localstack:1.19.1` to `1.19.3`
 
 #### Plugin Dependency Updates
 
