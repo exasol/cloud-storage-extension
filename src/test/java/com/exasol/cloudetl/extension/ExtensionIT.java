@@ -33,7 +33,7 @@ import junit.framework.AssertionFailedError;
 class ExtensionIT extends AbstractScriptExtensionIT {
     private static final Logger LOGGER = Logger.getLogger(ExtensionIT.class.getName());
     private static final String EXTENSION_ID = "cloud-storage-extension.js";
-    private static final String PREVIOUS_VERSION = "2.7.6";
+    private static final String PREVIOUS_VERSION = "2.7.8";
     private static final Path EXTENSION_SOURCE_DIR = Paths.get("extension").toAbsolutePath();
     private static final String PROJECT_VERSION = MavenProjectVersionGetter.getCurrentProjectVersion();
     private static final String S3_CONNECTION = "S3_CONNECTION";
