@@ -50,6 +50,7 @@ final case class FilesMetadataEmitter(properties: StorageProperties, parallelism
   private[this] def emitParquetFilesMetadata(context: ExaIterator): Unit = {
     val chunkSize = properties.getChunkSize()
     val chunks = ListBuffer.empty[FilenameChunkInterval]
+
     paths.foreach { filename =>
       val inputFile = HadoopInputFile.fromPath(filename, bucket.getConfiguration())
       val splits = new ParquetFileSplitter(inputFile, chunkSize).getSplits()
@@ -59,10 +60,13 @@ final case class FilesMetadataEmitter(properties: StorageProperties, parallelism
         )
       }
     }
-    val partitioner = Partitioner(chunks.size, parallelism)
+    val partitioner = Partitioner(40000, parallelism)
     var index = 0L
     var count = 0L
-    chunks.foreach { interval =>
+
+    (0 until 40000).foreach { i =>
+      val filename2 = s"file-$i.parquet"
+      val interval = FilenameChunkInterval(filename2, 0, 1)
       val filename = interval.filename
       val start = interval.start
       val end = interval.end

@@ -81,22 +81,22 @@ final case class FilesDataEmitter(properties: StorageProperties, files: Map[Stri
     var totalRowCount = 0
     var totalIntervalCount = 0
     files.foreach { case (filename, intervals) =>
-      val inputFile = getInputFile(filename)
-      val converter = ParquetValueConverter(RowParquetReader.getSchema(inputFile))
-      val source = new RowParquetChunkReader(inputFile, intervals)
+      // val inputFile = getInputFile(filename)
+      // val converter = ParquetValueConverter(RowParquetReader.getSchema(inputFile))
+      // val source = new RowParquetChunkReader(inputFile, intervals)
       var rowCount = 0
-      source.read(new Consumer[Row] {
-        override def accept(row: Row): Unit = {
-          val values = defaultTransformation.transform(converter.convert(row))
-          context.emit(values: _*)
-          rowCount += 1
-        }
-      })
+      //   source.read(new Consumer[Row] {
+      //     override def accept(row: Row): Unit = {
+      //       val values = defaultTransformation.transform(converter.convert(row))
+      //       context.emit(values: _*)
+      //       rowCount += 1
+      //     }
+      //   })
       totalRowCount += rowCount
       totalIntervalCount += intervals.size()
-      logger.info(
-        s"Imported file $inputFile with $rowCount rows and ${intervals.size()} intervals"
-      )
+    // logger.info(
+    // s"Imported file $filename with $rowCount rows and ${intervals.size()} intervals"
+    // )
     }
     logger.info(s"Imported ${files.size} files with $totalIntervalCount intervals and $totalRowCount rows in total")
   }

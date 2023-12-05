@@ -27,10 +27,13 @@ object FilesMetadataReader extends LazyLogging {
   def run(metadata: ExaMetadata, iterator: ExaIterator): Unit = {
     val bucketPath = iterator.getString(BUCKET_PATH_INDEX)
     val storageProperties = StorageProperties(iterator.getString(STORAGE_PROPERTIES_INDEX), metadata)
-    val parallelism = calculateParallelism(iterator.getInteger(PARALLELISM_INDEX), metadata, storageProperties)
+    val parallelism = 8 // calculateParallelism(iterator.getInteger(PARALLELISM_INDEX), metadata, storageProperties)
+
     logger.info(s"Reading metadata from bucket path '$bucketPath' with parallelism '$parallelism'.")
 
+    logger.info("Emitting 40k files...")
     FilesMetadataEmitter(storageProperties, parallelism).emit(iterator)
+    logger.info("Emitting finished.")
   }
 
   private[this] def calculateParallelism(

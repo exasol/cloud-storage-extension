@@ -2,6 +2,9 @@ package com.exasol.cloudetl
 
 import java.io.File
 import java.nio.file.Paths
+import java.sql.Connection
+import java.time.Duration
+import java.time.Instant
 
 import com.exasol.containers.ExasolContainer
 import com.exasol.dbbuilder.dialects.Column
@@ -16,10 +19,10 @@ import org.scalatest.funsuite.AnyFunSuite
 trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLogging {
   private[this] val JAR_NAME_PATTERN = "exasol-cloud-storage-extension-"
 
-  val DEFAULT_EXASOL_DOCKER_IMAGE = "8.23.1"
+  val DEFAULT_EXASOL_DOCKER_IMAGE = "7.1.8"
   val network = DockerNamedNetwork("it-tests", true)
   val exasolContainer = {
-    val c: ExasolContainer[_] = new ExasolContainer(getExasolDockerImageVersion())
+    val c: ExasolContainer[_] = new ExasolContainer("7.1.8")
     c.withNetwork(network)
     c.withReuse(true)
     c
@@ -29,23 +32,8 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   var connection: java.sql.Connection = null
   val assembledJarName = getAssembledJarName()
 
-  override def beforeAll(): Unit = {
+  override def beforeAll(): Unit =
     exasolContainer.start()
-    configureUdfRemoteLog()
-  }
-
-  def configureUdfRemoteLog(): Unit = {
-    val host = System.getProperty("com.exasol.virtualschema.debug.host")
-    val port = System.getProperty("com.exasol.virtualschema.debug.port")
-    if (host != null && port != null) {
-      val stmt = s"ALTER SESSION SET SCRIPT_OUTPUT_ADDRESS='$host:$port'"
-      logger.info(s"Enabling remote log by executing '$stmt'")
-      val _ = exasolContainer
-        .createConnection()
-        .createStatement()
-        .execute(stmt)
-    }
-  }
 
   override def afterAll(): Unit = {
     if (connection != null) {
@@ -65,9 +53,11 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   }
 
   def executeStmt(sql: String): Unit = {
-    logger.info(s"Executing statement $sql...")
+    logger.info(s"Executing statement '$sql'...")
+    val start = Instant.now()
     try {
       getConnection().createStatement().execute(sql)
+      logger.info(s"Statement finished after ${Duration.between(start, Instant.now())}")
     } catch {
       case exception: Exception =>
         throw new IllegalStateException(s"Failed executing SQL '$sql': ${exception.getMessage()}", exception)
@@ -83,9 +73,25 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
 
   private[this] def getConnection(): java.sql.Connection = {
     if (connection == null) {
+      logger.info("Creating new JDBC connection")
       connection = exasolContainer.createConnection("")
+      configureUdfRemoteLog(connection)
     }
     connection
+  }
+
+  def configureUdfRemoteLog(connection: Connection): Unit = {
+    // val host = System.getProperty("com.exasol.virtualschema.debug.host")
+    // val port = System.getProperty("com.exasol.virtualschema.debug.port")
+    val host = "192.168.56.6"
+    val port = "3000"
+    if (host != null && port != null) {
+      val stmt = s"ALTER SESSION SET SCRIPT_OUTPUT_ADDRESS='$host:$port'"
+      logger.info(s"Enabling remote log by executing '$stmt'")
+      val _ = connection
+        .createStatement()
+        .execute(stmt)
+    }
   }
 
   private[this] def createImportDeploymentScripts(): Unit = {
