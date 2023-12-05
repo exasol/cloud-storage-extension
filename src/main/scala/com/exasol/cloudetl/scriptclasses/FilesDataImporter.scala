@@ -36,7 +36,7 @@ object FilesDataImporter extends LazyLogging {
     var intervalCount = 0
     files.foreach { case (filename, intervals) =>
       logger.info(
-        s"Importing intervals '${getIntervalString(intervals)}' for file $filename on node '$nodeId' and vm '$vmId'."
+        s"Importing ${intervals.size()} intervals '${getIntervalString(intervals)}' for file $filename on node '$nodeId' and vm '$vmId'."
       )
       intervalCount += intervals.size()
     }

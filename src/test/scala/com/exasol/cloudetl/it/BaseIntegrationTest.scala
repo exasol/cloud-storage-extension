@@ -29,23 +29,8 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   var connection: java.sql.Connection = null
   val assembledJarName = getAssembledJarName()
 
-  override def beforeAll(): Unit = {
+  override def beforeAll(): Unit =
     exasolContainer.start()
-    configureUdfRemoteLog()
-  }
-
-  def configureUdfRemoteLog(): Unit = {
-    val host = System.getProperty("com.exasol.virtualschema.debug.host")
-    val port = System.getProperty("com.exasol.virtualschema.debug.port")
-    if (host != null && port != null) {
-      val stmt = s"ALTER SESSION SET SCRIPT_OUTPUT_ADDRESS='$host:$port'"
-      logger.info(s"Enabling remote log by executing '$stmt'")
-      val _ = exasolContainer
-        .createConnection()
-        .createStatement()
-        .execute(stmt)
-    }
-  }
 
   override def afterAll(): Unit = {
     if (connection != null) {
