@@ -61,7 +61,7 @@ jobs:
         run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
       - name: Run scalafix linting
         if: ${{ matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}
-        run: mvn --batch-mode clean compile test-compile scalastyle:check scalafix:scalafix
+        run: mvn --batch-mode clean compile test-compile scalastyle:check scalafix:scalafix spotless:check
       - name: Run tests and build with Maven
         run: >
           JAVA_HOME=$JAVA_HOME_11_X64
