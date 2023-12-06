@@ -144,15 +144,6 @@ class FilesDataImporterTest extends StorageTest with Matchers {
     result.values.foreach(intervals => assert(intervals.size() == 1))
   }
 
-  test("collectFiles with 40k real file names") {
-    assume(Files.exists(Paths.get("files.txt")))
-    val files = Source.fromFile("files.txt").getLines().map(fileName => iteratorRow(fileName, 0L, 1L)).toSeq
-    assert(files.size == 40000)
-    val result = FilesDataImporter.collectFiles(ExaIteratorMock.fromSeq(files))
-    assert(result.size == 40000)
-    result.values.foreach(intervals => assert(intervals.size() == 1))
-  }
-
   private def exaIteratorMock(files: Array[Object]*) = ExaIteratorMock.fromSeq(files)
 
   private def iteratorRow(file: String, intervalStart: java.lang.Long, intervalEnd: java.lang.Long) =
