@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.7.9, released 2023-12-07
+# Cloud Storage Extension 2.7.9, released 2023-12-08
 
 Code name: Fix CVE-2023-6378
 
