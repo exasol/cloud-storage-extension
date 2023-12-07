@@ -207,4 +207,4 @@
 [99]: https://github.com/evis/scalafix-maven-plugin
 [100]: https://www.mojohaus.org/exec-maven-plugin
 [101]: https://maven.apache.org/plugins/maven-clean-plugin/
-[102]: https://registry.npmjs.org/@exasol/extension-manager-interface/-/extension-manager-interface-0.4.0.tgz
+[102]: https://registry.npmjs.org/@exasol/extension-manager-interface/-/extension-manager-interface-0.4.1.tgz

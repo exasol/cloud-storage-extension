@@ -61,3 +61,18 @@ This release fixes vulnerability CVE-2023-6378 (CWE-502: Deserialization of Untr
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.1.2` to `3.2.2`
 * Updated `org.codehaus.mojo:exec-maven-plugin:3.1.0` to `3.1.1`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.16.1` to `2.16.2`
+
+### Extension
+
+#### Compile Dependency Updates
+
+* Updated `@exasol/extension-manager-interface:0.4.0` to `0.4.1`
+
+#### Development Dependency Updates
+
+* Updated `eslint:^8.53.0` to `^8.55.0`
+* Updated `@types/node:^20.8.10` to `^20.10.4`
+* Updated `@typescript-eslint/parser:^6.9.1` to `^6.13.2`
+* Updated `typescript:^5.2.2` to `^5.3.3`
+* Updated `@typescript-eslint/eslint-plugin:^6.9.1` to `^6.13.2`
+* Updated `esbuild:^0.19.5` to `^0.19.8`
