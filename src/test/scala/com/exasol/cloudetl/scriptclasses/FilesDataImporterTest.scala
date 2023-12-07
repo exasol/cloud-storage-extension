@@ -1,10 +1,5 @@
 package com.exasol.cloudetl.scriptclasses
 
-import java.nio.file.Files
-import java.nio.file.Paths
-
-import scala.io.Source
-
 import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
 import com.exasol.cloudetl.storage.StorageProperties
