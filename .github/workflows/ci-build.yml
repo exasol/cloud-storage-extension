@@ -62,6 +62,13 @@ jobs:
       - name: Run scalafix linting
         if: ${{ matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}
         run: mvn --batch-mode clean compile test-compile scalastyle:check scalafix:scalafix spotless:check
+      - name: Build extension
+        run: |
+          cd extension
+          npm ci
+          npm run build
+          npm run test
+          npm run lint
       - name: Run tests and build with Maven
         run: >
           JAVA_HOME=$JAVA_HOME_11_X64
