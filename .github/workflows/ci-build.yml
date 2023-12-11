@@ -64,6 +64,7 @@ jobs:
         run: mvn --batch-mode clean compile test-compile scalastyle:check scalafix:scalafix spotless:check
       - name: Build extension
         run: |
+          mvn package -DskipTests
           cd extension
           npm ci
           npm run build
@@ -72,7 +73,7 @@ jobs:
       - name: Run tests and build with Maven
         run: >
           JAVA_HOME=$JAVA_HOME_11_X64
-          mvn --batch-mode clean verify
+          mvn --batch-mode verify
           -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
           -DtrimStackTrace=false
           -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
