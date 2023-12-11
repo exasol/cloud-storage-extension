@@ -47,7 +47,7 @@ export function createExtension(): ExasolExtension {
         description: "Access data formatted with Avro, Orc and Parquet on public cloud storage systems",
         category: "cloud-storage-importer",
         version: EXTENSION_DESCRIPTION.version,
-        file: { name: EXTENSION_DESCRIPTION.fileName, size: EXTENSION_DESCRIPTION.fileSizeBytes },
+        files: [{ name: EXTENSION_DESCRIPTION.fileName, size: EXTENSION_DESCRIPTION.fileSizeBytes }],
         scripts: SCRIPTS,
         scriptVersionExtractor: jarFileVersionExtractor(/exasol-cloud-storage-extension-(\d+\.\d+\.\d+).jar/)
     }

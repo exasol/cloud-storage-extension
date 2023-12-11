@@ -16,7 +16,7 @@ import org.scalatest.funsuite.AnyFunSuite
 trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLogging {
   private[this] val JAR_NAME_PATTERN = "exasol-cloud-storage-extension-"
 
-  val DEFAULT_EXASOL_DOCKER_IMAGE = "7.1.24"
+  val DEFAULT_EXASOL_DOCKER_IMAGE = "8.23.1"
   val network = DockerNamedNetwork("it-tests", true)
   val exasolContainer = {
     val c: ExasolContainer[_] = new ExasolContainer(getExasolDockerImageVersion())
@@ -40,7 +40,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   }
 
   def prepareExasolDatabase(schemaName: String): Unit = {
-    executeStmt(s"DROP SCHEMA IF EXISTS $schemaName CASCADE;")
+    executeStmt(s"DROP SCHEMA IF EXISTS $schemaName CASCADE")
     factory = new ExasolObjectFactory(getConnection())
     logger.info("Creating schema " + schemaName)
     schema = factory.createSchema(schemaName)
@@ -50,6 +50,7 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   }
 
   def executeStmt(sql: String): Unit = {
+    logger.info(s"Executing statement $sql...")
     try {
       getConnection().createStatement().execute(sql)
     } catch {
@@ -123,9 +124,10 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
   }
 
   private[this] def uploadJarToBucket(): Unit = {
-    val jarPath = Paths.get("target", assembledJarName)
-    logger.info("Uploading JAR " + jarPath + " to bucket...")
+    val jarPath = Paths.get("target", assembledJarName).toAbsolutePath()
+    logger.info(s"Uploading JAR $jarPath to bucket at $assembledJarName...")
     exasolContainer.getDefaultBucket.uploadFile(jarPath, assembledJarName)
+    logger.info(s"Upload to $assembledJarName finished.")
   }
 
   private[this] def findFileOrDirectory(searchDirectory: String, name: String): String = {

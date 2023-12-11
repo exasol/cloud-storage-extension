@@ -33,7 +33,7 @@ class FilesDataImporterTest extends StorageTest with Matchers {
 
     val storageProperties = StorageProperties(properties)
     val iter =
-      new ExaIteratorMock(iteratorRow(storageProperties, file1, 0, 1), iteratorRow(storageProperties, file2, 0, 1))
+      exaIteratorMock(iteratorRow(storageProperties, file1, 0, 1), iteratorRow(storageProperties, file2, 0, 1))
 
     FilesDataImporter.run(mock[ExaMetadata], iter)
     assert(iter.getEmittedRows().size() == expectedNumberOfRecords)
@@ -42,7 +42,7 @@ class FilesDataImporterTest extends StorageTest with Matchers {
   test("run emits records for single interval") {
     val file1 = s"$testResourceDir/import/parquet/sales_positions1.snappy.parquet"
     val storageProperties = StorageProperties(properties)
-    val iter = new ExaIteratorMock(iteratorRow(storageProperties, file1, 0, 1))
+    val iter = exaIteratorMock(iteratorRow(storageProperties, file1, 0, 1))
     FilesDataImporter.run(mock[ExaMetadata], iter)
     assert(iter.getEmittedRows().size() == 500)
   }
@@ -51,7 +51,7 @@ class FilesDataImporterTest extends StorageTest with Matchers {
     val file = s"$testResourceDir/import/parquet/sales_positions1.snappy.parquet"
     val storageProperties = StorageProperties(properties)
     val iter =
-      new ExaIteratorMock(iteratorRow(storageProperties, file, 0, 1), iteratorRow(storageProperties, file, 0, 1))
+      exaIteratorMock(iteratorRow(storageProperties, file, 0, 1), iteratorRow(storageProperties, file, 0, 1))
     FilesDataImporter.run(mock[ExaMetadata], iter)
     assert(iter.getEmittedRows().size() == 500)
   }
@@ -89,14 +89,14 @@ class FilesDataImporterTest extends StorageTest with Matchers {
 
   test("collectFiles for iterator with single entry") {
     val result =
-      FilesDataImporter.collectFiles(new ExaIteratorMock(iteratorRow("file1.parquet", 17L, 42L)))
+      FilesDataImporter.collectFiles(exaIteratorMock(iteratorRow("file1.parquet", 17L, 42L)))
     result.get("file1.parquet").get.should(contain).theSameElementsAs(List(chunk(17, 42)))
   }
 
   test("collectFiles for iterator with single file but multiple chunks") {
     val result =
       FilesDataImporter.collectFiles(
-        new ExaIteratorMock(
+        exaIteratorMock(
           iteratorRow("file1.parquet", 17L, 42L),
           iteratorRow("file1.parquet", 1L, 2L)
         )
@@ -108,7 +108,7 @@ class FilesDataImporterTest extends StorageTest with Matchers {
   test("collectFiles for iterator with multiple files and multiple chunks") {
     val result =
       FilesDataImporter.collectFiles(
-        new ExaIteratorMock(
+        exaIteratorMock(
           iteratorRow("file1.parquet", 17L, 42L),
           iteratorRow("file1.parquet", 1L, 2L),
           iteratorRow("file2.parquet", 0L, 1L)
@@ -122,7 +122,7 @@ class FilesDataImporterTest extends StorageTest with Matchers {
   test("collectFiles for iterator with two files") {
     val result =
       FilesDataImporter.collectFiles(
-        new ExaIteratorMock(
+        exaIteratorMock(
           iteratorRow("file1.parquet", 17L, 42L),
           iteratorRow("file2.parquet", 1L, 2L)
         )
@@ -132,11 +132,25 @@ class FilesDataImporterTest extends StorageTest with Matchers {
     result.get("file2.parquet").get.should(contain).theSameElementsAs(List(chunk(1, 2)))
   }
 
-  private def iteratorRow(file: String, intervalStart: Long, intervalEnd: Long) =
-    Array[Any](null, null, file, intervalStart, intervalEnd)
+  test("collectFiles with 40k files") {
+    val files = (0 until 40000).map(i => iteratorRow(s"file$i.parquet", 0L, 1L))
+    val result = FilesDataImporter.collectFiles(ExaIteratorMock.fromSeq(files))
+    assert(result.size == 40000)
+    result.values.foreach(intervals => assert(intervals.size() == 1))
+  }
 
-  private def iteratorRow(storageProperties: StorageProperties, file: String, intervalStart: Long, intervalEnd: Long) =
-    Array[Any](storageProperties.getStoragePath(), storageProperties.mkString(), file, intervalStart, intervalEnd)
+  private def exaIteratorMock(files: Array[Object]*) = ExaIteratorMock.fromSeq(files)
+
+  private def iteratorRow(file: String, intervalStart: java.lang.Long, intervalEnd: java.lang.Long) =
+    Array[Object](null, null, file, intervalStart, intervalEnd)
+
+  private def iteratorRow(
+    storageProperties: StorageProperties,
+    file: String,
+    intervalStart: java.lang.Long,
+    intervalEnd: java.lang.Long
+  ) =
+    Array[Object](storageProperties.getStoragePath(), storageProperties.mkString(), file, intervalStart, intervalEnd)
 
   private[this] def chunk(start: Long, end: Long): ChunkInterval =
     new ChunkIntervalImpl(start, end)
