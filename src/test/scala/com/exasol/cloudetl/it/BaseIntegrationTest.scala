@@ -16,7 +16,7 @@ import org.scalatest.funsuite.AnyFunSuite
 trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLogging {
   private[this] val JAR_NAME_PATTERN = "exasol-cloud-storage-extension-"
 
-  val DEFAULT_EXASOL_DOCKER_IMAGE = "8.23.1"
+  val DEFAULT_EXASOL_DOCKER_IMAGE = "8.24.0"
   val network = DockerNamedNetwork("it-tests", true)
   val exasolContainer = {
     val c: ExasolContainer[_] = new ExasolContainer(getExasolDockerImageVersion())
