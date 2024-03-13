@@ -1,15 +1,12 @@
 # Cloud Storage Extension 2.7.10, released 2024-??-??
 
-Code name: Security fixes in transitive dependencies
+Code name:
 
 ## Summary
-Fix CVEs in transitive dependencies, upgrade of PK to 4.1.0
 
 ## Features
 
-* #294: CVE-2023-52428: com.nimbusds:nimbus-jose-jwt:jar:9.8.1:compile
-* #295: CVE-2024-25710: org.apache.commons:commons-compress
-* #296: CVE-2024-26308: org.apache.commons:commons-compress
+* ISSUE_NUMBER: description
 
 ## Dependency Updates
 
