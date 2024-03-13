@@ -733,6 +733,9 @@
                         <phase>none</phase>
                     </execution>
                 </executions>
+                <configuration>
+                    <useModulePath>false</useModulePath>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
