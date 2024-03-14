@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.7.10, released 2024-??-??
+# Cloud Storage Extension 2.7.10, released 2024-03-14
 
 Code name: Security fixes in transitive dependencies
 
