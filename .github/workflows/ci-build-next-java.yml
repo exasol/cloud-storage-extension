@@ -1,5 +1,4 @@
 name: CI Build next Java
-
 on:
   push:
     branches:
@@ -25,9 +24,10 @@ jobs:
           cache: "maven"
       - name: Run tests and build with Maven
         run: |
-          mvn --batch-mode --update-snapshots clean javadoc:javadoc -DtrimStackTrace=false \
+          mvn --batch-mode --update-snapshots clean javadoc:javadoc -DtrimStackTrace=false  \
+              -Djava.version=17 \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-      - name: Publish Test Report
+      - name: Publish Test Report for Java 17
         uses: scacap/action-surefire-report@v1
         if: ${{ always() && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
         with:
