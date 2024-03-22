@@ -7,7 +7,7 @@ Zookeeper dependency was upgraded to address CVE-2024-23944
 
 ## Features
 
-* #300: CVE-2024-23944: org.apache.zookeeper:zookeeper:jar:3.9.1:compile
+* #300: Fixed CVE-2024-23944 in `org.apache.zookeeper:zookeeper:jar:3.9.1:compile`
 
 ## Dependency Updates
 
