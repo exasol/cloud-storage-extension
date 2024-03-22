@@ -3,9 +3,10 @@
 Code name: upgrade zookeeper to fix CVE-2024-23944
 
 ## Summary
-Zookeeper dependency was upgraded to address CVE-2024-23944
 
-## Features
+Zookeeper dependency was upgraded to address CVE-2024-23944.
+
+## Security
 
 * #300: Fixed CVE-2024-23944 in `org.apache.zookeeper:zookeeper:jar:3.9.1:compile`
 
