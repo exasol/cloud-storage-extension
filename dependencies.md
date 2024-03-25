@@ -15,25 +15,25 @@
 | [snappy-java][9]                           | [Apache-2.0][10]                              |
 | [Import Export UDF Common Scala][11]       | [MIT License][12]                             |
 | [error-reporting-java][13]                 | [MIT License][14]                             |
-| Apache Hadoop Common                       | [Apache License, Version 2.0][3]              |
-| Apache Hadoop Amazon Web Services support  | [Apache License, Version 2.0][3]              |
+| Apache Hadoop Common                       | [Apache-2.0][3]                               |
+| Apache Hadoop Amazon Web Services support  | [Apache-2.0][3]                               |
 | [Apache ZooKeeper - Server][15]            | [Apache License, Version 2.0][3]              |
-| Apache Hadoop Azure support                | [Apache License, Version 2.0][3]              |
-| Apache Hadoop Azure Data Lake support      | [Apache License, Version 2.0][3]              |
-| Apache Hadoop HDFS                         | [Apache License, Version 2.0][3]              |
-| Apache Hadoop HDFS Client                  | [Apache License, Version 2.0][3]              |
+| Apache Hadoop Azure support                | [Apache-2.0][3]                               |
+| Apache Hadoop Azure Data Lake support      | [Apache-2.0][3]                               |
+| Apache Hadoop HDFS                         | [Apache-2.0][3]                               |
+| Apache Hadoop HDFS Client                  | [Apache-2.0][3]                               |
 | [Kotlin Stdlib][16]                        | [The Apache License, Version 2.0][5]          |
 | [Alluxio Core - Client - HDFS][17]         | [Apache License][18]                          |
 | [Metrics Core][19]                         | [Apache License 2.0][10]                      |
 | [Protocol Buffers [Core]][20]              | [BSD-3-Clause][21]                            |
-| [gcs-connector-hadoop3][22]                | [Apache License, Version 2.0][5]              |
+| [gcs-connector][22]                        | [Apache License, Version 2.0][3]              |
 | [Google OAuth Client Library for Java][23] | [The Apache Software License, Version 2.0][3] |
 | [ORC Core][24]                             | [Apache License, Version 2.0][3]              |
 | [Apache Avro][25]                          | [Apache-2.0][3]                               |
 | [Apache Commons Compress][26]              | [Apache-2.0][3]                               |
 | [Nimbus JOSE+JWT][27]                      | [The Apache Software License, Version 2.0][3] |
 | [delta-core][28]                           | [Apache-2.0][29]                              |
-| [Spark Project SQL][30]                    | [Apache 2.0 License][31]                      |
+| [Spark Project SQL][30]                    | [Apache-2.0][31]                              |
 | [Apache Ivy][32]                           | [The Apache Software License, Version 2.0][5] |
 | [Parquet for Java][33]                     | [MIT License][34]                             |
 | [JUL to SLF4J bridge][35]                  | [MIT License][36]                             |
@@ -129,7 +129,7 @@
 [19]: https://metrics.dropwizard.io/metrics-core
 [20]: https://developers.google.com/protocol-buffers/protobuf-java/
 [21]: https://opensource.org/licenses/BSD-3-Clause
-[22]: https://github.com/GoogleCloudPlatform/BigData-interop/gcs-connector/
+[22]: https://github.com/GoogleCloudDataproc/hadoop-connectors/gcs-connector
 [23]: https://github.com/googleapis/google-oauth-java-client/google-oauth-client
 [24]: https://orc.apache.org/orc-core
 [25]: https://avro.apache.org
