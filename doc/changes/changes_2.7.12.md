@@ -9,7 +9,7 @@ Dependencies upgraded to fix CVE-2024-29131, CVE-2024-29133 and CVE-2024-29025
 
 * #303: CVE-2024-29131: org.apache.commons:commons-configuration2:jar:2.8.0:compile
 * #304: CVE-2024-29133: org.apache.commons:commons-configuration2:jar:2.8.0:compile
-* #307: CVE-2024-29025: io.netty:netty-codec-http:jar:4.1.100.Final:compile
+* #306: CVE-2024-29025: io.netty:netty-codec-http:jar:4.1.100.Final:compile
 
 ## Dependency Updates
 
