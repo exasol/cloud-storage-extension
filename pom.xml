@@ -668,7 +668,7 @@
                         <javacArg>${java.version}</javacArg>
                         <javacArg>-deprecation</javacArg>
                         <javacArg>-parameters</javacArg>
-                        <javacArg>-Xlint:all</javacArg>
+                        <javacArg>-Xlint:-path</javacArg>
                     </javacArgs>
                     <jvmArgs>
                         <jvmArg>-Xmx2048m</jvmArg>
