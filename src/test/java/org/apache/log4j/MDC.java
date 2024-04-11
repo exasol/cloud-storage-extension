@@ -144,7 +144,8 @@ public class MDC {
         if (java1 || tlm == null) {
             return;
         } else {
-            Hashtable<String, Object> ht = (Hashtable<String, Object>) ((ThreadLocalMap) tlm).get();
+            @SuppressWarnings("unchecked") Hashtable<String, Object> ht =
+                    (Hashtable<String, Object>) ((ThreadLocalMap) tlm).get();
             if (ht == null) {
                 ht = new Hashtable<>(HT_SIZE);
                 ((ThreadLocalMap) tlm).set(ht);
