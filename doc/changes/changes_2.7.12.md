@@ -18,7 +18,6 @@ Dependencies upgraded to fix CVE-2024-29131, CVE-2024-29133 and CVE-2024-29025
 #### Compile Dependency Updates
 
 * Updated `com.exasol:parquet-io-java:2.0.6` to `2.0.8`
-* Updated `io.grpc:grpc-netty:1.60.0` to `1.63.0`
 * Added `io.netty:netty-codec-http2:4.1.108.Final`
 * Removed `io.netty:netty-handler:4.1.101.Final`
 * Added `org.apache.commons:commons-configuration2:2.10.1`
