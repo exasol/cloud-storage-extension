@@ -25,7 +25,6 @@ Dependencies upgraded to fix CVE-2024-29131, CVE-2024-29133 and CVE-2024-29025
 #### Test Dependency Updates
 
 * Updated `com.exasol:exasol-testcontainers:7.0.0` to `7.0.1`
-* Updated `com.exasol:extension-manager-integration-test-java:0.5.7` to `0.5.9`
 * Updated `com.exasol:test-db-builder-java:3.5.3` to `3.5.4`
 
 #### Plugin Dependency Updates
