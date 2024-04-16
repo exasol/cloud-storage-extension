@@ -25,6 +25,7 @@ Dependencies upgraded to fix CVE-2024-29131, CVE-2024-29133 and CVE-2024-29025
 
 * Updated `com.exasol:test-db-builder-java:3.5.3` to `3.5.4`
 * Added `org.glassfish.jersey.core:jersey-client:2.41`
+* Added `org.glassfish.jersey.core:jersey-server:2.41`
 
 #### Plugin Dependency Updates
 
