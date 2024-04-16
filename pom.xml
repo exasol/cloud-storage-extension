@@ -492,6 +492,10 @@
                     <groupId>org.apache.orc</groupId>
                     <artifactId>orc-core</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.jersey.core</groupId>
+                    <artifactId>jersey-client</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -613,6 +617,13 @@
             <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
+            <version>2.41</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
             <version>2.41</version>
             <scope>test</scope>
         </dependency>
