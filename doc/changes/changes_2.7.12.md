@@ -20,15 +20,17 @@ Dependencies upgraded to fix CVE-2024-29131, CVE-2024-29133 and CVE-2024-29025
 * Added `io.netty:netty-codec-http2:4.1.108.Final`
 * Removed `io.netty:netty-handler:4.1.101.Final`
 * Added `org.apache.commons:commons-configuration2:2.10.1`
+* Added `org.glassfish.jersey.containers:jersey-container-servlet-core:2.41`
+* Added `org.glassfish.jersey.containers:jersey-container-servlet:2.41`
+* Added `org.glassfish.jersey.core:jersey-client:2.41`
+* Added `org.glassfish.jersey.core:jersey-common:2.41`
+* Added `org.glassfish.jersey.core:jersey-server:2.41`
+* Added `org.glassfish.jersey.inject:jersey-hk2:2.41`
 
 #### Test Dependency Updates
 
 * Updated `com.exasol:test-db-builder-java:3.5.3` to `3.5.4`
-* Added `org.glassfish.jersey.containers:jersey-container-servlet-core:2.41`
-* Added `org.glassfish.jersey.containers:jersey-container-servlet:2.41`
-* Added `org.glassfish.jersey.core:jersey-client:2.41`
-* Added `org.glassfish.jersey.core:jersey-server:2.41`
-* Added `org.glassfish.jersey.inject:jersey-hk2:2.41`
+* Removed `org.glassfish.jersey.core:jersey-common:2.41`
 
 #### Plugin Dependency Updates
 
