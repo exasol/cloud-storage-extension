@@ -842,7 +842,7 @@
                         <!-- Vulnerabilities in fr.turri:aXMLRPC:1.13.0:test -->
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (9.8); -->
                         <!-- Used in tests only. -->
-                        <exclude>CVE-2020-36641</exclude>
+<!--                        <exclude>CVE-2020-36641</exclude>-->
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
