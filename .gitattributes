@@ -3,6 +3,7 @@
 .github/workflows/dependencies_check.yml                        linguist-generated=true
 .github/workflows/dependencies_update.yml                       linguist-generated=true
 .github/workflows/release_droid_print_quick_checksum.yml        linguist-generated=true
+.github/workflows/release.yml                                   linguist-generated=true
 .settings/org.eclipse.jdt.core.prefs                            linguist-generated=true
 .settings/org.eclipse.jdt.ui.prefs                              linguist-generated=true
 dependencies.md                                                 linguist-generated=true
