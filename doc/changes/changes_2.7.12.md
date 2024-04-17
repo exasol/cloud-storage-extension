@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.7.12, released 2024-??-??
+# Cloud Storage Extension 2.7.12, released 2024-04-18
 
 Code name: Dependency upgrades
 
