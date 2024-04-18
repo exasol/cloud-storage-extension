@@ -6,19 +6,53 @@ sources:
       - integration_tests
   - type: npm
     path: extension/package.json
+    artifacts:
+      - dist/cloud-storage-extension.js
 version:
   fromSource: pom.xml
 linkReplacements:
 excludes:
-  # Customization needed to build and release extension
-  - "W-PK-CORE-153: Project-keeper version 4.1.0 is outdated. Please update project-keeper to latest version 4.2.0."
-  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
-  - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_upload_github_release_assets.yml'"
-  - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_prepare_original_checksum.yml'"
+  - "E-PK-CORE-17: Missing required file: 'release_config.yml'"
 build:
   runnerOs: ubuntu-20.04
-  freeDiskSpace: false
+  freeDiskSpace: true
   exasolDbVersions:
     - "8.24.0"
-    - "7.1.25"
+    - "7.1.26"
+  workflows:
+    - name: ci-build.yml
+      stepCustomizations:
+        - action: INSERT_AFTER
+          stepId: enable-testcontainer-reuse
+          content:
+            name: Run scalafix linting
+            id: run-scalafix-linting
+            if: ${{ matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}
+            run: mvn --batch-mode clean compile test-compile scalastyle:check scalafix:scalafix spotless:check
+        - action: INSERT_AFTER
+          stepId: run-scalafix-linting
+          content:
+            name: Build extension
+            id: build-extension
+            run: |
+              mvn --batch-mode package -DskipTests
+              cd extension
+              npm ci
+              npm run build
+              npm run test
+              npm run lint
+        - action: REPLACE
+          stepId: build-pk-verify
+          content:
+            name: Run tests and build with Maven
+            id: build-pk-verify
+            run: |
+              mvn --batch-mode verify \
+                  -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+                  -DtrimStackTrace=false \
+                  -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
+            env:
+              # Set additional environment variable as in scala projects the scalatest plugin does not forward
+              # the system property -Dcom.exasol.dockerdb.image to the test's implementation.
+              EXASOL_DB_VERSION: ${{ matrix.exasol_db_version }}
