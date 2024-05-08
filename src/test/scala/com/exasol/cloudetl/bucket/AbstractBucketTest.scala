@@ -54,7 +54,7 @@ class AbstractBucketTest extends AnyFunSuite with BeforeAndAfterEach with Mockit
       fn
     }
     val message = thrown.getMessage()
-    assert(message.contains("Using credentials as parameters is forbidded"))
+    assert(message.contains("Using credentials as parameters is forbidden"))
     assert(message.contains("Please use an Exasol named connection object"))
     ()
   }
