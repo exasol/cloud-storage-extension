@@ -16,25 +16,25 @@
 | [snappy-java][10]                          | [Apache-2.0][11]                                                                                                                                                                                    |
 | [Import Export UDF Common Scala][12]       | [MIT License][13]                                                                                                                                                                                   |
 | [error-reporting-java][14]                 | [MIT License][15]                                                                                                                                                                                   |
-| Apache Hadoop Common                       | [Apache License, Version 2.0][3]                                                                                                                                                                    |
-| Apache Hadoop Amazon Web Services support  | [Apache License, Version 2.0][3]                                                                                                                                                                    |
+| Apache Hadoop Common                       | [Apache-2.0][3]                                                                                                                                                                                     |
+| Apache Hadoop Amazon Web Services support  | [Apache-2.0][3]                                                                                                                                                                                     |
 | [Apache ZooKeeper - Server][16]            | [Apache License, Version 2.0][3]                                                                                                                                                                    |
-| Apache Hadoop Azure support                | [Apache License, Version 2.0][3]                                                                                                                                                                    |
-| Apache Hadoop Azure Data Lake support      | [Apache License, Version 2.0][3]                                                                                                                                                                    |
-| Apache Hadoop HDFS                         | [Apache License, Version 2.0][3]                                                                                                                                                                    |
-| Apache Hadoop HDFS Client                  | [Apache License, Version 2.0][3]                                                                                                                                                                    |
+| Apache Hadoop Azure support                | [Apache-2.0][3]                                                                                                                                                                                     |
+| Apache Hadoop Azure Data Lake support      | [Apache-2.0][3]                                                                                                                                                                                     |
+| Apache Hadoop HDFS                         | [Apache-2.0][3]                                                                                                                                                                                     |
+| Apache Hadoop HDFS Client                  | [Apache-2.0][3]                                                                                                                                                                                     |
 | [Kotlin Stdlib][17]                        | [The Apache License, Version 2.0][6]                                                                                                                                                                |
 | [Alluxio Core - Client - HDFS][18]         | [Apache License][19]                                                                                                                                                                                |
 | [Metrics Core][20]                         | [Apache License 2.0][11]                                                                                                                                                                            |
 | [Protocol Buffers [Core]][21]              | [BSD-3-Clause][22]                                                                                                                                                                                  |
-| [gcs-connector-hadoop3][23]                | [Apache License, Version 2.0][6]                                                                                                                                                                    |
+| [gcs-connector][23]                        | [Apache License, Version 2.0][3]                                                                                                                                                                    |
 | [Google OAuth Client Library for Java][24] | [The Apache Software License, Version 2.0][3]                                                                                                                                                       |
 | [ORC Core][25]                             | [Apache License, Version 2.0][3]                                                                                                                                                                    |
 | [Apache Avro][26]                          | [Apache-2.0][3]                                                                                                                                                                                     |
 | [Apache Commons Compress][27]              | [Apache-2.0][3]                                                                                                                                                                                     |
 | [Nimbus JOSE+JWT][28]                      | [The Apache Software License, Version 2.0][3]                                                                                                                                                       |
 | [delta-core][29]                           | [Apache-2.0][30]                                                                                                                                                                                    |
-| [Spark Project SQL][31]                    | [Apache 2.0 License][32]                                                                                                                                                                            |
+| [Spark Project SQL][31]                    | [Apache-2.0][32]                                                                                                                                                                                    |
 | [Apache Ivy][33]                           | [The Apache Software License, Version 2.0][6]                                                                                                                                                       |
 | [Parquet for Java][34]                     | [MIT License][35]                                                                                                                                                                                   |
 | [JUL to SLF4J bridge][36]                  | [MIT License][37]                                                                                                                                                                                   |
@@ -79,7 +79,7 @@
 | Dependency                                              | License                                       |
 | ------------------------------------------------------- | --------------------------------------------- |
 | [SonarQube Scanner for Maven][82]                       | [GNU LGPL 3][83]                              |
-| [Apache Maven Toolchains Plugin][84]                    | [Apache License, Version 2.0][3]              |
+| [Apache Maven Toolchains Plugin][84]                    | [Apache-2.0][3]                               |
 | [Apache Maven Compiler Plugin][85]                      | [Apache-2.0][3]                               |
 | [Apache Maven Enforcer Plugin][86]                      | [Apache-2.0][3]                               |
 | [Maven Flatten Plugin][87]                              | [Apache Software Licenese][3]                 |
@@ -91,7 +91,7 @@
 | [Versions Maven Plugin][94]                             | [Apache License, Version 2.0][3]              |
 | [duplicate-finder-maven-plugin Maven Mojo][95]          | [Apache License 2.0][32]                      |
 | [Apache Maven Assembly Plugin][96]                      | [Apache-2.0][3]                               |
-| [Apache Maven JAR Plugin][97]                           | [Apache License, Version 2.0][3]              |
+| [Apache Maven JAR Plugin][97]                           | [Apache-2.0][3]                               |
 | [Artifact reference checker and unifier][98]            | [MIT License][99]                             |
 | [Maven Failsafe Plugin][100]                            | [Apache-2.0][3]                               |
 | [JaCoCo :: Maven Plugin][101]                           | [EPL-2.0][102]                                |
@@ -102,8 +102,8 @@
 | [Scalastyle Maven Plugin][110]                          | [Apache 2.0][32]                              |
 | [spotless-maven-plugin][111]                            | [The Apache Software License, Version 2.0][3] |
 | [scalafix-maven-plugin][112]                            | [BSD-3-Clause][22]                            |
-| [Exec Maven Plugin][113]                                | [Apache License 2][3]                         |
-| [Apache Maven Clean Plugin][114]                        | [Apache-2.0][3]                               |
+| exec-maven-plugin                                       |                                               |
+| [Apache Maven Clean Plugin][113]                        | [Apache-2.0][3]                               |
 
 ## Extension
 
@@ -111,7 +111,7 @@
 
 | Dependency                                 | License |
 | ------------------------------------------ | ------- |
-| [@exasol/extension-manager-interface][115] | MIT     |
+| [@exasol/extension-manager-interface][114] | MIT     |
 
 [0]: https://www.scala-lang.org/
 [1]: https://www.apache.org/licenses/LICENSE-2.0
@@ -136,7 +136,7 @@
 [20]: https://metrics.dropwizard.io/metrics-core
 [21]: https://developers.google.com/protocol-buffers/protobuf-java/
 [22]: https://opensource.org/licenses/BSD-3-Clause
-[23]: https://github.com/GoogleCloudPlatform/BigData-interop/gcs-connector/
+[23]: https://github.com/GoogleCloudDataproc/hadoop-connectors/gcs-connector
 [24]: https://github.com/googleapis/google-oauth-java-client/google-oauth-client
 [25]: https://orc.apache.org/orc-core
 [26]: https://avro.apache.org
@@ -226,6 +226,5 @@
 [110]: http://www.scalastyle.org
 [111]: https://github.com/diffplug/spotless
 [112]: https://github.com/evis/scalafix-maven-plugin
-[113]: https://www.mojohaus.org/exec-maven-plugin
-[114]: https://maven.apache.org/plugins/maven-clean-plugin/
-[115]: https://registry.npmjs.org/@exasol/extension-manager-interface/-/extension-manager-interface-0.4.1.tgz
+[113]: https://maven.apache.org/plugins/maven-clean-plugin/
+[114]: https://registry.npmjs.org/@exasol/extension-manager-interface/-/extension-manager-interface-0.4.2.tgz
