@@ -17,6 +17,40 @@ class GCSBucketTest extends AbstractBucketTest {
     assert(bucket.isInstanceOf[GCSBucket])
   }
 
+  test("constructing fails when both keyfile and connection are specified") {
+    val bucket = getBucket(
+      Map(
+        PATH -> "gs://my-bucket/",
+        FORMAT -> "AVRO",
+        "GCS_PROJECT_ID" -> "myProject",
+        "GCS_KEYFILE_PATH" -> "/keyfile.json",
+        "CONNECTION_NAME" -> "GCS_CONNECTION"
+      )
+    )
+    val thrown = intercept[IllegalArgumentException] {
+      bucket.validate()
+    }
+    assert(
+      thrown.getMessage() === "E-CSE-30: Both properties 'GCS_KEYFILE_PATH' and 'CONNECTION_NAME' are specified. Please specify only one of them."
+    )
+  }
+
+  test("constructing fails when both keyfile and connection are missing") {
+    val bucket = getBucket(
+      Map(
+        PATH -> "gs://my-bucket/",
+        FORMAT -> "AVRO",
+        "GCS_PROJECT_ID" -> "myProject"
+      )
+    )
+    val thrown = intercept[IllegalArgumentException] {
+      bucket.validate()
+    }
+    assert(
+      thrown.getMessage() === "E-CSE-31: Neither of properties 'GCS_KEYFILE_PATH' or 'CONNECTION_NAME' is specified. Please specify exactly one of them."
+    )
+  }
+
   test("proxy settings should be added when present") {
     val bucket = getBucket(
       defaultProperties ++ Map(

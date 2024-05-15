@@ -1,6 +1,8 @@
 package com.exasol.cloudetl.bucket
 
 import com.exasol.cloudetl.storage.StorageProperties
+import com.exasol.common.CommonConstants.CONNECTION_NAME
+import com.exasol.errorreporting.ExaError
 
 import org.apache.hadoop.conf.Configuration
 
@@ -17,14 +19,42 @@ final case class GCSBucket(path: String, params: StorageProperties) extends Buck
   override val properties: StorageProperties = params
 
   /** @inheritdoc */
-  override def validate(): Unit =
+  override def validate(): Unit = {
+
     validateRequiredProperties()
+    if (properties.containsKey(GCS_KEYFILE_PATH) && properties.containsKey(CONNECTION_NAME)) {
+      throw new IllegalArgumentException(
+        ExaError
+          .messageBuilder("E-CSE-30")
+          .message(
+            "Both properties {{GCS_KEYFILE_PATH}} and {{CONNECTION_NAME}} are specified.",
+            GCS_KEYFILE_PATH,
+            CONNECTION_NAME
+          )
+          .mitigation("Please specify only one of them.")
+          .toString()
+      )
+    }
+    if (!properties.containsKey(GCS_KEYFILE_PATH) && !properties.containsKey(CONNECTION_NAME)) {
+      throw new IllegalArgumentException(
+        ExaError
+          .messageBuilder("E-CSE-31")
+          .message(
+            "Neither of properties {{GCS_KEYFILE_PATH}} or {{CONNECTION_NAME}} is specified.",
+            GCS_KEYFILE_PATH,
+            CONNECTION_NAME
+          )
+          .mitigation("Please specify exactly one of them.")
+          .toString()
+      )
+    }
+  }
 
   /**
    * Returns the list of required property keys for Google Cloud Storage.
    */
   override def getRequiredProperties(): Seq[String] =
-    Seq(GCS_PROJECT_ID, GCS_KEYFILE_PATH)
+    Seq(GCS_PROJECT_ID)
 
   /**
    * @inheritdoc
@@ -38,6 +68,7 @@ final case class GCSBucket(path: String, params: StorageProperties) extends Buck
     conf.set("fs.gs.impl", classOf[com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem].getName)
     conf.setBoolean("fs.gs.auth.service.account.enable", true)
     conf.set("fs.gs.project.id", properties.getString(GCS_PROJECT_ID))
+    conf.set("fs.gs.auth.type", "SERVICE_ACCOUNT_JSON_KEYFILE")
     conf.set("fs.gs.auth.service.account.json.keyfile", properties.getString(GCS_KEYFILE_PATH))
 
     properties.getProxyHost().foreach { proxyHost =>
