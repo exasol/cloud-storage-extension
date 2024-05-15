@@ -21,17 +21,10 @@ Code name:
 * Updated `io.grpc:grpc-netty:1.60.0` to `1.63.0`
 * Updated `io.netty:netty-codec-http2:4.1.108.Final` to `4.1.109.Final`
 * Updated `org.apache.commons:commons-compress:1.26.0` to `1.26.1`
-* Updated `org.apache.hadoop:hadoop-aws:3.3.6` to `3.4.0`
-* Updated `org.apache.hadoop:hadoop-azure-datalake:3.3.6` to `3.4.0`
-* Updated `org.apache.hadoop:hadoop-azure:3.3.6` to `3.4.0`
-* Updated `org.apache.hadoop:hadoop-common:3.3.6` to `3.4.0`
-* Updated `org.apache.hadoop:hadoop-hdfs-client:3.3.6` to `3.4.0`
-* Updated `org.apache.hadoop:hadoop-hdfs:3.3.6` to `3.4.0`
 * Updated `org.apache.logging.log4j:log4j-1.2-api:2.22.0` to `2.23.1`
 * Updated `org.apache.logging.log4j:log4j-api:2.22.0` to `2.23.1`
 * Updated `org.apache.logging.log4j:log4j-core:2.22.0` to `2.23.1`
 * Updated `org.jetbrains.kotlin:kotlin-stdlib:1.9.21` to `1.9.24`
-* Updated `org.scala-lang:scala-library:2.13.11` to `2.13.14`
 * Updated `org.slf4j:jul-to-slf4j:2.0.9` to `2.0.13`
 
 #### Runtime Dependency Updates
