@@ -14,15 +14,12 @@ Code name:
 
 #### Compile Dependency Updates
 
-* Updated `com.google.cloud.bigdataoss:gcs-connector:1.9.4-hadoop3` to `3.0.0`
 * Updated `com.google.guava:guava:32.1.3-jre` to `33.2.0-jre`
 * Updated `com.google.oauth-client:google-oauth-client:1.34.1` to `1.36.0`
-* Updated `com.google.protobuf:protobuf-java:3.25.1` to `4.26.1`
 * Updated `com.nimbusds:nimbus-jose-jwt:9.37.3` to `9.39.1`
 * Updated `io.dropwizard.metrics:metrics-core:4.2.23` to `4.2.25`
 * Updated `io.grpc:grpc-netty:1.60.0` to `1.63.0`
 * Updated `io.netty:netty-codec-http2:4.1.108.Final` to `4.1.109.Final`
-* Updated `org.alluxio:alluxio-core-client-hdfs:300` to `312`
 * Updated `org.apache.commons:commons-compress:1.26.0` to `1.26.1`
 * Updated `org.apache.hadoop:hadoop-aws:3.3.6` to `3.4.0`
 * Updated `org.apache.hadoop:hadoop-azure-datalake:3.3.6` to `3.4.0`
@@ -33,14 +30,6 @@ Code name:
 * Updated `org.apache.logging.log4j:log4j-1.2-api:2.22.0` to `2.23.1`
 * Updated `org.apache.logging.log4j:log4j-api:2.22.0` to `2.23.1`
 * Updated `org.apache.logging.log4j:log4j-core:2.22.0` to `2.23.1`
-* Updated `org.apache.orc:orc-core:1.9.2` to `2.0.1`
-* Updated `org.apache.spark:spark-sql_2.13:3.4.1` to `3.5.1`
-* Updated `org.glassfish.jersey.containers:jersey-container-servlet-core:2.41` to `3.1.6`
-* Updated `org.glassfish.jersey.containers:jersey-container-servlet:2.41` to `3.1.6`
-* Updated `org.glassfish.jersey.core:jersey-client:2.41` to `3.1.6`
-* Updated `org.glassfish.jersey.core:jersey-common:2.41` to `3.1.6`
-* Updated `org.glassfish.jersey.core:jersey-server:2.41` to `3.1.6`
-* Updated `org.glassfish.jersey.inject:jersey-hk2:2.41` to `3.1.6`
 * Updated `org.jetbrains.kotlin:kotlin-stdlib:1.9.21` to `1.9.24`
 * Updated `org.scala-lang:scala-library:2.13.11` to `2.13.14`
 * Updated `org.slf4j:jul-to-slf4j:2.0.9` to `2.0.13`
@@ -68,7 +57,7 @@ Code name:
 * Updated `net.alchim31.maven:scala-maven-plugin:4.8.1` to `4.9.1`
 * Updated `org.apache.maven.plugins:maven-jar-plugin:3.3.0` to `3.4.1`
 * Updated `org.apache.maven.plugins:maven-toolchains-plugin:3.1.0` to `3.2.0`
-* Updated `org.codehaus.mojo:exec-maven-plugin:3.1.1` to `3.2.1`
+* Updated `org.codehaus.mojo:exec-maven-plugin:3.1.1` to `3.2.0`
 
 ### Extension
 
