@@ -18,7 +18,7 @@ build:
   runnerOs: ubuntu-20.04
   freeDiskSpace: true
   exasolDbVersions:
-    - "8.26.0"
+    - "8.25.0"
     - "7.1.26"
   workflows:
     - name: ci-build.yml
