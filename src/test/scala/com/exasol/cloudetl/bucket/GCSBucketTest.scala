@@ -31,7 +31,8 @@ class GCSBucketTest extends AbstractBucketTest {
       bucket.validate()
     }
     assert(
-      thrown.getMessage() === "E-CSE-30: Both properties 'GCS_KEYFILE_PATH' and 'CONNECTION_NAME' are specified. Please specify only one of them."
+      thrown.getMessage() === "E-CSE-30: Both properties 'GCS_KEYFILE_PATH' and 'CONNECTION_NAME' are specified. "
+        + "Please specify only one of them."
     )
   }
 
@@ -47,7 +48,8 @@ class GCSBucketTest extends AbstractBucketTest {
       bucket.validate()
     }
     assert(
-      thrown.getMessage() === "E-CSE-31: Neither of properties 'GCS_KEYFILE_PATH' or 'CONNECTION_NAME' is specified. Please specify exactly one of them."
+      thrown.getMessage() === "E-CSE-31: Neither of properties 'GCS_KEYFILE_PATH' or 'CONNECTION_NAME' is specified. "
+        + "Please specify exactly one of them."
     )
   }
 
