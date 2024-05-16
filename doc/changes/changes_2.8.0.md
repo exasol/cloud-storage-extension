@@ -4,7 +4,8 @@ Code name: Simplify GCS Configuration
 
 ## Summary
 
-This release allows configuring Google Cloud Storage (GCS) via a `CONNECTION` instead of uploading the credentials JSON file to BucketFS. This does not expose GCP credentials in BucketFS and it is easier to configure. See the [user guide](../user_guide/user_guide.md#configure-gcp-credentials) for details.
+This release allows configuring Google Cloud Storage (GCS) via a `CONNECTION` instead of uploading the credentials JSON file to BucketFS. This avoids exposing GCP credentials as file in BucketFS and simplifies configuration. See the [user guide](../user_guide/user_guide.md#configure-gcp-credentials) for details.
+Please note for backwards compatibility you can still provide the GCS credentials as a file although CSE recommends configuring Google Cloud Storage (GCS) via a `CONNECTION`.
 
 ## Features
 
