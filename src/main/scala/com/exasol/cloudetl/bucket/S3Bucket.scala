@@ -86,6 +86,8 @@ final case class S3Bucket(path: String, params: StorageProperties) extends Bucke
       properties
     }
 
+    // Deprecation warnings can be fixed once we upgrade to Hadoop 3.3.7 / 4.0.0
+    // See https://issues.apache.org/jira/browse/HADOOP-18073
     if (isAnonymousAWSParams(mergedProperties)) {
       conf.set(
         "fs.s3a.aws.credentials.provider",
