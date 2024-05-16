@@ -737,6 +737,7 @@
                         <arg>-explaintypes</arg>
                         <arg>-Xcheckinit</arg>
                         <arg>-Xlint:_</arg>
+                        <arg>-Werror</arg>
                         <arg>-Ywarn-dead-code</arg>
                         <arg>-Ywarn-numeric-widen</arg>
                         <arg>-Ywarn-value-discard</arg>
