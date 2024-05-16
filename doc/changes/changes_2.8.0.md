@@ -1,10 +1,10 @@
-# Cloud Storage Extension 2.8.0, released 2024-??-??
+# Cloud Storage Extension 2.8.0, released 2024-05-17
 
 Code name: Simplify GCS Configuration
 
 ## Summary
 
-This release allows configuring Google Cloud Storage (GCS) via a `CONNECTION` instead of uploading the credentials JSON file to BucketFS. This does not expose GCP credentials in BucketFS and it is easier to configure.
+This release allows configuring Google Cloud Storage (GCS) via a `CONNECTION` instead of uploading the credentials JSON file to BucketFS. This does not expose GCP credentials in BucketFS and it is easier to configure. See the [user guide](../user_guide/user_guide.md#configure-gcp-credentials) for details.
 
 ## Features
 
