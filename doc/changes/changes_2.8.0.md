@@ -14,6 +14,7 @@ Code name:
 
 #### Compile Dependency Updates
 
+* Added `com.github.mwiede:jsch:0.2.17`
 * Updated `com.google.guava:guava:32.1.3-jre` to `33.2.0-jre`
 * Updated `com.google.oauth-client:google-oauth-client:1.34.1` to `1.36.0`
 * Updated `com.nimbusds:nimbus-jose-jwt:9.37.3` to `9.39.1`

@@ -179,7 +179,18 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-reload4j</artifactId>
                 </exclusion>
+                <exclusion>
+                    <!-- This is deprecated, we replace it with com.github.mwiede:jsch -->
+                    <groupId>com.jcraft</groupId>
+                    <artifactId>jsch</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <!-- Replacement for deprecated com.jcraft:jsch from org.apache.hadoop:hadoop-common -->
+            <groupId>com.github.mwiede</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.2.17</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
