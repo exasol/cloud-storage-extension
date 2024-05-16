@@ -61,19 +61,23 @@ class GCSBucketTest extends AbstractBucketTest {
   val invalidConnectionContent = Table(
     (
       "",
-      "E-IEUCS-4: Properties input string does not contain key-value assignment '='. Please make sure that key-value pairs encoded correctly."
+      "E-IEUCS-4: Properties input string does not contain key-value assignment '='. "
+        + "Please make sure that key-value pairs encoded correctly."
     ),
     (
       "wrong-format",
-      "E-IEUCS-4: Properties input string does not contain key-value assignment '='. Please make sure that key-value pairs encoded correctly."
+      "E-IEUCS-4: Properties input string does not contain key-value assignment '='. "
+        + "Please make sure that key-value pairs encoded correctly."
     ),
     (
       "wrong_key=value",
-      "E-CSE-32: The connection 'connection_info' does not contain 'GCS_KEYFILE_CONTENT' property. Please check the connection properties."
+      "E-CSE-32: The connection 'connection_info' does not contain 'GCS_KEYFILE_CONTENT' property. "
+        + "Please check the connection properties."
     ),
     (
       "GCS_KEYFILE_CONTENT=invalid_json",
-      "E-CSE-33: The connection 'connection_info' does not contain valid JSON in property 'GCS_KEYFILE_CONTENT'. Please check the connection properties."
+      "E-CSE-33: The connection 'connection_info' does not contain valid JSON in property 'GCS_KEYFILE_CONTENT'. "
+        + "Please check the connection properties."
     )
   )
   forAll(invalidConnectionContent) { (connectionContent: String, expectedErrorMessage: String) =>

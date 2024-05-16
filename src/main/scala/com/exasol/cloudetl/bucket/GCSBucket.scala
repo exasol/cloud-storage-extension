@@ -57,26 +57,24 @@ final case class GCSBucket(path: String, params: StorageProperties) extends Buck
     }
   }
 
-  private def validateConnectionProperties(): Unit = {
-    if (!properties.hasNamedConnection()) {
-      return
+  private def validateConnectionProperties(): Unit =
+    if (properties.hasNamedConnection()) {
+      val connectionName = properties.getString(CONNECTION_NAME)
+      val content = getKeyfileContentFromConnection(connectionName)
+      if (!content.trim().startsWith("{")) {
+        throw new IllegalArgumentException(
+          ExaError
+            .messageBuilder("E-CSE-33")
+            .message(
+              "The connection {{connectionName}} does not contain valid JSON in property {{GCS_KEYFILE_CONTENT}}.",
+              connectionName,
+              GCS_KEYFILE_CONTENT
+            )
+            .mitigation("Please check the connection properties.")
+            .toString()
+        )
+      }
     }
-    val connectionName = properties.getString(CONNECTION_NAME)
-    val content = getKeyfileContentFromConnection(connectionName)
-    if (!content.trim().startsWith("{")) {
-      throw new IllegalArgumentException(
-        ExaError
-          .messageBuilder("E-CSE-33")
-          .message(
-            "The connection {{connectionName}} does not contain valid JSON in property {{GCS_KEYFILE_CONTENT}}.",
-            connectionName,
-            GCS_KEYFILE_CONTENT
-          )
-          .mitigation("Please check the connection properties.")
-          .toString()
-      )
-    }
-  }
 
   /**
    * Returns the list of required property keys for Google Cloud Storage.
@@ -108,15 +106,14 @@ final case class GCSBucket(path: String, params: StorageProperties) extends Buck
     conf
   }
 
-  private def getKeyFilePath(): String = {
+  private def getKeyFilePath(): String =
     if (properties.containsKey(GCS_KEYFILE_PATH)) {
-      return properties.getString(GCS_KEYFILE_PATH)
+      properties.getString(GCS_KEYFILE_PATH)
+    } else {
+      val connectionName = properties.getString(CONNECTION_NAME)
+      val jsonContent = getKeyfileContentFromConnection(connectionName)
+      writeToTempFile(jsonContent)
     }
-    val connectionName = properties.getString(CONNECTION_NAME)
-    val jsonContent = getKeyfileContentFromConnection(connectionName)
-    val keyFilePath = writeToTempFile(jsonContent)
-    return keyFilePath
-  }
 
   private def getKeyfileContentFromConnection(connectionName: String): String = {
     def map = properties.getConnectionProperties(null)
