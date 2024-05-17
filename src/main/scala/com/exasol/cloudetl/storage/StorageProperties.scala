@@ -135,6 +135,19 @@ class StorageProperties(private val properties: Map[String, String], private val
   }
 
   /**
+   * Get the connection properties from the Exasol connection.
+   *
+   * If the connection object contains the username, it is mapped to the {@code keyForUsername}
+   * parameter. However, this value is overwritten if the provided key is available in the password
+   * string of connection object.
+   *
+   * @param keyForUsername optional key for the username
+   * @return a map of connection properties
+   */
+  final def getConnectionProperties(keyForUsername: String): Map[String, String] =
+    parseConnectionInfo(keyForUsername, exaMetadata)
+
+  /**
    * Returns a string value of key-value property pairs.
    *
    * The returned string is sorted by keys ordering.

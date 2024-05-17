@@ -150,7 +150,7 @@ downloaded jar file is the same as the checksum provided in the releases.
 To check the SHA256 result of the local jar, run the command:
 
 ```sh
-sha256sum exasol-cloud-storage-extension-2.7.12.jar
+sha256sum exasol-cloud-storage-extension-2.8.0.jar
 ```
 
 ### Building From Source
@@ -180,7 +180,7 @@ mvn clean package -DskipTests=true
 ```
 
 The assembled jar file should be located at
-`target/exasol-cloud-storage-extension-2.7.12.jar`.
+`target/exasol-cloud-storage-extension-2.8.0.jar`.
 
 ### Create an Exasol Bucket
 
@@ -202,7 +202,7 @@ for the HTTP protocol.
 Upload the jar file using curl command:
 
 ```sh
-curl -X PUT -T exasol-cloud-storage-extension-2.7.12.jar \
+curl -X PUT -T exasol-cloud-storage-extension-2.8.0.jar \
   http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/
 ```
 
@@ -234,7 +234,7 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.12.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.8.0.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
@@ -244,12 +244,12 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
   end_index DECIMAL(36, 0)
 ) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.12.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.8.0.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.12.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.8.0.jar;
 /
 ```
 
@@ -268,12 +268,12 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.12.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.8.0.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.TableDataExporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.12.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.8.0.jar;
 /
 ```
 
@@ -407,13 +407,13 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
 ) AS
   %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.12.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.8.0.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.7.12.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.8.0.jar;
 /
 ```
 
@@ -846,24 +846,11 @@ FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
 ## Google Cloud Storage
 
 Similar to Amazon S3, you need to have security credentials to access the Google
-Cloud Storage (GCP).
+Cloud Storage (GCS).
 
-For this, you need to set two properties when running the UDF:
+### Service Accounts
 
-```
-GCS_PROJECT_ID
-GCS_KEYFILE_PATH
-```
-
-The **GCS_PROJECT_ID** is a Google Cloud Platform (GCP) project identifier. It
-is a unique string for your project which is composed of the project name and a
-randomly assigned number. Please check out the GCP [creating and managing
-projects][gcp-projects] page for more information.
-
-The **GCS_KEYFILE_PATH** is a BucketFS path to the GCP private key file
-location. It is usually stored in the JSON format.
-
-A Google Cloud Platform service account is an identity that an application can
+A Google Cloud Platform (GCP) service account is an identity that an application can
 use to authenticate and perform authorized tasks on Google cloud resources. It
 is a special type of Google account intended to represent a non-human user that
 needs to access Google APIs. Please check out the GCP [introduction to service
@@ -878,18 +865,38 @@ generating [service account private key][gcp-auth-keys] documentation pages.
 Once the service account is generated, give enough permissions to it to access
 the Google Cloud Storage objects and download its private key as a JSON file.
 
-Upload a GCP service account key file to a BucketFS bucket:
+### Configure GCP Credentials
 
-```bash
-curl -X PUT -T gcp-<PROJECT_ID>-service-keyfile.json \
-  http://w:<PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/
+**Note:** Starting with version 2.8.0, cloud-storage-extension allows configuring GCP credentials via
+a `CONNECTION`. Previous versions expected the GCP service account private key as a file in BucketFS
+and property `GCS_KEYFILE_PATH`. While this is still possible we recommend using a `CONNECTION` because
+this does not expose GCP credentials in BucketFS and it is easier to configure.
+
+Create a named connection object containing the GCP service account private key as JSON:
+
+```sql
+CREATE OR REPLACE CONNECTION GCS_CONNECTION
+TO ''
+USER ''
+IDENTIFIED BY 'GCS_KEYFILE_CONTENT={
+  "type": "service_account",
+  "project_id": "<PROJECT_ID>",
+  "private_key_id": "<PRIVATE_KEY_ID>",
+  "private_key": "-----BEGIN PRIVATE KEY-----\n<PRIVATE_KEY>\n-----END PRIVATE KEY-----\n",
+  "client_email": "<CLIENT_EMAIL>",
+  "client_id": "<CLIENT_ID>",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/<CERTIFICATE>",
+  "universe_domain": "googleapis.com"
+}';
 ```
 
-Make sure that the bucket is **secure** and only **readable by users** who run
-the Exasol Cloud Storage Extension scripts. Please check out the [BucketFS
-Access
-Control](https://docs.exasol.com/database_concepts/bucketfs/access_control.htm)
-documentation for more information.
+To run the UDF you also need the **GCS_PROJECT_ID**. This is a Google Cloud Platform (GCP) project identifier. It
+is a unique string for your project which is composed of the project name and a
+randomly assigned number. Please check out the GCP [creating and managing
+projects][gcp-projects] page for more information.
 
 ### Run Import Statement
 
@@ -898,8 +905,8 @@ IMPORT INTO <schema>.<table>
 FROM SCRIPT CLOUD_STORAGE_EXTENSION.IMPORT_PATH WITH
   BUCKET_PATH      = 'gs://<GCS_STORAGE_PATH>/import/avro/data/*'
   DATA_FORMAT      = 'AVRO'
-  GCS_PROJECT_ID   = '<GCP_PORJECT_ID>'
-  GCS_KEYFILE_PATH = '/buckets/bfsdefault/<BUCKET>/gcp-<PROJECT_ID>-service-keyfile.json';
+  GCS_PROJECT_ID   = '<GCS_PROJECT_ID>'
+  CONNECTION_NAME  = 'GCS_CONNECTION';
 ```
 
 ### Run Export Statement
@@ -909,8 +916,8 @@ EXPORT <schema>.<table>
 INTO SCRIPT CLOUD_STORAGE_EXTENSION.EXPORT_PATH WITH
   BUCKET_PATH      = 'gs://<GCS_STORAGE_PATH>/export/parquet/data/'
   DATA_FORMAT      = 'PARQUET'
-  GCS_PROJECT_ID   = '<GCP_PORJECT_ID>'
-  GCS_KEYFILE_PATH = '/buckets/bfsdefault/<BUCKET>/gcp-<PROJECT_ID>-service-keyfile.json';
+  GCS_PROJECT_ID   = '<GCS_PROJECT_ID>'
+  CONNECTION_NAME  = 'GCS_CONNECTION';
 ```
 
 ## Azure Blob Storage

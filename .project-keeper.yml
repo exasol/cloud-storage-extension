@@ -12,13 +12,13 @@ version:
   fromSource: pom.xml
 linkReplacements:
 excludes:
+  # Project is written in Scala, no need to test with next Java version
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
-  - "E-PK-CORE-17: Missing required file: 'release_config.yml'"
 build:
   runnerOs: ubuntu-20.04
   freeDiskSpace: true
   exasolDbVersions:
-    - "8.24.0"
+    - "8.25.0"
     - "7.1.26"
   workflows:
     - name: ci-build.yml
