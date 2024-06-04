@@ -1,6 +1,6 @@
 # Cloud Storage Extension 2.8.1, released 2024-06-04
 
-Code name:
+Code name: Security update - fix for CVE-2024-36114
 
 ## Summary
 
