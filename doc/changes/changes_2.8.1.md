@@ -1,12 +1,15 @@
-# Cloud Storage Extension 2.8.1, released 2024-??-??
+# Cloud Storage Extension 2.8.1, released 2024-06-04
 
-Code name:
+ode name: Security update - fix for CVE-2024-36114
 
 ## Summary
 
-## Features
+Fixed CVE-2024-36114  https://github.com/advisories/GHSA-973x-65j7-xcf4 via transitive version update.
+Updated dependencies.
 
-* ISSUE_NUMBER: description
+## Security
+
+* #318: CVE-2024-36114: io.airlift:aircompressor:jar:0.21:compile
 
 ## Dependency Updates
 
