@@ -1,6 +1,6 @@
 # Cloud Storage Extension 2.8.1, released 2024-06-04
 
-ode name: Security update - fix for CVE-2024-36114
+Code name:
 
 ## Summary
 
@@ -18,7 +18,6 @@ Updated dependencies.
 #### Compile Dependency Updates
 
 * Added `io.airlift:aircompressor:0.27`
-* Updated `org.apache.orc:orc-core:1.9.2` to `2.0.1`
 
 #### Plugin Dependency Updates
 
