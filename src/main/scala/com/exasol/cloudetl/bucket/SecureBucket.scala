@@ -27,7 +27,7 @@ trait SecureBucket extends LazyLogging { self: Bucket =>
       throw new BucketValidationException(
         ExaError
           .messageBuilder("E-CSE-5")
-          .message("Using credentials as parameters is forbidded.")
+          .message("Using credentials as parameters is forbidden.")
           .mitigation("Please use an Exasol named connection object via CONNECTION_NAME property.")
           .toString()
       )

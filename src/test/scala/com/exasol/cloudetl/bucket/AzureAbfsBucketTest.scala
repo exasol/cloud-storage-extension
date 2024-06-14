@@ -36,6 +36,21 @@ class AzureAbfsBucketTest extends AbstractBucketTest {
     assert(thrown.getMessage().startsWith("E-CSE-20"))
     assert(thrown.getMessage().contains(s"path '$path' scheme is not valid."))
   }
+  // https://github.com/MicrosoftDocs/fabric-docs/blob/main/docs/onelake/onelake-access-api.md
+  // "abfss://container1@account1.dfs.core.windows.net/data/"
+  // The account name is always onelake
+  // The container name is your workspace name.
+  //
+  // From the docs
+  // -> abfs[s]://<workspace>@onelake.dfs.fabric.microsoft.com/<item>.<itemtype>/<path>/<fileName>
+  test("apply throws if Azure OneLake path does not return valid Bucket") {
+    val path = "abfss://workspacename@onelake.dfs.fabric.microsoft.com/item.itemtype/path/filename"
+    val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret")
+    properties = defaultProperties ++ Map(PATH -> path, "CONNECTION_NAME" -> "connection_info")
+
+    val bucket = getBucket(properties, exaMetadata)
+    assert(bucket.isInstanceOf[AzureAbfsBucket])
+  }
 
   test("apply throws if no connection name is provided") {
     properties = defaultProperties

@@ -57,19 +57,27 @@ final case class AzureAbfsBucket(path: String, params: StorageProperties) extend
       .get(AZURE_ACCOUNT_NAME)
       .getOrElse(accountAndContainer.accountName)
     val secretKey = mergedProperties.getString(AZURE_SECRET_KEY)
-
-    conf.set(s"fs.azure.account.key.$accountName.dfs.core.windows.net", secretKey)
+    if (path.contains("fabric")) {
+        conf.set(s"fs.azure.account.key.$accountName.dfs.fabric.microsoft.com", secretKey)
+    } else {
+        conf.set(s"fs.azure.account.key.$accountName.dfs.core.windows.net", secretKey)
+    }
 
     conf
   }
 
   // Intentionally copy-paste, duplicate count: 2. Please, refactor when
   // it reaches 3+.
+  // Fabric / OneLake: .dfs.fabric.microsoft.com
   private[this] final val AZURE_ABFS_PATH_REGEX: Regex =
     """abfss?://(.*)@([^.]+).dfs.core.windows.net/(.*)$""".r
+  private[this] final val AZURE_ABFS_ONELAKE_PATH_REGEX: Regex =
+    """abfss?://(.*)@([^.]+)\.dfs\.fabric\.microsoft\.com/(.*)$""".r
 
   private[this] def regexParsePath(path: String): AccountAndContainer = path match {
     case AZURE_ABFS_PATH_REGEX(containerName, accountName, _) =>
+      AccountAndContainer(accountName, containerName)
+    case AZURE_ABFS_ONELAKE_PATH_REGEX(containerName, accountName, _) =>
       AccountAndContainer(accountName, containerName)
     case _ =>
       throw new BucketValidationException(
