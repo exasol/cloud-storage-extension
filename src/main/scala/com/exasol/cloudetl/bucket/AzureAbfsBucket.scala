@@ -57,8 +57,11 @@ final case class AzureAbfsBucket(path: String, params: StorageProperties) extend
       .get(AZURE_ACCOUNT_NAME)
       .getOrElse(accountAndContainer.accountName)
     val secretKey = mergedProperties.getString(AZURE_SECRET_KEY)
-
-    conf.set(s"fs.azure.account.key.$accountName.dfs.core.windows.net", secretKey)
+    if (path.contains("fabric")) {
+        conf.set(s"fs.azure.account.key.$accountName.dfs.fabric.microsoft.com", secretKey)
+    } else {
+        conf.set(s"fs.azure.account.key.$accountName.dfs.core.windows.net", secretKey)
+    }
 
     conf
   }
