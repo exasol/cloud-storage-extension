@@ -19,7 +19,7 @@ This release fixes vulnerability CVE-2024-25638 in `dnsjava:dnsjava:jar:3.4.0:co
 * Updated `com.exasol:parquet-io-java:2.0.8` to `2.0.10`
 * Updated `com.github.mwiede:jsch:0.2.17` to `0.2.18`
 * Updated `com.google.guava:guava:33.2.0-jre` to `33.2.1-jre`
-* Updated `com.google.protobuf:protobuf-java:3.25.1` to `4.27.2`
+* Updated `com.google.protobuf:protobuf-java:3.25.1` to `3.25.4`
 * Updated `com.nimbusds:nimbus-jose-jwt:9.39.1` to `9.40`
 * Added `dnsjava:dnsjava:3.6.1`
 * Updated `io.dropwizard.metrics:metrics-core:4.2.25` to `4.2.26`
