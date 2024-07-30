@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.8.2, released 2024-07-29
+# Cloud Storage Extension 2.8.2, released 2024-07-30
 
 Code name: Fix CVE-2024-25638 in `dnsjava:dnsjava:jar:3.4.0:compile`
 
