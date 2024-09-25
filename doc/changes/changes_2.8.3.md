@@ -24,7 +24,7 @@ Any project that parses untrusted Protocol Buffers data containing an arbitrary 
 
 #### Compile Dependency Updates
 
-* Removed `com.google.protobuf:protobuf-java:3.25.4`
+* Updated `com.google.protobuf:protobuf-java:3.25.4` to `3.25.5`
 
 #### Test Dependency Updates
 
