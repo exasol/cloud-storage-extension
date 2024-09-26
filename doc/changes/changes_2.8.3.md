@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.8.3, released 2024-09-25
+# Cloud Storage Extension 2.8.3, released 2024-09-26
 
 Code name: Fixed vulnerability CVE-2024-7254 in com.google.protobuf:protobuf-java:jar:3.19.6:test
 
