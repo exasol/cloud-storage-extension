@@ -16,20 +16,20 @@
 | [snappy-java][10]                          | [Apache-2.0][11]                                                                                                                                                                                    |
 | [Import Export UDF Common Scala][12]       | [MIT License][13]                                                                                                                                                                                   |
 | [error-reporting-java][14]                 | [MIT License][15]                                                                                                                                                                                   |
-| Apache Hadoop Common                       | [Apache License, Version 2.0][3]                                                                                                                                                                    |
+| Apache Hadoop Common                       | [Apache-2.0][3]                                                                                                                                                                                     |
 | [dnsjava][16]                              | [BSD-3-Clause][17]                                                                                                                                                                                  |
 | [JSch][18]                                 | [Revised BSD][19]; [Revised BSD][20]; [ISC][21]                                                                                                                                                     |
-| Apache Hadoop Amazon Web Services support  | [Apache License, Version 2.0][3]                                                                                                                                                                    |
+| Apache Hadoop Amazon Web Services support  | [Apache-2.0][3]                                                                                                                                                                                     |
 | [Apache ZooKeeper - Server][22]            | [Apache License, Version 2.0][3]                                                                                                                                                                    |
-| Apache Hadoop Azure support                | [Apache License, Version 2.0][3]                                                                                                                                                                    |
-| Apache Hadoop Azure Data Lake support      | [Apache License, Version 2.0][3]                                                                                                                                                                    |
-| Apache Hadoop HDFS                         | [Apache License, Version 2.0][3]                                                                                                                                                                    |
-| Apache Hadoop HDFS Client                  | [Apache License, Version 2.0][3]                                                                                                                                                                    |
+| Apache Hadoop Azure support                | [Apache-2.0][3]                                                                                                                                                                                     |
+| Apache Hadoop Azure Data Lake support      | [Apache-2.0][3]                                                                                                                                                                                     |
+| Apache Hadoop HDFS                         | [Apache-2.0][3]                                                                                                                                                                                     |
+| Apache Hadoop HDFS Client                  | [Apache-2.0][3]                                                                                                                                                                                     |
 | [Kotlin Stdlib][23]                        | [The Apache License, Version 2.0][6]                                                                                                                                                                |
 | [Alluxio Core - Client - HDFS][24]         | [Apache License][25]                                                                                                                                                                                |
 | [Metrics Core][26]                         | [Apache License 2.0][11]                                                                                                                                                                            |
 | [Protocol Buffers [Core]][27]              | [BSD-3-Clause][17]                                                                                                                                                                                  |
-| [gcs-connector-hadoop3][28]                | [Apache License, Version 2.0][6]                                                                                                                                                                    |
+| [gcs-connector][28]                        | [Apache License, Version 2.0][3]                                                                                                                                                                    |
 | [Google OAuth Client Library for Java][29] | [The Apache Software License, Version 2.0][3]                                                                                                                                                       |
 | [ORC Core][30]                             | [Apache License, Version 2.0][3]                                                                                                                                                                    |
 | [aircompressor][31]                        | [Apache License 2.0][11]                                                                                                                                                                            |
@@ -37,7 +37,7 @@
 | [Apache Commons Compress][33]              | [Apache-2.0][3]                                                                                                                                                                                     |
 | [Nimbus JOSE+JWT][34]                      | [The Apache Software License, Version 2.0][3]                                                                                                                                                       |
 | [delta-core][35]                           | [Apache-2.0][36]                                                                                                                                                                                    |
-| [Spark Project SQL][37]                    | [Apache 2.0 License][38]                                                                                                                                                                            |
+| [Spark Project SQL][37]                    | [Apache-2.0][38]                                                                                                                                                                                    |
 | [Apache Ivy][39]                           | [The Apache Software License, Version 2.0][6]                                                                                                                                                       |
 | [Parquet for Java][40]                     | [MIT License][41]                                                                                                                                                                                   |
 | [JUL to SLF4J bridge][42]                  | [MIT License][43]                                                                                                                                                                                   |
@@ -59,7 +59,7 @@
 | [scalatest][62]                            | [the Apache License, ASL Version 2.0][36] |
 | [scalatestplus-mockito][63]                | [Apache-2.0][36]                          |
 | [mockito-core][64]                         | [MIT][65]                                 |
-| [Hamcrest][66]                             | [BSD License 3][67]                       |
+| [Hamcrest][66]                             | [BSD-3-Clause][67]                        |
 | [testcontainers-scala-scalatest][68]       | [The MIT License (MIT)][65]               |
 | [Testcontainers :: Localstack][69]         | [MIT][70]                                 |
 | [Test containers for Exasol on Docker][71] | [MIT License][72]                         |
@@ -144,7 +144,7 @@
 [25]: https://github.com/alluxio/alluxio/blob/master/LICENSE
 [26]: https://metrics.dropwizard.io/metrics-core
 [27]: https://developers.google.com/protocol-buffers/protobuf-java/
-[28]: https://github.com/GoogleCloudPlatform/BigData-interop/gcs-connector/
+[28]: https://github.com/GoogleCloudDataproc/hadoop-connectors/gcs-connector
 [29]: https://github.com/googleapis/google-oauth-java-client/google-oauth-client
 [30]: https://orc.apache.org/orc-core
 [31]: https://github.com/airlift/aircompressor
@@ -183,7 +183,7 @@
 [64]: https://github.com/mockito/mockito
 [65]: https://opensource.org/licenses/MIT
 [66]: http://hamcrest.org/JavaHamcrest/
-[67]: http://opensource.org/licenses/BSD-3-Clause
+[67]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
 [68]: https://github.com/testcontainers/testcontainers-scala
 [69]: https://java.testcontainers.org
 [70]: http://opensource.org/licenses/MIT
