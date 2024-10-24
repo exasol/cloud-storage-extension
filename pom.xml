@@ -3,20 +3,20 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>cloud-storage-extension</artifactId>
-    <version>2.8.3</version>
+    <version>2.8.4</version>
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>
     <parent>
         <artifactId>cloud-storage-extension-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.8.3</version>
+        <version>2.8.4</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
         <scala.version>2.13.11</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
-        <hadoop.version>3.3.6</hadoop.version>
+        <hadoop.version>3.4.1</hadoop.version>
         <jersey.version>2.43</jersey.version>
         <log4j.version>2.23.1</log4j.version>
         <logback.version>1.5.6</logback.version>
@@ -446,9 +446,10 @@
             <version>0.27</version>
         </dependency>
         <dependency>
+            <!-- Update transitive dependency of org.apache.spark:spark-core to fix CVE-2024-47561 -->
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
-            <version>1.11.3</version>
+            <version>1.11.4</version>
             <exclusions>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -544,6 +545,13 @@
             <groupId>org.apache.ivy</groupId>
             <artifactId>ivy</artifactId>
             <version>2.5.2</version>
+        </dependency>
+        <dependency>
+            <!-- Upgrade transitive dependency of spark-sql to fix CVE-2023-33546 -->
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>3.1.12</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -864,11 +872,10 @@
                         <!-- Vulnerability in org.apache.spark:spark-sql_2.13.jar:3.4.1 -->
                         <!-- From transitive org.codehaus.janino:janino:3.1.9 dependency -->
                         <!-- CWE-787: Out-of-bounds Write (5.5); https://ossindex.sonatype.org/vulnerability/CVE-2023-33546 -->
-                        <exclude>CVE-2023-33546</exclude>
+                        <!--                        <exclude>CVE-2023-33546</exclude>-->
                         <!-- Vulnerabilities in fr.turri:aXMLRPC:1.13.0:test -->
                         <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (9.8); -->
                         <!-- Used in tests only. -->
-                        <exclude>CVE-2020-36641</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
@@ -891,7 +898,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>4.3.3</version>
+                <version>4.4.0</version>
                 <executions>
                     <execution>
                         <goals>
