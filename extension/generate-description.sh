@@ -20,7 +20,12 @@ fi
 readonly complete_path="${all_built_files[0]}"
 file_name=$(basename "$complete_path")
 readonly file_name
-file_size_bytes=$(stat -c%s "$complete_path")
+case $(uname -s) in
+  Darwin*)
+    file_size_bytes=$(stat -f %z "$complete_path");;
+  *)
+    file_size_bytes=$(stat -c%s "$complete_path");;
+esac
 readonly file_size_bytes
 
 version=
