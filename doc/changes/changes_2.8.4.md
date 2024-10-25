@@ -14,13 +14,8 @@ Code name:
 
 #### Compile Dependency Updates
 
+* Added `commons-io:commons-io:2.17.0`
 * Updated `org.apache.avro:avro:1.11.3` to `1.11.4`
-* Updated `org.apache.hadoop:hadoop-aws:3.3.6` to `3.4.1`
-* Updated `org.apache.hadoop:hadoop-azure-datalake:3.3.6` to `3.4.1`
-* Updated `org.apache.hadoop:hadoop-azure:3.3.6` to `3.4.1`
-* Updated `org.apache.hadoop:hadoop-common:3.3.6` to `3.4.1`
-* Updated `org.apache.hadoop:hadoop-hdfs-client:3.3.6` to `3.4.1`
-* Updated `org.apache.hadoop:hadoop-hdfs:3.3.6` to `3.4.1`
 * Added `org.codehaus.janino:janino:3.1.12`
 
 #### Plugin Dependency Updates

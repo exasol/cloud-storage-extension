@@ -188,6 +188,12 @@
             </exclusions>
         </dependency>
         <dependency>
+            <!-- Override version from org.apache.hadoop:hadoop-common to fix CVE-2024-47554 -->
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.17.0</version>
+        </dependency>
+        <dependency>
             <!-- Override version 2.1.7 from org.apache.hadoop:hadoop-common to fix CVE-2023-33546-->
             <artifactId>dnsjava</artifactId>
             <groupId>dnsjava</groupId>
@@ -869,13 +875,8 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
-                        <!-- Vulnerability in org.apache.spark:spark-sql_2.13.jar:3.4.1 -->
-                        <!-- From transitive org.codehaus.janino:janino:3.1.9 dependency -->
-                        <!-- CWE-787: Out-of-bounds Write (5.5); https://ossindex.sonatype.org/vulnerability/CVE-2023-33546 -->
-                        <!--                        <exclude>CVE-2023-33546</exclude>-->
-                        <!-- Vulnerabilities in fr.turri:aXMLRPC:1.13.0:test -->
-                        <!-- CWE-611: Improper Restriction of XML External Entity Reference ('XXE') (9.8); -->
-                        <!-- Used in tests only. -->
+                        <!-- Vulnerability in org.apache.hadoop:hadoop-common:jar:3.3.6:compile -->
+                        <exclude>CVE-2024-23454</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
