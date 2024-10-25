@@ -50,7 +50,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: |-
+          java-version: |
             11
             17
           cache: maven
@@ -142,7 +142,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: |-
+          java-version: |
             11
             17
           cache: maven
