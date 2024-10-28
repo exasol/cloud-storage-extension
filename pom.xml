@@ -899,14 +899,13 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>4.3.3</version>
+                <version>4.4.0</version>
                 <executions>
-<!-- Commented out as after 4.4.0 PK upgrade, assembly-plugin is not executed -->
-<!--                    <execution>-->
-<!--                        <goals>-->
-<!--                            <goal>verify</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
+                    <execution>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

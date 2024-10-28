@@ -25,12 +25,12 @@ jobs:
       fail-fast: false
       matrix:
         exasol_db_version: [
-          8.26.0,
+          8.31.0,
           7.1.29
         ]
         
     env: {
-      DEFAULT_EXASOL_DB_VERSION: 8.26.0
+      DEFAULT_EXASOL_DB_VERSION: 8.31.0
     }
     steps:
       - name: Free Disk Space
@@ -50,7 +50,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: |
+          java-version: |-
             11
             17
           cache: maven
@@ -142,7 +142,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: |
+          java-version: |-
             11
             17
           cache: maven
