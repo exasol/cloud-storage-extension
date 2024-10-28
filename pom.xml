@@ -724,6 +724,13 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <finalName>exasol-${project.artifactId}-${project.version}</finalName>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
                 <version>4.9.1</version>
@@ -860,13 +867,6 @@
                 <configuration>
                     <useModulePath>false</useModulePath>
                     <argLine>--add-exports java.base/sun.nio.ch=ALL-UNNAMED</argLine>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <finalName>exasol-${project.artifactId}-${project.version}</finalName>
                 </configuration>
             </plugin>
             <plugin>
