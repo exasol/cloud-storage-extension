@@ -1013,7 +1013,7 @@
                     </execution>
                     <execution>
                         <id>build-extension</id>
-                        <phase>package</phase>
+                        <phase>post-package</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
