@@ -237,7 +237,7 @@ class AvroDataImporterIT extends BaseDataImporter {
 
   test("imports array of doubles") {
     val schema = getBasicSchema("""{"type":"array","items":"double"}""")
-    AvroChecker(schema, "VARCHAR(20)", "array_doubles")
+    AvroChecker(schema, "VARCHAR(60)", "array_doubles")
       .withInputValues(List(java.util.List.of(1.01, 3.14, 2.71)))
       .assertResultSet(
         table()
