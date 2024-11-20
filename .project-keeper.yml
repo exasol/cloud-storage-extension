@@ -18,8 +18,8 @@ build:
   runnerOs: ubuntu-20.04
   freeDiskSpace: true
   exasolDbVersions:
-    - "8.31.0"
-    - "7.1.29"
+    - "8.32.0"
+    - "7.1.30"
   workflows:
     - name: ci-build.yml
       stepCustomizations:
@@ -42,13 +42,13 @@ build:
               npm run build
               npm run test
               npm run lint
-        # Omit clean to speedup build
         - action: REPLACE
           stepId: build-pk-verify
           content:
             name: Run tests and build with Maven
             id: build-pk-verify
             run: |
+              # Omit clean to speedup build
               mvn --batch-mode verify \
                   -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
                   -DtrimStackTrace=false \
