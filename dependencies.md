@@ -61,14 +61,14 @@
 | [scalatest][65]                            | [the Apache License, ASL Version 2.0][37] |
 | [scalatestplus-mockito][66]                | [Apache-2.0][37]                          |
 | [mockito-core][67]                         | [MIT][68]                                 |
-| [Hamcrest][69]                             | [BSD License 3][70]                       |
+| [Hamcrest][69]                             | [BSD-3-Clause][70]                        |
 | [testcontainers-scala-scalatest][71]       | [The MIT License (MIT)][68]               |
 | [Testcontainers :: Localstack][72]         | [MIT][73]                                 |
 | [Test containers for Exasol on Docker][74] | [MIT License][75]                         |
 | [Test Database Builder for Java][76]       | [MIT License][77]                         |
 | [Matcher for SQL Result Sets][78]          | [MIT License][79]                         |
 | [EqualsVerifier \| release normal jar][80] | [Apache License, Version 2.0][3]          |
-| [JUnit Jupiter Engine][81]                 | [Eclipse Public License v2.0][82]         |
+| [JUnit Jupiter API][81]                    | [Eclipse Public License v2.0][82]         |
 | [Maven Project Version Getter][83]         | [MIT License][84]                         |
 | [Extension integration tests library][85]  | [MIT License][86]                         |
 
@@ -192,7 +192,7 @@
 [67]: https://github.com/mockito/mockito
 [68]: https://opensource.org/licenses/MIT
 [69]: http://hamcrest.org/JavaHamcrest/
-[70]: http://opensource.org/licenses/BSD-3-Clause
+[70]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
 [71]: https://github.com/testcontainers/testcontainers-scala
 [72]: https://java.testcontainers.org
 [73]: http://opensource.org/licenses/MIT

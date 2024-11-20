@@ -17,9 +17,9 @@
         <scala.version>2.13.11</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
         <hadoop.version>3.3.6</hadoop.version>
-        <jersey.version>2.43</jersey.version>
-        <log4j.version>2.23.1</log4j.version>
-        <logback.version>1.5.6</logback.version>
+        <jersey.version>2.45</jersey.version>
+        <log4j.version>2.24.1</log4j.version>
+        <logback.version>1.5.12</logback.version>
         <sonar.sources>src/main/,extension/src/</sonar.sources>
         <sonar.exclusions>extension/src/*.test.ts</sonar.exclusions>
         <sonar.tests>src/test/,extension/src</sonar.tests>
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.15.0</version>
+            <version>3.17.0</version>
         </dependency>
         <dependency>
             <!-- Upgraded to fix CVE-2024-29131 and CVE-2024-29133 -->
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.2.1-jre</version>
+            <version>33.3.1-jre</version>
         </dependency>
         <dependency>
             <!-- Upgrading this will cause failing integration tests -->
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
-            <version>1.1.10.5</version>
+            <version>1.1.10.7</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -191,19 +191,19 @@
             <!-- Override version from org.apache.hadoop:hadoop-common to fix CVE-2024-47554 -->
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.17.0</version>
+            <version>2.18.0</version>
         </dependency>
         <dependency>
             <!-- Override version 2.1.7 from org.apache.hadoop:hadoop-common to fix CVE-2023-33546-->
             <artifactId>dnsjava</artifactId>
             <groupId>dnsjava</groupId>
-            <version>3.6.1</version>
+            <version>3.6.2</version>
         </dependency>
         <dependency>
             <!-- Replacement for deprecated com.jcraft:jsch from org.apache.hadoop:hadoop-common -->
             <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.2.18</version>
+            <version>0.2.21</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -409,7 +409,7 @@
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
-            <version>4.2.26</version>
+            <version>4.2.28</version>
         </dependency>
         <dependency>
             <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2024-7254 -->
@@ -431,7 +431,7 @@
         <dependency>
             <groupId>org.apache.orc</groupId>
             <artifactId>orc-core</artifactId>
-            <version>1.9.4</version>
+            <version>1.9.5</version>
             <exclusions>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -455,9 +455,9 @@
             <!-- Update transitive dependency of org.apache.spark:spark-core to fix CVE-2024-47561 -->
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
-            <version>1.11.4</version>
+            <version>1.12.0</version>
             <exclusions>
-                <!-- exluded because of duplicate-finder-maven-plugin -->
+                <!-- excluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
                     <artifactId>jackson-core</artifactId>
@@ -472,13 +472,13 @@
             <!-- Upgrade transitive dependency of org.apache.avro:avro to fix CVE-2024-26308 -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.26.2</version>
+            <version>1.27.1</version>
         </dependency>
         <dependency>
             <!-- Pinned to fix CVE-2023-52428 -->
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>9.40</version>
+            <version>9.47</version>
         </dependency>
         <dependency>
             <groupId>io.delta</groupId>
@@ -562,12 +562,12 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>parquet-io-java</artifactId>
-            <version>2.0.10</version>
+            <version>2.0.12</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>2.0.13</version>
+            <version>2.0.16</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -611,7 +611,7 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
-            <version>2.2</version>
+            <version>3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -623,7 +623,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.20.0</version>
+            <version>1.20.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -647,12 +647,12 @@
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.16.1</version>
+            <version>3.17.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
+            <artifactId>junit-jupiter-api</artifactId>
             <version>5.10.3</version>
             <scope>test</scope>
         </dependency>
@@ -665,7 +665,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>extension-manager-integration-test-java</artifactId>
-            <version>0.5.12</version>
+            <version>0.5.13</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -786,7 +786,7 @@
                         <javacArg>${java.version}</javacArg>
                         <javacArg>-deprecation</javacArg>
                         <javacArg>-parameters</javacArg>
-                        <javacArg>-Xlint:all</javacArg>
+                        <javacArg>-Xlint:all,-path</javacArg>
                     </javacArgs>
                     <jvmArgs>
                         <jvmArg>-Xmx2048m</jvmArg>
