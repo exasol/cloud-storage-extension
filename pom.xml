@@ -61,10 +61,10 @@
             <version>1.65.1</version>
         </dependency>
         <dependency>
-            <!-- Upgrade nettty-codec-http2 to fix CVE-2024-29025 -->
+            <!-- Upgrade nettty-codec-http2 to fix CVE-2024-29025 & CVE-2024-47535 in io.netty:netty-common -->
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http2</artifactId>
-            <version>4.1.112.Final</version>
+            <version>4.1.115.Final</version>
         </dependency>
         <dependency>
             <groupId>org.xerial.snappy</groupId>
@@ -211,10 +211,10 @@
             <version>${hadoop.version}</version>
         </dependency>
         <dependency>
-            <!-- override version 3.6.3 to fix vulnerability CVE-2023-42503 and CVE-2024-23944 -->
+            <!-- override version 3.6.3 to fix vulnerability CVE-2023-42503, CVE-2024-23944 & CVE-2024-51504 -->
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
-            <version>3.9.2</version>
+            <version>3.9.3</version>
         </dependency>
         <dependency>
             <!-- Upgrade transitive dependency of org.apache.zookeeper:zookeeper to fix CVE-2023-6378 -->
