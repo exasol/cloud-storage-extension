@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.8.4, released 2024-11-20
+# Cloud Storage Extension 2.8.4, released 2024-11-21
 
 Code name: Fix vulnerabilities CVE-2024-23454 & CVE-2024-47561 & CVE-2024-47554 & CVE-2024-51504 & CVE-2024-47535
 
@@ -77,6 +77,7 @@ This release fixes the following vulnerabilities in dependencies:
 * Updated `org.apache.maven.plugins:maven-site-plugin:3.3` to `3.9.1`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.5` to `3.5.1`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.16.2` to `2.17.1`
+* Removed `org.itsallcode:openfasttrace-maven-plugin:1.6.2`
 
 ### Extension
 

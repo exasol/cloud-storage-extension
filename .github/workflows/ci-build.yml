@@ -76,6 +76,7 @@ jobs:
       - name: Build extension
         id: build-extension
         run: |
+          # Packaged JAR is required for building the extension
           mvn --batch-mode package -DskipTests
           cd extension
           npm ci
@@ -84,12 +85,7 @@ jobs:
           npm run lint
       - name: Run tests and build with Maven
         id: build-pk-verify
-        run: |
-          # Omit clean to speedup build
-          mvn --batch-mode verify \
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
-              -DtrimStackTrace=false \
-              -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
+        run: mvn --batch-mode verify -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
         env: {
           EXASOL_DB_VERSION: '${{ matrix.exasol_db_version }}'
         }

@@ -104,10 +104,18 @@ jobs:
         env: {
           GITHUB_TOKEN: '${{ github.token }}'
         }
+      - name: Build extension
+        id: build-extension
+        run: |
+          # Packaged JAR is required for building the extension
+          mvn --batch-mode package -DskipTests
+          cd extension
+          npm ci
+          npm run build
       - {
         name: Build project,
         id: build,
-        run: mvn --batch-mode -DskipTests clean verify
+        run: mvn --batch-mode -DskipTests verify
       }
       - {
         name: List secret GPG keys,
