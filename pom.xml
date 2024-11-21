@@ -909,24 +909,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.itsallcode</groupId>
-                <artifactId>openfasttrace-maven-plugin</artifactId>
-                <version>1.6.2</version>
-                <executions>
-                    <execution>
-                        <id>trace-requirements</id>
-                        <goals>
-                            <goal>trace</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <reportOutputFormat>html</reportOutputFormat>
-                    <reportVerbosity>ALL</reportVerbosity>
-                    <reportShowOrigin>true</reportShowOrigin>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.scalastyle</groupId>
                 <artifactId>scalastyle-maven-plugin</artifactId>
                 <version>1.0.0</version>
