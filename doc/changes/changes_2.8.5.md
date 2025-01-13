@@ -1,9 +1,10 @@
-# Cloud Storage Extension 2.8.5, released 2025-??-??
+# Cloud Storage Extension 2.8.5, released 2025-01-13
 
 Code name: Security fixes
 
 ## Summary
-Fixes two CVEs in transitive dependencies: CVE-2024-12801 and CVE-2024-12798
+Fixes two CVEs in transitive dependencies: CVE-2024-12801 and CVE-2024-12798.
+Project Keeper was upgraded to 2.5.0.
 
 ## Security
 * #338: CVE-2024-12801: ch.qos.logback:logback-core:jar:1.5.12:runtime
