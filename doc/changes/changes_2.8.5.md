@@ -3,14 +3,20 @@
 Code name: Security fixes
 
 ## Summary
+Fixes two CVEs in transitive dependencies: CVE-2024-12801 and CVE-2024-12798
 
-## Features
-
-* ISSUE_NUMBER: description
+## Security
+* #338: CVE-2024-12801: ch.qos.logback:logback-core:jar:1.5.12:runtime
+* #337: CVE-2024-12798: ch.qos.logback:logback-core:jar:1.5.12:runtime
 
 ## Dependency Updates
 
 ### Cloud Storage Extension
+
+#### Runtime Dependency Updates
+
+* Updated `ch.qos.logback:logback-classic:1.5.12` to `1.5.16`
+* Updated `ch.qos.logback:logback-core:1.5.12` to `1.5.16`
 
 #### Plugin Dependency Updates
 

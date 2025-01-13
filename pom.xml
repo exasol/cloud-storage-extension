@@ -19,7 +19,7 @@
         <hadoop.version>3.3.6</hadoop.version>
         <jersey.version>2.45</jersey.version>
         <log4j.version>2.24.1</log4j.version>
-        <logback.version>1.5.12</logback.version>
+        <logback.version>1.5.16</logback.version>
         <sonar.sources>src/main/,extension/src/</sonar.sources>
         <sonar.exclusions>extension/src/*.test.ts</sonar.exclusions>
         <sonar.tests>src/test/,extension/src</sonar.tests>
