@@ -16,7 +16,7 @@
     <properties>
         <scala.version>2.13.11</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
-        <hadoop.version>3.4.0</hadoop.version>
+        <hadoop.version>3.3.6</hadoop.version>
         <jersey.version>2.45</jersey.version>
         <log4j.version>2.24.1</log4j.version>
         <logback.version>1.5.16</logback.version>
