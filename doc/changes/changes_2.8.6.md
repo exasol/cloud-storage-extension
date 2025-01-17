@@ -1,12 +1,13 @@
-# Cloud Storage Extension 2.8.6, released 2025-??-??
+# Cloud Storage Extension 2.8.6, released 2025-01-17
 
-Code name:
+Code name: Security fixes in NPM components
 
 ## Summary
+Fixed CVE-2024-4068 in braces
 
-## Features
+## Security
 
-* ISSUE_NUMBER: description
+* #340: Fix CVE-2024-4068 in braces
 
 ## Dependency Updates
 
