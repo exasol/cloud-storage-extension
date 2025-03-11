@@ -64,7 +64,7 @@
             <!-- Upgrade nettty-codec-http2 to fix CVE-2024-29025 & CVE-2024-47535 in io.netty:netty-common -->
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http2</artifactId>
-            <version>4.1.115.Final</version>
+            <version>4.1.119.Final</version>
         </dependency>
         <dependency>
             <groupId>org.xerial.snappy</groupId>
