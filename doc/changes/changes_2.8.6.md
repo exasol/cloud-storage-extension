@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.8.6, released 2025-03-??
+# Cloud Storage Extension 2.8.6, released 2025-03-11
 
 Code name: Security fixes in NPM components, netty upgrade
 
