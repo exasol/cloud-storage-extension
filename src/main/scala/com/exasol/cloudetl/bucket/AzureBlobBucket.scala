@@ -79,10 +79,10 @@ final case class AzureBlobBucket(path: String, params: StorageProperties) extend
   }
 
   private[this] final val AZURE_BLOB_PATH_REGEX: Regex =
-    """wasbs?://(.*)@([^.]+).blob.core.windows.net/(.*)$""".r
+    """wasbs?://(.*)@([^.]+).([^/]+)/(.*)$""".r
 
   private[this] def regexParsePath(path: String): AccountAndContainer = path match {
-    case AZURE_BLOB_PATH_REGEX(containerName, accountName, _) =>
+    case AZURE_BLOB_PATH_REGEX(containerName, accountName, _, _) =>
       AccountAndContainer(accountName, containerName)
     case _ =>
       throw new BucketValidationException(
