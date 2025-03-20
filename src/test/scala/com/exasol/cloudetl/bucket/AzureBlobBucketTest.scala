@@ -27,7 +27,7 @@ class AzureBlobBucketTest extends AbstractBucketTest {
   }
 
   test("apply throws if Azure Blob path is not valid") {
-    val path = "wasb://container@account1.blob.windows.net/data/"
+    val path = "wasbst://container@account1.blob.windows.net/data/"
     val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret")
     properties = defaultProperties ++ Map(PATH -> path, "CONNECTION_NAME" -> "connection_info")
     val thrown = intercept[BucketValidationException] {
