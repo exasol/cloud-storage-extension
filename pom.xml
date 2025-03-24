@@ -877,6 +877,8 @@
                     <excludeVulnerabilityIds>
                         <!-- Vulnerability in org.apache.hadoop:hadoop-common:jar:3.3.6:compile -->
                         <exclude>CVE-2024-23454</exclude>
+                        <!-- [CVE-2024-55551] CWE-94: Improper Control of Generation of Code ('Code Injection') (9.2) -->
+                        <exclude>CVE-2024-55551</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
