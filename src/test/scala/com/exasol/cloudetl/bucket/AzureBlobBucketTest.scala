@@ -73,6 +73,17 @@ class AzureBlobBucketTest extends AbstractBucketTest {
     assertAzureBlobBucket(bucket, Map("fs.azure.account.key.account1.blob.core.windows.net" -> "secret"))
   }
 
+  test("check private DNS urls are handled properly") {
+    properties = Map(
+      PATH -> "wasbs://container1@account1.custom.domain/orc-data/",
+      FORMAT -> "ORC",
+      "CONNECTION_NAME" -> "connection_info",
+    )
+    val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret")
+    val bucket = getBucket(properties, exaMetadata)
+    assertAzureBlobBucket(bucket, Map("fs.azure.account.key.account1.blob.core.windows.net" -> "secret"))
+  }
+
   test("apply returns sas token from password of connection with account, container name") {
     properties = defaultProperties ++ Map(
       "AZURE_ACCOUNT_NAME" -> "account1",
