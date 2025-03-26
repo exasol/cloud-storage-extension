@@ -77,7 +77,7 @@ class AzureBlobBucketTest extends AbstractBucketTest {
     properties = Map(
       PATH -> "wasbs://container1@account1.custom.domain/orc-data/",
       FORMAT -> "ORC",
-      "CONNECTION_NAME" -> "connection_info",
+      "CONNECTION_NAME" -> "connection_info"
     )
     val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret")
     val bucket = getBucket(properties, exaMetadata)
