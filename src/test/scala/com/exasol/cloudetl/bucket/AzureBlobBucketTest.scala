@@ -27,7 +27,7 @@ class AzureBlobBucketTest extends AbstractBucketTest {
   }
 
   test("apply throws if Azure Blob path is not valid") {
-    val path = "wasb://container@account1.blob.windows.net/data/"
+    val path = "wasbs://container@wrongdomain/data/"
     val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret")
     properties = defaultProperties ++ Map(PATH -> path, "CONNECTION_NAME" -> "connection_info")
     val thrown = intercept[BucketValidationException] {
@@ -71,6 +71,17 @@ class AzureBlobBucketTest extends AbstractBucketTest {
     val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret")
     val bucket = getBucket(properties, exaMetadata)
     assertAzureBlobBucket(bucket, Map("fs.azure.account.key.account1.blob.core.windows.net" -> "secret"))
+  }
+
+  test("check private DNS urls are handled properly") {
+    properties = Map(
+      PATH -> "wasbs://container1@account1.custom.domain/orc-data/",
+      FORMAT -> "ORC",
+      "CONNECTION_NAME" -> "connection_info"
+    )
+    val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret")
+    val bucket = getBucket(properties, exaMetadata)
+    assertAzureBlobBucket(bucket, Map("fs.azure.account.key.account1.custom.domain" -> "secret"))
   }
 
   test("apply returns sas token from password of connection with account, container name") {
