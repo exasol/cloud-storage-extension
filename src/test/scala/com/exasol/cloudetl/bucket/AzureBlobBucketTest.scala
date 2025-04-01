@@ -81,7 +81,7 @@ class AzureBlobBucketTest extends AbstractBucketTest {
     )
     val exaMetadata = mockConnectionInfo("", "AZURE_SECRET_KEY=secret")
     val bucket = getBucket(properties, exaMetadata)
-    assertAzureBlobBucket(bucket, Map("fs.azure.account.key.account1.blob.core.windows.net" -> "secret"))
+    assertAzureBlobBucket(bucket, Map("fs.azure.account.key.account1.custom.domain" -> "secret"))
   }
 
   test("apply returns sas token from password of connection with account, container name") {
