@@ -6,14 +6,7 @@ on:
       main
     ]
     
-  pull_request:
-    types: [
-      opened,
-      synchronize,
-      reopened,
-      ready_for_review
-    ]
-    
+  pull_request: null
 jobs:
   matrix-build:
     runs-on: ubuntu-20.04
