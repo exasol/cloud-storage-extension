@@ -206,6 +206,9 @@ curl -X PUT -T exasol-cloud-storage-extension-2.8.6.jar \
   http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/
 ```
 
+> :warning: Please check the curl command line parameters carefully. If `-T` is omitted, an empty JAR
+> file might be created in BucketFS.
+
 You can also check out the Exasol [BucketFS Client](https://github.com/exasol/bucketfs-client/) as an
 alternative option to upload jar files to buckets in BucketFS.
 
