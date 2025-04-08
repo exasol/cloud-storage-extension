@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.8.7, released 2025-04-07
+# Cloud Storage Extension 2.8.7, released 2025-04-08
 
 Code name: Update test dependencies, added extra note in documentation
 
