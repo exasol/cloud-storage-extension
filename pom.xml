@@ -3,23 +3,23 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>cloud-storage-extension</artifactId>
-    <version>2.8.7</version>
+    <version>2.8.8</version>
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>
     <parent>
         <artifactId>cloud-storage-extension-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.8.7</version>
+        <version>2.8.8</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
-        <scala.version>2.13.11</scala.version>
+        <scala.version>2.13.16</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
-        <hadoop.version>3.3.6</hadoop.version>
-        <jersey.version>2.45</jersey.version>
-        <log4j.version>2.24.1</log4j.version>
-        <logback.version>1.5.16</logback.version>
+        <hadoop.version>3.4.1</hadoop.version>
+        <jersey.version>3.1.10</jersey.version>
+        <log4j.version>2.24.3</log4j.version>
+        <logback.version>1.5.18</logback.version>
         <sonar.sources>src/main/,extension/src/</sonar.sources>
         <sonar.exclusions>extension/src/*.test.ts</sonar.exclusions>
         <sonar.tests>src/test/,extension/src</sonar.tests>
@@ -41,7 +41,7 @@
             <!-- Upgraded to fix CVE-2024-29131 and CVE-2024-29133 -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-configuration2</artifactId>
-            <version>2.11.0</version>
+            <version>2.12.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -52,19 +52,19 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.3.1-jre</version>
+            <version>33.4.8-jre</version>
         </dependency>
         <dependency>
             <!-- Upgrading this will cause failing integration tests -->
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.65.1</version>
+            <version>1.72.0</version>
         </dependency>
         <dependency>
             <!-- Upgrade nettty-codec-http2 to fix CVE-2024-29025 & CVE-2024-47535 in io.netty:netty-common -->
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http2</artifactId>
-            <version>4.1.119.Final</version>
+            <version>4.2.1.Final</version>
         </dependency>
         <dependency>
             <groupId>org.xerial.snappy</groupId>
@@ -191,19 +191,19 @@
             <!-- Override version from org.apache.hadoop:hadoop-common to fix CVE-2024-47554 -->
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.18.0</version>
+            <version>2.19.0</version>
         </dependency>
         <dependency>
             <!-- Override version 2.1.7 from org.apache.hadoop:hadoop-common to fix CVE-2023-33546-->
             <artifactId>dnsjava</artifactId>
             <groupId>dnsjava</groupId>
-            <version>3.6.2</version>
+            <version>3.6.3</version>
         </dependency>
         <dependency>
             <!-- Replacement for deprecated com.jcraft:jsch from org.apache.hadoop:hadoop-common -->
             <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.2.21</version>
+            <version>2.27.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -318,13 +318,13 @@
             <!-- Upgrade transitive dependency of hadoop-hdfs-client to fix CVE-2022-24329 -->
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
-            <version>1.9.25</version>
+            <version>2.1.21</version>
         </dependency>
         <dependency>
             <!-- Upgrading this will cause failing integration tests -->
             <groupId>org.alluxio</groupId>
             <artifactId>alluxio-core-client-hdfs</artifactId>
-            <version>300</version>
+            <version>313</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -409,29 +409,29 @@
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
-            <version>4.2.28</version>
+            <version>4.2.30</version>
         </dependency>
         <dependency>
             <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2024-7254 -->
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.25.5</version>
+            <version>4.31.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
             <artifactId>gcs-connector</artifactId>
-            <version>1.9.4-hadoop3</version>
+            <version>3.1.2</version>
         </dependency>
         <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2020-7692 and CVE-2021-22573 -->
         <dependency>
             <groupId>com.google.oauth-client</groupId>
             <artifactId>google-oauth-client</artifactId>
-            <version>1.36.0</version>
+            <version>1.39.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.orc</groupId>
             <artifactId>orc-core</artifactId>
-            <version>1.9.5</version>
+            <version>2.1.2</version>
             <exclusions>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -449,7 +449,7 @@
         <dependency>
             <groupId>io.airlift</groupId>
             <artifactId>aircompressor</artifactId>
-            <version>0.27</version>
+            <version>2.0.2</version>
         </dependency>
         <dependency>
             <!-- Update transitive dependency of org.apache.spark:spark-core to fix CVE-2024-47561 -->
@@ -478,7 +478,7 @@
             <!-- Pinned to fix CVE-2023-52428 -->
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>9.47</version>
+            <version>10.3</version>
         </dependency>
         <dependency>
             <groupId>io.delta</groupId>
@@ -488,7 +488,7 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${scala.compat.version}</artifactId>
-            <version>3.4.1</version>
+            <version>4.0.0-preview2</version>
             <!-- Upgrading will let unit tests fail -->
             <exclusions>
                 <exclusion>
@@ -550,7 +550,7 @@
             <!-- Upgrade transitive dependency of spark-sql to fix CVE-2022-46751 -->
             <groupId>org.apache.ivy</groupId>
             <artifactId>ivy</artifactId>
-            <version>2.5.2</version>
+            <version>2.5.3</version>
         </dependency>
         <dependency>
             <!-- Upgrade transitive dependency of spark-sql to fix CVE-2023-33546 -->
@@ -562,12 +562,12 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>parquet-io-java</artifactId>
-            <version>2.0.12</version>
+            <version>2.0.13</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>2.0.16</version>
+            <version>2.0.17</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -605,7 +605,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.12.0</version>
+            <version>5.17.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -617,25 +617,25 @@
         <dependency>
             <groupId>com.dimafeng</groupId>
             <artifactId>testcontainers-scala-scalatest_${scala.compat.version}</artifactId>
-            <version>0.41.4</version>
+            <version>0.43.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.20.3</version>
+            <version>1.21.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>7.1.4</version>
+            <version>7.1.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>test-db-builder-java</artifactId>
-            <version>3.6.0</version>
+            <version>3.6.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -647,25 +647,25 @@
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.17.3</version>
+            <version>4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.10.3</version>
+            <version>5.12.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>maven-project-version-getter</artifactId>
-            <version>1.2.0</version>
+            <version>1.2.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>extension-manager-integration-test-java</artifactId>
-            <version>0.5.13</version>
+            <version>0.5.16</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -901,7 +901,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>5.0.0</version>
+                <version>5.1.0</version>
                 <executions>
                     <execution>
                         <goals>
