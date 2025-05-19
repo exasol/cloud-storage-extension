@@ -629,7 +629,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>7.1.1</version>
+            <version>7.1.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -875,6 +875,10 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
+                        <!-- Vulnerability in org.apache.hadoop:hadoop-common:jar:3.3.6:compile -->
+<!--                        <exclude>CVE-2024-23454</exclude>-->
+                        <!-- Need to wait for proper fix in exasol-jdbc -->
+                        <exclude>CVE-2024-55551</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
@@ -897,7 +901,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>4.5.0</version>
+                <version>5.0.0</version>
                 <executions>
                     <execution>
                         <goals>
