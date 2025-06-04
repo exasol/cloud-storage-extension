@@ -8,7 +8,7 @@ import com.exasol.dbbuilder.dialects.Table
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.client.builder.AwsClientBuilder
-import com.amazonaws.services.s3.AmazonS3
+import software.amazon.awssdk.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model._
 import org.apache.hadoop.fs.{Path => HPath}
