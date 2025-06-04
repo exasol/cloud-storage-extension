@@ -15,7 +15,7 @@ excludes:
   # Project is written in Scala, no need to test with next Java version
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
 build:
-  runnerOs: ubuntu-20.04
+  runnerOs: ubuntu-22.04
   freeDiskSpace: true
   exasolDbVersions:
     - "8.32.0"
