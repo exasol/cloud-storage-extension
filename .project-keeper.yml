@@ -45,6 +45,13 @@ build:
               npm run build
               npm run test
               npm run lint
+        - action: INSERT_AFTER
+          job: matrix-build
+          stepId: build-extension
+          content:
+            name: Fix VM Crash in UDFs
+            id: fix-vm-crash
+            run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
         - action: REPLACE
           job: matrix-build
           stepId: build-pk-verify

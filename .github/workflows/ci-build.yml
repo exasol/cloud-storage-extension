@@ -90,6 +90,11 @@ jobs:
           npm run build
           npm run test
           npm run lint
+      - {
+        name: Fix VM Crash in UDFs,
+        id: fix-vm-crash,
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      }
       - name: Run tests and build with Maven
         id: build-pk-verify
         run: mvn --batch-mode verify -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
