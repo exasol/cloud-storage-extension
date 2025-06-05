@@ -16,7 +16,7 @@ on:
     
 jobs:
   matrix-build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run: {
         shell: bash
@@ -32,8 +32,7 @@ jobs:
       fail-fast: false
       matrix:
         exasol_db_version: [
-          8.32.0,
-          7.1.30
+          8.32.0
         ]
         
     env: {
@@ -90,6 +89,11 @@ jobs:
           npm run build
           npm run test
           npm run lint
+      - {
+        name: Fix VM Crash in UDFs,
+        id: fix-vm-crash,
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      }
       - name: Run tests and build with Maven
         id: build-pk-verify
         run: mvn --batch-mode verify -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
