@@ -1,12 +1,15 @@
-# Cloud Storage Extension 2.8.8, released 2025-??-??
+# Cloud Storage Extension 2.8.8, released 2025-06-05
 
-Code name:
+Code name: CVE fixes in transitive dependencies.
 
 ## Summary
 
+Fixed two CVEs in transitive dependencies: CVE-2025-48734 and CVE-2025-47436.
+
 ## Features
 
-* ISSUE_NUMBER: description
+* #351: CVE-2025-47436: org.apache.orc:orc-core:jar:1.9.5:compile
+* #353: CVE-2025-48734: commons-beanutils:commons-beanutils:jar:1.9.4:compile
 
 ## Dependency Updates
 
