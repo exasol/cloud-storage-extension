@@ -1,6 +1,6 @@
 # Cloud Storage Extension 2.8.8, released 2025-06-05
 
-Code name: CVE fixes in transitive dependencies.
+Code name: CVE fixes in transitive dependencies on top of 2.8.7
 
 ## Summary
 
