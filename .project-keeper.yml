@@ -19,7 +19,8 @@ build:
   freeDiskSpace: true
   exasolDbVersions:
     - "8.32.0"
-    - "7.1.30"
+# Disabled, see this for details: https://github.com/exasol/cloud-storage-extension/issues/356
+#    - "7.1.30"
   workflows:
     - name: ci-build.yml
       stepCustomizations:
