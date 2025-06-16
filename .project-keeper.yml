@@ -15,11 +15,12 @@ excludes:
   # Project is written in Scala, no need to test with next Java version
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
 build:
-  runnerOs: ubuntu-20.04
+  runnerOs: ubuntu-22.04
   freeDiskSpace: true
   exasolDbVersions:
     - "8.32.0"
-    - "7.1.30"
+# Disabled, see this for details: https://github.com/exasol/cloud-storage-extension/issues/356
+#    - "7.1.30"
   workflows:
     - name: ci-build.yml
       stepCustomizations:
@@ -45,6 +46,13 @@ build:
               npm run build
               npm run test
               npm run lint
+        - action: INSERT_AFTER
+          job: matrix-build
+          stepId: build-extension
+          content:
+            name: Fix VM Crash in UDFs
+            id: fix-vm-crash
+            run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
         - action: REPLACE
           job: matrix-build
           stepId: build-pk-verify
