@@ -10,12 +10,23 @@ Code name:
 
 ## Dependency Updates
 
-### Extension
+### Cloud Storage Extension
 
-#### Development Dependency Updates
+#### Compile Dependency Updates
 
-* Updated `eslint:9.14.0` to `9.18.0`
-* Updated `@types/node:^22.9.1` to `^22.10.7`
-* Updated `typescript-eslint:^8.14.0` to `^8.20.0`
-* Updated `typescript:^5.6.3` to `^5.7.3`
-* Updated `esbuild:^0.24.0` to `^0.24.2`
+* Removed `commons-beanutils:commons-beanutils:1.11.0`
+* Updated `org.apache.hadoop:hadoop-aws:3.3.6` to `3.4.1`
+* Updated `org.apache.hadoop:hadoop-azure-datalake:3.3.6` to `3.4.1`
+* Updated `org.apache.hadoop:hadoop-azure:3.3.6` to `3.4.1`
+* Updated `org.apache.hadoop:hadoop-common:3.3.6` to `3.4.1`
+* Updated `org.apache.hadoop:hadoop-hdfs-client:3.3.6` to `3.4.1`
+* Updated `org.apache.hadoop:hadoop-hdfs:3.3.6` to `3.4.1`
+* Updated `org.apache.orc:orc-core:1.9.6` to `1.9.5`
+
+#### Test Dependency Updates
+
+* Added `software.amazon.awssdk:s3:2.27.21`
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:project-keeper-maven-plugin:5.1.0` to `5.2.1`
