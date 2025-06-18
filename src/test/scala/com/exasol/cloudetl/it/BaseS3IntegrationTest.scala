@@ -55,13 +55,15 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
       .replaceAll("127.0.0.1", getS3ContainerNetworkGatewayAddress())
   }
 
-  def deleteBucketObjects(bucketName: String): Unit =
+  def deleteBucketObjects(bucketName: String): Unit = {
     listObjects(bucketName).forEach(s3_obj => s3.deleteObject(
       DeleteObjectRequest.builder()
         .bucket(bucketName)
         .key(s3_obj.key())
         .build()
     ))
+    ()
+  }
 
   def listObjects(bucketName: String): java.util.List[S3Object] = {
     s3.listObjectsV2(
@@ -77,6 +79,7 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
         .bucket(bucketName)
         .build()
     )
+    ()
   }
 
   def createS3ConnectionObject(): Unit = {
@@ -114,6 +117,7 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
         .build(),
       RequestBody.fromFile(new File(file.toUri))
     )
+    ()
   }
 
   def createBucket(bucket: String): Unit = {
