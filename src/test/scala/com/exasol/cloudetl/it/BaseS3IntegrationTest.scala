@@ -56,13 +56,15 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
   }
 
   def deleteBucketObjects(bucketName: String): Unit = {
-    listObjects(bucketName).forEach(s3_obj => s3.deleteObject(
-      DeleteObjectRequest.builder()
-        .bucket(bucketName)
-        .key(s3_obj.key())
-        .build()
-    ))
-    ()
+    listObjects(bucketName).forEach(s3_obj => {
+      s3.deleteObject(
+        DeleteObjectRequest.builder()
+          .bucket(bucketName)
+          .key(s3_obj.key())
+          .build()
+      )
+      ()
+    })
   }
 
   def listObjects(bucketName: String): java.util.List[S3Object] = {
