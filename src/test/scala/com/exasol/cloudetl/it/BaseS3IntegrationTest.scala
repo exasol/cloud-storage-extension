@@ -117,7 +117,11 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
   }
 
   def createBucket(bucket: String): Unit = {
-    s3.createBucket(new CreateBucketRequest(bucket))
+    s3.createBucket(
+      CreateBucketRequest.builder()
+        .bucket(bucket)
+        .build()
+    )
     ()
   }
 
