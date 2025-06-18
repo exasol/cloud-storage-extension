@@ -70,7 +70,6 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <!-- Upgrading this will cause failing integration tests -->
