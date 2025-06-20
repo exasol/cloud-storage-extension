@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.9.0, released 2025-06-20
+# Cloud Storage Extension 2.9.0, released 2025-??-??
 
 Code name: Upgrade of hadoop libraries
 
