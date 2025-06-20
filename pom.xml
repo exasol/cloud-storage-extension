@@ -898,8 +898,6 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
-                        <!-- Vulnerability in org.apache.hadoop:hadoop-common:jar:3.3.6:compile -->
-                        <!--                        <exclude>CVE-2024-23454</exclude>-->
                         <!-- Need to wait for proper fix in exasol-jdbc -->
                         <exclude>CVE-2024-55551</exclude>
                     </excludeVulnerabilityIds>

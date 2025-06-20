@@ -42,13 +42,15 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
   def prepareS3Client(): Unit = {
     val endpoint = s3Container.getEndpointOverride(LocalStackContainer.Service.S3)
     val region = Region.of(s3Container.getRegion)
-    val s3_config = S3Configuration.builder()
+    val s3_config = S3Configuration
+      .builder()
       .pathStyleAccessEnabled(true)
       .chunkedEncodingEnabled(false)
       .build()
     val s3_creds = AwsBasicCredentials.create(s3Container.getAccessKey, s3Container.getSecretKey)
 
-    s3 = S3Client.builder()
+    s3 = S3Client
+      .builder()
       .region(region)
       .endpointOverride(endpoint)
       .serviceConfiguration(s3_config)
@@ -59,29 +61,30 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
       .replaceAll("127.0.0.1", getS3ContainerNetworkGatewayAddress())
   }
 
-  def deleteBucketObjects(bucketName: String): Unit = {
-    listObjects(bucketName).forEach(s3_obj => {
+  def deleteBucketObjects(bucketName: String): Unit =
+    listObjects(bucketName).forEach { s3_obj =>
       s3.deleteObject(
-        DeleteObjectRequest.builder()
+        DeleteObjectRequest
+          .builder()
           .bucket(bucketName)
           .key(s3_obj.key())
           .build()
       )
       ()
-    })
-  }
+    }
 
-  def listObjects(bucketName: String): java.util.List[S3Object] = {
+  def listObjects(bucketName: String): java.util.List[S3Object] =
     s3.listObjectsV2(
-      ListObjectsV2Request.builder()
+      ListObjectsV2Request
+        .builder()
         .bucket(bucketName)
         .build()
     ).contents()
-  }
 
   def deleteBucket(bucketName: String): Unit = {
     s3.deleteBucket(
-      DeleteBucketRequest.builder()
+      DeleteBucketRequest
+        .builder()
         .bucket(bucketName)
         .build()
     )
@@ -98,10 +101,11 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
 
   def getAWSSecretKey(): String = s3Container.getSecretKey
 
-  def doesBucketExists(bucket: String): Boolean = {
+  def doesBucketExists(bucket: String): Boolean =
     try {
       s3.headBucket(
-        HeadBucketRequest.builder()
+        HeadBucketRequest
+          .builder()
           .bucket(bucket)
           .build()
       )
@@ -109,7 +113,6 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
     } catch {
       case _: S3Exception => false
     }
-  }
 
   def uploadFileToS3(bucket: String, file: HPath): Unit = {
     if (!doesBucketExists(bucket)) {
@@ -117,7 +120,8 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
     }
     logger.debug(s"Uploading file $file to bucket $bucket")
     s3.putObject(
-      PutObjectRequest.builder()
+      PutObjectRequest
+        .builder()
         .bucket(bucket)
         .key(file.getName)
         .build(),
@@ -128,7 +132,8 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
 
   def createBucket(bucket: String): Unit = {
     s3.createBucket(
-      CreateBucketRequest.builder()
+      CreateBucketRequest
+        .builder()
         .bucket(bucket)
         .build()
     )
