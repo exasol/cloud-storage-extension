@@ -1,16 +1,20 @@
 package com.exasol.cloudetl
 
 import java.io.File
+
 import com.exasol.dbbuilder.dialects.Table
-import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
-import software.amazon.awssdk.regions.Region
-import software.amazon.awssdk.services.s3.{S3Client, S3Configuration}
-import software.amazon.awssdk.services.s3.model._
+
 import org.apache.hadoop.fs.{Path => HPath}
 import org.testcontainers.containers.localstack.LocalStackContainer
 import org.testcontainers.containers.localstack.LocalStackContainer.Service.S3
 import org.testcontainers.utility.DockerImageName
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.core.sync.RequestBody
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.S3Configuration
+import software.amazon.awssdk.services.s3.model._
 
 trait BaseS3IntegrationTest extends BaseIntegrationTest {
   val INT_MIN: Int = Int.MinValue
