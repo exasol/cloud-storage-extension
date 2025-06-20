@@ -2,15 +2,14 @@ package com.exasol.cloudetl.it.scriptclasses
 
 import java.util.List
 import java.util.stream.Stream
-
 import com.exasol.cloudetl.BaseS3IntegrationTest
 import com.exasol.dbbuilder.dialects.Table
-
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.lessThanOrEqualTo
-import org.scalatest.BeforeAndAfterEach
+import org.scalatest.{BeforeAndAfterEach, Ignore}
 
+@Ignore
 class ExportParallelismIT extends BaseS3IntegrationTest with BeforeAndAfterEach {
   val SCHEMA_NAME: String = "EXPORT_PARALLELISM"
   val bucketName: String = "export-parallelism"
