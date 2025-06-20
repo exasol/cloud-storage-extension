@@ -1,12 +1,14 @@
-# Cloud Storage Extension 2.9.0, released 2025-??-??
+# Cloud Storage Extension 2.9.0, released 2025-06-20
 
-Code name:
+Code name: Upgrade of hadoop libraries
 
 ## Summary
+This version upgrades hadoop from 3.3.6 to the latest 3.4.1, which fixes several CVEs in transient dependencies and
+leverages all the improvements the recent hadoop libs have.
 
 ## Features
 
-* ISSUE_NUMBER: description
+* #310: Upgrade spark and hadoop versions
 
 ## Dependency Updates
 
