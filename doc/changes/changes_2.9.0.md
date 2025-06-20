@@ -14,7 +14,6 @@ Code name:
 
 #### Compile Dependency Updates
 
-* Removed `commons-beanutils:commons-beanutils:1.11.0`
 * Updated `org.apache.hadoop:hadoop-aws:3.3.6` to `3.4.1`
 * Updated `org.apache.hadoop:hadoop-azure-datalake:3.3.6` to `3.4.1`
 * Updated `org.apache.hadoop:hadoop-azure:3.3.6` to `3.4.1`
