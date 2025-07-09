@@ -16,6 +16,7 @@ leverages all the improvements the recent hadoop libs have.
 
 #### Compile Dependency Updates
 
+* Removed `com.google.guava:guava:33.3.1-jre`
 * Updated `org.apache.hadoop:hadoop-aws:3.3.6` to `3.4.1`
 * Updated `org.apache.hadoop:hadoop-azure-datalake:3.3.6` to `3.4.1`
 * Updated `org.apache.hadoop:hadoop-azure:3.3.6` to `3.4.1`
