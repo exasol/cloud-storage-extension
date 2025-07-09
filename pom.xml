@@ -61,11 +61,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>33.3.1-jre</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.google.guava</groupId>-->
+<!--            <artifactId>guava</artifactId>-->
+<!--            <version>33.3.1-jre</version>-->
+<!--        </dependency>-->
         <!-- awssdk-->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
