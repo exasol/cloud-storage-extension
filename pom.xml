@@ -71,24 +71,24 @@
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
         </dependency>
-        <dependency>
-            <!-- Upgrading this will cause failing integration tests -->
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-netty</artifactId>
-            <version>1.65.1</version>
-        </dependency>
-        <dependency>
-            <!-- Upgrade nettty-codec-http2 to fix CVE-2024-29025 & CVE-2024-47535 in io.netty:netty-common -->
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http2</artifactId>
-            <version>4.1.119.Final</version>
-        </dependency>
-        <dependency>
-            <!-- Upgrade commons-beanutils to fix CVE-2025-48734 -->
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.11.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            &lt;!&ndash; Upgrading this will cause failing integration tests &ndash;&gt;-->
+<!--            <groupId>io.grpc</groupId>-->
+<!--            <artifactId>grpc-netty</artifactId>-->
+<!--            <version>1.65.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            &lt;!&ndash; Upgrade nettty-codec-http2 to fix CVE-2024-29025 & CVE-2024-47535 in io.netty:netty-common &ndash;&gt;-->
+<!--            <groupId>io.netty</groupId>-->
+<!--            <artifactId>netty-codec-http2</artifactId>-->
+<!--            <version>4.1.119.Final</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            &lt;!&ndash; Upgrade commons-beanutils to fix CVE-2025-48734 &ndash;&gt;-->
+<!--            <groupId>commons-beanutils</groupId>-->
+<!--            <artifactId>commons-beanutils</artifactId>-->
+<!--            <version>1.11.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
@@ -181,9 +181,13 @@
                     <groupId>org.apache.hadoop.thirdparty</groupId>
                     <artifactId>hadoop-shaded-guava</artifactId>
                 </exclusion>
+<!--                <exclusion>-->
+<!--                    <groupId>org.apache.hadoop.thirdparty</groupId>-->
+<!--                    <artifactId>hadoop-shaded-protobuf_3_7</artifactId>-->
+<!--                </exclusion>-->
                 <exclusion>
                     <groupId>org.apache.hadoop.thirdparty</groupId>
-                    <artifactId>hadoop-shaded-protobuf_3_7</artifactId>
+                    <artifactId>hadoop-shaded-protobuf_3_25</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>ch.qos.reload4j</groupId>
@@ -232,6 +236,12 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-aws</artifactId>
             <version>${hadoop.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>software.amazon.awssdk</groupId>
+                    <artifactId>bundle</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <!-- override version 3.6.3 to fix vulnerability CVE-2023-42503, CVE-2024-23944 & CVE-2024-51504 -->
