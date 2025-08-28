@@ -16,7 +16,10 @@ leverages all the improvements the recent hadoop libs have.
 
 #### Compile Dependency Updates
 
+* Added `com.google.code.gson:gson:2.13.1`
 * Removed `io.grpc:grpc-netty:1.65.1`
+* Updated `io.netty:netty-codec-http2:4.1.119.Final` to `4.2.4.Final`
+* Updated `org.apache.commons:commons-lang3:3.17.0` to `3.18.0`
 * Updated `org.apache.hadoop:hadoop-aws:3.3.6` to `3.4.1`
 * Updated `org.apache.hadoop:hadoop-azure-datalake:3.3.6` to `3.4.1`
 * Updated `org.apache.hadoop:hadoop-azure:3.3.6` to `3.4.1`

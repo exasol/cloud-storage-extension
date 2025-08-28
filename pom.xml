@@ -47,7 +47,13 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.17.0</version>
+            <version>3.18.0</version>
+        </dependency>
+        <dependency>
+            <!-- Upgraded to fix CVE-2025-53864 -->
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.1</version>
         </dependency>
         <dependency>
             <!-- Upgraded to fix CVE-2024-29131 and CVE-2024-29133 -->
@@ -85,7 +91,7 @@
             <!-- Upgrade nettty-codec-http2 to fix CVE-2024-29025 & CVE-2024-47535 in io.netty:netty-common -->
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http2</artifactId>
-            <version>4.1.119.Final</version>
+            <version>4.2.4.Final</version>
         </dependency>
         <dependency>
             <!-- Upgrade commons-beanutils to fix CVE-2025-48734 -->
