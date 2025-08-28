@@ -81,12 +81,12 @@
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3-transfer-manager</artifactId>
         </dependency>
-        <!--        <dependency>-->
-        <!--            &lt;!&ndash; Upgrading this will cause failing integration tests &ndash;&gt;-->
-        <!--            <groupId>io.grpc</groupId>-->
-        <!--            <artifactId>grpc-netty</artifactId>-->
-        <!--            <version>1.65.1</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <!-- Upgrading this will cause failing integration tests -->
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty</artifactId>
+            <version>1.65.1</version>
+        </dependency>
         <dependency>
             <!-- Upgrade nettty-codec-http2 to fix CVE-2024-29025 & CVE-2024-47535 in io.netty:netty-common -->
             <groupId>io.netty</groupId>
@@ -401,10 +401,10 @@
                     <groupId>org.apache.logging.log4j</groupId>
                     <artifactId>log4j-core</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>io.grpc</groupId>
-                    <artifactId>grpc-core</artifactId>
-                </exclusion>
+<!--                <exclusion>-->
+<!--                    <groupId>io.grpc</groupId>-->
+<!--                    <artifactId>grpc-core</artifactId>-->
+<!--                </exclusion>-->
                 <exclusion>
                     <!-- ignore to avoid vulnerability CVE-2023-46120 in version 5.5.3-->
                     <groupId>com.rabbitmq</groupId>
