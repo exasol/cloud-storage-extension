@@ -71,6 +71,10 @@
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
         </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3-transfer-manager</artifactId>
+        </dependency>
         <!--        <dependency>-->
         <!--            &lt;!&ndash; Upgrading this will cause failing integration tests &ndash;&gt;-->
         <!--            <groupId>io.grpc</groupId>-->
