@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.9.0, released 2025-??-??
+# Cloud Storage Extension 2.9.0, released 2025-08-29
 
 Code name: Upgrade of hadoop libraries
 
@@ -17,7 +17,7 @@ leverages all the improvements the recent hadoop libs have.
 #### Compile Dependency Updates
 
 * Added `com.google.code.gson:gson:2.13.1`
-* Updated `io.netty:netty-codec-http2:4.1.119.Final` to `4.2.4.Final`
+* Updated `io.netty:netty-codec-http2:4.1.119.Final` to `4.1.124.Final`
 * Updated `org.apache.commons:commons-lang3:3.17.0` to `3.18.0`
 * Updated `org.apache.hadoop:hadoop-aws:3.3.6` to `3.4.1`
 * Updated `org.apache.hadoop:hadoop-azure-datalake:3.3.6` to `3.4.1`
@@ -26,8 +26,8 @@ leverages all the improvements the recent hadoop libs have.
 * Updated `org.apache.hadoop:hadoop-hdfs-client:3.3.6` to `3.4.1`
 * Updated `org.apache.hadoop:hadoop-hdfs:3.3.6` to `3.4.1`
 * Updated `org.apache.orc:orc-core:1.9.6` to `1.9.5`
-* Added `software.amazon.awssdk:s3-transfer-manager:2.27.21`
-* Added `software.amazon.awssdk:s3:2.27.21`
+* Added `software.amazon.awssdk:s3-transfer-manager:2.32.31`
+* Added `software.amazon.awssdk:s3:2.32.31`
 
 #### Plugin Dependency Updates
 
