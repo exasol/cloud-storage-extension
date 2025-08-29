@@ -10,9 +10,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.lessThanOrEqualTo
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.Ignore
 
-@Ignore
 class ExportParallelismIT extends BaseS3IntegrationTest with BeforeAndAfterEach {
   val SCHEMA_NAME: String = "EXPORT_PARALLELISM"
   val bucketName: String = "export-parallelism"
