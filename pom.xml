@@ -198,10 +198,6 @@
                     <groupId>org.apache.hadoop.thirdparty</groupId>
                     <artifactId>hadoop-shaded-guava</artifactId>
                 </exclusion>
-                <!--                <exclusion>-->
-                <!--                    <groupId>org.apache.hadoop.thirdparty</groupId>-->
-                <!--                    <artifactId>hadoop-shaded-protobuf_3_7</artifactId>-->
-                <!--                </exclusion>-->
                 <exclusion>
                     <groupId>org.apache.hadoop.thirdparty</groupId>
                     <artifactId>hadoop-shaded-protobuf_3_25</artifactId>
