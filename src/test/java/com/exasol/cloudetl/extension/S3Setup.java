@@ -4,15 +4,20 @@ import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.containers.localstack.LocalStackContainer.Service;
 import org.testcontainers.utility.DockerImageName;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
+import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.model.*;
+
+import java.net.URI;
+
+// TODO: this class heavily overlaps with BaseS3IntegrationTest.scala
 class S3Setup implements AutoCloseable {
     private final LocalStackContainer container;
-    private final AmazonS3 client;
+    private final S3Client client;
 
     private S3Setup(final LocalStackContainer container) {
         this.container = container;
@@ -20,31 +25,37 @@ class S3Setup implements AutoCloseable {
     }
 
     static S3Setup create() {
-        @SuppressWarnings("resource")
         final LocalStackContainer container = new LocalStackContainer(
                 DockerImageName.parse("localstack/localstack:2.2")).withServices(Service.S3).withReuse(true);
         container.start();
         return new S3Setup(container);
     }
 
-    AmazonS3 createS3Client() {
-        return AmazonS3ClientBuilder.standard().withPathStyleAccessEnabled(true)
-                .withEndpointConfiguration(getS3EndpointConfig())
-                .withCredentials(new AWSStaticCredentialsProvider(
-                        new BasicAWSCredentials(this.container.getAccessKey(), this.container.getSecretKey())))
-                .disableChunkedEncoding().build();
-    }
+    S3Client createS3Client() {
+        final Region region = Region.of(this.container.getRegion());
+        final URI endpoint = this.container.getEndpointOverride(Service.S3);
+        final S3Configuration config = S3Configuration.builder()
+                .pathStyleAccessEnabled(true)
+                .chunkedEncodingEnabled(false)
+                .build();
+        final AwsBasicCredentials creds = AwsBasicCredentials.create(
+                this.container.getAccessKey(),
+                this.container.getSecretKey());
 
-    AwsClientBuilder.EndpointConfiguration getS3EndpointConfig() {
-        return new AwsClientBuilder.EndpointConfiguration(
-                this.container.getEndpointOverride(LocalStackContainer.Service.S3).toString(),
-                this.container.getRegion());
+        return S3Client.builder()
+                .region(region)
+                .endpointOverride(endpoint)
+                .serviceConfiguration(config)
+                .credentialsProvider(StaticCredentialsProvider.create(creds))
+                .build();
     }
 
     String getS3Endpoint() {
+        final URI endpoint = this.container.getEndpointOverride(Service.S3);
         final String s3ContainerNetworkGatewayAddress = this.container.getContainerInfo().getNetworkSettings()
                 .getNetworks().values().iterator().next().getGateway();
-        return getS3EndpointConfig().getServiceEndpoint().replaceAll("127.0.0.1", s3ContainerNetworkGatewayAddress);
+        assert s3ContainerNetworkGatewayAddress != null;
+        return endpoint.toString().replaceAll("127.0.0.1", s3ContainerNetworkGatewayAddress);
     }
 
     String getSecret() {
@@ -53,14 +64,27 @@ class S3Setup implements AutoCloseable {
 
     String createBucket() {
         final String uniqueBucketName = "testing-bucket-" + System.currentTimeMillis();
-        this.client.createBucket(uniqueBucketName);
+        this.client.createBucket(
+                CreateBucketRequest.builder()
+                        .bucket(uniqueBucketName).build()
+        );
         return uniqueBucketName;
     }
 
     void deleteBucket(final String bucket) {
-        this.client.listObjects(bucket).getObjectSummaries()
-                .forEach(object -> this.client.deleteObject(object.getBucketName(), object.getKey()));
-        this.client.deleteBucket(bucket);
+        final ListObjectsV2Request request = ListObjectsV2Request.builder()
+                .bucket(bucket).build();
+        this.client.listObjectsV2(request).contents()
+                .forEach(object -> this.client.deleteObject(
+                        DeleteObjectRequest.builder()
+                                .bucket(bucket)
+                                .key(object.key())
+                                .build()
+                        ));
+        this.client.deleteBucket(
+                DeleteBucketRequest.builder()
+                        .bucket(bucket).build()
+        );
     }
 
     @Override

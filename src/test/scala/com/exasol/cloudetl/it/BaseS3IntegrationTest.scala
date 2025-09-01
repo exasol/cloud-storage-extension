@@ -1,31 +1,31 @@
 package com.exasol.cloudetl
 
 import java.io.File
-import java.lang.Long
 
 import com.exasol.dbbuilder.dialects.Table
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.client.builder.AwsClientBuilder
-import com.amazonaws.services.s3.AmazonS3
-import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.amazonaws.services.s3.model._
 import org.apache.hadoop.fs.{Path => HPath}
 import org.testcontainers.containers.localstack.LocalStackContainer
 import org.testcontainers.containers.localstack.LocalStackContainer.Service.S3
 import org.testcontainers.utility.DockerImageName
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
+import software.amazon.awssdk.core.sync.RequestBody
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.S3Configuration
+import software.amazon.awssdk.services.s3.model._
 
 trait BaseS3IntegrationTest extends BaseIntegrationTest {
-  val INT_MIN = Integer.MIN_VALUE
-  val INT_MAX = Integer.MAX_VALUE
-  val LONG_MIN = Long.MIN_VALUE
-  val LONG_MAX = Long.MAX_VALUE
+  val INT_MIN: Int = Int.MinValue
+  val INT_MAX: Int = Int.MaxValue
+  val LONG_MIN: Long = Long.MinValue
+  val LONG_MAX: Long = Long.MaxValue
 
   val s3Container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:2.2"))
     .withServices(S3)
     .withReuse(true)
-  var s3: AmazonS3 = _
+  var s3: S3Client = _
   var s3Endpoint: String = _
 
   override def beforeAll(): Unit = {
@@ -40,37 +40,56 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
   }
 
   def prepareS3Client(): Unit = {
-    s3 = AmazonS3ClientBuilder
-      .standard()
-      .withPathStyleAccessEnabled(true)
-      .withEndpointConfiguration(getS3EndpointConfiguration())
-      .withCredentials(
-        new AWSStaticCredentialsProvider(
-          new BasicAWSCredentials(s3Container.getAccessKey(), s3Container.getSecretKey())
-        )
-      )
-      .disableChunkedEncoding()
+    val endpoint = s3Container.getEndpointOverride(LocalStackContainer.Service.S3)
+    val region = Region.of(s3Container.getRegion)
+    val s3_config = S3Configuration
+      .builder()
+      .pathStyleAccessEnabled(true)
+      .chunkedEncodingEnabled(false)
+      .build()
+    val s3_creds = AwsBasicCredentials.create(s3Container.getAccessKey, s3Container.getSecretKey)
+
+    s3 = S3Client
+      .builder()
+      .region(region)
+      .endpointOverride(endpoint)
+      .serviceConfiguration(s3_config)
+      .credentialsProvider(StaticCredentialsProvider.create(s3_creds))
       .build()
 
-    s3Endpoint = getS3EndpointConfiguration()
-      .getServiceEndpoint()
+    s3Endpoint = endpoint.toString
       .replaceAll("127.0.0.1", getS3ContainerNetworkGatewayAddress())
   }
 
   def deleteBucketObjects(bucketName: String): Unit =
-    listObjects(bucketName).forEach(summary => s3.deleteObject(bucketName, summary.getKey()))
+    listObjects(bucketName).forEach { s3_obj =>
+      s3.deleteObject(
+        DeleteObjectRequest
+          .builder()
+          .bucket(bucketName)
+          .key(s3_obj.key())
+          .build()
+      )
+      ()
+    }
 
-  def listObjects(bucketName: String): java.util.List[S3ObjectSummary] =
-    s3.listObjects(bucketName).getObjectSummaries()
+  def listObjects(bucketName: String): java.util.List[S3Object] =
+    s3.listObjectsV2(
+      ListObjectsV2Request
+        .builder()
+        .bucket(bucketName)
+        .build()
+    ).contents()
 
-  def deleteBucket(bucketName: String): Unit =
-    s3.deleteBucket(bucketName)
-
-  private[this] def getS3EndpointConfiguration(): AwsClientBuilder.EndpointConfiguration =
-    new AwsClientBuilder.EndpointConfiguration(
-      s3Container.getEndpointOverride(LocalStackContainer.Service.S3).toString(),
-      s3Container.getRegion()
+  def deleteBucket(bucketName: String): Unit = {
+    s3.deleteBucket(
+      DeleteBucketRequest
+        .builder()
+        .bucket(bucketName)
+        .build()
     )
+    ()
+  }
 
   def createS3ConnectionObject(): Unit = {
     val secret = s"S3_ACCESS_KEY=${getAWSAccessKey()};S3_SECRET_KEY=${getAWSSecretKey()}"
@@ -78,22 +97,46 @@ trait BaseS3IntegrationTest extends BaseIntegrationTest {
     ()
   }
 
-  def getAWSAccessKey(): String = s3Container.getAccessKey()
+  def getAWSAccessKey(): String = s3Container.getAccessKey
 
-  def getAWSSecretKey(): String = s3Container.getSecretKey()
+  def getAWSSecretKey(): String = s3Container.getSecretKey
+
+  def doesBucketExists(bucket: String): Boolean =
+    try {
+      s3.headBucket(
+        HeadBucketRequest
+          .builder()
+          .bucket(bucket)
+          .build()
+      )
+      true
+    } catch {
+      case _: S3Exception => false
+    }
 
   def uploadFileToS3(bucket: String, file: HPath): Unit = {
-    if (!s3.doesBucketExistV2(bucket)) {
+    if (!doesBucketExists(bucket)) {
       createBucket(bucket)
     }
     logger.debug(s"Uploading file $file to bucket $bucket")
-    val request = new PutObjectRequest(bucket, file.getName(), new File(file.toUri()))
-    s3.putObject(request)
+    s3.putObject(
+      PutObjectRequest
+        .builder()
+        .bucket(bucket)
+        .key(file.getName)
+        .build(),
+      RequestBody.fromFile(new File(file.toUri))
+    )
     ()
   }
 
   def createBucket(bucket: String): Unit = {
-    s3.createBucket(new CreateBucketRequest(bucket))
+    s3.createBucket(
+      CreateBucketRequest
+        .builder()
+        .bucket(bucket)
+        .build()
+    )
     ()
   }
 

@@ -18,7 +18,7 @@ jobs:
       issues: write
     }
     outputs: {
-      created-issues: '${{ steps.security-issues.outputs.created-issues }}'
+      created-issues: '${{ steps.create-security-issues.outputs.created-issues }}'
     }
     concurrency: {
       group: '${{ github.workflow }}-report_security_issues',
@@ -60,7 +60,7 @@ jobs:
           echo "$CREATED_ISSUES" > test.jsonl
           cat test.jsonl
         env: {
-          CREATED_ISSUES: '${{ steps.security-issues.outputs.created-issues }}'
+          CREATED_ISSUES: '${{ steps.create-security-issues.outputs.created-issues }}'
         }
   start_dependency_udpate:
     needs: report_security_issues

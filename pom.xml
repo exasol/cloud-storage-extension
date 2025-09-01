@@ -3,20 +3,21 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>cloud-storage-extension</artifactId>
-    <version>2.8.8</version>
+    <version>2.9.0</version>
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>
     <parent>
         <artifactId>cloud-storage-extension-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.8.8</version>
+        <version>2.9.0</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
         <scala.version>2.13.11</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
-        <hadoop.version>3.3.6</hadoop.version>
+        <hadoop.version>3.4.1</hadoop.version>
+        <awssdk.version>2.32.31</awssdk.version>
         <jersey.version>2.45</jersey.version>
         <log4j.version>2.24.1</log4j.version>
         <logback.version>1.5.16</logback.version>
@@ -26,6 +27,17 @@
         <sonar.test.inclusions>src/test/,*.test.ts</sonar.test.inclusions>
         <sonar.javascript.lcov.reportPaths>extension/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${awssdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -35,7 +47,13 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.17.0</version>
+            <version>3.18.0</version>
+        </dependency>
+        <dependency>
+            <!-- Upgraded to fix CVE-2025-53864 -->
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.1</version>
         </dependency>
         <dependency>
             <!-- Upgraded to fix CVE-2024-29131 and CVE-2024-29133 -->
@@ -54,6 +72,15 @@
             <artifactId>guava</artifactId>
             <version>33.3.1-jre</version>
         </dependency>
+        <!-- awssdk-->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3-transfer-manager</artifactId>
+        </dependency>
         <dependency>
             <!-- Upgrading this will cause failing integration tests -->
             <groupId>io.grpc</groupId>
@@ -62,9 +89,22 @@
         </dependency>
         <dependency>
             <!-- Upgrade nettty-codec-http2 to fix CVE-2024-29025 & CVE-2024-47535 in io.netty:netty-common -->
+            <!-- This version has to be aligned with aws version -->
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http2</artifactId>
-            <version>4.1.119.Final</version>
+            <version>4.1.124.Final</version>
+        </dependency>
+        <dependency>
+            <!-- Upgrade commons-beanutils to fix CVE-2025-48734 -->
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.11.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.xerial.snappy</groupId>
@@ -86,10 +126,6 @@
             <artifactId>hadoop-common</artifactId>
             <version>${hadoop.version}</version>
             <exclusions>
-                <exclusion>
-                    <groupId>commons-beanutils</groupId>
-                    <artifactId>commons-beanutils</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
@@ -164,7 +200,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.hadoop.thirdparty</groupId>
-                    <artifactId>hadoop-shaded-protobuf_3_7</artifactId>
+                    <artifactId>hadoop-shaded-protobuf_3_25</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>ch.qos.reload4j</groupId>
@@ -198,18 +234,6 @@
             <version>2.18.0</version>
         </dependency>
         <dependency>
-            <!-- Override version from org.apache.hadoop:hadoop-common to fix CVE-2025-48734 -->
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.11.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <!-- Override version 2.1.7 from org.apache.hadoop:hadoop-common to fix CVE-2023-33546-->
             <artifactId>dnsjava</artifactId>
             <groupId>dnsjava</groupId>
@@ -225,6 +249,12 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-aws</artifactId>
             <version>${hadoop.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>software.amazon.awssdk</groupId>
+                    <artifactId>bundle</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <!-- override version 3.6.3 to fix vulnerability CVE-2023-42503, CVE-2024-23944 & CVE-2024-51504 -->
@@ -447,7 +477,7 @@
         <dependency>
             <groupId>org.apache.orc</groupId>
             <artifactId>orc-core</artifactId>
-            <version>1.9.6</version>
+            <version>1.9.5</version>
             <exclusions>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -891,8 +921,6 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
-                        <!-- Vulnerability in org.apache.hadoop:hadoop-common:jar:3.3.6:compile -->
-                        <exclude>CVE-2024-23454</exclude>
                         <!-- Need to wait for proper fix in exasol-jdbc -->
                         <exclude>CVE-2024-55551</exclude>
                     </excludeVulnerabilityIds>
@@ -917,7 +945,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>5.1.0</version>
+                <version>5.2.3</version>
                 <executions>
                     <execution>
                         <goals>
