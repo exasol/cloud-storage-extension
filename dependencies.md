@@ -41,7 +41,7 @@
 | [Apache Commons Compress][37]               | [Apache-2.0][3]                                                                                                                                                                                     |
 | [Nimbus JOSE+JWT][38]                       | [The Apache Software License, Version 2.0][3]                                                                                                                                                       |
 | [delta-core][39]                            | [Apache-2.0][40]                                                                                                                                                                                    |
-| [Spark Project SQL][41]                     | [Apache 2.0 License][42]                                                                                                                                                                            |
+| [Spark Project SQL][41]                     | [Apache-2.0][42]                                                                                                                                                                                    |
 | [Apache Ivy][43]                            | [The Apache Software License, Version 2.0][7]                                                                                                                                                       |
 | [janino][44]                                | [BSD-3-Clause][45]                                                                                                                                                                                  |
 | [Parquet for Java][46]                      | [MIT License][47]                                                                                                                                                                                   |
@@ -99,7 +99,7 @@
 | [Apache Maven Toolchains Plugin][106]                    | [Apache-2.0][3]                               |
 | [Apache Maven Compiler Plugin][107]                      | [Apache-2.0][3]                               |
 | [Apache Maven Enforcer Plugin][108]                      | [Apache-2.0][3]                               |
-| [Maven Flatten Plugin][109]                              | [Apache Software Licenese][3]                 |
+| [Maven Flatten Plugin][109]                              | [Apache Software License][3]                  |
 | [org.sonatype.ossindex.maven:ossindex-maven-plugin][110] | [ASL2][7]                                     |
 | [scala-maven-plugin][111]                                | [Public domain (Unlicense)][112]              |
 | [ScalaTest Maven Plugin][113]                            | [the Apache License, ASL Version 2.0][40]     |
