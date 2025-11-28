@@ -102,7 +102,9 @@ jobs:
         id: build-pk-verify
         run: mvn --batch-mode verify -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
         env: {
-          EXASOL_DB_VERSION: '${{ matrix.exasol_db_version }}'
+          EXASOL_DB_VERSION: '${{ matrix.exasol_db_version }}',
+          OSSINDEX_USERNAME: '${{ secrets.OSSINDEX_USERNAME }}',
+          OSSINDEX_API_TOKEN: '${{ secrets.OSSINDEX_API_TOKEN }}'
         }
       - name: Sonar analysis
         id: sonar-analysis

@@ -65,7 +65,8 @@ build:
               # Set additional environment variable as in scala projects the scalatest plugin does not forward
               # the system property -Dcom.exasol.dockerdb.image to the test's implementation.
               EXASOL_DB_VERSION: ${{ matrix.exasol_db_version }}
-
+              OSSINDEX_USERNAME: '${{ secrets.OSSINDEX_USERNAME }}'
+              OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
     - name: release.yml
       stepCustomizations:
         - action: INSERT_AFTER
