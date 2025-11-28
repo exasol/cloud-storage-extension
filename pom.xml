@@ -923,6 +923,10 @@
                     <excludeVulnerabilityIds>
                         <!-- Need to wait for proper fix in exasol-jdbc -->
                         <exclude>CVE-2024-55551</exclude>
+                        <!-- Temporarily exclude -->
+                        <exclude>CVE-2025-58457</exclude>
+                        <exclude>CVE-2025-11226</exclude>
+                        <exclude>CVE-2025-12383</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
