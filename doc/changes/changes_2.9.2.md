@@ -14,6 +14,8 @@ Code name:
 
 #### Compile Dependency Updates
 
+* Removed `io.delta:delta-core_2.13:2.4.0`
+* Added `io.delta:delta-spark_2.13:3.3.2`
 * Updated `org.apache.spark:spark-sql_2.13:3.4.1` to `3.5.7`
 
 #### Plugin Dependency Updates
