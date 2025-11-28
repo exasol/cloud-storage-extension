@@ -853,7 +853,7 @@
                 <version>2.2.0</version>
                 <configuration>
                     <junitxml>.</junitxml>
-                    <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
+                    <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties --add-exports java.base/sun.nio.ch=ALL-UNNAMED ${argLine}</argLine>
                 </configuration>
                 <executions>
                     <execution>
