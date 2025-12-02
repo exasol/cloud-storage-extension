@@ -1184,6 +1184,26 @@ changes.
 [delta-storage]: https://docs.delta.io/latest/delta-storage.html
 [delta-history]: https://docs.delta.io/latest/delta-utility.html#history
 
+### Delta compatibility with older JRE
+
+If CloudStorage Extension is used to import Delta format, JRE earlier than 17 
+has a problem with access to several internal Java classes (`sun.nio.ch`).
+
+To fix this, add this line to all the UDF setup scripts:
+```sql
+%jvmoption --add-exports=java.base/sun.nio.ch=ALL-UNNAMED;
+```
+
+In this case, full script will look like this:
+```sql
+--/
+CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
+%jvmoption --add-exports=java.base/sun.nio.ch=ALL-UNNAMED;
+%scriptclass com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator;
+%jar /buckets/bfsdefault/default/exasol-cloud-storage-extension-2.9.1.jar;
+/
+```
+
 ## Hadoop Distributed Filesystem (HDFS)
 
 The [Hadoop distributed file system (HDFS)][hdfs-link] is a distributed,
