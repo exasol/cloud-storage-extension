@@ -1200,7 +1200,7 @@ In this case, full script will look like this:
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
 %jvmoption --add-exports=java.base/sun.nio.ch=ALL-UNNAMED;
 %scriptclass com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator;
-%jar /buckets/bfsdefault/default/exasol-cloud-storage-extension-2.9.1.jar;
+%jar /buckets/bfsdefault/default/exasol-cloud-storage-extension-2.9.2.jar;
 /
 ```
 
