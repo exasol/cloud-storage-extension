@@ -6,7 +6,11 @@ Code name:
 
 ## Features
 
-* ISSUE_NUMBER: description
+* #365: Class import error on delta files
+
+## Security
+
+* Upgrade of transitive dependency to fix [CVE-2025-12183] CWE-125: Out-of-bounds Read (8.8); https://ossindex.sonatype.org/vulnerability/CVE-2025-12183?component-type=maven&component-name=org.lz4%2Flz4-java&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
 
 ## Dependency Updates
 
@@ -17,6 +21,7 @@ Code name:
 * Removed `io.delta:delta-core_2.13:2.4.0`
 * Added `io.delta:delta-spark_2.13:3.3.2`
 * Updated `org.apache.spark:spark-sql_2.13:3.4.1` to `3.5.7`
+* Added `org.lz4:lz4-java:1.8.1`
 
 #### Plugin Dependency Updates
 
