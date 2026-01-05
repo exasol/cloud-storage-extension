@@ -931,9 +931,9 @@
                         <!-- Need to wait for proper fix in exasol-jdbc -->
                         <exclude>CVE-2024-55551</exclude>
                         <!-- Temporarily exclude -->
-<!--                        <exclude>CVE-2025-58457</exclude>-->
-<!--                        <exclude>CVE-2025-11226</exclude>-->
-<!--                        <exclude>CVE-2025-12383</exclude>-->
+                        <!--                        <exclude>CVE-2025-58457</exclude>-->
+                        <!--                        <exclude>CVE-2025-11226</exclude>-->
+                        <!--                        <exclude>CVE-2025-12383</exclude>-->
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
@@ -956,7 +956,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>5.4.3</version>
+                <version>5.4.4</version>
                 <executions>
                     <execution>
                         <goals>

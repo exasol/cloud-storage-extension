@@ -50,7 +50,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.4.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -60,7 +60,7 @@
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version>5.2.0.4988</version>
+                <version>5.5.0.6356</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -165,16 +165,18 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.4</version>
                 <configuration>
-                    <!-- Set the highest log level for coverage testing, so that we
-          have a chance to reach branches in the logging lambdas too. -->
-                    <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
+                    <argLine>${argLine}</argLine>
+                    <systemPropertyVariables>
+                        <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches in the logging lambdas too. -->
+                        <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>
+                    </systemPropertyVariables>
                     <excludedGroups>${test.excludeTags}</excludedGroups>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.19.1</version>
+                <version>2.20.1</version>
                 <executions>
                     <execution>
                         <id>display-updates</id>
@@ -243,7 +245,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.7.1</version>
+                <version>3.8.0</version>
                 <configuration>
                     <descriptors>
                         <descriptor>src/assembly/all-dependencies.xml</descriptor>
@@ -269,7 +271,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <id>default-jar</id>
@@ -295,9 +297,11 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.5.4</version>
                 <configuration>
-                    <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches in the logging lambdas too. -->
-                    <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
-                    <systemPropertyVariables/>
+                    <argLine>${argLine}</argLine>
+                    <systemPropertyVariables>
+                        <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches in the logging lambdas too. -->
+                        <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>
+                    </systemPropertyVariables>
                     <excludedGroups>${test.excludeTags}</excludedGroups>
                 </configuration>
                 <executions>
