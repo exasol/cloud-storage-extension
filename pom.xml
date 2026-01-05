@@ -260,7 +260,7 @@
             <!-- override version 3.6.3 to fix vulnerability CVE-2023-42503, CVE-2024-23944 & CVE-2024-51504 -->
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
-            <version>3.9.3</version>
+            <version>3.9.4</version>
         </dependency>
         <dependency>
             <!-- Upgrade transitive dependency of org.apache.zookeeper:zookeeper to fix CVE-2023-6378 -->
