@@ -12,6 +12,7 @@ Code name:
 
 * Upgrade of transitive dependency to fix [CVE-2025-12183] CWE-125: Out-of-bounds Read (8.8); https://ossindex.sonatype.org/vulnerability/CVE-2025-12183?component-type=maven&component-name=org.lz4%2Flz4-java&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
 * Upgrade zookeeper dependency to fix [CVE-2025-58457] CWE-280: Improper Handling of Insufficient Permissions or Privileges  (5.3); https://ossindex.sonatype.org/vulnerability/CVE-2025-58457?component-type=maven&component-name=org.apache.zookeeper%2Fzookeeper&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
+* Upgrade lz4-java dependency to fix [CVE-2025-66566] CWE-201: Information Exposure Through Sent Data (8.2); https://ossindex.sonatype.org/vulnerability/CVE-2025-66566?component-type=maven&component-name=at.yawk.lz4%2Flz4-java&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
 
 ## Dependency Updates
 
@@ -19,11 +20,11 @@ Code name:
 
 #### Compile Dependency Updates
 
+* Added `at.yawk.lz4:lz4-java:1.10.2`
 * Removed `io.delta:delta-core_2.13:2.4.0`
 * Added `io.delta:delta-spark_2.13:3.3.2`
 * Updated `org.apache.spark:spark-sql_2.13:3.4.1` to `3.5.7`
 * Updated `org.apache.zookeeper:zookeeper:3.9.3` to `3.9.4`
-* Added `org.lz4:lz4-java:1.8.1`
 
 #### Plugin Dependency Updates
 
