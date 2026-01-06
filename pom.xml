@@ -518,7 +518,7 @@
             <!-- Upgrade transitive dependency of org.apache.spark to fix CVE-2025-12183 -->
             <groupId>org.lz4</groupId>
             <artifactId>lz4-java</artifactId>
-            <version>1.10.2</version>
+            <version>1.8.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
