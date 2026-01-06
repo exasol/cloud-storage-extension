@@ -14,6 +14,7 @@ Code name:
 * Upgrade zookeeper dependency to fix [CVE-2025-58457] CWE-280: Improper Handling of Insufficient Permissions or Privileges  (5.3); https://ossindex.sonatype.org/vulnerability/CVE-2025-58457?component-type=maven&component-name=org.apache.zookeeper%2Fzookeeper&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
 * Upgrade lz4-java dependency to fix [CVE-2025-66566] CWE-201: Information Exposure Through Sent Data (8.2); https://ossindex.sonatype.org/vulnerability/CVE-2025-66566?component-type=maven&component-name=at.yawk.lz4%2Flz4-java&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
 * Upgrade log4j dependency to fix [CVE-2025-68161] CWE-297: Improper Validation of Certificate with Host Mismatch (6.3); https://ossindex.sonatype.org/vulnerability/CVE-2025-68161?component-type=maven&component-name=org.apache.logging.log4j%2Flog4j-core&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
+* Upgrade logback dependency to fix [CVE-2025-11226] CWE-20: Improper Input Validation (7.3); https://ossindex.sonatype.org/vulnerability/CVE-2025-11226?component-type=maven&component-name=ch.qos.logback%2Flogback-core&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
 
 ## Dependency Updates
 
@@ -29,6 +30,11 @@ Code name:
 * Updated `org.apache.logging.log4j:log4j-core:2.24.1` to `2.25.3`
 * Updated `org.apache.spark:spark-sql_2.13:3.4.1` to `3.5.7`
 * Updated `org.apache.zookeeper:zookeeper:3.9.3` to `3.9.4`
+
+#### Runtime Dependency Updates
+
+* Updated `ch.qos.logback:logback-classic:1.5.16` to `1.5.23`
+* Updated `ch.qos.logback:logback-core:1.5.16` to `1.5.23`
 
 #### Plugin Dependency Updates
 
