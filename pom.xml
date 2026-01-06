@@ -19,7 +19,7 @@
         <hadoop.version>3.4.1</hadoop.version>
         <awssdk.version>2.34.0</awssdk.version>
         <jersey.version>2.45</jersey.version>
-        <log4j.version>2.24.1</log4j.version>
+        <log4j.version>2.25.3</log4j.version>
         <logback.version>1.5.16</logback.version>
         <sonar.sources>src/main/,extension/src/</sonar.sources>
         <sonar.exclusions>extension/src/*.test.ts</sonar.exclusions>
