@@ -30,6 +30,8 @@ Code name:
 * Updated `org.apache.spark:spark-sql_2.13:3.4.1` to `3.5.7`
 * Updated `org.apache.zookeeper:zookeeper:3.9.3` to `3.9.4`
 * Added `org.lz4:lz4-java:1.8.1`
+* Updated `software.amazon.awssdk:s3-transfer-manager:2.34.0` to `2.41.2`
+* Updated `software.amazon.awssdk:s3:2.34.0` to `2.41.2`
 
 #### Runtime Dependency Updates
 
