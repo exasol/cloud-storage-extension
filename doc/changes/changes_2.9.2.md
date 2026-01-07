@@ -23,11 +23,13 @@ Code name:
 #### Compile Dependency Updates
 
 * Added `at.yawk.lz4:lz4-java:1.10.2`
+* Removed `io.airlift:aircompressor:0.27`
 * Removed `io.delta:delta-core_2.13:2.4.0`
 * Added `io.delta:delta-spark_2.13:3.3.2`
 * Updated `org.apache.logging.log4j:log4j-1.2-api:2.24.1` to `2.25.3`
 * Updated `org.apache.logging.log4j:log4j-api:2.24.1` to `2.25.3`
 * Updated `org.apache.logging.log4j:log4j-core:2.24.1` to `2.25.3`
+* Updated `org.apache.orc:orc-core:1.9.5` to `2.2.1`
 * Updated `org.apache.spark:spark-sql_2.13:3.4.1` to `3.5.7`
 * Updated `org.apache.zookeeper:zookeeper:3.9.3` to `3.9.4`
 * Updated `org.glassfish.jersey.containers:jersey-container-servlet-core:2.45` to `2.47`
