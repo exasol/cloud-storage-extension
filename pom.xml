@@ -491,12 +491,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- Update transitive dependency of org.apache.orc:core to fix CVE-2024-36114 -->
-<!--        <dependency>-->
-<!--            <groupId>io.airlift</groupId>-->
-<!--            <artifactId>aircompressor</artifactId>-->
-<!--            <version>0.27</version>-->
-<!--        </dependency>-->
         <dependency>
             <!-- Update transitive dependency of org.apache.spark:spark-core to fix CVE-2024-47561 -->
             <groupId>org.apache.avro</groupId>
@@ -939,10 +933,6 @@
                         <exclude>CVE-2024-55551</exclude>
                         <!-- aircompressor wasn't updated for a year, exclusion is the only option atm -->
                         <exclude>CVE-2025-67721</exclude>
-                        <!-- Temporarily exclude -->
-                        <!--                        <exclude>CVE-2025-58457</exclude>-->
-                        <!--                        <exclude>CVE-2025-11226</exclude>-->
-                        <!--                        <exclude>CVE-2025-12383</exclude>-->
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
