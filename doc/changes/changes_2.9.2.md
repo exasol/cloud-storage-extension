@@ -30,6 +30,12 @@ Code name:
 * Updated `org.apache.logging.log4j:log4j-core:2.24.1` to `2.25.3`
 * Updated `org.apache.spark:spark-sql_2.13:3.4.1` to `3.5.7`
 * Updated `org.apache.zookeeper:zookeeper:3.9.3` to `3.9.4`
+* Updated `org.glassfish.jersey.containers:jersey-container-servlet-core:2.45` to `2.47`
+* Updated `org.glassfish.jersey.containers:jersey-container-servlet:2.45` to `2.47`
+* Updated `org.glassfish.jersey.core:jersey-client:2.45` to `2.47`
+* Updated `org.glassfish.jersey.core:jersey-common:2.45` to `2.47`
+* Updated `org.glassfish.jersey.core:jersey-server:2.45` to `2.47`
+* Updated `org.glassfish.jersey.inject:jersey-hk2:2.45` to `2.47`
 * Added `org.lz4:lz4-java:1.8.1`
 
 #### Runtime Dependency Updates
