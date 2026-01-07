@@ -937,6 +937,8 @@
                     <excludeVulnerabilityIds>
                         <!-- Need to wait for proper fix in exasol-jdbc -->
                         <exclude>CVE-2024-55551</exclude>
+                        <!-- aircompressor wasn't updated for a year, exclusion is the only option atm -->
+                        <exclude>CVE-2025-67721</exclude>
                         <!-- Temporarily exclude -->
                         <!--                        <exclude>CVE-2025-58457</exclude>-->
                         <!--                        <exclude>CVE-2025-11226</exclude>-->
