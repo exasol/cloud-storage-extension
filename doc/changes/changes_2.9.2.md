@@ -1,6 +1,6 @@
 # Cloud Storage Extension 2.9.2, released 2026-01-09
 
-Code name: Spark upgrade, documentation fixes and CVEs
+Code name: Spark upgrade, documentation fixes and CVEs 
 
 ## Summary
 This release adds documentation about delta files import error workaround.
@@ -47,7 +47,6 @@ dependencies to fix CVEs in transitive dependencies.
 
 * Updated `ch.qos.logback:logback-classic:1.5.16` to `1.5.23`
 * Updated `ch.qos.logback:logback-core:1.5.16` to `1.5.23`
-* Added `io.airlift:aircompressor-v3:3.4`
 
 #### Plugin Dependency Updates
 

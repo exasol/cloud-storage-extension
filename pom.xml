@@ -489,19 +489,7 @@
                     <groupId>org.apache.hadoop</groupId>
                     <artifactId>hadoop-client-api</artifactId>
                 </exclusion>
-                <!-- Replaced with io.airlift:aircompressor-v3 to fix CVE-2025-67721 -->
-                <exclusion>
-                    <groupId>io.airlift</groupId>
-                    <artifactId>aircompressor</artifactId>
-                </exclusion>
             </exclusions>
-        </dependency>
-        <!-- Fix CVE-2025-67721 in transitive dependency io.airlift:aircompressor:jar:2.0.2 of parquet-hadoop and spark-sql -->
-        <dependency>
-            <groupId>io.airlift</groupId>
-            <artifactId>aircompressor-v3</artifactId>
-            <version>3.4</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <!-- Update transitive dependency of org.apache.spark:spark-core to fix CVE-2024-47561 -->
@@ -589,11 +577,6 @@
                 <exclusion>
                     <groupId>org.apache.orc</groupId>
                     <artifactId>orc-core</artifactId>
-                </exclusion>
-                <!-- Replaced with io.airlift:aircompressor-v3 to fix CVE-2025-67721 -->
-                <exclusion>
-                    <groupId>io.airlift</groupId>
-                    <artifactId>aircompressor</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.glassfish.jersey.core</groupId>
