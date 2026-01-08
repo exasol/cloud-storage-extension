@@ -18,7 +18,7 @@ build:
   runnerOs: ubuntu-22.04
   freeDiskSpace: true
   exasolDbVersions:
-    - "8.32.0"
+    - "8.29.13"
 # Disabled, see this for details: https://github.com/exasol/cloud-storage-extension/issues/356
 #    - "7.1.30"
   workflows:
