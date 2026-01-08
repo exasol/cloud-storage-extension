@@ -1,8 +1,11 @@
-# Cloud Storage Extension 2.9.2, released 2025-??-??
+# Cloud Storage Extension 2.9.2, released 2026-01-09
 
-Code name:
+Code name: Spark upgrade, documentation fixes and CVEs 
 
 ## Summary
+This release adds documentation about delta files import error workaround.
+In addition we upgrade spark version to the latest 3.5.x release and updated 
+dependencies to fix CVEs in transitive dependencies.
 
 ## Features
 
