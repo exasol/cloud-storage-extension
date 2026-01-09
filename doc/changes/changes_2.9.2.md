@@ -1,0 +1,69 @@
+# Cloud Storage Extension 2.9.2, released 2026-01-09
+
+Code name: Spark upgrade, documentation fixes and CVEs 
+
+## Summary
+This release adds documentation about delta files import error workaround.
+In addition we upgrade spark version to the latest 3.5.x release and updated 
+dependencies to fix CVEs in transitive dependencies.
+
+## Features
+
+* #365: Class import error on delta files
+
+## Security
+
+* Upgrade of transitive dependency to fix [CVE-2025-12183] CWE-125: Out-of-bounds Read (8.8); https://ossindex.sonatype.org/vulnerability/CVE-2025-12183?component-type=maven&component-name=org.lz4%2Flz4-java&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
+* Upgrade zookeeper dependency to fix [CVE-2025-58457] CWE-280: Improper Handling of Insufficient Permissions or Privileges  (5.3); https://ossindex.sonatype.org/vulnerability/CVE-2025-58457?component-type=maven&component-name=org.apache.zookeeper%2Fzookeeper&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
+* Upgrade lz4-java dependency to fix [CVE-2025-66566] CWE-201: Information Exposure Through Sent Data (8.2); https://ossindex.sonatype.org/vulnerability/CVE-2025-66566?component-type=maven&component-name=at.yawk.lz4%2Flz4-java&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
+* Upgrade log4j dependency to fix [CVE-2025-68161] CWE-297: Improper Validation of Certificate with Host Mismatch (6.3); https://ossindex.sonatype.org/vulnerability/CVE-2025-68161?component-type=maven&component-name=org.apache.logging.log4j%2Flog4j-core&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
+* Upgrade logback dependency to fix [CVE-2025-11226] CWE-20: Improper Input Validation (7.3); https://ossindex.sonatype.org/vulnerability/CVE-2025-11226?component-type=maven&component-name=ch.qos.logback%2Flogback-core&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
+
+## Dependency Updates
+
+### Cloud Storage Extension
+
+#### Compile Dependency Updates
+
+* Added `at.yawk.lz4:lz4-java:1.10.2`
+* Removed `io.airlift:aircompressor:0.27`
+* Removed `io.delta:delta-core_2.13:2.4.0`
+* Added `io.delta:delta-spark_2.13:3.3.2`
+* Updated `org.apache.logging.log4j:log4j-1.2-api:2.24.1` to `2.25.3`
+* Updated `org.apache.logging.log4j:log4j-api:2.24.1` to `2.25.3`
+* Updated `org.apache.logging.log4j:log4j-core:2.24.1` to `2.25.3`
+* Updated `org.apache.orc:orc-core:1.9.5` to `1.9.7`
+* Updated `org.apache.spark:spark-sql_2.13:3.4.1` to `3.5.7`
+* Updated `org.apache.zookeeper:zookeeper:3.9.3` to `3.9.4`
+* Updated `org.glassfish.jersey.containers:jersey-container-servlet-core:2.45` to `2.47`
+* Updated `org.glassfish.jersey.containers:jersey-container-servlet:2.45` to `2.47`
+* Updated `org.glassfish.jersey.core:jersey-client:2.45` to `2.47`
+* Updated `org.glassfish.jersey.core:jersey-common:2.45` to `2.47`
+* Updated `org.glassfish.jersey.core:jersey-server:2.45` to `2.47`
+* Updated `org.glassfish.jersey.inject:jersey-hk2:2.45` to `2.47`
+* Added `org.lz4:lz4-java:1.8.1`
+
+#### Runtime Dependency Updates
+
+* Updated `ch.qos.logback:logback-classic:1.5.16` to `1.5.23`
+* Updated `ch.qos.logback:logback-core:1.5.16` to `1.5.23`
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:artifact-reference-checker-maven-plugin:0.4.3` to `0.4.4`
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.4` to `2.0.5`
+* Updated `com.exasol:project-keeper-maven-plugin:5.2.3` to `5.4.4`
+* Updated `com.exasol:quality-summarizer-maven-plugin:0.2.0` to `0.2.1`
+* Updated `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.1` to `9.0.2`
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.0` to `3.6.1`
+* Updated `org.apache.maven.plugins:maven-assembly-plugin:3.7.1` to `3.8.0`
+* Updated `org.apache.maven.plugins:maven-compiler-plugin:3.14.0` to `3.14.1`
+* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.5.0` to `3.6.2`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.3` to `3.5.4`
+* Updated `org.apache.maven.plugins:maven-jar-plugin:3.4.2` to `3.5.0`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:3.3.1` to `3.4.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.3` to `3.5.4`
+* Updated `org.codehaus.mojo:flatten-maven-plugin:1.7.0` to `1.7.3`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.18.0` to `2.20.1`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.13` to `0.8.14`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.1.0.4751` to `5.5.0.6356`
