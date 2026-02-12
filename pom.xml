@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>cloud-storage-extension</artifactId>
-    <version>2.9.2</version>
+    <version>2.9.3</version>
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>
     <parent>
         <artifactId>cloud-storage-extension-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.9.2</version>
+        <version>2.9.3</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
@@ -20,7 +20,7 @@
         <awssdk.version>2.34.0</awssdk.version>
         <jersey.version>2.47</jersey.version>
         <log4j.version>2.25.3</log4j.version>
-        <logback.version>1.5.23</logback.version>
+        <logback.version>1.5.29</logback.version>
         <sonar.sources>src/main/,extension/src/</sonar.sources>
         <sonar.exclusions>extension/src/*.test.ts</sonar.exclusions>
         <sonar.tests>src/test/,extension/src</sonar.tests>
@@ -461,7 +461,12 @@
             <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2024-7254 -->
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.25.5</version>
+            <version>3.25.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>3.25.8</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
@@ -955,7 +960,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>5.4.4</version>
+                <version>5.4.5</version>
                 <executions>
                     <execution>
                         <goals>

@@ -55,7 +55,7 @@ jobs:
         }
       - name: Create GitHub Issues
         id: create-security-issues
-        uses: exasol/python-toolbox/.github/actions/security-issues@4.0.0
+        uses: exasol/python-toolbox/.github/actions/security-issues@4.0.1
         with: {
           format: maven,
           command: cat ossindex-report.json,

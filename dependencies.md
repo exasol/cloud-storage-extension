@@ -33,62 +33,63 @@
 | [Alluxio Core - Client - HDFS][28]          | [Apache License][29]                                                                                                                                                                                |
 | [Metrics Core][30]                          | [Apache License 2.0][14]                                                                                                                                                                            |
 | [Protocol Buffers [Core]][31]               | [BSD-3-Clause][21]                                                                                                                                                                                  |
-| [gcs-connector-hadoop3][32]                 | [Apache License, Version 2.0][7]                                                                                                                                                                    |
-| [Google OAuth Client Library for Java][33]  | [The Apache Software License, Version 2.0][3]                                                                                                                                                       |
-| [ORC Core][34]                              | [Apache License, Version 2.0][3]                                                                                                                                                                    |
-| [Apache Avro][35]                           | [Apache-2.0][3]                                                                                                                                                                                     |
+| [Protocol Buffers [Util]][32]               | [BSD-3-Clause][21]                                                                                                                                                                                  |
+| [gcs-connector-hadoop3][33]                 | [Apache License, Version 2.0][7]                                                                                                                                                                    |
+| [Google OAuth Client Library for Java][34]  | [The Apache Software License, Version 2.0][3]                                                                                                                                                       |
+| [ORC Core][35]                              | [Apache License, Version 2.0][3]                                                                                                                                                                    |
+| [Apache Avro][36]                           | [Apache-2.0][3]                                                                                                                                                                                     |
 | lz4-java                                    |                                                                                                                                                                                                     |
-| [LZ4 Java Compression][36]                  | [Apache License, Version 2.0][1]                                                                                                                                                                    |
-| [Apache Commons Compress][37]               | [Apache-2.0][3]                                                                                                                                                                                     |
-| [Nimbus JOSE+JWT][38]                       | [The Apache Software License, Version 2.0][3]                                                                                                                                                       |
-| [delta-spark][39]                           | [Apache-2.0][40]                                                                                                                                                                                    |
-| [Spark Project SQL][41]                     | [Apache-2.0][42]                                                                                                                                                                                    |
-| [Apache Ivy][43]                            | [The Apache Software License, Version 2.0][7]                                                                                                                                                       |
-| [janino][44]                                | [BSD-3-Clause][45]                                                                                                                                                                                  |
-| [Parquet for Java][46]                      | [MIT License][47]                                                                                                                                                                                   |
-| [JUL to SLF4J bridge][48]                   | [MIT License][49]                                                                                                                                                                                   |
-| [Apache Log4j API][50]                      | [Apache-2.0][3]                                                                                                                                                                                     |
-| [Apache Log4j 1.x Compatibility API][50]    | [Apache-2.0][3]                                                                                                                                                                                     |
-| [Apache Log4j Core][50]                     | [Apache-2.0][3]                                                                                                                                                                                     |
-| [scala-logging][51]                         | [Apache 2.0 License][42]                                                                                                                                                                            |
-| [jersey-core-common][52]                    | [EPL 2.0][53]; [The GNU General Public License (GPL), Version 2, With Classpath Exception][54]; [Apache License, 2.0][42]; [Public Domain][55]                                                      |
-| [jersey-core-client][56]                    | [EPL 2.0][53]; [GPL2 w/ CPE][54]; [EDL 1.0][57]; [BSD 2-Clause][58]; [Apache License, 2.0][42]; [Public Domain][55]; [Modified BSD][59]; [jQuery license][60]; [MIT license][49]; [W3C license][61] |
-| [jersey-core-server][62]                    | [EPL 2.0][53]; [The GNU General Public License (GPL), Version 2, With Classpath Exception][54]; [Apache License, 2.0][42]; [Modified BSD][59]                                                       |
-| [jersey-container-servlet][63]              | [EPL 2.0][53]; [GPL2 w/ CPE][54]; [EDL 1.0][57]; [BSD 2-Clause][58]; [Apache License, 2.0][42]; [Public Domain][55]; [Modified BSD][59]; [jQuery license][60]; [MIT license][49]; [W3C license][61] |
-| [jersey-container-servlet-core][64]         | [EPL 2.0][53]; [GPL2 w/ CPE][54]; [EDL 1.0][57]; [BSD 2-Clause][58]; [Apache License, 2.0][42]; [Public Domain][55]; [Modified BSD][59]; [jQuery license][60]; [MIT license][49]; [W3C license][61] |
-| [jersey-inject-hk2][65]                     | [EPL 2.0][53]; [GPL2 w/ CPE][54]; [EDL 1.0][57]; [BSD 2-Clause][58]; [Apache License, 2.0][42]; [Public Domain][55]; [Modified BSD][59]; [jQuery license][60]; [MIT license][49]; [W3C license][61] |
+| [LZ4 Java Compression][37]                  | [Apache License, Version 2.0][1]                                                                                                                                                                    |
+| [Apache Commons Compress][38]               | [Apache-2.0][3]                                                                                                                                                                                     |
+| [Nimbus JOSE+JWT][39]                       | [The Apache Software License, Version 2.0][3]                                                                                                                                                       |
+| [delta-spark][40]                           | [Apache-2.0][41]                                                                                                                                                                                    |
+| [Spark Project SQL][42]                     | [Apache-2.0][43]                                                                                                                                                                                    |
+| [Apache Ivy][44]                            | [The Apache Software License, Version 2.0][7]                                                                                                                                                       |
+| [janino][45]                                | [BSD-3-Clause][46]                                                                                                                                                                                  |
+| [Parquet for Java][47]                      | [MIT License][48]                                                                                                                                                                                   |
+| [JUL to SLF4J bridge][49]                   | [MIT License][50]                                                                                                                                                                                   |
+| [Apache Log4j API][51]                      | [Apache-2.0][3]                                                                                                                                                                                     |
+| [Apache Log4j 1.x Compatibility API][51]    | [Apache-2.0][3]                                                                                                                                                                                     |
+| [Apache Log4j Core][51]                     | [Apache-2.0][3]                                                                                                                                                                                     |
+| [scala-logging][52]                         | [Apache 2.0 License][43]                                                                                                                                                                            |
+| [jersey-core-common][53]                    | [EPL 2.0][54]; [The GNU General Public License (GPL), Version 2, With Classpath Exception][55]; [Apache License, 2.0][43]; [Public Domain][56]                                                      |
+| [jersey-core-client][57]                    | [EPL 2.0][54]; [GPL2 w/ CPE][55]; [EDL 1.0][58]; [BSD 2-Clause][59]; [Apache License, 2.0][43]; [Public Domain][56]; [Modified BSD][60]; [jQuery license][61]; [MIT license][50]; [W3C license][62] |
+| [jersey-core-server][63]                    | [EPL 2.0][54]; [The GNU General Public License (GPL), Version 2, With Classpath Exception][55]; [Apache License, 2.0][43]; [Modified BSD][60]                                                       |
+| [jersey-container-servlet][64]              | [EPL 2.0][54]; [GPL2 w/ CPE][55]; [EDL 1.0][58]; [BSD 2-Clause][59]; [Apache License, 2.0][43]; [Public Domain][56]; [Modified BSD][60]; [jQuery license][61]; [MIT license][50]; [W3C license][62] |
+| [jersey-container-servlet-core][65]         | [EPL 2.0][54]; [GPL2 w/ CPE][55]; [EDL 1.0][58]; [BSD 2-Clause][59]; [Apache License, 2.0][43]; [Public Domain][56]; [Modified BSD][60]; [jQuery license][61]; [MIT license][50]; [W3C license][62] |
+| [jersey-inject-hk2][66]                     | [EPL 2.0][54]; [GPL2 w/ CPE][55]; [EDL 1.0][58]; [BSD 2-Clause][59]; [Apache License, 2.0][43]; [Public Domain][56]; [Modified BSD][60]; [jQuery license][61]; [MIT license][50]; [W3C license][62] |
 
 ### Test Dependencies
 
 | Dependency                                 | License                                   |
 | ------------------------------------------ | ----------------------------------------- |
-| [scalatest][66]                            | [the Apache License, ASL Version 2.0][40] |
-| [scalatestplus-mockito][67]                | [Apache-2.0][40]                          |
-| [mockito-core][68]                         | [MIT][69]                                 |
-| [Hamcrest][70]                             | [BSD-3-Clause][71]                        |
-| [testcontainers-scala-scalatest][72]       | [The MIT License (MIT)][69]               |
-| [Testcontainers :: Localstack][73]         | [MIT][74]                                 |
-| [Test containers for Exasol on Docker][75] | [MIT License][76]                         |
-| [Test Database Builder for Java][77]       | [MIT License][78]                         |
-| [Matcher for SQL Result Sets][79]          | [MIT License][80]                         |
-| [EqualsVerifier \| release normal jar][81] | [Apache License, Version 2.0][3]          |
-| [JUnit Jupiter API][82]                    | [Eclipse Public License v2.0][83]         |
-| [Maven Project Version Getter][84]         | [MIT License][85]                         |
-| [Extension integration tests library][86]  | [MIT License][87]                         |
+| [scalatest][67]                            | [the Apache License, ASL Version 2.0][41] |
+| [scalatestplus-mockito][68]                | [Apache-2.0][41]                          |
+| [mockito-core][69]                         | [MIT][70]                                 |
+| [Hamcrest][71]                             | [BSD-3-Clause][72]                        |
+| [testcontainers-scala-scalatest][73]       | [The MIT License (MIT)][70]               |
+| [Testcontainers :: Localstack][74]         | [MIT][75]                                 |
+| [Test containers for Exasol on Docker][76] | [MIT License][77]                         |
+| [Test Database Builder for Java][78]       | [MIT License][79]                         |
+| [Matcher for SQL Result Sets][80]          | [MIT License][81]                         |
+| [EqualsVerifier \| release normal jar][82] | [Apache License, Version 2.0][3]          |
+| [JUnit Jupiter API][83]                    | [Eclipse Public License v2.0][84]         |
+| [Maven Project Version Getter][85]         | [MIT License][86]                         |
+| [Extension integration tests library][87]  | [MIT License][88]                         |
 
 ### Runtime Dependencies
 
 | Dependency                   | License                                                                       |
 | ---------------------------- | ----------------------------------------------------------------------------- |
-| [Logback Classic Module][88] | [Eclipse Public License - v 1.0][89]; [GNU Lesser General Public License][90] |
-| [Logback Core Module][91]    | [Eclipse Public License - v 1.0][89]; [GNU Lesser General Public License][90] |
+| [Logback Classic Module][89] | [Eclipse Public License - v 2.0][84]; [GNU Lesser General Public License][90] |
+| [Logback Core Module][91]    | [Eclipse Public License - v 2.0][84]; [GNU Lesser General Public License][90] |
 
 ### Plugin Dependencies
 
 | Dependency                                               | License                                       |
 | -------------------------------------------------------- | --------------------------------------------- |
 | [Project Keeper Maven plugin][92]                        | [The MIT License][93]                         |
-| [Scalastyle Maven Plugin][94]                            | [Apache 2.0][42]                              |
+| [Scalastyle Maven Plugin][94]                            | [Apache 2.0][43]                              |
 | [spotless-maven-plugin][95]                              | [The Apache Software License, Version 2.0][3] |
 | [scalafix-maven-plugin][96]                              | [BSD-3-Clause][21]                            |
 | [Exec Maven Plugin][97]                                  | [Apache License 2][3]                         |
@@ -103,11 +104,11 @@
 | [Maven Flatten Plugin][107]                              | [Apache Software License][3]                  |
 | [org.sonatype.ossindex.maven:ossindex-maven-plugin][108] | [ASL2][7]                                     |
 | [scala-maven-plugin][109]                                | [Public domain (Unlicense)][110]              |
-| [ScalaTest Maven Plugin][111]                            | [the Apache License, ASL Version 2.0][40]     |
+| [ScalaTest Maven Plugin][111]                            | [the Apache License, ASL Version 2.0][41]     |
 | [Apache Maven Javadoc Plugin][112]                       | [Apache-2.0][3]                               |
 | [Maven Surefire Plugin][113]                             | [Apache-2.0][3]                               |
 | [Versions Maven Plugin][114]                             | [Apache License, Version 2.0][3]              |
-| [duplicate-finder-maven-plugin Maven Mojo][115]          | [Apache License 2.0][42]                      |
+| [duplicate-finder-maven-plugin Maven Mojo][115]          | [Apache License 2.0][43]                      |
 | [Apache Maven Artifact Plugin][116]                      | [Apache-2.0][3]                               |
 | [Apache Maven Assembly Plugin][117]                      | [Apache-2.0][3]                               |
 | [Apache Maven JAR Plugin][118]                           | [Apache-2.0][3]                               |
@@ -158,65 +159,65 @@
 [29]: https://github.com/alluxio/alluxio/blob/master/LICENSE
 [30]: https://metrics.dropwizard.io/metrics-core
 [31]: https://developers.google.com/protocol-buffers/protobuf-java/
-[32]: https://github.com/GoogleCloudPlatform/BigData-interop/gcs-connector/
-[33]: https://github.com/googleapis/google-oauth-java-client/google-oauth-client
-[34]: https://orc.apache.org/orc-core
-[35]: https://avro.apache.org
-[36]: https://github.com/yawkat/lz4-java
-[37]: https://commons.apache.org/proper/commons-compress/
-[38]: https://bitbucket.org/connect2id/nimbus-jose-jwt
-[39]: https://delta.io/
-[40]: http://www.apache.org/licenses/LICENSE-2.0
-[41]: https://spark.apache.org/
-[42]: http://www.apache.org/licenses/LICENSE-2.0.html
-[43]: http://ant.apache.org/ivy/
-[44]: http://janino-compiler.github.io/janino/
-[45]: https://spdx.org/licenses/BSD-3-Clause.html
-[46]: https://github.com/exasol/parquet-io-java/
-[47]: https://github.com/exasol/parquet-io-java/blob/main/LICENSE
-[48]: http://www.slf4j.org
-[49]: http://www.opensource.org/licenses/mit-license.php
-[50]: https://logging.apache.org/log4j/2.x/
-[51]: https://github.com/lightbend/scala-logging
-[52]: https://projects.eclipse.org/projects/ee4j.jersey/jersey-common
-[53]: http://www.eclipse.org/legal/epl-2.0
-[54]: https://www.gnu.org/software/classpath/license.html
-[55]: https://creativecommons.org/publicdomain/zero/1.0/
-[56]: https://projects.eclipse.org/projects/ee4j.jersey/jersey-client
-[57]: http://www.eclipse.org/org/documents/edl-v10.php
-[58]: https://opensource.org/licenses/BSD-2-Clause
-[59]: https://asm.ow2.io/license.html
-[60]: jquery.org/license
-[61]: https://www.w3.org/Consortium/Legal/copyright-documents-19990405
-[62]: https://projects.eclipse.org/projects/ee4j.jersey/jersey-server
-[63]: https://projects.eclipse.org/projects/ee4j.jersey/project/jersey-container-servlet
-[64]: https://projects.eclipse.org/projects/ee4j.jersey/project/jersey-container-servlet-core
-[65]: https://projects.eclipse.org/projects/ee4j.jersey/project/jersey-hk2
-[66]: http://www.scalatest.org
-[67]: https://github.com/scalatest/scalatestplus-mockito
-[68]: https://github.com/mockito/mockito
-[69]: https://opensource.org/licenses/MIT
-[70]: http://hamcrest.org/JavaHamcrest/
-[71]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
-[72]: https://github.com/testcontainers/testcontainers-scala
-[73]: https://java.testcontainers.org
-[74]: http://opensource.org/licenses/MIT
-[75]: https://github.com/exasol/exasol-testcontainers/
-[76]: https://github.com/exasol/exasol-testcontainers/blob/main/LICENSE
-[77]: https://github.com/exasol/test-db-builder-java/
-[78]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
-[79]: https://github.com/exasol/hamcrest-resultset-matcher/
-[80]: https://github.com/exasol/hamcrest-resultset-matcher/blob/main/LICENSE
-[81]: https://www.jqno.nl/equalsverifier
-[82]: https://junit.org/junit5/
-[83]: https://www.eclipse.org/legal/epl-v20.html
-[84]: https://github.com/exasol/maven-project-version-getter/
-[85]: https://github.com/exasol/maven-project-version-getter/blob/main/LICENSE
-[86]: https://github.com/exasol/extension-manager/
-[87]: https://github.com/exasol/extension-manager/blob/main/LICENSE
-[88]: http://logback.qos.ch/logback-classic
-[89]: http://www.eclipse.org/legal/epl-v10.html
-[90]: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+[32]: https://developers.google.com/protocol-buffers/protobuf-java-util/
+[33]: https://github.com/GoogleCloudPlatform/BigData-interop/gcs-connector/
+[34]: https://github.com/googleapis/google-oauth-java-client/google-oauth-client
+[35]: https://orc.apache.org/orc-core
+[36]: https://avro.apache.org
+[37]: https://github.com/yawkat/lz4-java
+[38]: https://commons.apache.org/proper/commons-compress/
+[39]: https://bitbucket.org/connect2id/nimbus-jose-jwt
+[40]: https://delta.io/
+[41]: http://www.apache.org/licenses/LICENSE-2.0
+[42]: https://spark.apache.org/
+[43]: http://www.apache.org/licenses/LICENSE-2.0.html
+[44]: http://ant.apache.org/ivy/
+[45]: http://janino-compiler.github.io/janino/
+[46]: https://spdx.org/licenses/BSD-3-Clause.html
+[47]: https://github.com/exasol/parquet-io-java/
+[48]: https://github.com/exasol/parquet-io-java/blob/main/LICENSE
+[49]: http://www.slf4j.org
+[50]: http://www.opensource.org/licenses/mit-license.php
+[51]: https://logging.apache.org/log4j/2.x/
+[52]: https://github.com/lightbend/scala-logging
+[53]: https://projects.eclipse.org/projects/ee4j.jersey/jersey-common
+[54]: http://www.eclipse.org/legal/epl-2.0
+[55]: https://www.gnu.org/software/classpath/license.html
+[56]: https://creativecommons.org/publicdomain/zero/1.0/
+[57]: https://projects.eclipse.org/projects/ee4j.jersey/jersey-client
+[58]: http://www.eclipse.org/org/documents/edl-v10.php
+[59]: https://opensource.org/licenses/BSD-2-Clause
+[60]: https://asm.ow2.io/license.html
+[61]: jquery.org/license
+[62]: https://www.w3.org/Consortium/Legal/copyright-documents-19990405
+[63]: https://projects.eclipse.org/projects/ee4j.jersey/jersey-server
+[64]: https://projects.eclipse.org/projects/ee4j.jersey/project/jersey-container-servlet
+[65]: https://projects.eclipse.org/projects/ee4j.jersey/project/jersey-container-servlet-core
+[66]: https://projects.eclipse.org/projects/ee4j.jersey/project/jersey-hk2
+[67]: http://www.scalatest.org
+[68]: https://github.com/scalatest/scalatestplus-mockito
+[69]: https://github.com/mockito/mockito
+[70]: https://opensource.org/licenses/MIT
+[71]: http://hamcrest.org/JavaHamcrest/
+[72]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
+[73]: https://github.com/testcontainers/testcontainers-scala
+[74]: https://java.testcontainers.org
+[75]: http://opensource.org/licenses/MIT
+[76]: https://github.com/exasol/exasol-testcontainers/
+[77]: https://github.com/exasol/exasol-testcontainers/blob/main/LICENSE
+[78]: https://github.com/exasol/test-db-builder-java/
+[79]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
+[80]: https://github.com/exasol/hamcrest-resultset-matcher/
+[81]: https://github.com/exasol/hamcrest-resultset-matcher/blob/main/LICENSE
+[82]: https://www.jqno.nl/equalsverifier
+[83]: https://junit.org/junit5/
+[84]: https://www.eclipse.org/legal/epl-v20.html
+[85]: https://github.com/exasol/maven-project-version-getter/
+[86]: https://github.com/exasol/maven-project-version-getter/blob/main/LICENSE
+[87]: https://github.com/exasol/extension-manager/
+[88]: https://github.com/exasol/extension-manager/blob/main/LICENSE
+[89]: http://logback.qos.ch/logback-classic
+[90]: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 [91]: http://logback.qos.ch/logback-core
 [92]: https://github.com/exasol/project-keeper/
 [93]: https://github.com/exasol/project-keeper/blob/main/LICENSE
