@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.9.3, released 2026-??-??
+# Cloud Storage Extension 2.9.3, released 2026-02-12
 
 Code name: Upgrade protobuf dependency
 
