@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.9.4, released 2026-??-??
+# Cloud Storage Extension 2.9.4, released 2026-04-01
 
 Code name: Update dependencies to fix CVEs
 
