@@ -39,7 +39,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-bom</artifactId>
-                <version>4.2.9.Final</version>
+                <version>4.2.12.Final</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -260,7 +260,7 @@
             <!-- override version 3.6.3 to fix vulnerability CVE-2023-42503, CVE-2024-23944 & CVE-2024-51504 -->
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
-            <version>3.9.4</version>
+            <version>3.9.5</version>
         </dependency>
         <dependency>
             <!-- Upgrade transitive dependency of org.apache.zookeeper:zookeeper to fix CVE-2023-6378 -->
@@ -482,7 +482,7 @@
         <dependency>
             <groupId>org.apache.orc</groupId>
             <artifactId>orc-core</artifactId>
-            <version>1.9.7</version>
+            <version>1.9.8</version>
             <exclusions>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -500,7 +500,7 @@
             <!-- Update transitive dependency of org.apache.spark:spark-core to fix CVE-2024-47561 -->
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
-            <version>1.12.0</version>
+            <version>1.12.1</version>
             <exclusions>
                 <!-- excluded because of duplicate-finder-maven-plugin -->
                 <exclusion>

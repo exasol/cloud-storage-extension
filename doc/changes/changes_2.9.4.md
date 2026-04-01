@@ -23,6 +23,12 @@ This release updates the project dependencies to fix the following cves:
 
 ### Cloud Storage Extension
 
+#### Compile Dependency Updates
+
+* Updated `org.apache.avro:avro:1.12.0` to `1.12.1`
+* Updated `org.apache.orc:orc-core:1.9.7` to `1.9.8`
+* Updated `org.apache.zookeeper:zookeeper:3.9.4` to `3.9.5`
+
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.0.5` to `2.0.6`
