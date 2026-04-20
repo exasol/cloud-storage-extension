@@ -16,7 +16,7 @@
     <properties>
         <scala.version>2.13.11</scala.version><!-- pinned -->
         <scala.compat.version>2.13</scala.compat.version>
-        <hadoop.version>3.5.0</hadoop.version>
+        <hadoop.version>3.4.1</hadoop.version><!-- pinned because of wasb support -->
         <awssdk.version>2.42.36</awssdk.version>
         <jersey.version>3.1.11</jersey.version>
         <log4j.version>2.25.4</log4j.version>
