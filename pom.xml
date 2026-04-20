@@ -14,7 +14,7 @@
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
-        <scala.version>3.8.3</scala.version>
+        <scala.version>2.13.18</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
         <hadoop.version>3.5.0</hadoop.version>
         <awssdk.version>2.42.36</awssdk.version>
