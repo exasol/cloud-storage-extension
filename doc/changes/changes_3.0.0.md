@@ -1,26 +1,30 @@
-# Cloud Storage Extension 2.9.5, released 2026-??-??
+# Cloud Storage Extension 3.0.0, released 2026-??-??
 
-Code name: Fixed vulnerability CVE-2026-5588 in org.bouncycastle:bcprov-jdk18on:jar:1.78.1:compile
+Code name: Java 17 baseline
 
 ## Summary
 
-This release fixes the following vulnerability:
+This release raises the Java baseline from Java 11 to Java 17.
 
-### CVE-2026-5588 (CWE-327) in dependency `org.bouncycastle:bcprov-jdk18on:jar:1.78.1:compile`
-: Use of a Broken or Risky Cryptographic Algorithm vulnerability in Legion of the Bouncy Castle Inc. BC-JAVA bcpkix on all (pkix modules).
+This is a breaking change. Cloud Storage Extension now only supports Java 17 for compilation, tests, and Java UDF execution in Exasol. Java 11 is no longer supported.
 
-PKIX draft CompositeVerifier accepts empty signature sequence as valid.
+To support Java 17-based UDF execution, the integration test setup was updated to Exasol `2025.2.1`, which provides current Script Language Containers with Java 17 support.
 
-This issue affects BC-JAVA: from 1.49 before 1.84.
-#### References
-* https://ossindex.sonatype.org/vulnerability/CVE-2026-5588?component-type=maven&component-name=org.bouncycastle%2Fbcprov-jdk18on&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
-* http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2026-5588
-* https://github.com/bcgit/bc-java/wiki/CVE%E2%80%902026%E2%80%905588
-* https://www.sonatype.com/products/sonatype-guide/oss-index-users
+This release also updates dependencies to fix the following vulnerabilities:
+- CVE-2026-5588: org.bouncycastle:bcprov-jdk18on:jar:1.78.1:compile
+- CVE-2024-1300: io.vertx:vertx-core:jar:4.3.5:compile
+- CVE-2026-1002: io.vertx:vertx-core:jar:4.3.5:compile
+
+## Breaking Changes
+
+* Java 11 support was removed. Java 17 is now required.
+* Exasol integration tests now run against Exasol `2025.2.1` to ensure Java 17-compatible Script Language Containers.
 
 ## Security
 
 * #386: Fixed vulnerability CVE-2026-5588 in dependency `org.bouncycastle:bcprov-jdk18on:jar:1.78.1:compile`
+* Fixed vulnerability CVE-2024-1300 in dependency `io.vertx:vertx-core:jar:4.3.5:compile`
+* Fixed vulnerability CVE-2026-1002 in dependency `io.vertx:vertx-core:jar:4.3.5:compile`
 
 ## Dependency Updates
 
