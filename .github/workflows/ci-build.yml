@@ -55,15 +55,14 @@ jobs:
       - name: Set up JDKs
         id: setup-java
         uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: |-
-            11
-            17
-          cache: maven
-          server-id: ossindex
-          server-username: OSSINDEX_USERNAME
+        with: {
+          distribution: temurin,
+          java-version: '17',
+          cache: maven,
+          server-id: ossindex,
+          server-username: OSSINDEX_USERNAME,
           server-password: OSSINDEX_API_TOKEN
+        }
       - name: Cache SonarCloud packages
         id: cache-sonar
         uses: actions/cache@v5
@@ -169,20 +168,20 @@ jobs:
         with: {
           fetch-depth: 0
         }
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         id: setup-java
         uses: actions/setup-java@v5
         with: {
           distribution: temurin,
-          java-version: '17',
+          java-version: '21',
           cache: maven,
           server-id: ossindex,
           server-username: OSSINDEX_USERNAME,
           server-password: OSSINDEX_API_TOKEN
         }
-      - name: Run tests and build with Maven 17
+      - name: Run tests and build with Maven 21
         id: build-next-java
-        run: mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=17
+        run: mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=21
         env: {
           OSSINDEX_USERNAME: '${{ secrets.OSSINDEX_USERNAME }}',
           OSSINDEX_API_TOKEN: '${{ secrets.OSSINDEX_API_TOKEN }}'
@@ -214,12 +213,11 @@ jobs:
       - name: Set up JDKs
         id: setup-java
         uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: |-
-            11
-            17
+        with: {
+          distribution: temurin,
+          java-version: '17',
           cache: maven
+        }
       - name: Check if release is needed
         id: check-release
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') }}

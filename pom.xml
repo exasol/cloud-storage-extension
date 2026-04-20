@@ -14,6 +14,7 @@
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
+        <java.version>17</java.version>
         <scala.version>2.13.11</scala.version><!-- pinned -->
         <scala.compat.version>2.13</scala.compat.version>
         <hadoop.version>3.4.1</hadoop.version><!-- pinned because of wasb support -->

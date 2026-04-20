@@ -7,7 +7,7 @@
 
 | Dependency                                  | License                                                                                                                                                                                             |
 | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [scala-library-bootstrapped][0]             | [Apache-2.0][1]                                                                                                                                                                                     |
+| [Scala Library][0]                          | [Apache-2.0][1]                                                                                                                                                                                     |
 | [Apache Commons Lang][2]                    | [Apache-2.0][3]                                                                                                                                                                                     |
 | [Gson][4]                                   | [Apache-2.0][3]                                                                                                                                                                                     |
 | [Apache Commons Configuration][5]           | [Apache-2.0][3]                                                                                                                                                                                     |
@@ -127,7 +127,7 @@
 | ------------------------------------------ | ------- |
 | [@exasol/extension-manager-interface][131] | MIT     |
 
-[0]: https://scala-lang.org/
+[0]: https://www.scala-lang.org/
 [1]: https://www.apache.org/licenses/LICENSE-2.0
 [2]: https://commons.apache.org/proper/commons-lang/
 [3]: https://www.apache.org/licenses/LICENSE-2.0.txt

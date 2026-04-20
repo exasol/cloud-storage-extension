@@ -49,7 +49,6 @@ This issue affects BC-JAVA: from 1.49 before 1.84.
 * Updated `org.apache.commons:commons-compress:1.27.1` to `1.28.0`
 * Updated `org.apache.commons:commons-configuration2:2.11.0` to `2.14.0`
 * Updated `org.apache.commons:commons-lang3:3.18.0` to `3.20.0`
-* Kept Hadoop dependencies at `3.4.1` because Hadoop `3.5.0` drops `wasb(s)` support used by the extension
 * Updated `org.apache.ivy:ivy:2.5.2` to `2.5.3`
 * Updated `org.apache.logging.log4j:log4j-1.2-api:2.25.3` to `2.25.4`
 * Updated `org.apache.logging.log4j:log4j-api:2.25.3` to `2.25.4`
@@ -63,7 +62,6 @@ This issue affects BC-JAVA: from 1.49 before 1.84.
 * Updated `org.glassfish.jersey.core:jersey-server:2.47` to `3.1.11`
 * Updated `org.glassfish.jersey.inject:jersey-hk2:2.47` to `3.1.11`
 * Updated `org.jetbrains.kotlin:kotlin-stdlib:1.9.25` to `2.3.20`
-* Kept `org.scala-lang:scala-library` at `2.13.11` because the build still targets Scala `2.13`
 * Updated `org.slf4j:jul-to-slf4j:2.0.16` to `2.0.17`
 * Updated `org.xerial.snappy:snappy-java:1.1.10.7` to `1.1.10.8`
 * Updated `software.amazon.awssdk:s3-transfer-manager:2.34.0` to `2.42.36`
