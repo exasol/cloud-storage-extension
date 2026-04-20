@@ -62,6 +62,7 @@ This issue affects BC-JAVA: from 1.49 before 1.84.
 * Updated `org.glassfish.jersey.core:jersey-server:2.47` to `3.1.11`
 * Updated `org.glassfish.jersey.inject:jersey-hk2:2.47` to `3.1.11`
 * Updated `org.jetbrains.kotlin:kotlin-stdlib:1.9.25` to `2.3.20`
+* Updated `org.scala-lang:scala-library:2.13.11` to `2.13.18`
 * Updated `org.slf4j:jul-to-slf4j:2.0.16` to `2.0.17`
 * Updated `org.xerial.snappy:snappy-java:1.1.10.7` to `1.1.10.8`
 * Updated `software.amazon.awssdk:s3-transfer-manager:2.34.0` to `2.42.36`
