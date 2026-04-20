@@ -113,6 +113,18 @@
             <version>1.1.10.8</version>
         </dependency>
         <dependency>
+            <!-- Override vulnerable transitive version from hadoop-common -->
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>1.84</version>
+        </dependency>
+        <dependency>
+            <!-- Override vulnerable transitive version from alluxio / jetcd / vertx-grpc -->
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>4.5.26</version>
+        </dependency>
+        <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>import-export-udf-common-scala_${scala.compat.version}</artifactId>
             <version>2.0.0</version>
