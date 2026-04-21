@@ -65,27 +65,27 @@
 
 | Dependency                                 | License                                   |
 | ------------------------------------------ | ----------------------------------------- |
-| [Alluxio Under File System - Local FS][72] | [Apache License][33]                      |
-| [scalatest][73]                            | [the Apache License, ASL Version 2.0][45] |
-| [scalatestplus-mockito][74]                | [Apache-2.0][45]                          |
-| [mockito-core][75]                         | [MIT][76]                                 |
-| [Hamcrest][77]                             | [BSD-3-Clause][78]                        |
-| [testcontainers-scala-scalatest][79]       | [The MIT License (MIT)][76]               |
-| [Testcontainers :: Localstack][80]         | [MIT][81]                                 |
-| [Test containers for Exasol on Docker][82] | [MIT License][83]                         |
-| [Test Database Builder for Java][84]       | [MIT License][85]                         |
-| [Matcher for SQL Result Sets][86]          | [MIT License][87]                         |
-| [EqualsVerifier \| release normal jar][88] | [Apache License, Version 2.0][3]          |
-| [JUnit Jupiter API][89]                    | [Eclipse Public License v2.0][90]         |
-| [Maven Project Version Getter][91]         | [MIT License][92]                         |
-| [Extension integration tests library][93]  | [MIT License][94]                         |
+| [scalatest][72]                            | [the Apache License, ASL Version 2.0][45] |
+| [scalatestplus-mockito][73]                | [Apache-2.0][45]                          |
+| [mockito-core][74]                         | [MIT][75]                                 |
+| [Hamcrest][76]                             | [BSD-3-Clause][77]                        |
+| [testcontainers-scala-scalatest][78]       | [The MIT License (MIT)][75]               |
+| [Testcontainers :: Localstack][79]         | [MIT][80]                                 |
+| [Test containers for Exasol on Docker][81] | [MIT License][82]                         |
+| [Test Database Builder for Java][83]       | [MIT License][84]                         |
+| [Matcher for SQL Result Sets][85]          | [MIT License][86]                         |
+| [EqualsVerifier \| release normal jar][87] | [Apache License, Version 2.0][3]          |
+| [JUnit Jupiter API][88]                    | [Eclipse Public License v2.0][89]         |
+| [Maven Project Version Getter][90]         | [MIT License][91]                         |
+| [Extension integration tests library][92]  | [MIT License][93]                         |
 
 ### Runtime Dependencies
 
-| Dependency                   | License                                                                       |
-| ---------------------------- | ----------------------------------------------------------------------------- |
-| [Logback Classic Module][95] | [Eclipse Public License - v 2.0][90]; [GNU Lesser General Public License][96] |
-| [Logback Core Module][97]    | [Eclipse Public License - v 2.0][90]; [GNU Lesser General Public License][96] |
+| Dependency                                 | License                                                                       |
+| ------------------------------------------ | ----------------------------------------------------------------------------- |
+| [Alluxio Under File System - Local FS][94] | [Apache License][33]                                                          |
+| [Logback Classic Module][95]               | [Eclipse Public License - v 2.0][89]; [GNU Lesser General Public License][96] |
+| [Logback Core Module][97]                  | [Eclipse Public License - v 2.0][89]; [GNU Lesser General Public License][96] |
 
 ### Plugin Dependencies
 
@@ -202,29 +202,29 @@
 [69]: https://projects.eclipse.org/projects/ee4j.jersey/project/jersey-container-servlet
 [70]: https://projects.eclipse.org/projects/ee4j.jersey/project/jersey-container-servlet-core
 [71]: https://projects.eclipse.org/projects/ee4j.jersey/project/jersey-hk2
-[72]: https://www.alluxio.io/alluxio-dora/alluxio-underfs/alluxio-underfs-local/
-[73]: http://www.scalatest.org
-[74]: https://github.com/scalatest/scalatestplus-mockito
-[75]: https://github.com/mockito/mockito
-[76]: https://opensource.org/licenses/MIT
-[77]: http://hamcrest.org/JavaHamcrest/
-[78]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
-[79]: https://github.com/testcontainers/testcontainers-scala
-[80]: https://java.testcontainers.org
-[81]: http://opensource.org/licenses/MIT
-[82]: https://github.com/exasol/exasol-testcontainers/
-[83]: https://github.com/exasol/exasol-testcontainers/blob/main/LICENSE
-[84]: https://github.com/exasol/test-db-builder-java/
-[85]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
-[86]: https://github.com/exasol/hamcrest-resultset-matcher/
-[87]: https://github.com/exasol/hamcrest-resultset-matcher/blob/main/LICENSE
-[88]: https://www.jqno.nl/equalsverifier
-[89]: https://junit.org/
-[90]: https://www.eclipse.org/legal/epl-v20.html
-[91]: https://github.com/exasol/maven-project-version-getter/
-[92]: https://github.com/exasol/maven-project-version-getter/blob/main/LICENSE
-[93]: https://github.com/exasol/extension-manager/
-[94]: https://github.com/exasol/extension-manager/blob/main/LICENSE
+[72]: http://www.scalatest.org
+[73]: https://github.com/scalatest/scalatestplus-mockito
+[74]: https://github.com/mockito/mockito
+[75]: https://opensource.org/licenses/MIT
+[76]: http://hamcrest.org/JavaHamcrest/
+[77]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
+[78]: https://github.com/testcontainers/testcontainers-scala
+[79]: https://java.testcontainers.org
+[80]: http://opensource.org/licenses/MIT
+[81]: https://github.com/exasol/exasol-testcontainers/
+[82]: https://github.com/exasol/exasol-testcontainers/blob/main/LICENSE
+[83]: https://github.com/exasol/test-db-builder-java/
+[84]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
+[85]: https://github.com/exasol/hamcrest-resultset-matcher/
+[86]: https://github.com/exasol/hamcrest-resultset-matcher/blob/main/LICENSE
+[87]: https://www.jqno.nl/equalsverifier
+[88]: https://junit.org/
+[89]: https://www.eclipse.org/legal/epl-v20.html
+[90]: https://github.com/exasol/maven-project-version-getter/
+[91]: https://github.com/exasol/maven-project-version-getter/blob/main/LICENSE
+[92]: https://github.com/exasol/extension-manager/
+[93]: https://github.com/exasol/extension-manager/blob/main/LICENSE
+[94]: https://www.alluxio.io/alluxio-dora/alluxio-underfs/alluxio-underfs-local/
 [95]: http://logback.qos.ch/logback-classic
 [96]: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 [97]: http://logback.qos.ch/logback-core

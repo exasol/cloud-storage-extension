@@ -125,11 +125,11 @@
             <version>4.5.26</version>
         </dependency>
         <dependency>
-            <!-- Enable local filesystem UnderFS for integration testing -->
+            <!-- Required at runtime when connecting to Alluxio deployments backed by the local UnderFS -->
             <groupId>org.alluxio</groupId>
             <artifactId>alluxio-underfs-local</artifactId>
             <version>313</version>
-            <scope>test</scope>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
