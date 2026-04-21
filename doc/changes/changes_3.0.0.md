@@ -88,6 +88,7 @@ This release also updates dependencies to fix the following vulnerabilities:
 * Updated `com.exasol:maven-project-version-getter:1.2.0` to `1.2.2`
 * Updated `com.exasol:test-db-builder-java:3.6.0` to `3.6.4`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.17.3` to `4.5`
+* Added `org.alluxio:alluxio-underfs-local:313`
 * Updated `org.junit.jupiter:junit-jupiter-api:5.10.3` to `6.0.3`
 * Updated `org.mockito:mockito-core:5.12.0` to `5.23.0`
 * Updated `org.testcontainers:localstack:1.20.3` to `1.21.4`
