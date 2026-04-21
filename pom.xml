@@ -116,7 +116,7 @@
             <!-- Override vulnerable transitive version from hadoop-common -->
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk18on</artifactId>
-            <version>1.84</version>
+            <version>1.85</version>
         </dependency>
         <dependency>
             <!-- Override vulnerable transitive version from alluxio / jetcd / vertx-grpc -->

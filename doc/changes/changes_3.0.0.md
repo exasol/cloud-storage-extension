@@ -60,7 +60,7 @@ This release also updates dependencies to fix the following vulnerabilities:
 * Updated `org.apache.logging.log4j:log4j-core:2.25.3` to `2.25.4`
 * Updated `org.apache.orc:orc-core:1.9.8` to `2.3.0`
 * Updated `org.apache.spark:spark-sql_2.13:3.5.7` to `4.2.0-preview4`
-* Added `org.bouncycastle:bcprov-jdk18on:1.84`
+* Added `org.bouncycastle:bcprov-jdk18on:1.85`
 * Updated `org.glassfish.jersey.containers:jersey-container-servlet-core:2.47` to `3.1.11`
 * Updated `org.glassfish.jersey.containers:jersey-container-servlet:2.47` to `3.1.11`
 * Updated `org.glassfish.jersey.core:jersey-client:2.47` to `3.1.11`
