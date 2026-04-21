@@ -1,17 +1,18 @@
 package com.exasol.cloudetl.alluxio
 
-import java.sql.ResultSet
-import java.nio.file.{ Files, Path }
+import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.attribute.PosixFilePermissions
+import java.sql.ResultSet
 
 import com.exasol.cloudetl.BaseIntegrationTest
 import com.exasol.dbbuilder.dialects.Table
 import com.exasol.matcher.ResultSetStructureMatcher.table
 
 import com.dimafeng.testcontainers.GenericContainer
-import org.testcontainers.containers.BindMode
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
+import org.testcontainers.containers.BindMode
 
 class AlluxioExportImportIT extends BaseIntegrationTest {
 
