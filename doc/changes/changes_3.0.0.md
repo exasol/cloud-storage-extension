@@ -15,7 +15,7 @@ This release also updates dependencies to fix the following vulnerabilities:
 - CVE-2024-1300: io.vertx:vertx-core:jar:4.3.5:compile
 - CVE-2026-1002: io.vertx:vertx-core:jar:4.3.5:compile
 
-`CVE-2026-0636` is excluded because exploiting the vulnerability requires LDAP, which Cloud Storage Extension does not use. We will update to Bouncy Castle 1.85 once it is released.
+`CVE-2026-5598` is excluded because it affects Bouncy Castle FrodoKEM code paths, which Cloud Storage Extension does not use. The project does not invoke Bouncy Castle directly and does not use FrodoKEM or other post-quantum cryptography APIs.
 
 ## Breaking Changes
 
@@ -27,6 +27,7 @@ This release also updates dependencies to fix the following vulnerabilities:
 * #386: Fixed vulnerability CVE-2026-5588 in dependency `org.bouncycastle:bcprov-jdk18on:jar:1.78.1:compile`
 * Fixed vulnerability CVE-2024-1300 in dependency `io.vertx:vertx-core:jar:4.3.5:compile`
 * Fixed vulnerability CVE-2026-1002 in dependency `io.vertx:vertx-core:jar:4.3.5:compile`
+* Excluded vulnerability CVE-2026-5598 in dependency `org.bouncycastle:bcprov-jdk18on:jar:1.84:compile` because the affected FrodoKEM code path is not used by Cloud Storage Extension
 
 ## Dependency Updates
 

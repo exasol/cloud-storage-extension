@@ -956,8 +956,8 @@
                     <excludeVulnerabilityIds>
                         <!-- aircompressor wasn't updated for a year, exclusion is the only option atm -->
                         <exclude>CVE-2025-67721</exclude>
-                        <!-- CVE-2026-0636 affects LDAP certificate store usage in Bouncy Castle. We do not use LDAP cert store paths here, so this attack vector does not apply to this project. We will update to 1.85 once it is available. -->
-                        <exclude>CVE-2026-0636</exclude>
+                        <!-- CVE-2026-5598 affects Bouncy Castle FrodoKEM code paths. Cloud Storage Extension does not use Bouncy Castle directly and does not invoke FrodoKEM or other PQC APIs, so this finding is not exploitable in this project. -->
+                        <exclude>CVE-2026-5598</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
