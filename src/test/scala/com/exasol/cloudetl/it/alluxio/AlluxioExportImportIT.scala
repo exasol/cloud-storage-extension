@@ -21,7 +21,8 @@ class AlluxioExportImportIT extends BaseIntegrationTest {
   private val alluxioUnderfsMountPoint = "/opt/alluxio/underFSStorage"
   private val alluxioRootUfs = s"local://$alluxioUnderfsMountPoint"
   private val alluxioUnderfsBind =
-    Seq(GenericContainer.FileSystemBind(alluxioUnderfsDirectory.toString, alluxioUnderfsMountPoint, BindMode.READ_WRITE))
+    Seq(GenericContainer.FileSystemBind(alluxioUnderfsDirectory.toString, alluxioUnderfsMountPoint,
+      BindMode.READ_WRITE))
 
   val alluxioMainContainer =
     GenericContainer(
