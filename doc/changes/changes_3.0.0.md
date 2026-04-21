@@ -15,6 +15,8 @@ This release also updates dependencies to fix the following vulnerabilities:
 - CVE-2024-1300: io.vertx:vertx-core:jar:4.3.5:compile
 - CVE-2026-1002: io.vertx:vertx-core:jar:4.3.5:compile
 
+`CVE-2026-0636` is excluded because exploiting the vulnerability requires LDAP, which Cloud Storage Extension does not use. We will update to Bouncy Castle 1.85 once it is released.
+
 ## Breaking Changes
 
 * Java 11 support was removed. Java 17 is now required.
