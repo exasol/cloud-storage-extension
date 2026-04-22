@@ -1,0 +1,29 @@
+{
+  "summary": "Accepted npm audit findings for development-only tooling in the extension workspace. These findings do not affect the production extension code or the release artifact shipped to users.",
+  "exceptions": [
+    {
+      "advisory": "GHSA-67mh-4wv8-2f99",
+      "package": "esbuild",
+      "version": "0.24.2",
+      "scope": "dev",
+      "applies_to_runtime": false,
+      "reason": "The advisory only affects esbuild's development server. This project uses esbuild for bundling during the build step and does not run the esbuild dev server in production."
+    },
+    {
+      "advisory": "GHSA-xffm-g5w8-qvg7",
+      "package": "@eslint/plugin-kit",
+      "version": "0.2.8",
+      "scope": "dev",
+      "applies_to_runtime": false,
+      "reason": "The ReDoS issue is in ESLint config comment parsing. It only matters while linting untrusted source code and does not affect the shipped extension runtime."
+    },
+    {
+      "advisory": "GHSA-xffm-g5w8-qvg7",
+      "package": "eslint",
+      "version": "9.18.0",
+      "scope": "dev",
+      "applies_to_runtime": false,
+      "reason": "This is the same underlying advisory as @eslint/plugin-kit. npm audit reports eslint because it depends on the vulnerable parser code used only during linting."
+    }
+  ]
+}

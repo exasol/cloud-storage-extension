@@ -17,6 +17,8 @@ This release also updates dependencies to fix the following vulnerabilities:
 
 `CVE-2026-5598` is excluded because it affects Bouncy Castle FrodoKEM code paths, which Cloud Storage Extension does not use. The project does not invoke Bouncy Castle directly and does not use FrodoKEM or other post-quantum cryptography APIs.
 
+The remaining npm audit findings in the `extension/` workspace only affect development tools used while building or linting the project. They do not affect the production extension code or the release artifact used by customers.
+
 ## Breaking Changes
 
 * Java 11 support was removed. Java 17 is now required.
@@ -28,6 +30,10 @@ This release also updates dependencies to fix the following vulnerabilities:
 * Fixed vulnerability CVE-2024-1300 in dependency `io.vertx:vertx-core:jar:4.3.5:compile`
 * Fixed vulnerability CVE-2026-1002 in dependency `io.vertx:vertx-core:jar:4.3.5:compile`
 * Excluded vulnerability CVE-2026-5598 in dependency `org.bouncycastle:bcprov-jdk18on:jar:1.84:compile` because the affected FrodoKEM code path is not used by Cloud Storage Extension
+* The remaining `npm audit` findings in `extension/` are accepted as development-only exceptions:
+  `esbuild` is flagged for its development server, but this project only uses esbuild to bundle files during the build and does not expose the dev server in production.
+  `@eslint/plugin-kit` and the related `eslint` finding only affect linting of untrusted source files during development or CI.
+  These findings do not affect the production code that users run.
 
 ## Dependency Updates
 
