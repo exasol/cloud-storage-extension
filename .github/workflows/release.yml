@@ -83,27 +83,25 @@ jobs:
         id: configure-maven-central-credentials
         if: ${{ false }}
         uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: |-
-            11
-            17
-          cache: maven
-          server-id: maven-central-portal
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
-          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+        with: {
+          distribution: temurin,
+          java-version: '17',
+          cache: maven,
+          server-id: maven-central-portal,
+          server-username: MAVEN_USERNAME,
+          server-password: MAVEN_PASSWORD,
+          gpg-private-key: '${{ secrets.OSSRH_GPG_SECRET_KEY }}',
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
+        }
       - name: Set up JDKs
         id: setup-jdks
         if: ${{ ! false }}
         uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: |-
-            11
-            17
+        with: {
+          distribution: temurin,
+          java-version: '17',
           cache: maven
+        }
       - name: Fail if not running on main or release branch
         id: check-main-or-release-branch
         if: ${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/heads/release/') }}

@@ -8,11 +8,14 @@ import org.apache.parquet.column.ParquetProperties
 import org.apache.parquet.hadoop.ParquetFileWriter
 import org.apache.parquet.hadoop.ParquetWriter
 import org.apache.parquet.hadoop.api.WriteSupport
+import org.apache.parquet.hadoop.util.HadoopOutputFile
+import org.apache.parquet.io.OutputFile
 import org.apache.parquet.schema.MessageType
 
 object ParquetRowWriter {
 
-  private[this] class Builder(path: Path, messageType: MessageType) extends ParquetWriter.Builder[Row, Builder](path) {
+  private[this] class Builder(file: OutputFile, messageType: MessageType)
+      extends ParquetWriter.Builder[Row, Builder](file) {
 
     override def getWriteSupport(conf: Configuration): WriteSupport[Row] =
       new RowWriteSupport(messageType)
@@ -26,7 +29,7 @@ object ParquetRowWriter {
     messageType: MessageType,
     options: ParquetWriteOptions
   ): ParquetWriter[Row] =
-    new Builder(path, messageType)
+    new Builder(HadoopOutputFile.fromPath(path, conf), messageType)
       .withRowGroupSize(options.blockSize.toLong)
       .withPageSize(options.pageSize)
       .withCompressionCodec(options.compressionCodec)

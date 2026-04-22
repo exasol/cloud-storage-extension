@@ -7,6 +7,8 @@ import org.apache.parquet.example.data.GroupWriter
 import org.apache.parquet.example.data.simple.SimpleGroup
 import org.apache.parquet.hadoop.ParquetWriter
 import org.apache.parquet.hadoop.api.WriteSupport
+import org.apache.parquet.hadoop.util.HadoopOutputFile
+import org.apache.parquet.io.OutputFile
 import org.apache.parquet.io.api.Binary
 import org.apache.parquet.io.api.RecordConsumer
 import org.apache.parquet.schema._
@@ -16,7 +18,7 @@ trait ParquetTestDataWriter {
   private[this] val PARQUET_BLOCK_SIZE = 64L * 1024 * 1024
 
   final def getParquetWriter(path: HPath, schema: MessageType, dictionaryEncoding: Boolean): ParquetWriter[Group] =
-    BaseGroupWriterBuilder(path, schema)
+    BaseGroupWriterBuilder(HadoopOutputFile.fromPath(path, new Configuration()), schema)
       .withPageSize(ParquetWriter.DEFAULT_PAGE_SIZE)
       .withRowGroupSize(PARQUET_BLOCK_SIZE)
       .withDictionaryEncoding(dictionaryEncoding)
@@ -63,8 +65,8 @@ trait ParquetTestDataWriter {
       writer.write(record)
   }
 
-  private[this] case class BaseGroupWriterBuilder(path: HPath, schema: MessageType)
-      extends ParquetWriter.Builder[Group, BaseGroupWriterBuilder](path) {
+  private[this] case class BaseGroupWriterBuilder(file: OutputFile, schema: MessageType)
+      extends ParquetWriter.Builder[Group, BaseGroupWriterBuilder](file) {
     override def getWriteSupport(conf: Configuration): WriteSupport[Group] = BaseGroupWriteSupport(schema)
     override def self(): BaseGroupWriterBuilder = this
   }

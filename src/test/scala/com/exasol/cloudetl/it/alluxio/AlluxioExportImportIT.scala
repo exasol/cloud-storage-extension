@@ -1,5 +1,8 @@
 package com.exasol.cloudetl.alluxio
 
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.attribute.PosixFilePermissions
 import java.sql.ResultSet
 
 import com.exasol.cloudetl.BaseIntegrationTest
@@ -9,14 +12,26 @@ import com.exasol.matcher.ResultSetStructureMatcher.table
 import com.dimafeng.testcontainers.GenericContainer
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
+import org.testcontainers.containers.BindMode
 
 class AlluxioExportImportIT extends BaseIntegrationTest {
 
   val ALLUXIO_IMAGE = "alluxio/alluxio:300"
   val SCHEMA_NAME = "ALLUXIO_SCHEMA"
+  private val alluxioUnderfsDirectory = createSharedUnderfsDirectory()
+  private val alluxioUnderfsMountPoint = "/opt/alluxio/underFSStorage"
+  private val alluxioUnderfsBind =
+    Seq(
+      GenericContainer.FileSystemBind(alluxioUnderfsDirectory.toString, alluxioUnderfsMountPoint, BindMode.READ_WRITE)
+    )
 
   val alluxioMainContainer =
-    GenericContainer(ALLUXIO_IMAGE, exposedPorts = Seq(19998, 19999), command = Seq("master"))
+    GenericContainer(
+      ALLUXIO_IMAGE,
+      exposedPorts = Seq(19998, 19999),
+      command = Seq("master"),
+      fileSystemBind = alluxioUnderfsBind
+    )
       .configure { c =>
         c.withNetwork(network)
         c.withNetworkAliases("alluxio-main")
@@ -25,14 +40,20 @@ class AlluxioExportImportIT extends BaseIntegrationTest {
         ()
       }
   val alluxioWorkerContainer =
-    GenericContainer(ALLUXIO_IMAGE, exposedPorts = Seq(29999, 30000), command = Seq("worker"))
+    GenericContainer(
+      ALLUXIO_IMAGE,
+      exposedPorts = Seq(29999, 30000),
+      command = Seq("worker"),
+      fileSystemBind = alluxioUnderfsBind
+    )
       .configure { c =>
         c.withNetwork(network)
         c.withNetworkAliases("alluxio-worker")
         c.withEnv(
           "ALLUXIO_JAVA_OPTS",
           "-Dalluxio.master.hostname=alluxio-main " +
-            "-Dalluxio.worker.container.hostname=alluxio-worker -Dalluxio.worker.ramdisk.size=64MB"
+            s"-Dalluxio.worker.container.hostname=alluxio-worker " +
+            s"-Dalluxio.worker.ramdisk.size=64MB"
         )
         c.withSharedMemorySize(1024 * 1024 * 1024)
         c.dependsOn(alluxioMainContainer)
@@ -132,5 +153,17 @@ class AlluxioExportImportIT extends BaseIntegrationTest {
       .iterator()
       .next()
       .getIpAddress()
+
+  private[this] def createSharedUnderfsDirectory(): Path = {
+    val directory = Files.createTempDirectory("alluxio-underfs-")
+    if (Files.getFileStore(directory).supportsFileAttributeView("posix")) {
+      Files.setPosixFilePermissions(directory, PosixFilePermissions.fromString("rwxrwxrwx"))
+    } else {
+      directory.toFile.setReadable(true, false)
+      directory.toFile.setWritable(true, false)
+      directory.toFile.setExecutable(true, false)
+    }
+    directory
+  }
 
 }
