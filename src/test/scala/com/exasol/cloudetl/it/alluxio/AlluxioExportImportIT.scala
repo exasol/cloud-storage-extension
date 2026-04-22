@@ -20,7 +20,6 @@ class AlluxioExportImportIT extends BaseIntegrationTest {
   val SCHEMA_NAME = "ALLUXIO_SCHEMA"
   private val alluxioUnderfsDirectory = createSharedUnderfsDirectory()
   private val alluxioUnderfsMountPoint = "/opt/alluxio/underFSStorage"
-  private val alluxioRootUfs = s"local://$alluxioUnderfsMountPoint"
   private val alluxioUnderfsBind =
     Seq(
       GenericContainer.FileSystemBind(alluxioUnderfsDirectory.toString, alluxioUnderfsMountPoint, BindMode.READ_WRITE)
@@ -36,11 +35,7 @@ class AlluxioExportImportIT extends BaseIntegrationTest {
       .configure { c =>
         c.withNetwork(network)
         c.withNetworkAliases("alluxio-main")
-        c.withEnv(
-          "ALLUXIO_JAVA_OPTS",
-          s"-Dalluxio.master.hostname=alluxio-main " +
-            s"-Dalluxio.master.mount.table.root.ufs=$alluxioRootUfs"
-        )
+        c.withEnv("ALLUXIO_JAVA_OPTS", "-Dalluxio.master.hostname=alluxio-main")
         c.withReuse(true)
         ()
       }
@@ -58,8 +53,7 @@ class AlluxioExportImportIT extends BaseIntegrationTest {
           "ALLUXIO_JAVA_OPTS",
           "-Dalluxio.master.hostname=alluxio-main " +
             s"-Dalluxio.worker.container.hostname=alluxio-worker " +
-            s"-Dalluxio.worker.ramdisk.size=64MB " +
-            s"-Dalluxio.master.mount.table.root.ufs=$alluxioRootUfs"
+            s"-Dalluxio.worker.ramdisk.size=64MB"
         )
         c.withSharedMemorySize(1024 * 1024 * 1024)
         c.dependsOn(alluxioMainContainer)
