@@ -6,8 +6,8 @@ import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.SeekableInput;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.mapred.FsInput;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.AvroFSInput;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
@@ -56,8 +56,7 @@ public final class AvroSource extends Source {
 
     private DataFileReader<GenericRecord> createReader() {
         try {
-            final SeekableInput input = (SeekableInput) (Object) new AvroFSInput(this.fileSystem.open(this.path),
-                    this.fileSystem.getFileStatus(this.path).getLen());
+            final SeekableInput input = new FsInput(this.path, this.fileSystem);
             return new DataFileReader<>(input, new GenericDatumReader<>());
         } catch (final RuntimeException | java.io.IOException exception) {
             LOGGER.error("Could not create avro reader for path: {}", this.path, exception);
