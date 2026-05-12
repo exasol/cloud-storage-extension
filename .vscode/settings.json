@@ -5,16 +5,19 @@
         "source.generate.finalModifiers": "explicit",
         "source.fixAll": "explicit"
     },
-    "java.saveActions.organizeImports": true,
     "java.sources.organizeImports.starThreshold": 3,
     "java.sources.organizeImports.staticStarThreshold": 3,
     "java.test.config": {
         "vmArgs": [
             "-Djava.util.logging.config.file=src/test/resources/logging.properties",
-            "-Dcom.exasol.dockerdb.image=8.26.0"
+            "-Dcom.exasol.dockerdb.image=2025.2.1"
         ]
     },
     "files.watcherExclude": {
         "**/target": true
+    },
+    "sonarlint.connectedMode.project": {
+        "connectionId": "exasol",
+        "projectKey": "com.exasol:cloud-storage-extension"
     }
 }

@@ -18,7 +18,8 @@ build:
   runnerOs: ubuntu-22.04
   freeDiskSpace: true
   exasolDbVersions:
-    - "8.29.13"
+    - "2025.2.1"
+    - "2025.1.10"
 # Disabled, see this for details: https://github.com/exasol/cloud-storage-extension/issues/356
 #    - "7.1.30"
   workflows:
@@ -85,5 +86,5 @@ build:
           content:
             name: Build project
             id: build
-            # Omit clean to speedup build. Tests already ran durning CI build.
+            # Omit clean to speedup build. Tests already ran during CI build.
             run: mvn --batch-mode -DskipTests verify
