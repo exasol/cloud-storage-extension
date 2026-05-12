@@ -147,14 +147,14 @@ jobs:
         id: build-extension
         run: |
           # Packaged JAR is required for building the extension
-          mvn --batch-mode package -DskipTests
+          mvn --batch-mode package -DossindexSkip=true -DskipTests
           cd extension
           npm ci
           npm run build
       - {
         name: Build project,
         id: build,
-        run: mvn --batch-mode -DskipTests verify
+        run: mvn --batch-mode -DskipTests -DossindexSkip=true verify
       }
       - {
         name: List secret GPG keys,
