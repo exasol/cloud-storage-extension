@@ -80,12 +80,12 @@ public final class DateTimeConverter {
     /**
      * Returns microseconds since epoch from Julian day and nanoseconds in a day.
      *
-     * @param day julian day
+     * @param day   julian day
      * @param nanos nanoseconds in day
      * @return microseconds since epoch
      */
     public static long getMicrosFromJulianDay(final int day, final long nanos) {
-        final long seconds = (long) (day - JULIAN_DAY_OF_EPOCH) * SECONDS_PER_DAY;
+        final long seconds = (day - JULIAN_DAY_OF_EPOCH) * SECONDS_PER_DAY;
         return seconds * MICROS_PER_SECOND + nanos / 1000L;
     }
 
@@ -97,8 +97,7 @@ public final class DateTimeConverter {
      */
     public static long daysSinceEpoch(final Date date) {
         final long millisUtc = date.getTime();
-        final long millis =
-                millisUtc + TimeZone.getTimeZone(ZoneId.systemDefault()).getOffset(millisUtc);
+        final long millis = millisUtc + TimeZone.getTimeZone(ZoneId.systemDefault()).getOffset(millisUtc);
         return (long) Math.floor((double) millis / MILLIS_PER_DAY);
     }
 
