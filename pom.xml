@@ -49,6 +49,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <!-- Scala module 2.15.0 requires Jackson Databind version >= 2.15.0 and < 2.16.0 -->
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>2.15.4</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -121,6 +129,11 @@
             <groupId>com.exasol</groupId>
             <artifactId>import-export-udf-common-scala_${scala.compat.version}</artifactId>
             <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <!-- Scala module 2.15.4 requires Jackson Databind version >= 2.15.0 and < 2.16.0 - Found jackson-databind version 2.12.7-1 -->
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>

@@ -17,6 +17,7 @@ This release migrates the project from Scala to Java to simplify maintainence an
 #### Compile Dependency Updates
 
 * Updated `com.exasol:parquet-io-java:2.0.12` to `2.0.16`
+* Added `com.fasterxml.jackson.core:jackson-databind:2.12.7.1`
 
 #### Test Dependency Updates
 
