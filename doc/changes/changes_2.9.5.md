@@ -1,12 +1,14 @@
 # Cloud Storage Extension 2.9.5, released 2026-??-??
 
-Code name:
+Code name: Migrate from Scala to Java
 
 ## Summary
 
-## Features
+This release migrates the project from Scala to Java to simplify maintainence and reduce dependencies.
 
-* ISSUE_NUMBER: description
+## Refactoring
+
+* #393: Migrate production code from Scala to Java
 
 ## Dependency Updates
 
