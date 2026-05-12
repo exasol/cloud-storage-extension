@@ -25,6 +25,7 @@ Out of scope:
 * [README](../README.md)
 * [User Guide](../user_guide/user_guide.md)
 * [Developers Guide](../developers_guide/developers_guide.md)
+* [Quality Criteria](../quality_requirements.md)
 * [Build Configuration](../../pom.xml)
 
 ## Strategy
