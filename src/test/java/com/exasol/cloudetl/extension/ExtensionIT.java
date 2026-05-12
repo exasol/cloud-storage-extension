@@ -47,7 +47,7 @@ class ExtensionIT extends AbstractScriptExtensionIT {
     @BeforeAll
     static void setup() throws FileNotFoundException, BucketAccessException, TimeoutException, SQLException {
         exasolTestSetup = new ExasolTestSetupFactory(Paths.get("no-cloud-setup")).getTestSetup();
-        ExasolVersionCheck.assumeExasolVersion8(exasolTestSetup);
+        ExasolVersionCheck.assertExasolVersionSupported(exasolTestSetup);
         setup = ExtensionManagerSetup.create(exasolTestSetup, ExtensionBuilder.createDefaultNpmBuilder(
                 EXTENSION_SOURCE_DIR, EXTENSION_SOURCE_DIR.resolve("dist").resolve(EXTENSION_ID)));
         exasolTestSetup.getDefaultBucket().uploadFile(ADAPTER_JAR, ADAPTER_JAR.getFileName().toString());

@@ -18,6 +18,10 @@ This release migrates the project from Scala to Java to simplify maintainence an
 
 * Updated `com.exasol:parquet-io-java:2.0.12` to `2.0.16`
 
+#### Test Dependency Updates
+
+* Updated `com.exasol:extension-manager-integration-test-java:0.5.13` to `0.5.19`
+
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.0.6` to `2.0.7`
