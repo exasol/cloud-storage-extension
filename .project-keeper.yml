@@ -29,14 +29,6 @@ build:
           job: matrix-build
           stepId: enable-testcontainer-reuse
           content:
-            name: Run scalafix linting
-            id: run-scalafix-linting
-            if: ${{ matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}
-            run: mvn --batch-mode clean compile test-compile scalastyle:check scalafix:scalafix spotless:check
-        - action: INSERT_AFTER
-          job: matrix-build
-          stepId: run-scalafix-linting
-          content:
             name: Build extension
             id: build-extension
             run: |

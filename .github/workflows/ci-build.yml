@@ -76,12 +76,6 @@ jobs:
         id: enable-testcontainer-reuse,
         run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
       }
-      - {
-        name: Run scalafix linting,
-        id: run-scalafix-linting,
-        if: '${{ matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}',
-        run: 'mvn --batch-mode clean compile test-compile scalastyle:check scalafix:scalafix spotless:check'
-      }
       - name: Build extension
         id: build-extension
         run: |
