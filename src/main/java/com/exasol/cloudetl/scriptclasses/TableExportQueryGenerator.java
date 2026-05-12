@@ -64,7 +64,7 @@ public final class TableExportQueryGenerator {
         } else if (parts.length == 2) {
             return parts[1];
         }
-        throw new TableExporterException(ExaError.messageBuilder("E-CSE-17")
+        throw new TableExporterException(ExaError.messageBuilder("E-CSE-34")
                 .message("Could not parse the column name from given column syntax {{COLUMN}}.")
                 .parameter("COLUMN", columnName).toString());
     }

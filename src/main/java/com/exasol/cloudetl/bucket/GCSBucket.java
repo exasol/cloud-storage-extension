@@ -3,6 +3,7 @@ package com.exasol.cloudetl.bucket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 
@@ -108,10 +109,10 @@ public final class GCSBucket extends AbstractConfiguredBucket {
     }
 
     private String getKeyfileContentFromConnection(final String connectionName) {
-        final scala.collection.immutable.Map<String, String> map = properties().getConnectionProperties(null);
-        final scala.Option<String> content = map.get(GCS_KEYFILE_CONTENT);
-        if (content.isDefined()) {
-            return content.get();
+        final Map<String, String> map = ScalaConverters.javaMapCopy(properties().getConnectionProperties(null));
+        final String content = map.get(GCS_KEYFILE_CONTENT);
+        if (content != null) {
+            return content;
         }
         throw new IllegalArgumentException(ExaError.messageBuilder("E-CSE-32")
                 .message("The connection {{connectionName}} does not contain {{GCS_KEYFILE_CONTENT}} property.",

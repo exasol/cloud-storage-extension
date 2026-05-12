@@ -35,12 +35,13 @@ public final class FilesDataImporter {
         final long nodeId = metadata.getNodeId();
         final String vmId = metadata.getVmId();
         int intervalCount = 0;
-        for (final Map.Entry<String, List<ChunkInterval>> entry : ScalaConverters.javaMapCopy(files).entrySet()) {
+        final Map<String, List<ChunkInterval>> javaFiles = ScalaConverters.javaMapCopy(files);
+        for (final Map.Entry<String, List<ChunkInterval>> entry : javaFiles.entrySet()) {
             LOGGER.info("Importing {} intervals '{}' for file {} on node '{}' and vm '{}'.", entry.getValue().size(),
                     getIntervalString(entry.getValue()), entry.getKey(), nodeId, vmId);
             intervalCount += entry.getValue().size();
         }
-        LOGGER.info("Importing {} files with {} intervals", files.size(), intervalCount);
+        LOGGER.info("Importing {} files with {} intervals", javaFiles.size(), intervalCount);
         new FilesDataEmitter(storageProperties, files).emit(iterator);
     }
 

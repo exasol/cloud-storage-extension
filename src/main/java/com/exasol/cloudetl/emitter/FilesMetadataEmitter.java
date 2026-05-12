@@ -3,6 +3,7 @@ package com.exasol.cloudetl.emitter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.hadoop.fs.Path;
 import org.apache.parquet.hadoop.util.HadoopInputFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public final class FilesMetadataEmitter implements Emitter {
     private final StorageProperties properties;
     private final int parallelism;
     private final Bucket bucket;
-    private final scala.collection.immutable.Seq<org.apache.hadoop.fs.Path> paths;
+    private final List<Path> paths;
     private final FileFormat fileFormat;
 
     /** Create an emitter. */
@@ -29,7 +30,7 @@ public final class FilesMetadataEmitter implements Emitter {
         this.properties = properties;
         this.parallelism = parallelism;
         this.bucket = Bucket.create(properties);
-        this.paths = this.bucket.getPaths();
+        this.paths = ScalaConverters.asJavaList(this.bucket.getPaths());
         this.fileFormat = properties.getFileFormat();
     }
 
@@ -49,7 +50,7 @@ public final class FilesMetadataEmitter implements Emitter {
 
     private void emitRegularFilesMetadata(final ExaIterator context) {
         long index = 0L;
-        for (final org.apache.hadoop.fs.Path filename : ScalaConverters.asJavaList(this.paths)) {
+        for (final Path filename : this.paths) {
             emitRow(context, filename.toString(), String.valueOf(index % this.parallelism), Long.valueOf(0), Long.valueOf(0));
             index++;
         }
@@ -59,7 +60,7 @@ public final class FilesMetadataEmitter implements Emitter {
         final long chunkSize = this.properties.getChunkSize();
         final List<FilenameChunkInterval> chunks = new ArrayList<>();
         try {
-            for (final org.apache.hadoop.fs.Path filename : ScalaConverters.asJavaList(this.paths)) {
+            for (final Path filename : this.paths) {
                 final HadoopInputFile inputFile = HadoopInputFile.fromPath(filename, this.bucket.getConfiguration());
                 final java.util.List<com.exasol.parquetio.data.ChunkInterval> splits =
                         new ParquetFileSplitter(inputFile, chunkSize).getSplits();
