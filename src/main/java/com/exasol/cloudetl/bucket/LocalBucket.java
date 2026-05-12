@@ -15,6 +15,16 @@ public final class LocalBucket extends AbstractConfiguredBucket {
     }
 
     @Override
+    public boolean equals(final Object obj) {
+        return (this == obj) || ((obj instanceof LocalBucket) && hasSameConfiguration((LocalBucket) obj));
+    }
+
+    @Override
+    public int hashCode() {
+        return configuredHashCode(LocalBucket.class);
+    }
+
+    @Override
     public scala.collection.immutable.Seq<String> getRequiredProperties() {
         return ScalaConverters.seqFromJava(List.of());
     }

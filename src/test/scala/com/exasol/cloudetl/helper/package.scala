@@ -4,9 +4,9 @@ import com.exasol.ExaIterator
 import com.exasol.ExaMetadata
 
 package object helper {
-  val ExasolColumnValueProvider: ExasolColumnValueProviderFactory.type = ExasolColumnValueProviderFactory
-  val ExportParallelismCalculator: ExportParallelismCalculatorFactory.type = ExportParallelismCalculatorFactory
-  val ParquetSchemaConverter: ParquetSchemaConverterFactory.type = ParquetSchemaConverterFactory
+  lazy val ExasolColumnValueProvider: ExasolColumnValueProviderFactory.type = ExasolColumnValueProviderFactory
+  lazy val ExportParallelismCalculator: ExportParallelismCalculatorFactory.type = ExportParallelismCalculatorFactory
+  lazy val ParquetSchemaConverter: ParquetSchemaConverterFactory.type = ParquetSchemaConverterFactory
 }
 
 object ExasolColumnValueProviderFactory {
@@ -23,10 +23,10 @@ object ExportParallelismCalculatorFactory {
 }
 
 object ParquetSchemaConverterFactory {
-  val DECIMAL_MAX_PRECISION: Int = _root_.com.exasol.cloudetl.helper.ParquetSchemaConverter.DECIMAL_MAX_PRECISION
-  val DECIMAL_MAX_INT_DIGITS: Int = _root_.com.exasol.cloudetl.helper.ParquetSchemaConverter.DECIMAL_MAX_INT_DIGITS
-  val DECIMAL_MAX_LONG_DIGITS: Int = _root_.com.exasol.cloudetl.helper.ParquetSchemaConverter.DECIMAL_MAX_LONG_DIGITS
-  val PRECISION_TO_BYTE_SIZE: java.util.List[Integer] =
+  lazy val DECIMAL_MAX_PRECISION: Int = _root_.com.exasol.cloudetl.helper.ParquetSchemaConverter.DECIMAL_MAX_PRECISION
+  lazy val DECIMAL_MAX_INT_DIGITS: Int = _root_.com.exasol.cloudetl.helper.ParquetSchemaConverter.DECIMAL_MAX_INT_DIGITS
+  lazy val DECIMAL_MAX_LONG_DIGITS: Int = _root_.com.exasol.cloudetl.helper.ParquetSchemaConverter.DECIMAL_MAX_LONG_DIGITS
+  lazy val PRECISION_TO_BYTE_SIZE: java.util.List[Integer] =
     _root_.com.exasol.cloudetl.helper.ParquetSchemaConverter.PRECISION_TO_BYTE_SIZE
 
   def apply(

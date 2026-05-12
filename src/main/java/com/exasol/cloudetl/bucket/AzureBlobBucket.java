@@ -25,6 +25,16 @@ public final class AzureBlobBucket extends AbstractConfiguredBucket implements S
     }
 
     @Override
+    public boolean equals(final Object obj) {
+        return (this == obj) || ((obj instanceof AzureBlobBucket) && hasSameConfiguration((AzureBlobBucket) obj));
+    }
+
+    @Override
+    public int hashCode() {
+        return configuredHashCode(AzureBlobBucket.class);
+    }
+
+    @Override
     public scala.collection.immutable.Seq<String> getRequiredProperties() {
         return ScalaConverters.seqFromJava(List.of());
     }

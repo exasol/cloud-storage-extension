@@ -2,7 +2,7 @@ package com.exasol.cloudetl.orc.converter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.hadoop.hive.ql.exec.vector.BytesColumnVector;
@@ -99,7 +99,7 @@ final class OrcConverters {
         public Map<Object, Object> readAt(final MapColumnVector vector, final int rowIndex) {
             final int offset = (int) vector.offsets[rowIndex];
             final int length = (int) vector.lengths[rowIndex];
-            final Map<Object, Object> values = new LinkedHashMap<>();
+            final Map<Object, Object> values = new HashMap<>();
             for (int pointer = offset; pointer < offset + length; pointer++) {
                 values.put(this.keyConverter.readAt((T) vector.keys, pointer),
                         this.valueConverter.readAt((U) vector.values, pointer));

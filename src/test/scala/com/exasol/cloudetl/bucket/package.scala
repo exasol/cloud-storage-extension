@@ -1,5 +1,7 @@
 package com.exasol.cloudetl
 
+import com.exasol.errorreporting.ExaError
+
 package object bucket {
   val Bucket: BucketFactory.type = BucketFactory
   val AlluxioBucket: AlluxioBucketFactory.type = AlluxioBucketFactory
@@ -26,7 +28,14 @@ object BucketFactory {
       case "wasb" | "wasbs" => new _root_.com.exasol.cloudetl.bucket.AzureBlobBucket(path, storageProperties)
       case "hdfs"           => new _root_.com.exasol.cloudetl.bucket.HDFSBucket(path, storageProperties)
       case "file"           => new _root_.com.exasol.cloudetl.bucket.LocalBucket(path, storageProperties)
-      case other            => throw new IllegalArgumentException(s"Unsupported scheme: $other")
+      case other =>
+        throw new IllegalArgumentException(
+          ExaError
+            .messageBuilder("F-CSE-4")
+            .message("Provided path scheme {{SCHEME}} is not supported.", other)
+            .mitigation("Please check out the user guide for supported storage systems and their path schemes.")
+            .toString()
+        )
     }
   }
 }

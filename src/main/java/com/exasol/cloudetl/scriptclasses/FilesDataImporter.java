@@ -50,11 +50,16 @@ public final class FilesDataImporter {
         final Map<String, List<ChunkInterval>> files = new LinkedHashMap<>();
         do {
             final String filename = iterator.getString(FILENAME_STARTING_INDEX);
-            final long startIndex = iterator.getLong(FILENAME_STARTING_INDEX + 1);
-            final long endIndex = iterator.getLong(FILENAME_STARTING_INDEX + 2);
-            files.computeIfAbsent(filename, ignored -> new ArrayList<>()).add(new ChunkIntervalImpl(startIndex, endIndex));
+            final Long startIndex = iterator.getLong(FILENAME_STARTING_INDEX + 1);
+            final Long endIndex = iterator.getLong(FILENAME_STARTING_INDEX + 2);
+            files.computeIfAbsent(filename, ignored -> new ArrayList<>())
+                    .add(new ChunkIntervalImpl(longValueOrZero(startIndex), longValueOrZero(endIndex)));
         } while (iterator.next());
         return ScalaConverters.mapFromJava(files);
+    }
+
+    private static long longValueOrZero(final Long value) {
+        return value == null ? 0L : value.longValue();
     }
 
     private static String getIntervalString(final List<ChunkInterval> intervals) {

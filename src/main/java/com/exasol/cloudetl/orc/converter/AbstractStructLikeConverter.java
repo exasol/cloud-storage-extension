@@ -1,6 +1,6 @@
 package com.exasol.cloudetl.orc.converter;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +26,7 @@ abstract class AbstractStructLikeConverter {
     }
 
     final Map<String, Object> readFields(final ColumnVector[] fieldVectors, final int rowIndex) {
-        final Map<String, Object> values = new LinkedHashMap<>();
+        final Map<String, Object> values = new HashMap<>();
         for (int fieldIndex = 0; fieldIndex < this.size; fieldIndex++) {
             values.put(getFieldName(fieldIndex), readFromFieldColumn(fieldVectors[fieldIndex], rowIndex, fieldIndex));
         }

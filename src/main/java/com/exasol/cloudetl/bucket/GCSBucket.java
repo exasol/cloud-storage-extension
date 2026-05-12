@@ -23,6 +23,16 @@ public final class GCSBucket extends AbstractConfiguredBucket {
     }
 
     @Override
+    public boolean equals(final Object obj) {
+        return (this == obj) || ((obj instanceof GCSBucket) && hasSameConfiguration((GCSBucket) obj));
+    }
+
+    @Override
+    public int hashCode() {
+        return configuredHashCode(GCSBucket.class);
+    }
+
+    @Override
     public void validate() {
         validateRequiredProperties();
         validateKeyfileProperties();

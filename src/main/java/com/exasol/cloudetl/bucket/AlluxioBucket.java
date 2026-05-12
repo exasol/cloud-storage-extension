@@ -15,6 +15,16 @@ public final class AlluxioBucket extends AbstractConfiguredBucket {
     }
 
     @Override
+    public boolean equals(final Object obj) {
+        return (this == obj) || ((obj instanceof AlluxioBucket) && hasSameConfiguration((AlluxioBucket) obj));
+    }
+
+    @Override
+    public int hashCode() {
+        return configuredHashCode(AlluxioBucket.class);
+    }
+
+    @Override
     public scala.collection.immutable.Seq<String> getRequiredProperties() {
         return ScalaConverters.seqFromJava(List.of());
     }

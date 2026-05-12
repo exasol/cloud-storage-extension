@@ -26,6 +26,16 @@ public final class S3Bucket extends AbstractConfiguredBucket implements SecureBu
     }
 
     @Override
+    public boolean equals(final Object obj) {
+        return (this == obj) || ((obj instanceof S3Bucket) && hasSameConfiguration((S3Bucket) obj));
+    }
+
+    @Override
+    public int hashCode() {
+        return configuredHashCode(S3Bucket.class);
+    }
+
+    @Override
     public scala.collection.immutable.Seq<String> getRequiredProperties() {
         return ScalaConverters.seqFromJava(List.of(S3_ENDPOINT));
     }
