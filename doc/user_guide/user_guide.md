@@ -1184,10 +1184,17 @@ changes.
 [delta-storage]: https://docs.delta.io/latest/delta-storage.html
 [delta-history]: https://docs.delta.io/latest/delta-utility.html#history
 
-### Delta compatibility with older JRE
+### Delta compatibility with Java module access
 
-If CloudStorage Extension is used to import Delta format, JRE earlier than 17 
-has a problem with access to several internal Java classes (`sun.nio.ch`).
+When Cloud Storage Extension imports Delta format data, Apache Spark may require access to internal Java classes from the `sun.nio.ch` package. If the UDF JVM does not export this package, the import can fail with an error like this:
+
+```text
+com.exasol.ExaUDFException: F-UDF-CL-SL-JAVA-1080: Exception during run
+java.lang.IllegalAccessError: class org.apache.spark.storage.StorageUtils$
+(in unnamed module @0x3cc1435c) cannot access class sun.nio.ch.DirectBuffer
+(in module java.base) because module java.base does not export sun.nio.ch
+to unnamed module @0x3cc1435c
+```
 
 To fix this, add this line to all the UDF setup scripts:
 ```sql
