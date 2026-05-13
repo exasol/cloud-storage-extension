@@ -22,14 +22,14 @@ public class OrcTestDataWriter {
     private static final long ORC_STRIPE_SIZE = 32L * 1024L * 1024L;
     private static final long ORC_BLOCK_SIZE = 64L * 1024L * 1024L;
 
-    protected final Writer getOrcWriter(final Path path, final TypeDescription schema) throws IOException {
+    public final Writer getOrcWriter(final Path path, final TypeDescription schema) throws IOException {
         final Configuration conf = new Configuration();
         conf.set("orc.stripe.size", Long.toString(ORC_STRIPE_SIZE));
         conf.set("orc.block.size", Long.toString(ORC_BLOCK_SIZE));
         return OrcFile.createWriter(path, OrcFile.writerOptions(conf).setSchema(schema).useUTCTimestamp(true));
     }
 
-    protected final <T> void writeDataValues(final List<T> values, final Path path, final TypeDescription schema)
+    public final <T> void writeDataValues(final List<T> values, final Path path, final TypeDescription schema)
             throws IOException {
         try (Writer writer = getOrcWriter(path, schema)) {
             final List<TypeDescription> schemaChildren = schema.getChildren();

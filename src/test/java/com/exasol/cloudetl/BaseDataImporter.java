@@ -85,11 +85,11 @@ public abstract class BaseDataImporter extends BaseS3IntegrationTest {
             return this;
         }
 
-        protected void assertResultSet(final Matcher<ResultSet> matcher) throws SQLException {
+        public void assertResultSet(final Matcher<ResultSet> matcher) throws SQLException {
             withResultSet(resultSet -> assertThat(resultSet, matcher));
         }
 
-        protected void assertFails(final Matcher<String> errorMessageMatcher) {
+        public void assertFails(final Matcher<String> errorMessageMatcher) {
             BaseDataImporter.this.paths.forEach(path -> uploadFileToS3(bucketName(), path));
             final var tableBuilder = BaseDataImporter.this.schema.createTableBuilder(this.tableName.toUpperCase(Locale.ENGLISH));
             this.columns.forEach(tableBuilder::column);

@@ -15,16 +15,16 @@ import org.apache.parquet.io.api.Binary;
 import org.apache.parquet.io.api.RecordConsumer;
 import org.apache.parquet.schema.MessageType;
 
-class ParquetTestDataWriter {
+public class ParquetTestDataWriter {
     private static final long PARQUET_BLOCK_SIZE = 64L * 1024L * 1024L;
 
-    protected final ParquetWriter<Group> getParquetWriter(final Path path, final MessageType schema,
+    public final ParquetWriter<Group> getParquetWriter(final Path path, final MessageType schema,
             final boolean dictionaryEncoding) throws IOException {
         return new BaseGroupWriterBuilder(path, schema).withPageSize(ParquetWriter.DEFAULT_PAGE_SIZE)
                 .withRowGroupSize(PARQUET_BLOCK_SIZE).withDictionaryEncoding(dictionaryEncoding).build();
     }
 
-    protected final <T> void writeDataValues(final List<T> data, final Path path, final MessageType schema)
+    public final <T> void writeDataValues(final List<T> data, final Path path, final MessageType schema)
             throws IOException {
         try (ParquetWriter<Group> writer = getParquetWriter(path, schema, true)) {
             for (final T value : data) {
