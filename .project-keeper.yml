@@ -35,7 +35,7 @@ build:
               # Packaged JAR is required for building the extension
               mvn --batch-mode package -DossindexSkip=true -DskipTests
               cd extension
-              npm ci
+              npm ci --ignore-scripts
               npm run build
               npm run test
               npm run lint
@@ -71,7 +71,7 @@ build:
               # Packaged JAR is required for building the extension
               mvn --batch-mode package -DossindexSkip=true -DskipTests -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
               cd extension
-              npm ci
+              npm ci --ignore-scripts
               npm run build
         - action: REPLACE
           stepId: build
