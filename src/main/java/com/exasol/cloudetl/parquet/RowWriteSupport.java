@@ -10,10 +10,8 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.parquet.hadoop.api.WriteSupport;
 import org.apache.parquet.io.api.Binary;
 import org.apache.parquet.io.api.RecordConsumer;
+import org.apache.parquet.schema.*;
 import org.apache.parquet.schema.LogicalTypeAnnotation.DecimalLogicalTypeAnnotation;
-import org.apache.parquet.schema.MessageType;
-import org.apache.parquet.schema.OriginalType;
-import org.apache.parquet.schema.PrimitiveType;
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName;
 
 import com.exasol.cloudetl.helper.DateTimeConverter;
@@ -48,8 +46,8 @@ public class RowWriteSupport extends WriteSupport<Row> {
     }
 
     @Override
-    public void prepareForWrite(final RecordConsumer record) {
-        this.recordConsumer = record;
+    public void prepareForWrite(final RecordConsumer recordConsumer) {
+        this.recordConsumer = recordConsumer;
     }
 
     @Override
@@ -79,33 +77,33 @@ public class RowWriteSupport extends WriteSupport<Row> {
         final PrimitiveTypeName typeName = primitiveType.getPrimitiveTypeName();
         final OriginalType originalType = primitiveType.getOriginalType();
         switch (typeName) {
-        case BOOLEAN:
-            return (row, index) -> this.recordConsumer.addBoolean((Boolean) row.get(index));
-        case INT32:
-            if (originalType == OriginalType.DATE) {
-                return makeDateWriter();
-            }
-            return (row, index) -> this.recordConsumer.addInteger((Integer) row.get(index));
-        case INT64:
-            return (row, index) -> this.recordConsumer.addLong((Long) row.get(index));
-        case FLOAT:
-            return (row, index) -> this.recordConsumer.addFloat(((Double) row.get(index)).floatValue());
-        case DOUBLE:
-            return (row, index) -> this.recordConsumer.addDouble((Double) row.get(index));
-        case BINARY:
-            return (row, index) -> this.recordConsumer
-                    .addBinary(Binary.fromReusedByteArray(((String) row.get(index)).getBytes(UTF_8)));
-        case INT96:
-            return makeTimestampWriter();
-        case FIXED_LEN_BYTE_ARRAY:
-            if (originalType == OriginalType.DECIMAL) {
-                final DecimalLogicalTypeAnnotation decimal = (DecimalLogicalTypeAnnotation) primitiveType
-                        .getLogicalTypeAnnotation();
-                return makeDecimalWriter(decimal.getPrecision());
-            }
-            break;
-        default:
-            break;
+            case BOOLEAN:
+                return (row, index) -> this.recordConsumer.addBoolean((Boolean) row.get(index));
+            case INT32:
+                if (originalType == OriginalType.DATE) {
+                    return makeDateWriter();
+                }
+                return (row, index) -> this.recordConsumer.addInteger((Integer) row.get(index));
+            case INT64:
+                return (row, index) -> this.recordConsumer.addLong((Long) row.get(index));
+            case FLOAT:
+                return (row, index) -> this.recordConsumer.addFloat(((Double) row.get(index)).floatValue());
+            case DOUBLE:
+                return (row, index) -> this.recordConsumer.addDouble((Double) row.get(index));
+            case BINARY:
+                return (row, index) -> this.recordConsumer
+                        .addBinary(Binary.fromReusedByteArray(((String) row.get(index)).getBytes(UTF_8)));
+            case INT96:
+                return makeTimestampWriter();
+            case FIXED_LEN_BYTE_ARRAY:
+                if (originalType == OriginalType.DECIMAL) {
+                    final DecimalLogicalTypeAnnotation decimal = (DecimalLogicalTypeAnnotation) primitiveType
+                            .getLogicalTypeAnnotation();
+                    return makeDecimalWriter(decimal.getPrecision());
+                }
+                break;
+            default:
+                break;
         }
         throw new UnsupportedOperationException(ExaError.messageBuilder("E-CSE-18")
                 .message("Parquet type {{PARQUET_TYPE}} is not supported.").parameter("PARQUET_TYPE", typeName.toString())

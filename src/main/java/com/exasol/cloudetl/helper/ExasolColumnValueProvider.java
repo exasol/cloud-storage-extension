@@ -9,7 +9,7 @@ import com.exasol.cloudetl.data.ExaColumnInfo;
 import com.exasol.errorreporting.ExaError;
 
 /** Provides typed column values from an Exasol iterator. */
-public final class ExasolColumnValueProvider implements JavaClassTypes {
+public final class ExasolColumnValueProvider {
     private final ExaIterator iterator;
 
     /** Create a provider. */
@@ -26,22 +26,22 @@ public final class ExasolColumnValueProvider implements JavaClassTypes {
     public Object getColumnValue(final int index, final ExaColumnInfo columnInfo) {
         try {
             final Class<?> columnType = columnInfo.type;
-            if (Objects.equals(columnType, J_INTEGER)) {
+            if (Objects.equals(columnType, JavaClassTypes.J_INTEGER)) {
                 return this.iterator.getInteger(index);
-            } else if (Objects.equals(columnType, J_LONG)) {
+            } else if (Objects.equals(columnType, JavaClassTypes.J_LONG)) {
                 return this.iterator.getLong(index);
-            } else if (Objects.equals(columnType, J_BIG_DECIMAL)) {
+            } else if (Objects.equals(columnType, JavaClassTypes.J_BIG_DECIMAL)) {
                 return scaleBigDecimalAndValidatePrecision(this.iterator.getBigDecimal(index), columnInfo.precision,
                         columnInfo.scale);
-            } else if (Objects.equals(columnType, J_DOUBLE)) {
+            } else if (Objects.equals(columnType, JavaClassTypes.J_DOUBLE)) {
                 return this.iterator.getDouble(index);
-            } else if (Objects.equals(columnType, J_STRING)) {
+            } else if (Objects.equals(columnType, JavaClassTypes.J_STRING)) {
                 return this.iterator.getString(index);
-            } else if (Objects.equals(columnType, J_BOOLEAN)) {
+            } else if (Objects.equals(columnType, JavaClassTypes.J_BOOLEAN)) {
                 return this.iterator.getBoolean(index);
-            } else if (Objects.equals(columnType, J_SQL_DATE)) {
+            } else if (Objects.equals(columnType, JavaClassTypes.J_SQL_DATE)) {
                 return this.iterator.getDate(index);
-            } else if (Objects.equals(columnType, J_SQL_TIMESTAMP)) {
+            } else if (Objects.equals(columnType, JavaClassTypes.J_SQL_TIMESTAMP)) {
                 return this.iterator.getTimestamp(index);
             }
             throw new IllegalArgumentException(ExaError.messageBuilder("E-CSE-23")

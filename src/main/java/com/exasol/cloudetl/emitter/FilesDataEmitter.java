@@ -1,10 +1,7 @@
 package com.exasol.cloudetl.emitter;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.function.Consumer;
+import java.util.*;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.parquet.hadoop.util.HadoopInputFile;
@@ -102,13 +99,10 @@ public final class FilesDataEmitter implements Emitter {
                 final ParquetValueConverter converter = new ParquetValueConverter(RowParquetReader.getSchema(inputFile));
                 final RowParquetChunkReader source = new RowParquetChunkReader(inputFile, intervals);
                 final int[] rowCount = { 0 };
-                source.read(new Consumer<com.exasol.parquetio.data.Row>() {
-                    @Override
-                    public void accept(final com.exasol.parquetio.data.Row row) {
-                        final Object[] values = defaultTransformation.transform(converter.convert(row));
-                        emitRow(context, values);
-                        rowCount[0]++;
-                    }
+                source.read(row -> {
+                    final Object[] values = defaultTransformation.transform(converter.convert(row));
+                    emitRow(context, values);
+                    rowCount[0]++;
                 });
                 totalRowCount += rowCount[0];
                 totalIntervalCount += intervals.size();

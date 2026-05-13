@@ -143,7 +143,7 @@ public final class BatchSizedSink extends Sink<Row> {
     }
 
     private String getNewPath() {
-        final String uuidStr = UUID.randomUUID().toString().replaceAll("-", "");
+        final String uuidStr = UUID.randomUUID().toString().replace("-", "");
         final ParquetWriteOptions parquetOptions = ParquetWriteOptions.from(this.bucket.properties());
         if (parquetOptions.compressionCodec == CompressionCodecName.UNCOMPRESSED) {
             return "exa_export_" + this.nodeId + "_" + this.vmId + "_" + uuidStr + ".parquet";

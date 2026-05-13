@@ -1,9 +1,6 @@
 package com.exasol.cloudetl.scriptclasses;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +34,10 @@ public final class FilesDataImporter {
         int intervalCount = 0;
         final Map<String, List<ChunkInterval>> javaFiles = ScalaConverters.javaMapCopy(files);
         for (final Map.Entry<String, List<ChunkInterval>> entry : javaFiles.entrySet()) {
-            LOGGER.info("Importing {} intervals '{}' for file {} on node '{}' and vm '{}'.", entry.getValue().size(),
-                    getIntervalString(entry.getValue()), entry.getKey(), nodeId, vmId);
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Importing {} intervals '{}' for file {} on node '{}' and vm '{}'.", entry.getValue().size(),
+                        getIntervalString(entry.getValue()), entry.getKey(), nodeId, vmId);
+            }
             intervalCount += entry.getValue().size();
         }
         LOGGER.info("Importing {} files with {} intervals", javaFiles.size(), intervalCount);

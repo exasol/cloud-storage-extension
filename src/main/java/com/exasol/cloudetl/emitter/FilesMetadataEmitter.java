@@ -37,7 +37,9 @@ public final class FilesMetadataEmitter implements Emitter {
 
     @Override
     public void emit(final ExaIterator context) {
-        LOGGER.info("Found total of '{}' files in path '{}'.", this.paths.size(), this.bucket.bucketPath());
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Found total of '{}' files in path '{}'.", this.paths.size(), this.bucket.bucketPath());
+        }
         if (isParquetFormat(this.fileFormat)) {
             emitParquetFilesMetadata(context);
         } else {
@@ -63,8 +65,7 @@ public final class FilesMetadataEmitter implements Emitter {
         try {
             for (final Path filename : this.paths) {
                 final HadoopInputFile inputFile = HadoopInputFile.fromPath(filename, this.bucket.getConfiguration());
-                final java.util.List<com.exasol.parquetio.data.ChunkInterval> splits =
-                        new ParquetFileSplitter(inputFile, chunkSize).getSplits();
+                final java.util.List<com.exasol.parquetio.data.ChunkInterval> splits = new ParquetFileSplitter(inputFile, chunkSize).getSplits();
                 for (int index = 0; index < splits.size(); index++) {
                     chunks.add(new FilenameChunkInterval(filename.toString(), splits.get(index).getStartPosition(),
                             splits.get(index).getEndPosition()));

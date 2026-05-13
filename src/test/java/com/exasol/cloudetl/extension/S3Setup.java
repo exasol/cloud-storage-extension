@@ -1,5 +1,7 @@
 package com.exasol.cloudetl.extension;
 
+import java.net.URI;
+
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.containers.localstack.LocalStackContainer.Service;
 import org.testcontainers.utility.DockerImageName;
@@ -8,11 +10,8 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-
 import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.model.*;
-
-import java.net.URI;
 
 // TODO: this class heavily overlaps with BaseS3IntegrationTest.scala
 class S3Setup implements AutoCloseable {
@@ -25,6 +24,7 @@ class S3Setup implements AutoCloseable {
     }
 
     static S3Setup create() {
+        @SuppressWarnings("resource") // Container is closed in close() method
         final LocalStackContainer container = new LocalStackContainer(
                 DockerImageName.parse("localstack/localstack:2.2")).withServices(Service.S3).withReuse(true);
         container.start();
@@ -66,8 +66,7 @@ class S3Setup implements AutoCloseable {
         final String uniqueBucketName = "testing-bucket-" + System.currentTimeMillis();
         this.client.createBucket(
                 CreateBucketRequest.builder()
-                        .bucket(uniqueBucketName).build()
-        );
+                        .bucket(uniqueBucketName).build());
         return uniqueBucketName;
     }
 
@@ -79,12 +78,10 @@ class S3Setup implements AutoCloseable {
                         DeleteObjectRequest.builder()
                                 .bucket(bucket)
                                 .key(object.key())
-                                .build()
-                        ));
+                                .build()));
         this.client.deleteBucket(
                 DeleteBucketRequest.builder()
-                        .bucket(bucket).build()
-        );
+                        .bucket(bucket).build());
     }
 
     @Override

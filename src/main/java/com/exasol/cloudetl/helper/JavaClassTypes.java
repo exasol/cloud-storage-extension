@@ -1,21 +1,25 @@
 package com.exasol.cloudetl.helper;
 
 /** Java class constants used for type dispatch. */
-public interface JavaClassTypes {
+class JavaClassTypes {
+    private JavaClassTypes() {
+        // not instantiable
+    }
+
     /** Integer class. */
-    Class<Integer> J_INTEGER = Integer.class;
+    static final Class<Integer> J_INTEGER = Integer.class;
     /** Long class. */
-    Class<Long> J_LONG = Long.class;
+    static final Class<Long> J_LONG = Long.class;
     /** BigDecimal class. */
-    Class<java.math.BigDecimal> J_BIG_DECIMAL = java.math.BigDecimal.class;
+    static final Class<java.math.BigDecimal> J_BIG_DECIMAL = java.math.BigDecimal.class;
     /** Double class. */
-    Class<Double> J_DOUBLE = Double.class;
+    static final Class<Double> J_DOUBLE = Double.class;
     /** Boolean class. */
-    Class<Boolean> J_BOOLEAN = Boolean.class;
+    static final Class<Boolean> J_BOOLEAN = Boolean.class;
     /** String class. */
-    Class<String> J_STRING = String.class;
+    static final Class<String> J_STRING = String.class;
     /** SQL date class. */
-    Class<java.sql.Date> J_SQL_DATE = java.sql.Date.class;
+    static final Class<java.sql.Date> J_SQL_DATE = java.sql.Date.class;
     /** SQL timestamp class. */
-    Class<java.sql.Timestamp> J_SQL_TIMESTAMP = java.sql.Timestamp.class;
+    static final Class<java.sql.Timestamp> J_SQL_TIMESTAMP = java.sql.Timestamp.class;
 }

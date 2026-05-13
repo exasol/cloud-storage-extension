@@ -1,33 +1,19 @@
 package com.exasol.cloudetl.helper;
 
 import static java.util.Locale.ENGLISH;
-import static org.apache.parquet.schema.LogicalTypeAnnotation.dateType;
-import static org.apache.parquet.schema.LogicalTypeAnnotation.decimalType;
-import static org.apache.parquet.schema.LogicalTypeAnnotation.stringType;
-import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.BINARY;
-import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.BOOLEAN;
-import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.DOUBLE;
-import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.FIXED_LEN_BYTE_ARRAY;
-import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT32;
-import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT64;
-import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT96;
+import static org.apache.parquet.schema.LogicalTypeAnnotation.*;
+import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-import org.apache.parquet.schema.LogicalTypeAnnotation;
-import org.apache.parquet.schema.MessageType;
-import org.apache.parquet.schema.PrimitiveType;
-import org.apache.parquet.schema.Type;
-import org.apache.parquet.schema.Types;
+import org.apache.parquet.schema.*;
 
 import com.exasol.cloudetl.ScalaConverters;
 import com.exasol.cloudetl.data.ExaColumnInfo;
 import com.exasol.errorreporting.ExaError;
 
 /** Converts Exasol column metadata to a Parquet schema. */
-public final class ParquetSchemaConverter implements JavaClassTypes {
+public final class ParquetSchemaConverter {
     /** Decimal maximum precision. */
     public static final int DECIMAL_MAX_PRECISION = 38;
     /** Maximum decimal precision for int32. */
@@ -76,23 +62,23 @@ public final class ParquetSchemaConverter implements JavaClassTypes {
     private Type getParquetType(final String columnName, final ExaColumnInfo columnInfo) {
         final Class<?> columnType = columnInfo.type;
         final Type.Repetition repetition = columnInfo.isNullable ? Type.Repetition.OPTIONAL : Type.Repetition.REQUIRED;
-        if (Objects.equals(columnType, J_INTEGER)) {
+        if (Objects.equals(columnType, JavaClassTypes.J_INTEGER)) {
             return getIntegerType(columnName, columnInfo, repetition);
-        } else if (Objects.equals(columnType, J_LONG)) {
+        } else if (Objects.equals(columnType, JavaClassTypes.J_LONG)) {
             return getLongType(columnName, columnInfo, repetition);
-        } else if (Objects.equals(columnType, J_BIG_DECIMAL)) {
+        } else if (Objects.equals(columnType, JavaClassTypes.J_BIG_DECIMAL)) {
             return getPrimitiveType(columnName, FIXED_LEN_BYTE_ARRAY, repetition,
                     PRECISION_TO_BYTE_SIZE.get(columnInfo.precision - 1), decimalType(columnInfo.scale, columnInfo.precision));
-        } else if (Objects.equals(columnType, J_DOUBLE)) {
+        } else if (Objects.equals(columnType, JavaClassTypes.J_DOUBLE)) {
             return getPrimitiveType(columnName, DOUBLE, repetition, null, null);
-        } else if (Objects.equals(columnType, J_STRING)) {
+        } else if (Objects.equals(columnType, JavaClassTypes.J_STRING)) {
             return getPrimitiveType(columnName, BINARY, repetition, columnInfo.length > 0 ? columnInfo.length : null,
                     stringType());
-        } else if (Objects.equals(columnType, J_BOOLEAN)) {
+        } else if (Objects.equals(columnType, JavaClassTypes.J_BOOLEAN)) {
             return getPrimitiveType(columnName, BOOLEAN, repetition, null, null);
-        } else if (Objects.equals(columnType, J_SQL_DATE)) {
+        } else if (Objects.equals(columnType, JavaClassTypes.J_SQL_DATE)) {
             return getPrimitiveType(columnName, INT32, repetition, null, dateType());
-        } else if (Objects.equals(columnType, J_SQL_TIMESTAMP)) {
+        } else if (Objects.equals(columnType, JavaClassTypes.J_SQL_TIMESTAMP)) {
             return getPrimitiveType(columnName, INT96, repetition, null, null);
         }
         throw new IllegalArgumentException(ExaError.messageBuilder("F-CSE-22")
@@ -138,7 +124,7 @@ public final class ParquetSchemaConverter implements JavaClassTypes {
             final double size = Math.ceil((Math.log(power - 1) / Math.log(2) + 1) / 8);
             result.add((int) size);
         }
-        return result;
+        return List.copyOf(result);
     }
 
     private static void require(final boolean condition, final String message) {

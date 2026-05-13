@@ -33,30 +33,6 @@ public final class ExaColumnInfo {
         this(name, type, 0, 0, 0, true);
     }
 
-    public String name() {
-        return this.name;
-    }
-
-    public Class<?> type() {
-        return this.type;
-    }
-
-    public int precision() {
-        return this.precision;
-    }
-
-    public int scale() {
-        return this.scale;
-    }
-
-    public int length() {
-        return this.length;
-    }
-
-    public boolean isNullable() {
-        return this.isNullable;
-    }
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
