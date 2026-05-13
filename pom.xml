@@ -970,50 +970,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.diffplug.spotless</groupId>
-                <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.43.0</version>
-                <configuration>
-                    <scala>
-                        <scalafmt>
-                            <file>${project.basedir}/.scalafmt.conf</file>
-                        </scalafmt>
-                    </scala>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>io.github.evis</groupId>
-                <artifactId>scalafix-maven-plugin_${scala.compat.version}</artifactId>
-                <version>0.1.7_0.10.3</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.geirsson</groupId>
-                        <artifactId>metaconfig-pprint_${scala.compat.version}</artifactId>
-                        <version>0.12.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.github.liancheng</groupId>
-                        <artifactId>organize-imports_${scala.compat.version}</artifactId>
-                        <version>0.6.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.github.vovapolu</groupId>
-                        <artifactId>scaluzzi_${scala.compat.version}</artifactId>
-                        <version>0.1.23</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <mode>CHECK</mode>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.2.0</version>
