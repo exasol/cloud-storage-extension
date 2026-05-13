@@ -87,3 +87,4 @@ pom.xml.versionsBackup
 /extension-test.properties
 
 /.testcontainers-tmp-*
+/.serena/

@@ -20,7 +20,6 @@ import com.exasol.dbbuilder.dialects.Table;
 import com.exasol.dbbuilder.dialects.exasol.*;
 import com.exasol.exasoltestsetup.ExasolTestSetup;
 import com.exasol.exasoltestsetup.ExasolTestSetupFactory;
-import com.exasol.extensionmanager.itest.ExasolVersionCheck;
 import com.exasol.extensionmanager.itest.ExtensionManagerSetup;
 import com.exasol.extensionmanager.itest.base.AbstractScriptExtensionIT;
 import com.exasol.extensionmanager.itest.base.ExtensionITConfig;
@@ -47,7 +46,6 @@ class ExtensionIT extends AbstractScriptExtensionIT {
     @BeforeAll
     static void setup() throws FileNotFoundException, BucketAccessException, TimeoutException, SQLException {
         exasolTestSetup = new ExasolTestSetupFactory(Paths.get("no-cloud-setup")).getTestSetup();
-        ExasolVersionCheck.assumeExasolVersion8(exasolTestSetup);
         setup = ExtensionManagerSetup.create(exasolTestSetup, ExtensionBuilder.createDefaultNpmBuilder(
                 EXTENSION_SOURCE_DIR, EXTENSION_SOURCE_DIR.resolve("dist").resolve(EXTENSION_ID)));
         exasolTestSetup.getDefaultBucket().uploadFile(ADAPTER_JAR, ADAPTER_JAR.getFileName().toString());
@@ -127,7 +125,7 @@ class ExtensionIT extends AbstractScriptExtensionIT {
         }
     }
 
-    private void importFromS3IntoExasol(final Table table, final String bucket, final String file) throws SQLException {
+    private void importFromS3IntoExasol(final Table table, final String bucket, final String file) {
         executeStatement("IMPORT INTO " + table.getFullyQualifiedName() + "\n" //
                 + "FROM SCRIPT " + ExtensionManagerSetup.EXTENSION_SCHEMA_NAME + ".IMPORT_PATH WITH\n" //
                 + "BUCKET_PATH              = 's3a://" + bucket + "/" + file + "'\n" //

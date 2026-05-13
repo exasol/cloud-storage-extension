@@ -150,7 +150,7 @@ downloaded jar file is the same as the checksum provided in the releases.
 To check the SHA256 result of the local jar, run the command:
 
 ```sh
-sha256sum exasol-cloud-storage-extension-2.9.4.jar
+sha256sum exasol-cloud-storage-extension-2.9.5.jar
 ```
 
 ### Building From Source
@@ -180,7 +180,7 @@ mvn clean package -DskipTests=true
 ```
 
 The assembled jar file should be located at
-`target/exasol-cloud-storage-extension-2.9.4.jar`.
+`target/exasol-cloud-storage-extension-2.9.5.jar`.
 
 ### Create an Exasol Bucket
 
@@ -202,7 +202,7 @@ for the HTTP protocol.
 Upload the jar file using curl command:
 
 ```sh
-curl -X PUT -T exasol-cloud-storage-extension-2.9.4.jar \
+curl -X PUT -T exasol-cloud-storage-extension-2.9.5.jar \
   http://w:<WRITE_PASSWORD>@exasol.datanode.domain.com:2580/<BUCKET>/
 ```
 
@@ -237,7 +237,7 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.4.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.5.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
@@ -247,12 +247,12 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
   end_index DECIMAL(36, 0)
 ) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.4.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.5.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.4.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.5.jar;
 /
 ```
 
@@ -271,12 +271,12 @@ OPEN SCHEMA CLOUD_STORAGE_EXTENSION;
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_PATH(...) EMITS (...) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.TableExportQueryGenerator;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.4.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.5.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT EXPORT_TABLE(...) EMITS (ROWS_AFFECTED INT) AS
   %scriptclass com.exasol.cloudetl.scriptclasses.TableDataExporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.4.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.5.jar;
 /
 ```
 
@@ -410,13 +410,13 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...) EMITS (
 ) AS
   %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesMetadataReader;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.4.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.5.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
   %jvmoption -DHTTPS_PROXY=http://username:password@10.10.1.10:1180
   %scriptclass com.exasol.cloudetl.scriptclasses.FilesDataImporter;
-  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.4.jar;
+  %jar /buckets/bfsdefault/<BUCKET>/exasol-cloud-storage-extension-2.9.5.jar;
 /
 ```
 
@@ -1184,10 +1184,17 @@ changes.
 [delta-storage]: https://docs.delta.io/latest/delta-storage.html
 [delta-history]: https://docs.delta.io/latest/delta-utility.html#history
 
-### Delta compatibility with older JRE
+### Delta compatibility with Java module access
 
-If CloudStorage Extension is used to import Delta format, JRE earlier than 17 
-has a problem with access to several internal Java classes (`sun.nio.ch`).
+When Cloud Storage Extension imports Delta format data, Apache Spark may require access to internal Java classes from the `sun.nio.ch` package. If the UDF JVM does not export this package, the import can fail with an error like this:
+
+```text
+com.exasol.ExaUDFException: F-UDF-CL-SL-JAVA-1080: Exception during run
+java.lang.IllegalAccessError: class org.apache.spark.storage.StorageUtils$
+(in unnamed module @0x3cc1435c) cannot access class sun.nio.ch.DirectBuffer
+(in module java.base) because module java.base does not export sun.nio.ch
+to unnamed module @0x3cc1435c
+```
 
 To fix this, add this line to all the UDF setup scripts:
 ```sql
@@ -1200,7 +1207,7 @@ In this case, full script will look like this:
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
 %jvmoption --add-exports=java.base/sun.nio.ch=ALL-UNNAMED;
 %scriptclass com.exasol.cloudetl.scriptclasses.FilesImportQueryGenerator;
-%jar /buckets/bfsdefault/default/exasol-cloud-storage-extension-2.9.4.jar;
+%jar /buckets/bfsdefault/default/exasol-cloud-storage-extension-2.9.5.jar;
 /
 ```
 

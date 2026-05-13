@@ -68,7 +68,7 @@ class TableExportQueryGeneratorTest extends PathTest {
     val thrown = intercept[TableExporterException] {
       TableExportQueryGenerator.generateSqlForExportSpec(metadata, exportSpec)
     }
-    assert(thrown.getMessage().startsWith("E-CSE-17"))
+    assert(thrown.getMessage().startsWith("E-CSE-34"))
     assert(thrown.getMessage().contains("from given column syntax 'tbl.c_int.integer'"))
     verify(metadata, atLeastOnce).getScriptSchema()
     verify(exportSpec, times(1)).getParameters()

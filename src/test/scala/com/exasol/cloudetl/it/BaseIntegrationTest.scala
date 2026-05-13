@@ -6,6 +6,7 @@ import java.nio.file.Paths
 import com.exasol.containers.ExasolContainer
 import com.exasol.dbbuilder.dialects.Column
 import com.exasol.dbbuilder.dialects.exasol.ExasolObjectFactory
+import com.exasol.dbbuilder.dialects.exasol.ExasolObjectConfiguration
 import com.exasol.dbbuilder.dialects.exasol.ExasolSchema
 import com.exasol.dbbuilder.dialects.exasol.udf.UdfScript
 
@@ -15,8 +16,9 @@ import org.scalatest.funsuite.AnyFunSuite
 
 trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLogging {
   private[this] val JAR_NAME_PATTERN = "exasol-cloud-storage-extension-"
+  private[this] val SPARK_JAVA_MODULE_OPTION = "--add-exports=java.base/sun.nio.ch=ALL-UNNAMED"
 
-  val DEFAULT_EXASOL_DOCKER_IMAGE = "8.25.0"
+  val DEFAULT_EXASOL_DOCKER_IMAGE = "2025.2.1"
   val network = DockerNamedNetwork("it-tests", true)
   val exasolContainer = {
     val c: ExasolContainer[_] = new ExasolContainer(getExasolDockerImageVersion())
@@ -41,7 +43,10 @@ trait BaseIntegrationTest extends AnyFunSuite with BeforeAndAfterAll with LazyLo
 
   def prepareExasolDatabase(schemaName: String): Unit = {
     executeStmt(s"DROP SCHEMA IF EXISTS $schemaName CASCADE")
-    factory = new ExasolObjectFactory(getConnection())
+    factory = new ExasolObjectFactory(
+      getConnection(),
+      ExasolObjectConfiguration.builder().withJvmOptions(SPARK_JAVA_MODULE_OPTION).build()
+    )
     logger.info("Creating schema " + schemaName)
     schema = factory.createSchema(schemaName)
     createImportDeploymentScripts()
