@@ -24,6 +24,8 @@ As part of this endeavor, we updated the `parquet-io-java` dependency to 2.0.16,
 * Added `org.junit.jupiter:junit-jupiter:5.10.3`
 * Removed `org.scalatestplus:scalatestplus-mockito_2.13:1.0.0-SNAP5`
 * Removed `org.scalatest:scalatest_2.13:3.3.0-SNAP4`
+* Added `org.slf4j:slf4j-jdk14:1.7.36`
+* Updated `org.testcontainers:localstack:1.20.3` to `1.21.4`
 
 #### Plugin Dependency Updates
 

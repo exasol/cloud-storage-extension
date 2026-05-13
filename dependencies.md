@@ -73,6 +73,7 @@
 | [JUnit Jupiter (Aggregator)][80]           | [Eclipse Public License v2.0][81] |
 | [Maven Project Version Getter][82]         | [MIT License][83]                 |
 | [Extension integration tests library][84]  | [MIT License][85]                 |
+| [SLF4J JDK14 Binding][49]                  | [MIT License][50]                 |
 
 ### Runtime Dependencies
 
