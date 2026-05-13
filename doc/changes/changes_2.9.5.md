@@ -14,6 +14,10 @@ This release migrates the project from Scala to Java to simplify maintainence an
 
 ### Cloud Storage Extension
 
+#### Test Dependency Updates
+
+* Updated `com.exasol:extension-manager-integration-test-java:0.5.13` to `0.5.19`
+
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.0.6` to `2.0.7`
