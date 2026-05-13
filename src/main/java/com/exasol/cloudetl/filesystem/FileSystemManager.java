@@ -1,8 +1,9 @@
 package com.exasol.cloudetl.filesystem;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -27,7 +28,7 @@ public final class FileSystemManager {
 
     /** Return matching files. */
     public scala.collection.immutable.Seq<Path> getFiles(final String path) throws java.io.IOException {
-        return globStatus(path);
+        return resolveMatchingFiles(path);
     }
 
     /** Return matching local files. */
@@ -35,7 +36,7 @@ public final class FileSystemManager {
         return getFiles(path.toAbsolutePath().toUri().getRawPath());
     }
 
-    private scala.collection.immutable.Seq<Path> globStatus(final String path) throws java.io.IOException {
+    private scala.collection.immutable.Seq<Path> resolveMatchingFiles(final String path) throws java.io.IOException {
         final Path hadoopPath = new Path(path);
         final FileStatus[] statuses = this.fileSystem.globStatus(hadoopPath, HiddenFilesFilter.INSTANCE);
         if (statuses == null) {
@@ -54,12 +55,8 @@ public final class FileSystemManager {
     }
 
     private scala.collection.immutable.Seq<Path> listFiles(final FileStatus[] paths) {
-        final List<Path> result = new ArrayList<>();
-        for (final FileStatus path : paths) {
-            if (path.isFile()) {
-                result.add(path.getPath());
-            }
-        }
+        final List<Path> result = Arrays.stream(paths).filter(FileStatus::isFile).map(FileStatus::getPath)
+                .collect(Collectors.toList());
         return ScalaConverters.seqFromJava(result);
     }
 }

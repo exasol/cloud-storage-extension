@@ -31,7 +31,8 @@ public final class ExasolColumnValueProvider implements JavaClassTypes {
             } else if (Objects.equals(columnType, J_LONG)) {
                 return this.iterator.getLong(index);
             } else if (Objects.equals(columnType, J_BIG_DECIMAL)) {
-                return updateBigDecimal(this.iterator.getBigDecimal(index), columnInfo.precision, columnInfo.scale);
+                return scaleBigDecimalAndValidatePrecision(this.iterator.getBigDecimal(index), columnInfo.precision,
+                        columnInfo.scale);
             } else if (Objects.equals(columnType, J_DOUBLE)) {
                 return this.iterator.getDouble(index);
             } else if (Objects.equals(columnType, J_STRING)) {
@@ -51,7 +52,8 @@ public final class ExasolColumnValueProvider implements JavaClassTypes {
         }
     }
 
-    private BigDecimal updateBigDecimal(final BigDecimal bigDecimal, final int precision, final int scale) {
+    private BigDecimal scaleBigDecimalAndValidatePrecision(final BigDecimal bigDecimal, final int precision,
+            final int scale) {
         if (bigDecimal == null) {
             return null;
         }

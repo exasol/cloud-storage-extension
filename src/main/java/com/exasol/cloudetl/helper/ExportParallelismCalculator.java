@@ -16,8 +16,8 @@ public final class ExportParallelismCalculator {
         this.properties = properties;
     }
 
-    /** Factory for Java callers. */
-    public static ExportParallelismCalculator apply(final ExaMetadata metadata, final StorageProperties properties) {
+    /** Create a calculator for Java callers. */
+    public static ExportParallelismCalculator create(final ExaMetadata metadata, final StorageProperties properties) {
         return new ExportParallelismCalculator(metadata, properties);
     }
 
