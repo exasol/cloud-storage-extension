@@ -1,9 +1,7 @@
 package com.exasol.cloudetl.source;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.UncheckedIOException;
+import java.util.*;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -78,12 +76,15 @@ public final class OrcSource extends Source {
                     }
                     return true;
                 } catch (final java.io.IOException exception) {
-                    throw new IllegalStateException(exception);
+                    throw new UncheckedIOException(exception);
                 }
             }
 
             @Override
             public Row next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
                 return this.batchIterator.next();
             }
         });
@@ -133,6 +134,9 @@ public final class OrcSource extends Source {
 
         @Override
         public Row next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
             final Map<String, Object> valuesMap = this.converter.readAt(this.vector, this.offset);
             final List<Object> values = new ArrayList<>(this.fields.size());
             for (int index = 0; index < this.fields.size(); index++) {

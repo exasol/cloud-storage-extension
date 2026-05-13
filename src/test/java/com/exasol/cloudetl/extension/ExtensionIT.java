@@ -125,7 +125,7 @@ class ExtensionIT extends AbstractScriptExtensionIT {
         }
     }
 
-    private void importFromS3IntoExasol(final Table table, final String bucket, final String file) throws SQLException {
+    private void importFromS3IntoExasol(final Table table, final String bucket, final String file) {
         executeStatement("IMPORT INTO " + table.getFullyQualifiedName() + "\n" //
                 + "FROM SCRIPT " + ExtensionManagerSetup.EXTENSION_SCHEMA_NAME + ".IMPORT_PATH WITH\n" //
                 + "BUCKET_PATH              = 's3a://" + bucket + "/" + file + "'\n" //
