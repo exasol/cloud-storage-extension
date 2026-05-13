@@ -28,3 +28,4 @@ As part of this endeavor, we updated the `parquet-io-java` dependency to 2.0.16,
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.4` to `3.5.5`
 * Updated `org.apache.maven.plugins:maven-resources-plugin:3.4.0` to `3.5.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.4` to `3.5.5`
+* Removed `org.scalastyle:scalastyle-maven-plugin:1.0.0`

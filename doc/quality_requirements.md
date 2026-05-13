@@ -41,7 +41,7 @@ The browser extension dependencies are managed by `extension/package.json` and i
 
 ## Static Analysis and Security Gates
 
-CI runs Maven verification, Project Keeper verification, Scalastyle, Scalafmt checks through Spotless, Scalafix checks, the error-code crawler, duplicate dependency checks, and OSS Index vulnerability audits. Release workflows must pass the same project verification gates before publishing.
+CI runs Maven verification, Project Keeper verification, Scalafmt checks through Spotless, Scalafix checks, the error-code crawler, duplicate dependency checks, and OSS Index vulnerability audits. Release workflows must pass the same project verification gates before publishing.
 
 Generated files such as `pk_generated_parent.pom` must be updated through Project Keeper instead of edited manually.
 
