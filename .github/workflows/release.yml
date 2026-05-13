@@ -154,7 +154,7 @@ jobs:
       - {
         name: Build project,
         id: build,
-        run: mvn --batch-mode -DskipTests -DossindexSkip=true verify -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+        run: mvn --batch-mode -DskipTests -DossindexSkip=true clean verify
       }
       - {
         name: List secret GPG keys,
