@@ -4,12 +4,14 @@ import static org.apache.parquet.schema.LogicalTypeAnnotation.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.parquet.schema.*;
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName;
 import org.apache.parquet.schema.Type.Repetition;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.cloudetl.ScalaConverters;
 import com.exasol.cloudetl.data.ExaColumnInfo;
@@ -86,28 +88,26 @@ class ParquetSchemaConverterTest {
         assertEquals("requirement failed: Got a 'Long' type with more than '18' precision.", thrown.getMessage());
     }
 
-    @Test
-    void createParquetMessageTypeRemovesQuotesFromFieldNames() {
-        for (final boolean lowercase : List.of(true, false)) {
-            final ParquetSchemaConverter converter = new ParquetSchemaConverter(lowercase);
-            final var columns = ScalaConverters.seqFromJava(List.of(//
-                    new ExaColumnInfo("\"column int\"", Integer.class, 9, 0, 0, true), //
-                    new ExaColumnInfo("\"c_long\"", Long.class, 12, 0, 0, true)));
-            final MessageType schema = converter.createParquetMessageType(columns, "test");
-            assertEquals("column int", schema.getFieldName(0));
-            assertEquals("c_long", schema.getFieldName(1));
-        }
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    void createParquetMessageTypeRemovesQuotesFromFieldNames(final boolean lowercase) {
+        final ParquetSchemaConverter converter = new ParquetSchemaConverter(lowercase);
+        final var columns = ScalaConverters.seqFromJava(List.of(//
+                new ExaColumnInfo("\"column int\"", Integer.class, 9, 0, 0, true), //
+                new ExaColumnInfo("\"c_long\"", Long.class, 12, 0, 0, true)));
+        final MessageType schema = converter.createParquetMessageType(columns, "test");
+        assertEquals("column int", schema.getFieldName(0));
+        assertEquals("c_long", schema.getFieldName(1));
     }
 
-    @Test
-    void createParquetMessageTypeConvertsFieldNamesToLowercaseWhenEnabled() {
-        final Map<Boolean, String> tests = Map.of(true, "c_long", false, "c_LONG");
-        tests.forEach((lowercase, expectedFieldName) -> {
-            final ParquetSchemaConverter converter = new ParquetSchemaConverter(lowercase);
-            final var columns = ScalaConverters
-                    .seqFromJava(List.of(new ExaColumnInfo("\"c_LONG\"", Long.class, 12, 0, 0, true)));
-            final MessageType schema = converter.createParquetMessageType(columns, "test");
-            assertEquals(expectedFieldName, schema.getFieldName(0));
-        });
+    @ParameterizedTest
+    @CsvSource({ "true, c_long", "false, c_LONG" })
+    void createParquetMessageTypeConvertsFieldNamesToLowercaseWhenEnabled(final boolean lowercase,
+            final String expectedFieldName) {
+        final ParquetSchemaConverter converter = new ParquetSchemaConverter(lowercase);
+        final var columns = ScalaConverters
+                .seqFromJava(List.of(new ExaColumnInfo("\"c_LONG\"", Long.class, 12, 0, 0, true)));
+        final MessageType schema = converter.createParquetMessageType(columns, "test");
+        assertEquals(expectedFieldName, schema.getFieldName(0));
     }
 }

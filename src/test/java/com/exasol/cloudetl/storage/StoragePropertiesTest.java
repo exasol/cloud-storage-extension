@@ -4,9 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.*;
 import com.exasol.cloudetl.ScalaConverters;
@@ -35,12 +40,11 @@ class StoragePropertiesTest {
                 .contains("Failed to get value for '" + StorageProperties.BUCKET_PATH + "' property"));
     }
 
-    @Test
-    void getStoragePathSchemeReturnsPathSchemeValue() {
-        for (final String scheme : List.of("s3a", "s3", "wasbs", "adls", "file")) {
-            this.properties = Map.of(StorageProperties.BUCKET_PATH, scheme + "://a/path");
-            assertEquals(scheme, baseProperties().getStoragePathScheme());
-        }
+    @ParameterizedTest
+    @ValueSource(strings = { "s3a", "s3", "wasbs", "adls", "file" })
+    void getStoragePathSchemeReturnsPathSchemeValue(final String scheme) {
+        this.properties = Map.of(StorageProperties.BUCKET_PATH, scheme + "://a/path");
+        assertEquals(scheme, baseProperties().getStoragePathScheme());
     }
 
     @Test
@@ -49,19 +53,11 @@ class StoragePropertiesTest {
         assertEquals("s3a", baseProperties().getStoragePathScheme());
     }
 
-    @Test
-    void getDeltaFormatLogStoreClassNameReturnsStorageClassNameForScheme() {
-        final Map<String, String> data = Map.of("s3a", "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore",
-                "abfs", "org.apache.spark.sql.delta.storage.AzureLogStore", "abfss",
-                "org.apache.spark.sql.delta.storage.AzureLogStore", "adl",
-                "org.apache.spark.sql.delta.storage.AzureLogStore", "wasbs",
-                "org.apache.spark.sql.delta.storage.AzureLogStore", "wasb",
-                "org.apache.spark.sql.delta.storage.AzureLogStore", "file",
-                "org.apache.spark.sql.delta.storage.HDFSLogStore");
-        data.forEach((scheme, expected) -> {
-            this.properties = Map.of(StorageProperties.BUCKET_PATH, scheme + "://a/path");
-            assertEquals(expected, baseProperties().getDeltaFormatLogStoreClassName());
-        });
+    @ParameterizedTest
+    @MethodSource("deltaFormatLogStoreClassNames")
+    void getDeltaFormatLogStoreClassNameReturnsStorageClassNameForScheme(final String scheme, final String expected) {
+        this.properties = Map.of(StorageProperties.BUCKET_PATH, scheme + "://a/path");
+        assertEquals(expected, baseProperties().getDeltaFormatLogStoreClassName());
     }
 
     @Test
@@ -211,6 +207,17 @@ class StoragePropertiesTest {
 
     private StorageProperties baseProperties() {
         return new StorageProperties(this.properties);
+    }
+
+    private static Stream<Arguments> deltaFormatLogStoreClassNames() {
+        return Stream.of(//
+                Arguments.of("s3a", "org.apache.spark.sql.delta.storage.S3SingleDriverLogStore"), //
+                Arguments.of("abfs", "org.apache.spark.sql.delta.storage.AzureLogStore"), //
+                Arguments.of("abfss", "org.apache.spark.sql.delta.storage.AzureLogStore"), //
+                Arguments.of("adl", "org.apache.spark.sql.delta.storage.AzureLogStore"), //
+                Arguments.of("wasbs", "org.apache.spark.sql.delta.storage.AzureLogStore"), //
+                Arguments.of("wasb", "org.apache.spark.sql.delta.storage.AzureLogStore"), //
+                Arguments.of("file", "org.apache.spark.sql.delta.storage.HDFSLogStore"));
     }
 
     private ExaConnectionInformation newConnectionInformation(final String username, final String password) {

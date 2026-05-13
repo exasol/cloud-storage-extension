@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class DateTimeConverterTest {
     private void daysSinceEpochToDate(final Date date) {
@@ -16,12 +18,17 @@ class DateTimeConverterTest {
         assertEquals(date.toString(), converted.toString());
     }
 
-    @Test
-    void fromJavaSqlDateToDaysSinceEpochAndBackToJavaSqlDate() throws ParseException {
+    @ParameterizedTest
+    @MethodSource("dates")
+    void fromJavaSqlDateToDaysSinceEpochAndBackToJavaSqlDate(final Date date) {
+        daysSinceEpochToDate(date);
+    }
+
+    private static Stream<Date> dates() throws ParseException {
         final SimpleDateFormat localFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         final SimpleDateFormat utcFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z", Locale.US);
 
-        final List<Date> testDates = List.of(//
+        return Stream.of(//
                 new Date(100), //
                 new Date(localFormat.parse("1776-07-04 10:30:00").getTime()), //
                 new Date(utcFormat.parse("1776-07-04 18:30:00 UTC").getTime()), //
@@ -41,7 +48,6 @@ class DateTimeConverterTest {
                 new Date(localFormat.parse("1989-11-09 11:59:59").getTime()), //
                 new Date(utcFormat.parse("1989-11-09 19:59:59 UTC").getTime()), //
                 Date.valueOf("2019-02-10"));
-        testDates.forEach(this::daysSinceEpochToDate);
     }
 
     @Test

@@ -7,7 +7,8 @@ import static org.mockito.Mockito.*;
 import java.math.BigInteger;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import com.exasol.ExaMetadata;
 
@@ -22,23 +23,20 @@ class AbstractUdfCountCalculatorTest {
         when(this.metadata.getNodeCount()).thenReturn((long) TOTAL_NUMBER_OF_NODES);
     }
 
-    @Test
-    void calculatesFixedBasedNumberOfUdfInstances() {
-        final long[][] testData = { { 2L, 20, 8 }, { 4L, 20, 16 }, { 20L, 10, 20 } };
-        for (final long[] row : testData) {
-            when(this.metadata.getMemoryLimit()).thenReturn(GB.multiply(BigInteger.valueOf(row[0])));
-            assertThat(new FixedUdfCountCalculator(this.metadata).getUdfCount((int) row[1]), equalTo((int) row[2]));
-        }
+    @ParameterizedTest
+    @CsvSource({ "2, 20, 8", "4, 20, 16", "20, 10, 20" })
+    void calculatesFixedBasedNumberOfUdfInstances(final long memoryLimitInGb, final int maxInstances,
+            final int expectedUdfCount) {
+        when(this.metadata.getMemoryLimit()).thenReturn(GB.multiply(BigInteger.valueOf(memoryLimitInGb)));
+        assertThat(new FixedUdfCountCalculator(this.metadata).getUdfCount(maxInstances), equalTo(expectedUdfCount));
     }
 
-    @Test
-    void calculatesMemoryBasedNumberOfUdfInstances() {
-        final long[][] testData = { { 2L, 20, 500L, 8 }, { 4L, 20, 150L, 40 }, { 20L, 10, 1000L, 20 },
-                { 10L, 25, 700L, 28 } };
-        for (final long[] row : testData) {
-            when(this.metadata.getMemoryLimit()).thenReturn(GB.multiply(BigInteger.valueOf(row[0])));
-            assertThat(new MemoryUdfCountCalculator(this.metadata, row[2] * MB).getUdfCount((int) row[1]),
-                    equalTo((int) row[3]));
-        }
+    @ParameterizedTest
+    @CsvSource({ "2, 20, 500, 8", "4, 20, 150, 40", "20, 10, 1000, 20", "10, 25, 700, 28" })
+    void calculatesMemoryBasedNumberOfUdfInstances(final long memoryLimitInGb, final int maxInstances,
+            final long memoryPerInstanceInMb, final int expectedUdfCount) {
+        when(this.metadata.getMemoryLimit()).thenReturn(GB.multiply(BigInteger.valueOf(memoryLimitInGb)));
+        assertThat(new MemoryUdfCountCalculator(this.metadata, memoryPerInstanceInMb * MB).getUdfCount(maxInstances),
+                equalTo(expectedUdfCount));
     }
 }

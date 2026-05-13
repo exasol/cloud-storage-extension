@@ -54,7 +54,7 @@ class DeltaFormatBucketTest extends AbstractBucketTest {
         saveSparkDataset(spark.range(1, 101).repartition(20), null);
 
         final Bucket bucket = getBucket(this.properties);
-        assertEquals(20, bucket.getPaths().size());
+        assertEquals(20, ScalaConverters.asJavaList(bucket.getPaths()).size());
     }
 
     @Test
@@ -74,7 +74,7 @@ class DeltaFormatBucketTest extends AbstractBucketTest {
         saveSparkDataset(spark.range(101, 110).coalesce(2), "overwrite");
 
         final Bucket bucket = getBucket(this.properties);
-        assertEquals(2, bucket.getPaths().size());
+        assertEquals(2, ScalaConverters.asJavaList(bucket.getPaths()).size());
     }
 
     @Test

@@ -3,10 +3,14 @@ package com.exasol.cloudetl.parquet;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.exasol.cloudetl.storage.StorageProperties;
 
@@ -21,13 +25,11 @@ class ParquetWriteOptionsTest {
         assertTrue(options.enableValidation);
     }
 
-    @Test
-    void fromReturnsUserProvidedCompressionCodec() {
-        final Map<String, CompressionCodecName> testData = Map.of("snappy", CompressionCodecName.SNAPPY, "gzip",
-                CompressionCodecName.GZIP, "lzo", CompressionCodecName.LZO, "other",
-                CompressionCodecName.UNCOMPRESSED);
-        testData.forEach((given, expected) -> assertEquals(expected,
-                ParquetWriteOptions.from(new StorageProperties(Map.of("PARQUET_COMPRESSION_CODEC", given))).compressionCodec));
+    @ParameterizedTest
+    @MethodSource("compressionCodecs")
+    void fromReturnsUserProvidedCompressionCodec(final String given, final CompressionCodecName expected) {
+        assertEquals(expected,
+                ParquetWriteOptions.from(new StorageProperties(Map.of("PARQUET_COMPRESSION_CODEC", given))).compressionCodec);
     }
 
     @Test
@@ -65,5 +67,13 @@ class ParquetWriteOptionsTest {
     @Test
     void fromReturnsUserProvidedValidationEnabled() {
         assertFalse(ParquetWriteOptions.from(new StorageProperties(Map.of("PARQUET_VALIDATION", "false"))).enableValidation);
+    }
+
+    private static Stream<Arguments> compressionCodecs() {
+        return Stream.of(//
+                Arguments.of("snappy", CompressionCodecName.SNAPPY), //
+                Arguments.of("gzip", CompressionCodecName.GZIP), //
+                Arguments.of("lzo", CompressionCodecName.LZO), //
+                Arguments.of("other", CompressionCodecName.UNCOMPRESSED));
     }
 }

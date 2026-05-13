@@ -7,6 +7,9 @@ import java.util.*;
 
 import org.apache.hadoop.fs.azure.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class AzureBlobBucketTest extends AbstractBucketTest {
     private final Map<String, String> defaultProperties = Map.of(PATH,
@@ -24,19 +27,18 @@ class AzureBlobBucketTest extends AbstractBucketTest {
         assertTrue(thrown.getMessage().contains("path '" + path + "' scheme is not valid."));
     }
 
-    @Test
-    void createThrowsIfAzureBlobPathDoesNotMatchTheExpectedFormat() {
-        for (final String path : List.of("wasbs://container1@account1.blob.core.windows.net",
-                "wasbs://container1@.blob.core.windows.net/orc-data/",
-                "wasbs://container1@account1.dfs.core.windows.net/orc-data/",
-                "wasbs://container1@account1.blob.windows.net/orc-data/")) {
-            this.properties = with(this.defaultProperties, PATH, path, "CONNECTION_NAME", "connection_info");
-            final BucketValidationException thrown = assertThrows(BucketValidationException.class,
-                    () -> getBucket(this.properties, mockConnectionInfo("", "AZURE_SECRET_KEY=" + this.secretKey))
-                            .getConfiguration());
-            assertTrue(thrown.getMessage().startsWith("E-CSE-19"));
-            assertTrue(thrown.getMessage().contains("path '" + path + "' scheme is not valid."));
-        }
+    @ParameterizedTest
+    @ValueSource(strings = { "wasbs://container1@account1.blob.core.windows.net",
+            "wasbs://container1@.blob.core.windows.net/orc-data/",
+            "wasbs://container1@account1.dfs.core.windows.net/orc-data/",
+            "wasbs://container1@account1.blob.windows.net/orc-data/" })
+    void createThrowsIfAzureBlobPathDoesNotMatchTheExpectedFormat(final String path) {
+        this.properties = with(this.defaultProperties, PATH, path, "CONNECTION_NAME", "connection_info");
+        final BucketValidationException thrown = assertThrows(BucketValidationException.class,
+                () -> getBucket(this.properties, mockConnectionInfo("", "AZURE_SECRET_KEY=" + this.secretKey))
+                        .getConfiguration());
+        assertTrue(thrown.getMessage().startsWith("E-CSE-19"));
+        assertTrue(thrown.getMessage().contains("path '" + path + "' scheme is not valid."));
     }
 
     @Test
@@ -73,25 +75,23 @@ class AzureBlobBucketTest extends AbstractBucketTest {
                 Map.of("fs.azure.account.key.account1.blob.core.windows.net", "secret"));
     }
 
-    @Test
-    void createParsesAccountNameFromAzureBlobPaths() {
-        for (final AzurePath path : azureBlobPaths()) {
-            final Map<String, String> properties = with(this.defaultProperties, PATH, path.path, "CONNECTION_NAME",
-                    "connection_info");
-            assertAzureBlobBucket(getBucket(properties, mockConnectionInfo("", "AZURE_SECRET_KEY=" + this.secretKey)),
-                    Map.of("fs.azure.account.key." + path.expectedAccountName + ".blob.core.windows.net", this.secretKey));
-        }
+    @ParameterizedTest
+    @MethodSource("azureBlobPaths")
+    void createParsesAccountNameFromAzureBlobPaths(final AzurePath path) {
+        final Map<String, String> properties = with(this.defaultProperties, PATH, path.path, "CONNECTION_NAME",
+                "connection_info");
+        assertAzureBlobBucket(getBucket(properties, mockConnectionInfo("", "AZURE_SECRET_KEY=" + this.secretKey)),
+                Map.of("fs.azure.account.key." + path.expectedAccountName + ".blob.core.windows.net", this.secretKey));
     }
 
-    @Test
-    void createParsesAccountAndContainerNamesFromAzureBlobPathsForSasToken() {
-        for (final AzurePath path : azureBlobPaths()) {
-            final Map<String, String> properties = with(this.defaultProperties, PATH, path.path, "CONNECTION_NAME",
-                    "connection_info");
-            assertAzureBlobBucket(getBucket(properties, mockConnectionInfo("", "AZURE_SAS_TOKEN=" + this.sasToken)),
-                    Map.of("fs.azure.sas." + path.expectedContainerName + "." + path.expectedAccountName
-                            + ".blob.core.windows.net", this.sasToken));
-        }
+    @ParameterizedTest
+    @MethodSource("azureBlobPaths")
+    void createParsesAccountAndContainerNamesFromAzureBlobPathsForSasToken(final AzurePath path) {
+        final Map<String, String> properties = with(this.defaultProperties, PATH, path.path, "CONNECTION_NAME",
+                "connection_info");
+        assertAzureBlobBucket(getBucket(properties, mockConnectionInfo("", "AZURE_SAS_TOKEN=" + this.sasToken)),
+                Map.of("fs.azure.sas." + path.expectedContainerName + "." + path.expectedAccountName
+                        + ".blob.core.windows.net", this.sasToken));
     }
 
     @Test
@@ -131,7 +131,7 @@ class AzureBlobBucketTest extends AbstractBucketTest {
         withAll(defaultMappings, extraMappings).forEach((given, expected) -> assertEquals(expected, conf.get(given)));
     }
 
-    private List<AzurePath> azureBlobPaths() {
+    private static List<AzurePath> azureBlobPaths() {
         return List.of(new AzurePath("wasbs://container1@account1.blob.core.windows.net/orc-data/", "account1",
                 "container1"), new AzurePath("wasb://container-2@account2.blob.core.windows.net/parquet-data/year=2026/file.parquet",
                         "account2", "container-2"));

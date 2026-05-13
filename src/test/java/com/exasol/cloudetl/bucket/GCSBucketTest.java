@@ -7,8 +7,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class GCSBucketTest extends AbstractBucketTest {
     private final Map<String, String> defaultProperties = Map.of(PATH, "gs://my-bucket/", FORMAT, "AVRO",
@@ -38,21 +42,13 @@ class GCSBucketTest extends AbstractBucketTest {
                 + "Please specify exactly one of them.", thrown.getMessage());
     }
 
-    @Test
-    void validationFailsForInvalidConnectionValues() {
-        final Map<String, String> testData = Map.of("", "E-IEUCS-4: Properties input string does not contain "
-                + "key-value assignment '='. Please make sure that key-value pairs encoded correctly.", "wrong-format",
-                "E-IEUCS-4: Properties input string does not contain key-value assignment '='. Please make sure that key-value pairs encoded correctly.",
-                "wrong_key=value",
-                "E-CSE-32: The connection 'connection_info' does not contain 'GCS_KEYFILE_CONTENT' property. Please check the connection properties.",
-                "GCS_KEYFILE_CONTENT=invalid_json",
-                "E-CSE-33: The connection 'connection_info' does not contain valid JSON in property 'GCS_KEYFILE_CONTENT'. Please check the connection properties.");
-        testData.forEach((connectionContent, expectedErrorMessage) -> {
-            final Bucket bucket = getBucket(Map.of(PATH, "gs://my-bucket/", FORMAT, "AVRO", "GCS_PROJECT_ID",
-                    "myProject", "CONNECTION_NAME", "connection_info"), mockConnectionInfo("", connectionContent));
-            final IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, bucket::validate);
-            assertEquals(expectedErrorMessage, thrown.getMessage());
-        });
+    @ParameterizedTest
+    @MethodSource("invalidConnectionValues")
+    void validationFailsForInvalidConnectionValues(final String connectionContent, final String expectedErrorMessage) {
+        final Bucket bucket = getBucket(Map.of(PATH, "gs://my-bucket/", FORMAT, "AVRO", "GCS_PROJECT_ID",
+                "myProject", "CONNECTION_NAME", "connection_info"), mockConnectionInfo("", connectionContent));
+        final IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, bucket::validate);
+        assertEquals(expectedErrorMessage, thrown.getMessage());
     }
 
     @Test
@@ -94,5 +90,19 @@ class GCSBucketTest extends AbstractBucketTest {
         bucket.validate();
         assertInstanceOf(GCSBucket.class, bucket);
         assertTrue(bucket.getConfiguration().getValByRegex("fs\\.s3a\\.proxy.+").isEmpty());
+    }
+
+    private static Stream<Arguments> invalidConnectionValues() {
+        final String invalidFormatMessage = "E-IEUCS-4: Properties input string does not contain key-value assignment '='."
+                + " Please make sure that key-value pairs encoded correctly.";
+        return Stream.of(//
+                Arguments.of("", invalidFormatMessage), //
+                Arguments.of("wrong-format", invalidFormatMessage), //
+                Arguments.of("wrong_key=value",
+                        "E-CSE-32: The connection 'connection_info' does not contain 'GCS_KEYFILE_CONTENT' property."
+                                + " Please check the connection properties."), //
+                Arguments.of("GCS_KEYFILE_CONTENT=invalid_json",
+                        "E-CSE-33: The connection 'connection_info' does not contain valid JSON in property"
+                                + " 'GCS_KEYFILE_CONTENT'. Please check the connection properties."));
     }
 }

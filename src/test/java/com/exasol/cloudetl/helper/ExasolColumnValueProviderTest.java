@@ -6,10 +6,13 @@ import static org.mockito.Mockito.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.exasol.ExaIterator;
 import com.exasol.cloudetl.data.ExaColumnInfo;
@@ -25,37 +28,16 @@ class ExasolColumnValueProviderTest {
         this.columnValueProvider = new ExasolColumnValueProvider(this.exasolIterator);
     }
 
-    @Test
-    void getColumnValueReturnsValueWithColumnType() throws Exception {
-        final BigDecimal decimal = new BigDecimal(1337);
-        final Date date = new Date(System.currentTimeMillis());
-        final Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        when(this.exasolIterator.getInteger(3)).thenReturn(1);
-        when(this.exasolIterator.getLong(4)).thenReturn(3L);
-        when(this.exasolIterator.getBigDecimal(5)).thenReturn(decimal);
-        when(this.exasolIterator.getDouble(6)).thenReturn(3.14);
-        when(this.exasolIterator.getString(7)).thenReturn("xyz");
-        when(this.exasolIterator.getBoolean(8)).thenReturn(true);
-        when(this.exasolIterator.getDate(9)).thenReturn(date);
-        when(this.exasolIterator.getTimestamp(10)).thenReturn(timestamp);
+    @ParameterizedTest
+    @MethodSource("columnValues")
+    void getColumnValueReturnsValueWithColumnType(final int index, final Object expectedValue,
+            final ExaColumnInfo columnInfo) throws Exception {
+        mockIteratorValue(index, expectedValue, columnInfo.type);
 
-        final List<Object[]> data = List.of(//
-                new Object[] { 1, new ExaColumnInfo("c_int", Integer.class) }, //
-                new Object[] { 3L, new ExaColumnInfo("c_long", Long.class) }, //
-                new Object[] { decimal, new ExaColumnInfo("c_decimal", BigDecimal.class, 4, 0, 0, true) }, //
-                new Object[] { 3.14, new ExaColumnInfo("c_double", Double.class) }, //
-                new Object[] { "xyz", new ExaColumnInfo("c_string", String.class) }, //
-                new Object[] { true, new ExaColumnInfo("c_boolean", Boolean.class) }, //
-                new Object[] { date, new ExaColumnInfo("c_date", Date.class) }, //
-                new Object[] { timestamp, new ExaColumnInfo("c_timestamp", Timestamp.class) });
+        final Object value = this.columnValueProvider.getColumnValue(index, columnInfo);
 
-        for (int index = 0; index < data.size(); index++) {
-            final Object expectedValue = data.get(index)[0];
-            final ExaColumnInfo columnInfo = (ExaColumnInfo) data.get(index)[1];
-            final Object value = this.columnValueProvider.getColumnValue(START_INDEX + index, columnInfo);
-            assertEquals(expectedValue, value);
-            assertEquals(columnInfo.type, value.getClass());
-        }
+        assertEquals(expectedValue, value);
+        assertEquals(columnInfo.type, value.getClass());
     }
 
     @Test
@@ -84,5 +66,41 @@ class ExasolColumnValueProviderTest {
         when(this.exasolIterator.getBigDecimal(3)).thenReturn(decimal);
         final BigDecimal columnValue = (BigDecimal) this.columnValueProvider.getColumnValue(3, columnInfo);
         assertEquals("238316.3800", columnValue.toPlainString());
+    }
+
+    private static Stream<Arguments> columnValues() {
+        final BigDecimal decimal = new BigDecimal(1337);
+        final Date date = Date.valueOf("2026-05-13");
+        final Timestamp timestamp = Timestamp.valueOf("2026-05-13 12:34:56");
+        return Stream.of(//
+                Arguments.of(START_INDEX, 1, new ExaColumnInfo("c_int", Integer.class)), //
+                Arguments.of(START_INDEX + 1, 3L, new ExaColumnInfo("c_long", Long.class)), //
+                Arguments.of(START_INDEX + 2, decimal,
+                        new ExaColumnInfo("c_decimal", BigDecimal.class, 4, 0, 0, true)), //
+                Arguments.of(START_INDEX + 3, 3.14, new ExaColumnInfo("c_double", Double.class)), //
+                Arguments.of(START_INDEX + 4, "xyz", new ExaColumnInfo("c_string", String.class)), //
+                Arguments.of(START_INDEX + 5, true, new ExaColumnInfo("c_boolean", Boolean.class)), //
+                Arguments.of(START_INDEX + 6, date, new ExaColumnInfo("c_date", Date.class)), //
+                Arguments.of(START_INDEX + 7, timestamp, new ExaColumnInfo("c_timestamp", Timestamp.class)));
+    }
+
+    private void mockIteratorValue(final int index, final Object value, final Class<?> type) throws Exception {
+        if (type.equals(Integer.class)) {
+            when(this.exasolIterator.getInteger(index)).thenReturn((Integer) value);
+        } else if (type.equals(Long.class)) {
+            when(this.exasolIterator.getLong(index)).thenReturn((Long) value);
+        } else if (type.equals(BigDecimal.class)) {
+            when(this.exasolIterator.getBigDecimal(index)).thenReturn((BigDecimal) value);
+        } else if (type.equals(Double.class)) {
+            when(this.exasolIterator.getDouble(index)).thenReturn((Double) value);
+        } else if (type.equals(String.class)) {
+            when(this.exasolIterator.getString(index)).thenReturn((String) value);
+        } else if (type.equals(Boolean.class)) {
+            when(this.exasolIterator.getBoolean(index)).thenReturn((Boolean) value);
+        } else if (type.equals(Date.class)) {
+            when(this.exasolIterator.getDate(index)).thenReturn((Date) value);
+        } else if (type.equals(Timestamp.class)) {
+            when(this.exasolIterator.getTimestamp(index)).thenReturn((Timestamp) value);
+        }
     }
 }
