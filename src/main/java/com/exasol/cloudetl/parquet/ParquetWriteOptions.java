@@ -2,8 +2,6 @@ package com.exasol.cloudetl.parquet;
 
 import static java.util.Locale.ENGLISH;
 
-import java.util.Objects;
-
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 
@@ -64,25 +62,5 @@ public final class ParquetWriteOptions {
         final boolean validation = Boolean
                 .parseBoolean(params.get("PARQUET_VALIDATION").isDefined() ? params.get("PARQUET_VALIDATION").get() : "true");
         return new ParquetWriteOptions(blockSize, pageSize, compressionCodec, dictionary, validation);
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof ParquetWriteOptions)) {
-            return false;
-        }
-        final ParquetWriteOptions other = (ParquetWriteOptions) obj;
-        return this.blockSize == other.blockSize && this.pageSize == other.pageSize
-                && this.enableDictionaryEncoding == other.enableDictionaryEncoding
-                && this.enableValidation == other.enableValidation && this.compressionCodec == other.compressionCodec;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.blockSize, this.pageSize, this.compressionCodec, this.enableDictionaryEncoding,
-                this.enableValidation);
     }
 }

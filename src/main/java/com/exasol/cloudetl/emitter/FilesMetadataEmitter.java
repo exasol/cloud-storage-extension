@@ -1,5 +1,6 @@
 package com.exasol.cloudetl.emitter;
 
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +71,7 @@ public final class FilesMetadataEmitter implements Emitter {
                 }
             }
         } catch (final java.io.IOException exception) {
-            throw new IllegalStateException(exception);
+            throw new UncheckedIOException(exception);
         }
         final Partitioner partitioner = new Partitioner(chunks.size(), this.parallelism);
         long index = 0L;

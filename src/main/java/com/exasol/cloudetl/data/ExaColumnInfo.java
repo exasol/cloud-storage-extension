@@ -28,7 +28,7 @@ public final class ExaColumnInfo {
         this.isNullable = isNullable;
     }
 
-    /** Create nullable column information with default numeric metadata. */
+    /** Create nullable column information with unspecified precision, scale, and length. */
     public ExaColumnInfo(final String name, final Class<?> type) {
         this(name, type, 0, 0, 0, true);
     }

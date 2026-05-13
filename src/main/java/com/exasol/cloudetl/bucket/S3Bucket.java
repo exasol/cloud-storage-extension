@@ -74,10 +74,10 @@ public final class S3Bucket extends AbstractConfiguredBucket implements SecureBu
         conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
         conf.set("fs.s3a.impl", org.apache.hadoop.fs.s3a.S3AFileSystem.class.getName());
         conf.set("fs.s3a.endpoint", properties().getString(S3_ENDPOINT));
-        setIfPresent(conf, "fs.s3a.endpoint.region", S3_ENDPOINT_REGION);
-        setIfPresent(conf, "fs.s3a.change.detection.mode", S3_CHANGE_DETECTION_MODE);
-        setIfPresent(conf, "fs.s3a.path.style.access", S3_PATH_STYLE_ACCESS);
-        setIfPresent(conf, "fs.s3a.connection.ssl.enabled", S3_SSL_ENABLED);
+        setHadoopConfigurationIfPropertyPresent(conf, "fs.s3a.endpoint.region", S3_ENDPOINT_REGION);
+        setHadoopConfigurationIfPropertyPresent(conf, "fs.s3a.change.detection.mode", S3_CHANGE_DETECTION_MODE);
+        setHadoopConfigurationIfPropertyPresent(conf, "fs.s3a.path.style.access", S3_PATH_STYLE_ACCESS);
+        setHadoopConfigurationIfPropertyPresent(conf, "fs.s3a.connection.ssl.enabled", S3_SSL_ENABLED);
         final StorageProperties mergedProperties = properties().hasNamedConnection() ? properties().merge(S3_ACCESS_KEY)
                 : properties();
         if (isAnonymousAwsParams(mergedProperties)) {
@@ -107,7 +107,8 @@ public final class S3Bucket extends AbstractConfiguredBucket implements SecureBu
         return conf;
     }
 
-    private void setIfPresent(final Configuration conf, final String hadoopKey, final String propertyKey) {
+    private void setHadoopConfigurationIfPropertyPresent(final Configuration conf, final String hadoopKey,
+            final String propertyKey) {
         if (properties().containsKey(propertyKey)) {
             conf.set(hadoopKey, properties().getString(propertyKey));
         }

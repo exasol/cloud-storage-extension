@@ -15,7 +15,7 @@ public final class AzureAbfsBucket extends AbstractConfiguredBucket implements S
     private static final String AZURE_ACCOUNT_NAME = "AZURE_ACCOUNT_NAME";
     private static final String AZURE_SECRET_KEY = "AZURE_SECRET_KEY";
     private static final Pattern AZURE_ABFS_PATH_REGEX = Pattern
-            .compile("abfss?://(.*)@([^.]+).dfs.core.windows.net/(.*)$");
+            .compile("abfss?://[^@]+@([^.]+)\\.dfs\\.core\\.windows\\.net/.*$");
 
     /** Create a bucket. */
     public AzureAbfsBucket(final String path, final StorageProperties params) {
@@ -58,30 +58,22 @@ public final class AzureAbfsBucket extends AbstractConfiguredBucket implements S
         conf.set("fs.AbstractFileSystem.abfss.impl", org.apache.hadoop.fs.azurebfs.Abfss.class.getName());
         final StorageProperties mergedProperties = properties().hasNamedConnection() ? properties().merge(AZURE_ACCOUNT_NAME)
                 : properties();
-        final AccountAndContainer accountAndContainer = regexParsePath(bucketPath());
+        final String pathAccountName = parseAccountName(bucketPath());
         final String accountName = mergedProperties.get(AZURE_ACCOUNT_NAME).isDefined()
                 ? mergedProperties.get(AZURE_ACCOUNT_NAME).get()
-                : accountAndContainer.accountName;
+                : pathAccountName;
         conf.set("fs.azure.account.key." + accountName + ".dfs.core.windows.net",
                 mergedProperties.getString(AZURE_SECRET_KEY));
         return conf;
     }
 
-    private AccountAndContainer regexParsePath(final String path) {
+    private String parseAccountName(final String path) {
         final Matcher matcher = AZURE_ABFS_PATH_REGEX.matcher(path);
         if (matcher.matches()) {
-            return new AccountAndContainer(matcher.group(2), matcher.group(1));
+            return matcher.group(1);
         }
         throw new BucketValidationException(ExaError.messageBuilder("E-CSE-20")
                 .message("Azure datalake storage path {{PATH}} scheme is not valid.", path)
                 .mitigation("It should be either 'abfs' or 'abfss'.").toString());
-    }
-
-    private static final class AccountAndContainer {
-        private final String accountName;
-
-        private AccountAndContainer(final String accountName, final String containerName) {
-            this.accountName = accountName;
-        }
     }
 }

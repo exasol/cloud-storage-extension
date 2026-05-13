@@ -48,11 +48,11 @@ public final class FilesDataEmitter implements Emitter {
 
     @Override
     public void emit(final ExaIterator context) {
-        checkIfTimezoneUtc();
+        setDefaultTimezoneToUtcIfEnabled();
         emitFileFormatData(context);
     }
 
-    private void checkIfTimezoneUtc() {
+    private void setDefaultTimezoneToUtcIfEnabled() {
         if (this.properties.isEnabled("TIMEZONE_UTC")) {
             TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         }

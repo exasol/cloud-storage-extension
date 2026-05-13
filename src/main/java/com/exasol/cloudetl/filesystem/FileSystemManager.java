@@ -3,7 +3,6 @@ package com.exasol.cloudetl.filesystem;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -62,16 +61,5 @@ public final class FileSystemManager {
             }
         }
         return ScalaConverters.seqFromJava(result);
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return this == obj || obj instanceof FileSystemManager
-                && Objects.equals(this.fileSystem, ((FileSystemManager) obj).fileSystem);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.fileSystem);
     }
 }

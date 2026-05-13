@@ -1,10 +1,12 @@
-# Cloud Storage Extension 2.9.5, released 2026-??-??
+# Cloud Storage Extension 2.9.5, released 2026-05-??
 
 Code name: Migrate from Scala to Java
 
 ## Summary
 
-This release migrates the project from Scala to Java to simplify maintainence and reduce dependencies.
+This release migrates the project from Scala to Java to simplify maintenance and reduce dependencies.
+
+As part of this endeavor, we updated the `parquet-io-java` dependency to 2.0.16, which is now also pure Java.
 
 ## Refactoring
 
