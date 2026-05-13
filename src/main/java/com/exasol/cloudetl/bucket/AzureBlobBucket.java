@@ -17,7 +17,7 @@ public final class AzureBlobBucket extends AbstractConfiguredBucket implements S
     private static final String AZURE_SAS_TOKEN = "AZURE_SAS_TOKEN";
     private static final String AZURE_SECRET_KEY = "AZURE_SECRET_KEY";
     private static final Pattern AZURE_BLOB_PATH_REGEX = Pattern
-            .compile("wasbs?://(.*)@([^.]+).blob.core.windows.net/(.*)$");
+            .compile("^wasbs?://([^@/]++)@([^./@]++)\\.blob\\.core\\.windows\\.net/[^\\r\\n]*+$");
 
     /** Create a bucket. */
     public AzureBlobBucket(final String path, final StorageProperties params) {

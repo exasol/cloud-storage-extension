@@ -1,6 +1,6 @@
 package com.exasol.cloudetl.helper;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 /**
  * Helper class that generates string values.
@@ -8,7 +8,7 @@ import java.util.Random;
 public final class StringGenerator {
     private static final int FIRST_PRINTABLE_ASCII = 32;
     private static final int PRINTABLE_ASCII_RANGE = 95;
-    private static final Random RNG = new Random();
+    private static final SecureRandom RNG = new SecureRandom();
 
     private StringGenerator() {
         // Prevent instantiation.
