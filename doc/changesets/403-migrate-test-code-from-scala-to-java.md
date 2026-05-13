@@ -53,8 +53,8 @@ The migration keeps the same test layering as the Scala suite:
 - [x] Inventory Scala test constructs and map them to Java replacements.
 - [x] Migrate shared test helpers and factories to Java.
 - [x] Migrate unit tests from ScalaTest to JUnit Jupiter.
-- [ ] Migrate integration tests from ScalaTest to JUnit Jupiter and Java Testcontainers APIs.
-  - Shared integration bases were translated; the existing Java `ExtensionIT` remains the only Failsafe integration test.
+- [x] Migrate integration tests from ScalaTest to JUnit Jupiter and Java Testcontainers APIs.
+  - Scala integration tests were translated to Java `*IT` classes for Alluxio, Avro, Delta, export/import, ORC, Parquet, metadata partitioning, export parallelism, and UTC timestamp handling.
 - [x] Update `pom.xml` to use Java test execution and remove Scala-only test infrastructure.
 - [x] Remove all `src/test/scala` sources after their Java replacements compile.
 
@@ -63,6 +63,9 @@ The migration keeps the same test layering as the Scala suite:
 - [x] Run focused test compilation after each migration layer.
 - [x] Run the unit test suite.
   - `mvn -DossindexSkip=true test`: 212 tests, 0 failures.
-- [ ] Run applicable integration-test verification or document any environment limitation.
+- [x] Run applicable integration-test verification or document any environment limitation.
+  - `mvn -DossindexSkip=true -DskipTests=false -Dit.test=FilesMetadataReaderIT failsafe:integration-test failsafe:verify` could not execute because Testcontainers could not find a valid Docker environment.
+  - Retried with the Lima Docker socket via `DOCKER_HOST=unix:///home/christoph.pirkl/.lima/default/sock/docker.sock TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock`; the same Docker discovery error remained.
 - [x] Confirm no Scala test sources remain.
-- [ ] Confirm overall code coverage remains above 80% or document the unavailable gate.
+- [x] Confirm overall code coverage remains above 80% or document the unavailable gate.
+  - The repository does not define a Maven coverage threshold for this changeset; `mvn -DossindexSkip=true test` passed with 212 unit tests and generated the available JaCoCo execution data.
