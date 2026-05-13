@@ -4,7 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 import org.hamcrest.Matcher;
@@ -21,17 +22,21 @@ public abstract class BaseDataImporter extends BaseS3IntegrationTest {
     protected abstract String dataFormat();
 
     protected Path outputDirectory;
-    protected final List<org.apache.hadoop.fs.Path> paths = new ArrayList<>();
     protected final String baseFileName = "part-";
+    private final List<org.apache.hadoop.fs.Path> pendingImportFiles = new ArrayList<>();
+    private int fileCounter;
 
     @BeforeEach
     void baseDataImporterBeforeEach() throws IOException {
         this.outputDirectory = TestFileManager.createTemporaryFolder(dataFormat() + "-tests-");
+        this.fileCounter = 0;
+        deleteBucketObjects(bucketName());
     }
 
     @AfterEach
     void baseDataImporterAfterEach() throws IOException {
-        this.paths.clear();
+        this.pendingImportFiles.clear();
+        deleteBucketObjects(bucketName());
         TestFileManager.deletePathFiles(this.outputDirectory);
     }
 
@@ -48,10 +53,10 @@ public abstract class BaseDataImporter extends BaseS3IntegrationTest {
     }
 
     protected org.apache.hadoop.fs.Path addFile() {
-        final String fileCounter = String.format("%04d", this.paths.size());
+        final String formattedFileCounter = String.format("%04d", this.fileCounter++);
         final org.apache.hadoop.fs.Path newPath = new org.apache.hadoop.fs.Path(this.outputDirectory.toUri().toString(),
-                this.baseFileName + fileCounter + "." + dataFormat());
-        this.paths.add(newPath);
+                this.baseFileName + formattedFileCounter + "." + dataFormat());
+        this.pendingImportFiles.add(newPath);
         return newPath;
     }
 
@@ -71,16 +76,17 @@ public abstract class BaseDataImporter extends BaseS3IntegrationTest {
         }
 
         protected AbstractMultiColChecker withResultSet(final ResultSetConsumer block) throws SQLException {
-            BaseDataImporter.this.paths.forEach(path -> uploadFileToS3(bucketName(), path));
-            final var tableBuilder = BaseDataImporter.this.schema.createTableBuilder(this.tableName.toUpperCase(Locale.ENGLISH));
-            this.columns.forEach(tableBuilder::column);
-            final Table table = tableBuilder.build();
-            importFromS3IntoExasol(schemaName(), table, bucketName(), BaseDataImporter.this.baseFileName + "*", dataFormat());
-            final ResultSet resultSet = executeQuery("SELECT * FROM " + table.getFullyQualifiedName());
             try {
-                block.accept(resultSet);
+                final Table table = createTable();
+                importPendingFiles(table);
+                final ResultSet resultSet = executeQuery("SELECT * FROM " + table.getFullyQualifiedName());
+                try {
+                    block.accept(resultSet);
+                } finally {
+                    resultSet.close();
+                }
             } finally {
-                resultSet.close();
+                clearPendingImport();
             }
             return this;
         }
@@ -90,14 +96,32 @@ public abstract class BaseDataImporter extends BaseS3IntegrationTest {
         }
 
         public void assertFails(final Matcher<String> errorMessageMatcher) {
-            BaseDataImporter.this.paths.forEach(path -> uploadFileToS3(bucketName(), path));
-            final var tableBuilder = BaseDataImporter.this.schema.createTableBuilder(this.tableName.toUpperCase(Locale.ENGLISH));
+            try {
+                final Table table = createTable();
+                final IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class,
+                        () -> importPendingFiles(table));
+                assertThat(exception.getCause().getMessage(), errorMessageMatcher);
+            } finally {
+                clearPendingImport();
+            }
+        }
+
+        private Table createTable() {
+            final var tableBuilder = BaseDataImporter.this.schema
+                    .createTableBuilder(this.tableName.toUpperCase(Locale.ENGLISH));
             this.columns.forEach(tableBuilder::column);
-            final Table table = tableBuilder.build();
-            final IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class,
-                    () -> importFromS3IntoExasol(schemaName(), table, bucketName(), BaseDataImporter.this.baseFileName + "*",
-                            dataFormat()));
-            assertThat(exception.getCause().getMessage(), errorMessageMatcher);
+            return tableBuilder.build();
+        }
+
+        private void importPendingFiles(final Table table) {
+            deleteBucketObjects(bucketName());
+            BaseDataImporter.this.pendingImportFiles.forEach(path -> uploadFileToS3(bucketName(), path));
+            importFromS3IntoExasol(schemaName(), table, bucketName(), BaseDataImporter.this.baseFileName + "*", dataFormat());
+        }
+
+        private void clearPendingImport() {
+            BaseDataImporter.this.pendingImportFiles.clear();
+            deleteBucketObjects(bucketName());
         }
     }
 
