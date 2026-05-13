@@ -10,6 +10,7 @@ import org.testcontainers.containers.Network;
 
 import com.github.dockerjava.api.DockerClient;
 
+// This class will be migrated to testcontainers 2.x in https://github.com/exasol/cloud-storage-extension/issues/405
 public final class DockerNamedNetwork implements Network {
     private static final Logger LOGGER = Logger.getLogger(DockerNamedNetwork.class.getName());
     private static final ConcurrentHashMap<String, DockerNamedNetwork> NAMED_NETWORKS = new ConcurrentHashMap<>();
