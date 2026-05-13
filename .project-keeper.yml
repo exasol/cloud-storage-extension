@@ -53,7 +53,7 @@ build:
             name: Run tests and build with Maven
             id: build-pk-verify
             # Omit clean to speedup build
-            run: mvn --batch-mode verify -DossindexSkip=true -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
+            run: mvn --batch-mode verify -DossindexSkip=true -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }} -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
             env:
               # Set additional environment variable as in scala projects the scalatest plugin does not forward
               # the system property -Dcom.exasol.dockerdb.image to the test's implementation.
@@ -69,7 +69,7 @@ build:
             id: build-extension
             run: |
               # Packaged JAR is required for building the extension
-              mvn --batch-mode package -DossindexSkip=true -DskipTests
+              mvn --batch-mode package -DossindexSkip=true -DskipTests -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
               cd extension
               npm ci
               npm run build
@@ -79,4 +79,4 @@ build:
             name: Build project
             id: build
             # Omit clean to speedup build. Tests already ran during CI build.
-            run: mvn --batch-mode -DskipTests -DossindexSkip=true verify
+            run: mvn --batch-mode -DskipTests -DossindexSkip=true verify -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn

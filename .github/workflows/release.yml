@@ -147,14 +147,14 @@ jobs:
         id: build-extension
         run: |
           # Packaged JAR is required for building the extension
-          mvn --batch-mode package -DossindexSkip=true -DskipTests
+          mvn --batch-mode package -DossindexSkip=true -DskipTests -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
           cd extension
           npm ci
           npm run build
       - {
         name: Build project,
         id: build,
-        run: mvn --batch-mode -DskipTests -DossindexSkip=true verify
+        run: mvn --batch-mode -DskipTests -DossindexSkip=true verify -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
       }
       - {
         name: List secret GPG keys,
