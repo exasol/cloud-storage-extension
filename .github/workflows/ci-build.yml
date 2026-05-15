@@ -93,11 +93,14 @@ jobs:
       }
       - name: Run tests and build with Maven
         id: build-pk-verify
-        run: mvn --batch-mode verify -DossindexSkip=true -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }} -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+        run: |
+          mvn --batch-mode clean verify \
+              -DossindexSkip=true \
+              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+              -DtrimStackTrace=false \
+              -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
         env: {
-          EXASOL_DB_VERSION: '${{ matrix.exasol_db_version }}',
-          OSSINDEX_USERNAME: '${{ secrets.OSSINDEX_USERNAME }}',
-          OSSINDEX_API_TOKEN: '${{ secrets.OSSINDEX_API_TOKEN }}'
+          EXASOL_DB_VERSION: '${{ matrix.exasol_db_version }}'
         }
       - name: Sonar analysis
         id: sonar-analysis

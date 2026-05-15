@@ -16,9 +16,19 @@ As part of this endeavor, we updated the `parquet-io-java` dependency to 2.0.16,
 
 ### Cloud Storage Extension
 
+#### Compile Dependency Updates
+
+* Added `org.slf4j:slf4j-api:2.0.18`
+
 #### Test Dependency Updates
 
+* Removed `com.dimafeng:testcontainers-scala-scalatest_2.13:0.41.4`
 * Updated `com.exasol:extension-manager-integration-test-java:0.5.13` to `0.5.19`
+* Removed `org.junit.jupiter:junit-jupiter-api:5.10.3`
+* Added `org.junit.jupiter:junit-jupiter:5.10.3`
+* Removed `org.scalatestplus:scalatestplus-mockito_2.13:1.0.0-SNAP5`
+* Removed `org.scalatest:scalatest_2.13:3.3.0-SNAP4`
+* Updated `org.testcontainers:localstack:1.20.3` to `1.21.4`
 
 #### Plugin Dependency Updates
 
@@ -27,7 +37,9 @@ As part of this endeavor, we updated the `parquet-io-java` dependency to 2.0.16,
 * Updated `com.exasol:project-keeper-maven-plugin:5.4.6` to `5.6.2`
 * Removed `io.github.evis:scalafix-maven-plugin_2.13:0.1.7_0.10.3`
 * Updated `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.2` to `10.0.0`
+* Removed `net.alchim31.maven:scala-maven-plugin:4.9.1`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.4` to `3.5.5`
 * Updated `org.apache.maven.plugins:maven-resources-plugin:3.4.0` to `3.5.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.4` to `3.5.5`
 * Removed `org.scalastyle:scalastyle-maven-plugin:1.0.0`
+* Removed `org.scalatest:scalatest-maven-plugin:2.2.0`

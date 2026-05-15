@@ -115,6 +115,12 @@
             <groupId>com.exasol</groupId>
             <artifactId>import-export-udf-common-scala_${scala.compat.version}</artifactId>
             <version>2.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -238,6 +244,11 @@
             <artifactId>dnsjava</artifactId>
             <groupId>dnsjava</groupId>
             <version>3.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.18</version>
         </dependency>
         <dependency>
             <!-- Replacement for deprecated com.jcraft:jsch from org.apache.hadoop:hadoop-common -->
@@ -603,6 +614,10 @@
                     <groupId>org.glassfish.jersey.inject</groupId>
                     <artifactId>jersey-hk2</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j2-impl</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -650,18 +665,6 @@
         </dependency>
         <!-- Test Dependencies -->
         <dependency>
-            <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_${scala.compat.version}</artifactId>
-            <version>3.3.0-SNAP4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.scalatestplus</groupId>
-            <artifactId>scalatestplus-mockito_${scala.compat.version}</artifactId>
-            <version>1.0.0-SNAP5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>5.12.0</version>
@@ -674,15 +677,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.dimafeng</groupId>
-            <artifactId>testcontainers-scala-scalatest_${scala.compat.version}</artifactId>
-            <version>0.41.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.20.3</version>
+            <version>1.21.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -711,7 +708,7 @@
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
+            <artifactId>junit-jupiter</artifactId>
             <version>5.10.3</version>
             <scope>test</scope>
         </dependency>
@@ -790,111 +787,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>net.alchim31.maven</groupId>
-                <artifactId>scala-maven-plugin</artifactId>
-                <version>4.9.1</version>
-                <executions>
-                    <execution>
-                        <id>scala-compile-first</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>scala-test-compile</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>attach-scaladocs</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>doc</goal>
-                            <goal>doc-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <scalaVersion>${scala.version}</scalaVersion>
-                    <scalaCompatVersion>${scala.compat.version}</scalaCompatVersion>
-                    <checkMultipleScalaVersions>true</checkMultipleScalaVersions>
-                    <failOnMultipleScalaVersions>true</failOnMultipleScalaVersions>
-                    <recompileMode>incremental</recompileMode>
-                    <args>
-                        <arg>-unchecked</arg>
-                        <arg>-deprecation</arg>
-                        <arg>-feature</arg>
-                        <arg>-explaintypes</arg>
-                        <arg>-Xcheckinit</arg>
-                        <arg>-Xlint:_</arg>
-                        <arg>-Werror</arg>
-                        <arg>-Ywarn-dead-code</arg>
-                        <arg>-Ywarn-numeric-widen</arg>
-                        <arg>-Ywarn-value-discard</arg>
-                        <arg>-Ywarn-extra-implicit</arg>
-                        <arg>-Ywarn-unused:_</arg>
-                    </args>
-                    <javacArgs>
-                        <javacArg>-source</javacArg>
-                        <javacArg>${java.version}</javacArg>
-                        <javacArg>-target</javacArg>
-                        <javacArg>${java.version}</javacArg>
-                        <javacArg>-deprecation</javacArg>
-                        <javacArg>-parameters</javacArg>
-                        <javacArg>-Xlint:all,-path</javacArg>
-                    </javacArgs>
-                    <jvmArgs>
-                        <jvmArg>-Xmx2048m</jvmArg>
-                        <jvmArg>-Xss64m</jvmArg>
-                    </jvmArgs>
-                    <compilerPlugins>
-                        <compilerPlugin>
-                            <groupId>org.scalameta</groupId>
-                            <artifactId>semanticdb-scalac_${scala.version}</artifactId>
-                            <version>4.8.0</version>
-                        </compilerPlugin>
-                    </compilerPlugins>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.scalatest</groupId>
-                <artifactId>scalatest-maven-plugin</artifactId>
-                <version>2.2.0</version>
-                <configuration>
-                    <junitxml>.</junitxml>
-                    <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties --add-exports java.base/sun.nio.ch=ALL-UNNAMED ${argLine}</argLine>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>test</id>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <suffixes>(?&lt;!IT)</suffixes>
-                            <filereports>TestSuite.txt</filereports>
-                            <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>integration-test</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <suffixes>(?&lt;=IT)</suffixes>
-                            <filereports>IntegrationTestSuite.txt</filereports>
-                            <reportsDirectory>${project.build.directory}/failsafe-reports</reportsDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.6.3</version>
@@ -910,22 +802,25 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-test</id>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
                 <configuration>
                     <useModulePath>false</useModulePath>
+                    <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties --add-exports java.base/sun.nio.ch=ALL-UNNAMED ${argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <useModulePath>false</useModulePath>
-                    <argLine>--add-exports java.base/sun.nio.ch=ALL-UNNAMED</argLine>
+                    <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties --add-exports java.base/sun.nio.ch=ALL-UNNAMED</argLine>
                 </configuration>
             </plugin>
             <plugin>
