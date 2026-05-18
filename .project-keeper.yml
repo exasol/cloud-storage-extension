@@ -60,3 +60,11 @@ build:
               cd extension
               npm ci --ignore-scripts
               npm run build
+
+        - action: REPLACE
+          stepId: build
+          content:
+            name: Build project
+            id: build
+            # Omit clean: we must not delete the extension built in the previous step.
+            run: mvn --batch-mode -DskipTests -DossindexSkip=true verify -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
