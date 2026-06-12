@@ -239,14 +239,13 @@ Sonatype's research suggests that this CVE's details differ from those defined a
 * Updated `com.exasol:error-reporting-java:1.0.1` to `1.0.2`
 * Updated `com.exasol:parquet-io-java:2.0.12` to `2.0.16`
 * Updated `com.github.mwiede:jsch:0.2.21` to `2.28.2`
-* Updated `com.google.cloud.bigdataoss:gcs-connector:1.9.4-hadoop3` to `3.1.17`
 * Updated `com.google.code.gson:gson:2.13.1` to `2.14.0`
 * Updated `com.google.guava:guava:33.3.1-jre` to `33.6.0-jre`
 * Updated `com.google.oauth-client:google-oauth-client:1.36.0` to `1.39.0`
-* Updated `com.google.protobuf:protobuf-java-util:3.25.8` to `4.35.0`
-* Updated `com.google.protobuf:protobuf-java:3.25.8` to `4.35.0`
+* Removed `com.google.protobuf:protobuf-java-util:3.25.8`
+* Removed `com.google.protobuf:protobuf-java:3.25.8`
 * Updated `com.nimbusds:nimbus-jose-jwt:9.47` to `10.9.1`
-* Updated `com.typesafe.scala-logging:scala-logging_2.13:3.9.5` to `3.9.6`
+* Removed `com.typesafe.scala-logging:scala-logging_2.13:3.9.5`
 * Updated `commons-io:commons-io:2.18.0` to `2.22.0`
 * Updated `dnsjava:dnsjava:3.6.2` to `3.6.5`
 * Updated `io.dropwizard.metrics:metrics-core:4.2.28` to `4.2.39`

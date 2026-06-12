@@ -67,6 +67,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2024-7254 -->
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-bom</artifactId>
+                <version>4.35.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -494,21 +502,10 @@
             <version>4.2.39</version>
         </dependency>
         <dependency>
-            <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2024-7254 -->
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>4.35.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java-util</artifactId>
-            <version>4.35.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
             <artifactId>gcs-connector</artifactId>
-            <!-- Version 4 requires Java 17 -->
-            <version>3.1.17</version>
+            <!-- Version 4 requires Java 17, need to use hadoop compatible version -->
+            <version>1.9.4-hadoop3</version>
         </dependency>
         <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2020-7692 and CVE-2021-22573 -->
         <dependency>
@@ -684,11 +681,6 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.typesafe.scala-logging</groupId>
-            <artifactId>scala-logging_${scala.compat.version}</artifactId>
-            <version>3.9.6</version>
         </dependency>
         <!-- Test Dependencies -->
         <dependency>
