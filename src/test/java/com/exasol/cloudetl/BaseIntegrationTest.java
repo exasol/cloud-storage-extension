@@ -3,7 +3,8 @@ package com.exasol.cloudetl;
 import java.io.File;
 import java.nio.file.Paths;
 import java.sql.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.*;
@@ -18,7 +19,7 @@ public abstract class BaseIntegrationTest {
     private static final Logger LOGGER = Logger.getLogger(BaseIntegrationTest.class.getName());
     private static final String JAR_NAME_PATTERN = "exasol-cloud-storage-extension-";
     private static final String SPARK_JAVA_MODULE_OPTION = "--add-exports=java.base/sun.nio.ch=ALL-UNNAMED";
-    protected final String defaultExasolDockerImage = "2025.2.1";
+    protected final String defaultExasolDockerImage = "2026.1.0";
     protected final DockerNamedNetwork network = DockerNamedNetwork.create("it-tests", true);
     protected final ExasolContainer<?> exasolContainer = createExasolContainer();
     protected ExasolObjectFactory factory;
