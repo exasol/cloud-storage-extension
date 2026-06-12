@@ -8,7 +8,8 @@ import java.util.*;
 import org.apache.spark.sql.*;
 import org.junit.jupiter.api.*;
 
-import com.exasol.cloudetl.*;
+import com.exasol.cloudetl.ScalaConverters;
+import com.exasol.cloudetl.TestFileManager;
 import com.exasol.cloudetl.parquet.ParquetSourceTest;
 import com.exasol.common.data.Row;
 
@@ -43,8 +44,8 @@ class DeltaFormatBucketTest extends AbstractBucketTest {
 
     @Test
     void getPathsThrowsIfThePathIsNotDeltaFormat() {
-        final IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class,
-                () -> getBucket(this.properties).getPaths());
+        final Bucket bucket = getBucket(this.properties);
+        final IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, bucket::getPaths);
         assertTrue(thrown.getMessage().startsWith("F-CSE-3"));
         assertTrue(thrown.getMessage().contains("path '" + this.path + "' is not a Delta formatted"));
     }
@@ -65,7 +66,7 @@ class DeltaFormatBucketTest extends AbstractBucketTest {
         final Bucket bucket = getBucket(this.properties);
         final List<org.apache.hadoop.fs.Path> paths = ScalaConverters.asJavaList(bucket.getPaths());
         assertEquals(1, paths.size());
-        assertFalse(paths.stream().anyMatch(path -> path.toUri().toString().contains("/*")));
+        assertFalse(paths.stream().anyMatch(p -> p.toUri().toString().contains("/*")));
     }
 
     @Test
@@ -78,13 +79,13 @@ class DeltaFormatBucketTest extends AbstractBucketTest {
     }
 
     @Test
-    void streamReturnsRecordsFromTheLatestDeltaSnapshot() throws IOException {
+    void streamReturnsRecordsFromTheLatestDeltaSnapshot() {
         saveSparkDataset(spark.range(1, 6), null);
         assertEquals(Set.of(1L, 2L, 3L, 4L, 5L), collectToSet(getBucket(this.properties)));
     }
 
     @Test
-    void streamReturnsRecordsFromTheOverwriteDeltaSnapshot() throws IOException {
+    void streamReturnsRecordsFromTheOverwriteDeltaSnapshot() {
         saveSparkDataset(spark.range(1, 6), null);
         saveSparkDataset(spark.range(10, 13), "overwrite");
         assertEquals(Set.of(10L, 11L, 12L), collectToSet(getBucket(this.properties)));
@@ -99,11 +100,11 @@ class DeltaFormatBucketTest extends AbstractBucketTest {
         }
     }
 
-    private Set<Long> collectToSet(final Bucket bucket) throws IOException {
+    private Set<Long> collectToSet(final Bucket bucket) {
         final Set<Long> set = new HashSet<>();
         final var conf = bucket.getConfiguration();
-        for (final org.apache.hadoop.fs.Path path : ScalaConverters.asJavaList(bucket.getPaths())) {
-            try (ParquetSourceTest source = new ParquetSourceTest(path, conf)) {
+        for (final org.apache.hadoop.fs.Path fsPath : ScalaConverters.asJavaList(bucket.getPaths())) {
+            try (ParquetSourceTest source = new ParquetSourceTest(fsPath, conf)) {
                 final scala.collection.Iterator<Row> iterator = source.stream();
                 while (iterator.hasNext()) {
                     set.add(((Number) iterator.next().get(0)).longValue());

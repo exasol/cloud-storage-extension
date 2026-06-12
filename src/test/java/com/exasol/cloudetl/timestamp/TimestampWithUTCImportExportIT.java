@@ -6,9 +6,11 @@ import static com.exasol.matcher.ResultSetStructureMatcher.table;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.IOException;
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.sql.*;
-import java.time.*;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -19,7 +21,8 @@ import org.apache.parquet.schema.MessageTypeParser;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.*;
 
-import com.exasol.cloudetl.*;
+import com.exasol.cloudetl.BaseS3IntegrationTest;
+import com.exasol.cloudetl.TestFileManager;
 import com.exasol.cloudetl.avro.AvroTestDataWriter;
 import com.exasol.cloudetl.orc.OrcTestDataWriter;
 import com.exasol.cloudetl.parquet.ParquetTestDataWriter;
@@ -129,7 +132,7 @@ class TimestampWithUTCImportExportIT extends BaseS3IntegrationTest {
                 + "CONNECTION_NAME          = 'S3_CONNECTION'%n"
                 + "TIMEZONE_UTC             = 'true'%n"
                 + "PARALLELISM              = 'nproc()';%n", table.getFullyQualifiedName(), SCHEMA_NAME, bucket,
-                dataFormat, this.s3Endpoint));
+                dataFormat, getS3Endpoint()));
     }
 
     private void exportIntoS3Bucket(final Table table, final String bucket) {
@@ -141,7 +144,7 @@ class TimestampWithUTCImportExportIT extends BaseS3IntegrationTest {
                 + "CONNECTION_NAME = 'S3_CONNECTION'%n"
                 + "TIMEZONE_UTC    = 'true'%n"
                 + "PARALLELISM     = 'iproc()';%n", table.getFullyQualifiedName(), SCHEMA_NAME, bucket,
-                this.s3Endpoint));
+                getS3Endpoint()));
     }
 
     private void verifyTable(final String query, final Matcher<ResultSet> matcher) throws SQLException {

@@ -3,7 +3,8 @@ package com.exasol.cloudetl.it.delta;
 import static com.exasol.matcher.ResultSetStructureMatcher.table;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collections;
 
 import org.apache.spark.sql.*;
@@ -18,6 +19,8 @@ class DeltaDataImporterIT extends BaseS3IntegrationTest {
     private SparkSession spark;
     private static final String SCHEMA_NAME = "DELTA_SCHEMA";
     private static final String DATA_FORMAT = "delta";
+    private static final String S3_CHANGE_DETECTION_MODE = "none";
+    private static final String S3_PATH_STYLE_ACCESS = "true";
 
     @BeforeAll
     void beforeAll() {
@@ -26,7 +29,10 @@ class DeltaDataImporterIT extends BaseS3IntegrationTest {
         this.spark = SparkSession.builder()
                 .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
                 .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-                .config("spark.hadoop.fs.s3a.endpoint", this.s3Endpoint)
+                .config("spark.hadoop.fs.s3a.endpoint", getHostS3Endpoint())
+                .config("spark.hadoop.fs.s3a.endpoint.region", this.s3Container.getRegion())
+                .config("spark.hadoop.fs.s3a.path.style.access", S3_PATH_STYLE_ACCESS)
+                .config("spark.hadoop.fs.s3a.change.detection.mode", S3_CHANGE_DETECTION_MODE)
                 .config("spark.hadoop.fs.s3a.access.key", getAwsAccessKey())
                 .config("spark.hadoop.fs.s3a.secret.key", getAwsSecretKey()).appName("DeltaFormatIT")
                 .master("local[2]").getOrCreate();
