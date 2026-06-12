@@ -3,24 +3,24 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>cloud-storage-extension</artifactId>
-    <version>2.9.5</version>
+    <version>2.9.6</version>
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>
     <parent>
         <artifactId>cloud-storage-extension-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.9.5</version>
+        <version>2.9.6</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
-        <scala.version>2.13.11</scala.version>
+        <!-- Version 3 requires Java 17 -->
+        <scala.version>2.13.18</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
-        <hadoop.version>3.4.1</hadoop.version>
-        <awssdk.version>2.34.0</awssdk.version>
-        <jersey.version>2.47</jersey.version>
-        <log4j.version>2.25.3</log4j.version>
-        <logback.version>1.5.29</logback.version>
+        <!-- Hadoop 3.5.0 requires Java 17 -->
+        <hadoop.version>3.4.3</hadoop.version>
+        <log4j.version>2.26.0</log4j.version>
+        <logback.version>1.5.34</logback.version>
         <sonar.sources>src/main/,extension/src/</sonar.sources>
         <sonar.exclusions>extension/src/*.test.ts</sonar.exclusions>
         <sonar.tests>src/test/,extension/src</sonar.tests>
@@ -32,14 +32,46 @@
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
-                <version>${awssdk.version}</version>
+                <version>2.46.7</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-bom</artifactId>
-                <version>4.2.12.Final</version>
+                <version>4.2.15.Final</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <!-- org.apache.hadoop:hadoop-common uses Jersey 2.x -->
+                <version>2.48</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <!-- Upgrade transitive dependency of org.apache.hadoop:hadoop-common to fix CVE-2026-0636, CVE-2026-5588 & CVE-2026-5598 -->
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bc-jdk18on-bom</artifactId>
+                <version>1.84</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <!-- Upgrade transitive dependency of org.apache.hadoop:hadoop-hdfs to fix CVE-2025-49128 & CVE-2025-52999 -->
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>2.22.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2024-7254 -->
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-bom</artifactId>
+                <version>4.35.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -54,19 +86,19 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.18.0</version>
+            <version>3.20.0</version>
         </dependency>
         <dependency>
             <!-- Upgraded to fix CVE-2025-53864 -->
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.13.1</version>
+            <version>2.14.0</version>
         </dependency>
         <dependency>
             <!-- Upgraded to fix CVE-2024-29131 and CVE-2024-29133 -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-configuration2</artifactId>
-            <version>2.11.0</version>
+            <version>2.15.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -77,7 +109,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.3.1-jre</version>
+            <version>33.6.0-jre</version>
         </dependency>
         <!-- awssdk-->
         <dependency>
@@ -89,10 +121,10 @@
             <artifactId>s3-transfer-manager</artifactId>
         </dependency>
         <dependency>
-            <!-- Upgrading this will cause failing integration tests -->
+            <!-- Alluxio 300 calls io.grpc.internal.ReadableBuffer.readBytes(ByteBuffer), removed after gRPC 1.76.x. -->
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.65.1</version>
+            <version>1.76.3</version>
         </dependency>
         <dependency>
             <!-- Upgrade commons-beanutils to fix CVE-2025-48734 -->
@@ -109,7 +141,7 @@
         <dependency>
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
-            <version>1.1.10.7</version>
+            <version>1.1.10.8</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -123,9 +155,22 @@
             </exclusions>
         </dependency>
         <dependency>
+            <!-- Required by Jackson at runtime -->
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+            <exclusions>
+                <exclusion>
+                    <!-- Contains duplicate classes as jakarta.activation:jakarta.activation-api:1.2.1 -->
+                    <groupId>javax.activation</groupId>
+                    <artifactId>javax.activation-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>error-reporting-java</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -237,13 +282,13 @@
             <!-- Override version from org.apache.hadoop:hadoop-common to fix CVE-2024-47554 -->
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.18.0</version>
+            <version>2.22.0</version>
         </dependency>
         <dependency>
             <!-- Override version 2.1.7 from org.apache.hadoop:hadoop-common to fix CVE-2023-33546-->
             <artifactId>dnsjava</artifactId>
             <groupId>dnsjava</groupId>
-            <version>3.6.2</version>
+            <version>3.6.5</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -254,7 +299,7 @@
             <!-- Replacement for deprecated com.jcraft:jsch from org.apache.hadoop:hadoop-common -->
             <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.2.21</version>
+            <version>2.28.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -262,10 +307,17 @@
             <version>${hadoop.version}</version>
             <exclusions>
                 <exclusion>
+                    <!-- bundle is 686MB big -->
                     <groupId>software.amazon.awssdk</groupId>
                     <artifactId>bundle</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <!-- Required by hadoop-aws because we exclude the aws bundle -->
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>apache-client</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <!-- override version 3.6.3 to fix vulnerability CVE-2023-42503, CVE-2024-23944 & CVE-2024-51504 -->
@@ -372,12 +424,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <!-- Upgrade transitive dependency of hadoop-hdfs-client to fix CVE-2022-24329 -->
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-            <version>1.9.25</version>
-        </dependency>
-        <dependency>
             <!-- Upgrading this will cause failing integration tests -->
             <groupId>org.alluxio</groupId>
             <artifactId>alluxio-core-client-hdfs</artifactId>
@@ -466,33 +512,24 @@
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
-            <version>4.2.28</version>
-        </dependency>
-        <dependency>
-            <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2024-7254 -->
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>3.25.8</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java-util</artifactId>
-            <version>3.25.8</version>
+            <version>4.2.39</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
             <artifactId>gcs-connector</artifactId>
+            <!-- Version 4 requires Java 17, need to use hadoop compatible version -->
             <version>1.9.4-hadoop3</version>
         </dependency>
         <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2020-7692 and CVE-2021-22573 -->
         <dependency>
             <groupId>com.google.oauth-client</groupId>
             <artifactId>google-oauth-client</artifactId>
-            <version>1.36.0</version>
+            <version>1.39.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.orc</groupId>
             <artifactId>orc-core</artifactId>
+            <!-- Version 2 requires Java 17 -->
             <version>1.9.8</version>
             <exclusions>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
@@ -506,6 +543,13 @@
                     <artifactId>hadoop-client-api</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <!-- Upgrade transitive dependency of orc-core to fix CVE-2025-67721 -->
+            <groupId>io.airlift</groupId>
+            <artifactId>aircompressor</artifactId>
+            <version>2.0.3</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <!-- Update transitive dependency of org.apache.spark:spark-core to fix CVE-2024-47561 -->
@@ -535,30 +579,32 @@
             <!-- Upgrade transitive dependency of org.apache.spark to fix CVE-2025-12183 -->
             <groupId>at.yawk.lz4</groupId>
             <artifactId>lz4-java</artifactId>
-            <version>1.10.2</version>
+            <version>1.11.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <!-- Upgrade transitive dependency of org.apache.avro:avro to fix CVE-2024-26308 -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.27.1</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
             <!-- Pinned to fix CVE-2023-52428 -->
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>9.47</version>
+            <version>10.9.1</version>
         </dependency>
         <dependency>
             <groupId>io.delta</groupId>
             <artifactId>delta-spark_${scala.compat.version}</artifactId>
+            <!-- Version 4 is incompatible: NoSuchMethodError: 'void org.apache.spark.sql.catalyst.parser.ParserInterface.$init$(org.apache.spark.sql.catalyst.parser.ParserInterface)' -->
             <version>3.3.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${scala.compat.version}</artifactId>
-            <version>3.5.7</version>
+            <!-- Version 4 requires Java 17 -->
+            <version>3.5.8</version>
             <!-- Upgrading will let unit tests fail -->
             <exclusions>
                 <exclusion>
@@ -595,22 +641,6 @@
                     <artifactId>orc-core</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.glassfish.jersey.core</groupId>
-                    <artifactId>jersey-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.glassfish.jersey.core</groupId>
-                    <artifactId>jersey-server</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.glassfish.jersey.containers</groupId>
-                    <artifactId>jersey-container-servlet</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.glassfish.jersey.containers</groupId>
-                    <artifactId>jersey-container-servlet-core</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>org.glassfish.jersey.inject</groupId>
                     <artifactId>jersey-hk2</artifactId>
                 </exclusion>
@@ -624,7 +654,7 @@
             <!-- Upgrade transitive dependency of spark-sql to fix CVE-2022-46751 -->
             <groupId>org.apache.ivy</groupId>
             <artifactId>ivy</artifactId>
-            <version>2.5.2</version>
+            <version>2.5.3</version>
         </dependency>
         <dependency>
             <!-- Upgrade transitive dependency of spark-sql to fix CVE-2023-33546 -->
@@ -636,12 +666,19 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>parquet-io-java</artifactId>
-            <version>2.0.12</version>
+            <version>2.0.16</version>
+            <exclusions>
+                <exclusion>
+                    <!-- Fix warnings by duplicate-finder-maven-plugin -->
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-client-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>2.0.16</version>
+            <version>2.0.18</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -658,16 +695,11 @@
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.typesafe.scala-logging</groupId>
-            <artifactId>scala-logging_${scala.compat.version}</artifactId>
-            <version>3.9.5</version>
-        </dependency>
         <!-- Test Dependencies -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.12.0</version>
+            <version>5.23.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -685,37 +717,39 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>7.1.4</version>
+            <version>7.3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>test-db-builder-java</artifactId>
-            <version>3.6.0</version>
+            <version>4.0.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>hamcrest-resultset-matcher</artifactId>
-            <version>1.7.0</version>
+            <version>1.7.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.17.3</version>
+            <!-- Version 4 requires Java 17 -->
+            <version>3.19.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.10.3</version>
+            <!-- Version 6 requires Java 17 -->
+            <version>5.14.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>maven-project-version-getter</artifactId>
-            <version>1.2.0</version>
+            <version>1.2.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -724,48 +758,7 @@
             <version>0.5.19</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-common</artifactId>
-            <version>${jersey.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>${jersey.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-server</artifactId>
-            <version>${jersey.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet</artifactId>
-            <version>${jersey.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
-            <version>${jersey.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>${jersey.version}</version>
-            <scope>compile</scope>
-        </dependency>
+        
     </dependencies>
     <build>
         <plugins>
@@ -804,7 +797,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <useModulePath>false</useModulePath>
-                    <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties --add-exports java.base/sun.nio.ch=ALL-UNNAMED ${argLine}</argLine>
+                    <argLine>--add-exports java.base/sun.nio.ch=ALL-UNNAMED ${argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -824,19 +817,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.sonatype.ossindex.maven</groupId>
-                <artifactId>ossindex-maven-plugin</artifactId>
-                <configuration>
-                    <skip>${ossindex.skip}</skip>
-                    <excludeVulnerabilityIds>
-                        <!-- Need to wait for proper fix in exasol-jdbc -->
-                        <exclude>CVE-2024-55551</exclude>
-                        <!-- aircompressor wasn't updated for a year, exclusion is the only option atm -->
-                        <exclude>CVE-2025-67721</exclude>
-                    </excludeVulnerabilityIds>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.basepom.maven</groupId>
                 <artifactId>duplicate-finder-maven-plugin</artifactId>
                 <configuration>
@@ -848,6 +828,9 @@
                         <ignoredResourcePattern>arrow-git.properties</ignoredResourcePattern>
                         <ignoredResourcePattern>.*\.properties$</ignoredResourcePattern>
                         <ignoredResourcePattern>.*\.proto$</ignoredResourcePattern>
+                        <ignoredResourcePattern>PropertyList-1.0.dtd</ignoredResourcePattern>
+                        <ignoredResourcePattern>properties.dtd</ignoredResourcePattern>
+                        <ignoredResourcePattern>parquet.thrift</ignoredResourcePattern>
                     </ignoredResourcePatterns>
                     <ignoredDependencies/>
                 </configuration>
@@ -867,7 +850,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>npm-ci</id>
@@ -878,7 +861,7 @@
                         <configuration>
                             <workingDirectory>extension/</workingDirectory>
                             <executable>npm</executable>
-                            <commandlineArgs>ci</commandlineArgs>
+                            <commandlineArgs>ci --ignore-scripts --no-fund</commandlineArgs>
                             <useMavenLogger>false</useMavenLogger>
                         </configuration>
                     </execution>
@@ -925,7 +908,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>3.3.2</version>
                 <configuration>
                     <filesets>
                         <fileset>

@@ -11,10 +11,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.common.type.HiveDecimal;
 import org.apache.hadoop.hive.ql.exec.vector.*;
-import org.apache.orc.OrcFile;
-import org.apache.orc.TypeDescription;
-import org.apache.orc.TypeDescription.Category;
-import org.apache.orc.Writer;
+import org.apache.orc.*;
 
 import com.exasol.errorreporting.ExaError;
 
@@ -51,35 +48,35 @@ public class OrcTestDataWriter {
 
     private ColumnSetter getColumnSetter(final TypeDescription orcType, final ColumnVector column) {
         switch (orcType.getCategory()) {
-        case BOOLEAN:
-        case BYTE:
-        case SHORT:
-        case INT:
-        case LONG:
-        case DATE:
-            return longWriter((LongColumnVector) column);
-        case FLOAT:
-        case DOUBLE:
-            return doubleWriter((DoubleColumnVector) column);
-        case DECIMAL:
-            return decimalWriter((DecimalColumnVector) column);
-        case CHAR:
-        case VARCHAR:
-        case BINARY:
-        case STRING:
-            return stringWriter((BytesColumnVector) column);
-        case TIMESTAMP:
-            return timestampWriter((TimestampColumnVector) column);
-        case LIST:
-            return listWriter((ListColumnVector) column, orcType);
-        case MAP:
-            return mapWriter((MapColumnVector) column, orcType);
-        case STRUCT:
-            return structWriter((StructColumnVector) column, orcType);
-        default:
-            throw new UnsupportedOperationException(ExaError.messageBuilder("E-CSE-15")
-                    .message("Unknown Orc type {{ORC_TYPE}} for writer.")
-                    .parameter("ORC_TYPE", String.valueOf(orcType)).toString());
+            case BOOLEAN:
+            case BYTE:
+            case SHORT:
+            case INT:
+            case LONG:
+            case DATE:
+                return longWriter((LongColumnVector) column);
+            case FLOAT:
+            case DOUBLE:
+                return doubleWriter((DoubleColumnVector) column);
+            case DECIMAL:
+                return decimalWriter((DecimalColumnVector) column);
+            case CHAR:
+            case VARCHAR:
+            case BINARY:
+            case STRING:
+                return stringWriter((BytesColumnVector) column);
+            case TIMESTAMP:
+                return timestampWriter((TimestampColumnVector) column);
+            case LIST:
+                return listWriter((ListColumnVector) column, orcType);
+            case MAP:
+                return mapWriter((MapColumnVector) column, orcType);
+            case STRUCT:
+                return structWriter((StructColumnVector) column, orcType);
+            default:
+                throw new UnsupportedOperationException(ExaError.messageBuilder("E-CSE-15")
+                        .message("Unknown Orc type {{ORC_TYPE}} for writer.")
+                        .parameter("ORC_TYPE", String.valueOf(orcType)).toString());
         }
     }
 

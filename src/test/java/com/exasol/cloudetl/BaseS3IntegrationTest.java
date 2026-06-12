@@ -1,6 +1,7 @@
 package com.exasol.cloudetl;
 
 import java.io.File;
+import java.net.URI;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -12,10 +13,12 @@ import org.testcontainers.utility.DockerImageName;
 
 import com.exasol.dbbuilder.dialects.Table;
 
-import software.amazon.awssdk.auth.credentials.*;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.*;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.model.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -25,10 +28,11 @@ public abstract class BaseS3IntegrationTest extends BaseIntegrationTest {
     protected final int intMax = Integer.MAX_VALUE;
     protected final long longMin = Long.MIN_VALUE;
     protected final long longMax = Long.MAX_VALUE;
+
+    @SuppressWarnings("resource") // Will be closed in baseS3AfterAll()
     protected final LocalStackContainer s3Container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:2.2"))
             .withServices(Service.S3).withReuse(true);
     protected S3Client s3;
-    protected String s3Endpoint;
 
     @BeforeAll
     void baseS3BeforeAll() {
@@ -42,15 +46,25 @@ public abstract class BaseS3IntegrationTest extends BaseIntegrationTest {
     }
 
     protected void prepareS3Client() {
-        final var endpoint = this.s3Container.getEndpointOverride(Service.S3);
         final Region region = Region.of(this.s3Container.getRegion());
         final S3Configuration s3Config = S3Configuration.builder().pathStyleAccessEnabled(true)
                 .chunkedEncodingEnabled(false).build();
         final AwsBasicCredentials s3Creds = AwsBasicCredentials.create(this.s3Container.getAccessKey(),
                 this.s3Container.getSecretKey());
-        this.s3 = S3Client.builder().region(region).endpointOverride(endpoint).serviceConfiguration(s3Config)
+        this.s3 = S3Client.builder().region(region).endpointOverride(getS3EndpointUri()).serviceConfiguration(s3Config)
                 .credentialsProvider(StaticCredentialsProvider.create(s3Creds)).build();
-        this.s3Endpoint = endpoint.toString().replaceAll("127.0.0.1", getS3ContainerNetworkGatewayAddress());
+    }
+
+    private URI getS3EndpointUri() {
+        return this.s3Container.getEndpointOverride(Service.S3);
+    }
+
+    protected String getHostS3Endpoint() {
+        return getS3EndpointUri().toString();
+    }
+
+    protected String getS3Endpoint() {
+        return getS3EndpointUri().toString().replaceAll("127.0.0.1", getS3ContainerNetworkGatewayAddress());
     }
 
     protected void deleteBucketObjects(final String bucketName) {
@@ -105,26 +119,26 @@ public abstract class BaseS3IntegrationTest extends BaseIntegrationTest {
             final String file, final String dataFormat) {
         final String bucketPath = "s3a://" + bucket + "/" + file;
         executeStmt(String.format("IMPORT INTO %s\n" +
-"FROM SCRIPT %s.IMPORT_PATH WITH\n" +
-"BUCKET_PATH              = '%s'\n" +
-"DATA_FORMAT              = '%s'\n" +
-"S3_ENDPOINT              = '%s'\n" +
-"S3_CHANGE_DETECTION_MODE = 'none'\n" +
-"TRUNCATE_STRING          = 'true'\n" +
-"CONNECTION_NAME          = 'S3_CONNECTION'\n" +
-"PARALLELISM              = 'nproc()';\n" +
-"\n", table.getFullyQualifiedName(), schemaName, bucketPath, dataFormat, this.s3Endpoint));
+                "FROM SCRIPT %s.IMPORT_PATH WITH\n" +
+                "BUCKET_PATH              = '%s'\n" +
+                "DATA_FORMAT              = '%s'\n" +
+                "S3_ENDPOINT              = '%s'\n" +
+                "S3_CHANGE_DETECTION_MODE = 'none'\n" +
+                "TRUNCATE_STRING          = 'true'\n" +
+                "CONNECTION_NAME          = 'S3_CONNECTION'\n" +
+                "PARALLELISM              = 'nproc()';\n" +
+                "\n", table.getFullyQualifiedName(), schemaName, bucketPath, dataFormat, getS3Endpoint()));
     }
 
     protected void exportIntoS3(final String schemaName, final String tableName, final String bucket) {
         executeStmt(String.format("EXPORT %s\n" +
-"INTO SCRIPT %s.EXPORT_PATH WITH\n" +
-"BUCKET_PATH     = 's3a://%s/'\n" +
-"DATA_FORMAT     = 'PARQUET'\n" +
-"S3_ENDPOINT     = '%s'\n" +
-"CONNECTION_NAME = 'S3_CONNECTION'\n" +
-"PARALLELISM     = 'iproc()';\n" +
-"\n", tableName, schemaName, bucket, this.s3Endpoint));
+                "INTO SCRIPT %s.EXPORT_PATH WITH\n" +
+                "BUCKET_PATH     = 's3a://%s/'\n" +
+                "DATA_FORMAT     = 'PARQUET'\n" +
+                "S3_ENDPOINT     = '%s'\n" +
+                "CONNECTION_NAME = 'S3_CONNECTION'\n" +
+                "PARALLELISM     = 'iproc()';\n" +
+                "\n", tableName, schemaName, bucket, getS3Endpoint()));
     }
 
     private String getS3ContainerNetworkGatewayAddress() {

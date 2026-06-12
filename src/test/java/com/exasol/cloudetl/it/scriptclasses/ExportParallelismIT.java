@@ -62,7 +62,7 @@ class ExportParallelismIT extends BaseS3IntegrationTest {
                 + "S3_ENDPOINT     = '%s'%n"
                 + "CONNECTION_NAME = 'S3_CONNECTION'%n"
                 + "%s%n"
-                + ";%n", this.exportTable.getFullyQualifiedName(), SCHEMA_NAME, BUCKET_NAME, this.s3Endpoint,
+                + ";%n", this.exportTable.getFullyQualifiedName(), SCHEMA_NAME, BUCKET_NAME, getS3Endpoint(),
                 parallelism));
     }
 }

@@ -4,14 +4,17 @@ import static com.exasol.matcher.ResultSetStructureMatcher.table;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.IOException;
-import java.nio.file.*;
-import java.sql.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.*;
 
-import com.exasol.cloudetl.*;
+import com.exasol.cloudetl.BaseS3IntegrationTest;
+import com.exasol.cloudetl.TestFileManager;
 
 class FilesMetadataReaderIT extends BaseS3IntegrationTest {
     private static final String SCHEMA_NAME = "DATA_SCHEMA";
@@ -88,7 +91,7 @@ class FilesMetadataReaderIT extends BaseS3IntegrationTest {
     }
 
     private String getPropertiesString() {
-        return "BUCKET_PATH -> s3a://filesmetadata/*;DATA_FORMAT -> ORC;" + "S3_ENDPOINT -> " + this.s3Endpoint
+        return "BUCKET_PATH -> s3a://filesmetadata/*;DATA_FORMAT -> ORC;" + "S3_ENDPOINT -> " + getS3Endpoint()
                 + ";CONNECTION_NAME -> S3_CONNECTION";
     }
 

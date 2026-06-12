@@ -1,6 +1,5 @@
 package com.exasol.cloudetl.source;
 
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -44,11 +43,11 @@ abstract class AbstractSourceTest {
     final Source getSource(final org.apache.hadoop.fs.Path filePath, final String fileFormat) {
         final FileFormat format = FileFormat.apply(fileFormat);
         switch (format) {
-        case PARQUET:
-        case DELTA:
-            return new ParquetSourceTest(filePath, this.conf);
-        default:
-            return Source.create(format, filePath, this.conf, this.fileSystem);
+            case PARQUET:
+            case DELTA:
+                return new ParquetSourceTest(filePath, this.conf);
+            default:
+                return Source.create(format, filePath, this.conf, this.fileSystem);
         }
     }
 

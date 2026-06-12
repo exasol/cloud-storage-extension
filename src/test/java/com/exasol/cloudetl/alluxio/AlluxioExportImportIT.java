@@ -16,10 +16,12 @@ import com.exasol.dbbuilder.dialects.Table;
 class AlluxioExportImportIT extends BaseIntegrationTest {
     private static final String ALLUXIO_IMAGE = "alluxio/alluxio:300";
     private static final String SCHEMA_NAME = "ALLUXIO_SCHEMA";
+    @SuppressWarnings("resource") // Will be closed in afterAll()
     private final GenericContainer<?> alluxioMainContainer = new GenericContainer<>(DockerImageName.parse(ALLUXIO_IMAGE))
             .withExposedPorts(19998, 19999).withCommand("master").withNetwork(this.network)
             .withNetworkAliases("alluxio-main")
             .withEnv("ALLUXIO_JAVA_OPTS", "-Dalluxio.master.hostname=alluxio-main").withReuse(true);
+    @SuppressWarnings("resource") // Will be closed in afterAll()
     private final GenericContainer<?> alluxioWorkerContainer = new GenericContainer<>(DockerImageName.parse(ALLUXIO_IMAGE))
             .withExposedPorts(29999, 30000).withCommand("worker").withNetwork(this.network)
             .withNetworkAliases("alluxio-worker")

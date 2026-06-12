@@ -10,7 +10,7 @@
     "java.test.config": {
         "vmArgs": [
             "-Djava.util.logging.config.file=src/test/resources/logging.properties",
-            "-Dcom.exasol.dockerdb.image=2025.2.1"
+            "-Dcom.exasol.dockerdb.image=2026.1.0"
         ]
     },
     "files.watcherExclude": {
@@ -19,5 +19,6 @@
     "sonarlint.connectedMode.project": {
         "connectionId": "exasol",
         "projectKey": "com.exasol:cloud-storage-extension"
-    }
+    },
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:disable"
 }
