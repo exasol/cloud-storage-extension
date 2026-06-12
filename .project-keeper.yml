@@ -11,17 +11,12 @@ sources:
 version:
   fromSource: pom.xml
 linkReplacements:
-excludes:
-  # Project is written in Scala, no need to test with next Java version
-  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
 build:
   runnerOs: ubuntu-22.04
   freeDiskSpace: true
   exasolDbVersions:
-    - "2025.2.1"
+    - "2026.1.0"
     - "2025.1.10"
-# Disabled, see this for details: https://github.com/exasol/cloud-storage-extension/issues/356
-#    - "7.1.30"
   workflows:
     - name: ci-build.yml
       stepCustomizations:

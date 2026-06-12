@@ -14,11 +14,12 @@
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
-        <scala.version>3.8.4</scala.version>
+        <!-- Version 3 requires Java 17 -->
+        <scala.version>2.13.18</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
-        <hadoop.version>3.5.0</hadoop.version>
+        <!-- Hadoop 3.5.0 requires Java 17 -->
+        <hadoop.version>3.4.3</hadoop.version>
         <awssdk.version>2.46.5</awssdk.version>
-        <jersey.version>3.1.11</jersey.version>
         <log4j.version>2.26.0</log4j.version>
         <logback.version>1.5.34</logback.version>
         <sonar.sources>src/main/,extension/src/</sonar.sources>
@@ -40,6 +41,30 @@
                 <groupId>io.netty</groupId>
                 <artifactId>netty-bom</artifactId>
                 <version>4.2.15.Final</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <!-- org.apache.hadoop:hadoop-common uses Jersey 2.x -->
+                <version>2.48</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <!-- Upgrade transitive dependency of org.apache.hadoop:hadoop-common to fix CVE-2026-0636, CVE-2026-5588 & CVE-2026-5598 -->
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bc-jdk18on-bom</artifactId>
+                <version>1.84</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <!-- Upgrade transitive dependency of org.apache.hadoop:hadoop-hdfs to fix CVE-2025-49128 & CVE-2025-52999 -->
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>2.22.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -372,16 +397,10 @@
             </exclusions>
         </dependency>
         <dependency>
-            <!-- Upgrade transitive dependency of hadoop-hdfs-client to fix CVE-2022-24329 -->
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-            <version>2.4.0</version>
-        </dependency>
-        <dependency>
             <!-- Upgrading this will cause failing integration tests -->
             <groupId>org.alluxio</groupId>
             <artifactId>alluxio-core-client-hdfs</artifactId>
-            <version>313</version>
+            <version>300</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -482,7 +501,8 @@
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
             <artifactId>gcs-connector</artifactId>
-            <version>4.0.4</version>
+            <!-- Version 4 requires Java 17 -->
+            <version>3.1.17</version>
         </dependency>
         <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2020-7692 and CVE-2021-22573 -->
         <dependency>
@@ -493,7 +513,8 @@
         <dependency>
             <groupId>org.apache.orc</groupId>
             <artifactId>orc-core</artifactId>
-            <version>2.3.0</version>
+            <!-- Version 2 requires Java 17 -->
+            <version>1.9.8</version>
             <exclusions>
                 <!-- exluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -506,6 +527,13 @@
                     <artifactId>hadoop-client-api</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <!-- Upgrade transitive dependency of orc-core to fix CVE-2025-67721 -->
+            <groupId>io.airlift</groupId>
+            <artifactId>aircompressor</artifactId>
+            <version>2.0.3</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <!-- Update transitive dependency of org.apache.spark:spark-core to fix CVE-2024-47561 -->
@@ -558,7 +586,8 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${scala.compat.version}</artifactId>
-            <version>4.2.0-preview5</version>
+            <!-- Version 4 requires Java 17 -->
+            <version>3.5.8</version>
             <!-- Upgrading will let unit tests fail -->
             <exclusions>
                 <exclusion>
@@ -703,13 +732,15 @@
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>4.5</version>
+            <!-- Version 4 requires Java 17 -->
+            <version>3.19.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>6.1.0</version>
+            <!-- Version 6 requires Java 17 -->
+            <version>5.14.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -724,48 +755,7 @@
             <version>0.5.19</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-common</artifactId>
-            <version>${jersey.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>${jersey.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-server</artifactId>
-            <version>${jersey.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet</artifactId>
-            <version>${jersey.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
-            <version>${jersey.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <!-- Upgrade jersey-common to fix NoSuchFieldError: JSON_MAX_STRING_LENGTH when running extension integration tests -->
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>${jersey.version}</version>
-            <scope>compile</scope>
-        </dependency>
+        
     </dependencies>
     <build>
         <plugins>
@@ -824,19 +814,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.sonatype.ossindex.maven</groupId>
-                <artifactId>ossindex-maven-plugin</artifactId>
-                <configuration>
-                    <skip>${ossindex.skip}</skip>
-                    <excludeVulnerabilityIds>
-                        <!-- Need to wait for proper fix in exasol-jdbc -->
-                        <exclude>CVE-2024-55551</exclude>
-                        <!-- aircompressor wasn't updated for a year, exclusion is the only option atm -->
-                        <exclude>CVE-2025-67721</exclude>
-                    </excludeVulnerabilityIds>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.basepom.maven</groupId>
                 <artifactId>duplicate-finder-maven-plugin</artifactId>
                 <configuration>
@@ -867,7 +844,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>npm-ci</id>
@@ -878,7 +855,7 @@
                         <configuration>
                             <workingDirectory>extension/</workingDirectory>
                             <executable>npm</executable>
-                            <commandlineArgs>ci</commandlineArgs>
+                            <commandlineArgs>ci --ignore-scripts --no-fund</commandlineArgs>
                             <useMavenLogger>false</useMavenLogger>
                         </configuration>
                     </execution>
@@ -925,7 +902,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>3.3.2</version>
                 <configuration>
                     <filesets>
                         <fileset>
