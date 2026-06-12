@@ -12,8 +12,7 @@ import java.sql.SQLException;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.*;
 
 import com.exasol.bucketfs.BucketAccessException;
 import com.exasol.dbbuilder.dialects.Table;
@@ -32,7 +31,7 @@ import junit.framework.AssertionFailedError;
 class ExtensionIT extends AbstractScriptExtensionIT {
     private static final Logger LOGGER = Logger.getLogger(ExtensionIT.class.getName());
     private static final String EXTENSION_ID = "cloud-storage-extension.js";
-    private static final String PREVIOUS_VERSION = "2.7.8";
+    private static final String PREVIOUS_VERSION = "2.9.5";
     private static final Path EXTENSION_SOURCE_DIR = Paths.get("extension").toAbsolutePath();
     private static final String PROJECT_VERSION = MavenProjectVersionGetter.getCurrentProjectVersion();
     private static final String S3_CONNECTION = "S3_CONNECTION";
@@ -64,6 +63,11 @@ class ExtensionIT extends AbstractScriptExtensionIT {
         } else {
             throw new AssertionFailedError("Adapter jar " + jar + " does not exist. Run 'mvn package'.");
         }
+    }
+
+    @BeforeEach
+    void logTestStart(final TestInfo testInfo) {
+        LOGGER.fine(() -> "Starting test: " + testInfo.getTestClass().map(Class::getSimpleName).orElse("<unknown>") + "." + testInfo.getDisplayName());
     }
 
     @AfterAll
@@ -148,7 +152,6 @@ class ExtensionIT extends AbstractScriptExtensionIT {
     }
 
     private void executeStatement(final String sql) {
-        LOGGER.info(() -> "Running statement '" + sql + "'...");
         try (var statement = connection.createStatement()) {
             statement.execute(sql);
         } catch (final SQLException exception) {

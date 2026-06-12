@@ -34,7 +34,7 @@ public abstract class BaseIntegrationTest {
 
     @BeforeEach
     void logTestStart(final TestInfo testInfo) {
-        LOGGER.fine(() -> "Starting test: " + testInfo.getDisplayName());
+        LOGGER.fine(() -> "Starting test: " + testInfo.getTestClass().map(Class::getSimpleName).orElse("<unknown>") + "." + testInfo.getDisplayName());
     }
 
     @AfterAll
