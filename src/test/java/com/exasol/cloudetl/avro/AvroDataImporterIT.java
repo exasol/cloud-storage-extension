@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.apache.avro.*;
 import org.apache.avro.generic.GenericData;
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 
 import com.exasol.cloudetl.BaseDataImporter;

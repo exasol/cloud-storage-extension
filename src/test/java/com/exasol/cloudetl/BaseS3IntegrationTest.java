@@ -25,6 +25,8 @@ public abstract class BaseS3IntegrationTest extends BaseIntegrationTest {
     protected final int intMax = Integer.MAX_VALUE;
     protected final long longMin = Long.MIN_VALUE;
     protected final long longMax = Long.MAX_VALUE;
+
+    @SuppressWarnings("resource") // Will be closed in baseS3AfterAll()
     protected final LocalStackContainer s3Container = new LocalStackContainer(DockerImageName.parse("localstack/localstack:2.2"))
             .withServices(Service.S3).withReuse(true);
     protected S3Client s3;

@@ -32,6 +32,11 @@ public abstract class BaseIntegrationTest {
         this.exasolContainer.start();
     }
 
+    @BeforeEach
+    void logTestStart(final TestInfo testInfo) {
+        LOGGER.fine(() -> "Starting test: " + testInfo.getDisplayName());
+    }
+
     @AfterAll
     void baseAfterAll() throws SQLException {
         if (this.connection != null) {
@@ -52,7 +57,6 @@ public abstract class BaseIntegrationTest {
     }
 
     protected void executeStmt(final String sql) {
-        LOGGER.info(() -> "Executing statement " + sql + "...");
         try (Statement statement = getConnection().createStatement()) {
             statement.execute(sql);
         } catch (final Exception exception) {
