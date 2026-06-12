@@ -249,7 +249,7 @@ Sonatype's research suggests that this CVE's details differ from those defined a
 * Updated `commons-io:commons-io:2.18.0` to `2.22.0`
 * Updated `dnsjava:dnsjava:3.6.2` to `3.6.5`
 * Updated `io.dropwizard.metrics:metrics-core:4.2.28` to `4.2.39`
-* Updated `io.grpc:grpc-netty:1.65.1` to `1.81.0`
+* Updated `io.grpc:grpc-netty:1.65.1` to `1.76.3`
 * Added `javax.xml.bind:jaxb-api:2.3.1`
 * Updated `org.apache.commons:commons-compress:1.27.1` to `1.28.0`
 * Updated `org.apache.commons:commons-configuration2:2.11.0` to `2.15.1`
