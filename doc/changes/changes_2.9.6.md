@@ -249,7 +249,6 @@ Sonatype's research suggests that this CVE's details differ from those defined a
 * Updated `com.typesafe.scala-logging:scala-logging_2.13:3.9.5` to `3.9.6`
 * Updated `commons-io:commons-io:2.18.0` to `2.22.0`
 * Updated `dnsjava:dnsjava:3.6.2` to `3.6.5`
-* Updated `io.delta:delta-spark_2.13:3.3.2` to `4.2.0`
 * Updated `io.dropwizard.metrics:metrics-core:4.2.28` to `4.2.39`
 * Updated `io.grpc:grpc-netty:1.65.1` to `1.81.0`
 * Updated `org.apache.commons:commons-compress:1.27.1` to `1.28.0`
@@ -276,14 +275,15 @@ Sonatype's research suggests that this CVE's details differ from those defined a
 * Updated `org.scala-lang:scala-library:2.13.11` to `2.13.18`
 * Updated `org.slf4j:jul-to-slf4j:2.0.16` to `2.0.18`
 * Updated `org.xerial.snappy:snappy-java:1.1.10.7` to `1.1.10.8`
-* Updated `software.amazon.awssdk:s3-transfer-manager:2.34.0` to `2.46.5`
-* Updated `software.amazon.awssdk:s3:2.34.0` to `2.46.5`
+* Updated `software.amazon.awssdk:s3-transfer-manager:2.34.0` to `2.46.7`
+* Updated `software.amazon.awssdk:s3:2.34.0` to `2.46.7`
 
 #### Runtime Dependency Updates
 
 * Updated `ch.qos.logback:logback-classic:1.5.29` to `1.5.34`
 * Updated `ch.qos.logback:logback-core:1.5.29` to `1.5.34`
 * Added `io.airlift:aircompressor:2.0.3`
+* Added `software.amazon.awssdk:apache-client:2.46.7`
 
 #### Test Dependency Updates
 

@@ -19,7 +19,6 @@
         <scala.compat.version>2.13</scala.compat.version>
         <!-- Hadoop 3.5.0 requires Java 17 -->
         <hadoop.version>3.4.3</hadoop.version>
-        <awssdk.version>2.46.5</awssdk.version>
         <log4j.version>2.26.0</log4j.version>
         <logback.version>1.5.34</logback.version>
         <sonar.sources>src/main/,extension/src/</sonar.sources>
@@ -33,7 +32,7 @@
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
-                <version>${awssdk.version}</version>
+                <version>2.46.7</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -287,10 +286,17 @@
             <version>${hadoop.version}</version>
             <exclusions>
                 <exclusion>
+                    <!-- bundle is 686MB big -->
                     <groupId>software.amazon.awssdk</groupId>
                     <artifactId>bundle</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <!-- Required by hadoop-aws because we exclude the aws bundle -->
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>apache-client</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <!-- override version 3.6.3 to fix vulnerability CVE-2023-42503, CVE-2024-23944 & CVE-2024-51504 -->
@@ -581,7 +587,8 @@
         <dependency>
             <groupId>io.delta</groupId>
             <artifactId>delta-spark_${scala.compat.version}</artifactId>
-            <version>4.2.0</version>
+            <!-- Version 4 is incompatible: NoSuchMethodError: 'void org.apache.spark.sql.catalyst.parser.ParserInterface.$init$(org.apache.spark.sql.catalyst.parser.ParserInterface)' -->
+            <version>3.3.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -622,22 +629,6 @@
                 <exclusion>
                     <groupId>org.apache.orc</groupId>
                     <artifactId>orc-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.glassfish.jersey.core</groupId>
-                    <artifactId>jersey-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.glassfish.jersey.core</groupId>
-                    <artifactId>jersey-server</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.glassfish.jersey.containers</groupId>
-                    <artifactId>jersey-container-servlet</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.glassfish.jersey.containers</groupId>
-                    <artifactId>jersey-container-servlet-core</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.glassfish.jersey.inject</groupId>
@@ -794,7 +785,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <useModulePath>false</useModulePath>
-                    <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties --add-exports java.base/sun.nio.ch=ALL-UNNAMED ${argLine}</argLine>
+                    <argLine>--add-exports java.base/sun.nio.ch=ALL-UNNAMED ${argLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>
