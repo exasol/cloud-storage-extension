@@ -7,7 +7,7 @@
 
 | Dependency                                  | License                                         |
 | ------------------------------------------- | ----------------------------------------------- |
-| [Scala Library][0]                          | [Apache-2.0][1]                                 |
+| [scala-library-bootstrapped][0]             | [Apache-2.0][1]                                 |
 | [Apache Commons Lang][2]                    | [Apache-2.0][3]                                 |
 | [Gson][4]                                   | [Apache-2.0][3]                                 |
 | [Apache Commons Configuration][5]           | [Apache-2.0][3]                                 |
@@ -33,62 +33,62 @@
 | Apache Hadoop HDFS Client                   | [Apache-2.0][3]                                 |
 | [Alluxio Core - Client - HDFS][31]          | [Apache License][32]                            |
 | [Metrics Core][33]                          | [Apache License 2.0][14]                        |
-| [gcs-connector-hadoop3][34]                 | [Apache License, Version 2.0][7]                |
+| [gcs-connector][34]                         | [Apache License, Version 2.0][3]                |
 | [Google OAuth Client Library for Java][35]  | [The Apache Software License, Version 2.0][3]   |
-| [ORC Core][36]                              | [Apache License, Version 2.0][3]                |
+| [ORC Core][36]                              | [Apache-2.0][3]                                 |
 | [Apache Avro][37]                           | [Apache-2.0][3]                                 |
 | lz4-java                                    |                                                 |
 | [LZ4 Java Compression][38]                  | [Apache License, Version 2.0][1]                |
 | [Apache Commons Compress][39]               | [Apache-2.0][3]                                 |
 | [Nimbus JOSE+JWT][40]                       | [The Apache Software License, Version 2.0][3]   |
 | [delta-spark][41]                           | [Apache-2.0][42]                                |
-| [Spark Project SQL][43]                     | [Apache-2.0][44]                                |
-| [Apache Ivy][45]                            | [The Apache Software License, Version 2.0][7]   |
-| [janino][46]                                | [BSD-3-Clause][47]                              |
-| [Parquet for Java][48]                      | [MIT License][49]                               |
+| [Spark Project SQL][43]                     | [Apache-2.0][14]                                |
+| [Apache Ivy][44]                            | [The Apache Software License, Version 2.0][7]   |
+| [janino][45]                                | [BSD-3-Clause][46]                              |
+| [Parquet for Java][47]                      | [MIT License][48]                               |
 | [JUL to SLF4J bridge][24]                   | [MIT][25]                                       |
-| [Apache Log4j API][50]                      | [Apache-2.0][3]                                 |
-| [Apache Log4j 1.x Compatibility API][50]    | [Apache-2.0][3]                                 |
-| [Apache Log4j Core][50]                     | [Apache-2.0][3]                                 |
+| [Apache Log4j API][49]                      | [Apache-2.0][3]                                 |
+| [Apache Log4j 1.x Compatibility API][49]    | [Apache-2.0][3]                                 |
+| [Apache Log4j Core][49]                     | [Apache-2.0][3]                                 |
 
 ### Test Dependencies
 
 | Dependency                                 | License                           |
 | ------------------------------------------ | --------------------------------- |
-| [mockito-core][51]                         | [MIT][52]                         |
-| [Hamcrest][53]                             | [BSD-3-Clause][54]                |
-| [Testcontainers :: Localstack][55]         | [MIT][56]                         |
-| [Test containers for Exasol on Docker][57] | [MIT License][58]                 |
-| [Test Database Builder for Java][59]       | [MIT License][60]                 |
-| [Matcher for SQL Result Sets][61]          | [MIT License][62]                 |
-| [EqualsVerifier \| release normal jar][63] | [Apache License, Version 2.0][3]  |
-| [JUnit Jupiter (Aggregator)][64]           | [Eclipse Public License v2.0][65] |
-| [Maven Project Version Getter][66]         | [MIT License][67]                 |
-| [Extension integration tests library][68]  | [MIT License][69]                 |
+| [mockito-core][50]                         | [MIT][51]                         |
+| [Hamcrest][52]                             | [BSD-3-Clause][53]                |
+| [Testcontainers :: Localstack][54]         | [MIT][55]                         |
+| [Test containers for Exasol on Docker][56] | [MIT License][57]                 |
+| [Test Database Builder for Java][58]       | [MIT License][59]                 |
+| [Matcher for SQL Result Sets][60]          | [MIT License][61]                 |
+| [EqualsVerifier \| release normal jar][62] | [Apache License, Version 2.0][3]  |
+| [JUnit Jupiter (Aggregator)][63]           | [Eclipse Public License v2.0][64] |
+| [Maven Project Version Getter][65]         | [MIT License][66]                 |
+| [Extension integration tests library][67]  | [MIT License][68]                 |
 
 ### Runtime Dependencies
 
 | Dependency                                   | License                            |
 | -------------------------------------------- | ---------------------------------- |
-| [AWS Java SDK :: HTTP Clients :: Apache][70] | [Apache License, Version 2.0][9]   |
-| [Logback Classic Module][71]                 | [EPL-2.0][65]; [LGPL-2.1-only][72] |
-| [Logback Core Module][73]                    | [EPL-2.0][65]; [LGPL-2.1-only][72] |
-| [aircompressor][74]                          | [Apache License 2.0][14]           |
+| [AWS Java SDK :: HTTP Clients :: Apache][69] | [Apache License, Version 2.0][9]   |
+| [Logback Classic Module][70]                 | [EPL-2.0][64]; [LGPL-2.1-only][71] |
+| [Logback Core Module][72]                    | [EPL-2.0][64]; [LGPL-2.1-only][71] |
+| [aircompressor][73]                          | [Apache License 2.0][14]           |
 
 ### Plugin Dependencies
 
 | Dependency                                              | License                                     |
 | ------------------------------------------------------- | ------------------------------------------- |
-| [SonarQube Scanner for Maven][75]                       | [GNU LGPL 3][76]                            |
-| [Apache Maven Toolchains Plugin][77]                    | [Apache-2.0][3]                             |
-| [Apache Maven Compiler Plugin][78]                      | [Apache-2.0][3]                             |
-| [Apache Maven Enforcer Plugin][79]                      | [Apache-2.0][3]                             |
-| [Maven Flatten Plugin][80]                              | [Apache Software License][3]                |
-| [org.sonatype.ossindex.maven:ossindex-maven-plugin][81] | [ASL2][7]                                   |
-| [Apache Maven Javadoc Plugin][82]                       | [Apache-2.0][3]                             |
-| [Maven Surefire Plugin][83]                             | [Apache-2.0][3]                             |
-| [Versions Maven Plugin][84]                             | [Apache License, Version 2.0][3]            |
-| [duplicate-finder-maven-plugin Maven Mojo][85]          | [Apache License 2.0][44]                    |
+| [SonarQube Scanner for Maven][74]                       | [GNU LGPL 3][75]                            |
+| [Apache Maven Toolchains Plugin][76]                    | [Apache-2.0][3]                             |
+| [Apache Maven Compiler Plugin][77]                      | [Apache-2.0][3]                             |
+| [Apache Maven Enforcer Plugin][78]                      | [Apache-2.0][3]                             |
+| [Maven Flatten Plugin][79]                              | [Apache Software License][3]                |
+| [org.sonatype.ossindex.maven:ossindex-maven-plugin][80] | [ASL2][7]                                   |
+| [Apache Maven Javadoc Plugin][81]                       | [Apache-2.0][3]                             |
+| [Maven Surefire Plugin][82]                             | [Apache-2.0][3]                             |
+| [Versions Maven Plugin][83]                             | [Apache License, Version 2.0][3]            |
+| [duplicate-finder-maven-plugin Maven Mojo][84]          | [Apache License 2.0][85]                    |
 | [Apache Maven Artifact Plugin][86]                      | [Apache-2.0][3]                             |
 | [Apache Maven Assembly Plugin][87]                      | [Apache-2.0][3]                             |
 | [Apache Maven JAR Plugin][88]                           | [Apache-2.0][3]                             |
@@ -113,7 +113,7 @@
 | ------------------------------------------ | ------- |
 | [@exasol/extension-manager-interface][107] | MIT     |
 
-[0]: https://www.scala-lang.org/
+[0]: https://scala-lang.org/
 [1]: https://www.apache.org/licenses/LICENSE-2.0
 [2]: https://commons.apache.org/proper/commons-lang/
 [3]: https://www.apache.org/licenses/LICENSE-2.0.txt
@@ -147,7 +147,7 @@
 [31]: https://www.alluxio.io/alluxio-dora/alluxio-core/alluxio-core-client/alluxio-core-client-hdfs/
 [32]: https://github.com/alluxio/alluxio/blob/master/LICENSE
 [33]: https://metrics.dropwizard.io/metrics-core
-[34]: https://github.com/GoogleCloudPlatform/BigData-interop/gcs-connector/
+[34]: https://github.com/GoogleCloudDataproc/hadoop-connectors/gcs-connector
 [35]: https://github.com/googleapis/google-oauth-java-client/google-oauth-client
 [36]: https://orc.apache.org/orc-core
 [37]: https://avro.apache.org
@@ -157,48 +157,48 @@
 [41]: https://delta.io/
 [42]: http://www.apache.org/licenses/LICENSE-2.0
 [43]: https://spark.apache.org/
-[44]: http://www.apache.org/licenses/LICENSE-2.0.html
-[45]: http://ant.apache.org/ivy/
-[46]: http://janino-compiler.github.io/janino/
-[47]: https://spdx.org/licenses/BSD-3-Clause.html
-[48]: https://github.com/exasol/parquet-io-java/
-[49]: https://github.com/exasol/parquet-io-java/blob/main/LICENSE
-[50]: https://logging.apache.org/log4j/2.x/
-[51]: https://github.com/mockito/mockito
-[52]: https://opensource.org/licenses/MIT
-[53]: http://hamcrest.org/JavaHamcrest/
-[54]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
-[55]: https://java.testcontainers.org
-[56]: http://opensource.org/licenses/MIT
-[57]: https://github.com/exasol/exasol-testcontainers/
-[58]: https://github.com/exasol/exasol-testcontainers/blob/main/LICENSE
-[59]: https://github.com/exasol/test-db-builder-java/
-[60]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
-[61]: https://github.com/exasol/hamcrest-resultset-matcher/
-[62]: https://github.com/exasol/hamcrest-resultset-matcher/blob/main/LICENSE
-[63]: https://www.jqno.nl/equalsverifier
-[64]: https://junit.org/
-[65]: https://www.eclipse.org/legal/epl-v20.html
-[66]: https://github.com/exasol/maven-project-version-getter/
-[67]: https://github.com/exasol/maven-project-version-getter/blob/main/LICENSE
-[68]: https://github.com/exasol/extension-manager/
-[69]: https://github.com/exasol/extension-manager/blob/main/LICENSE
-[70]: https://aws.amazon.com/sdkforjava/http-clients/apache-client
-[71]: http://logback.qos.ch/logback-classic
-[72]: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
-[73]: http://logback.qos.ch/logback-core
-[74]: https://github.com/airlift/aircompressor
-[75]: https://docs.sonarsource.com/sonarqube-server/latest/extension-guide/developing-a-plugin/plugin-basics/sonar-scanner-maven/sonar-maven-plugin/
-[76]: http://www.gnu.org/licenses/lgpl.txt
-[77]: https://maven.apache.org/plugins/maven-toolchains-plugin/
-[78]: https://maven.apache.org/plugins/maven-compiler-plugin/
-[79]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
-[80]: https://www.mojohaus.org/flatten-maven-plugin/
-[81]: https://sonatype.github.io/ossindex-maven/maven-plugin/
-[82]: https://maven.apache.org/plugins/maven-javadoc-plugin/
-[83]: https://maven.apache.org/surefire/maven-surefire-plugin/
-[84]: https://www.mojohaus.org/versions/versions-maven-plugin/
-[85]: https://basepom.github.io/duplicate-finder-maven-plugin
+[44]: http://ant.apache.org/ivy/
+[45]: http://janino-compiler.github.io/janino/
+[46]: https://spdx.org/licenses/BSD-3-Clause.html
+[47]: https://github.com/exasol/parquet-io-java/
+[48]: https://github.com/exasol/parquet-io-java/blob/main/LICENSE
+[49]: https://logging.apache.org/log4j/2.x/
+[50]: https://github.com/mockito/mockito
+[51]: https://opensource.org/licenses/MIT
+[52]: http://hamcrest.org/JavaHamcrest/
+[53]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
+[54]: https://java.testcontainers.org
+[55]: http://opensource.org/licenses/MIT
+[56]: https://github.com/exasol/exasol-testcontainers/
+[57]: https://github.com/exasol/exasol-testcontainers/blob/main/LICENSE
+[58]: https://github.com/exasol/test-db-builder-java/
+[59]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
+[60]: https://github.com/exasol/hamcrest-resultset-matcher/
+[61]: https://github.com/exasol/hamcrest-resultset-matcher/blob/main/LICENSE
+[62]: https://www.jqno.nl/equalsverifier
+[63]: https://junit.org/
+[64]: https://www.eclipse.org/legal/epl-v20.html
+[65]: https://github.com/exasol/maven-project-version-getter/
+[66]: https://github.com/exasol/maven-project-version-getter/blob/main/LICENSE
+[67]: https://github.com/exasol/extension-manager/
+[68]: https://github.com/exasol/extension-manager/blob/main/LICENSE
+[69]: https://aws.amazon.com/sdkforjava/http-clients/apache-client
+[70]: http://logback.qos.ch/logback-classic
+[71]: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+[72]: http://logback.qos.ch/logback-core
+[73]: https://github.com/airlift/aircompressor
+[74]: https://docs.sonarsource.com/sonarqube-server/latest/extension-guide/developing-a-plugin/plugin-basics/sonar-scanner-maven/sonar-maven-plugin/
+[75]: http://www.gnu.org/licenses/lgpl.txt
+[76]: https://maven.apache.org/plugins/maven-toolchains-plugin/
+[77]: https://maven.apache.org/plugins/maven-compiler-plugin/
+[78]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
+[79]: https://www.mojohaus.org/flatten-maven-plugin/
+[80]: https://sonatype.github.io/ossindex-maven/maven-plugin/
+[81]: https://maven.apache.org/plugins/maven-javadoc-plugin/
+[82]: https://maven.apache.org/surefire/maven-surefire-plugin/
+[83]: https://www.mojohaus.org/versions/versions-maven-plugin/
+[84]: https://basepom.github.io/duplicate-finder-maven-plugin
+[85]: http://www.apache.org/licenses/LICENSE-2.0.html
 [86]: https://maven.apache.org/plugins/maven-artifact-plugin/
 [87]: https://maven.apache.org/plugins/maven-assembly-plugin/
 [88]: https://maven.apache.org/plugins/maven-jar-plugin/
