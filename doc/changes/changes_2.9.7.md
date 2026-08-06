@@ -138,6 +138,7 @@ io.netty/netty-codec-http - Unbounded queue growth via HTTP/1.1 pipelining leads
 
 #### Test Dependency Updates
 
+* Updated `com.exasol:exasol-testcontainers:7.3.0` to `8.0.1`
 * Updated `com.exasol:extension-manager-integration-test-java:0.5.19` to `0.5.20`
 * Updated `com.exasol:test-db-builder-java:4.0.0` to `4.0.1`
 
