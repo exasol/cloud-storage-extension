@@ -936,6 +936,17 @@
                     </filesets>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.ossindex.maven</groupId>
+                <artifactId>ossindex-maven-plugin</artifactId>
+                <configuration>
+                    <excludeVulnerabilityIds>
+                        <!-- Hadoop dependency -->
+                        <!--  org.eclipse.jetty:jetty-security:jar:9.4.57.v20241219:compile; https://guide.sonatype.com/component/maven/org.eclipse.jetty%3Ajetty-security/9.4.57.v20241219?utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1 -->
+                        <exclude>CVE-2026-10050</exclude>
+                    </excludeVulnerabilityIds>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
