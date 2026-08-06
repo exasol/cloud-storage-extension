@@ -15,10 +15,10 @@
     </parent>
     <properties>
         <!-- Version 3 requires Java 17 -->
-        <scala.version>3.8.4</scala.version>
+        <scala.version>2.13.18</scala.version>
         <scala.compat.version>2.13</scala.compat.version>
         <!-- Hadoop 3.5.0 requires Java 17 -->
-        <hadoop.version>3.5.0</hadoop.version>
+        <hadoop.version>3.4.3</hadoop.version>
         <log4j.version>2.26.1</log4j.version>
         <logback.version>1.6.0</logback.version>
         <sonar.sources>src/main/,extension/src/</sonar.sources>

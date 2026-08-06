@@ -124,19 +124,12 @@ io.netty/netty-codec-http - Unbounded queue growth via HTTP/1.1 pipelining leads
 * Updated `io.delta:delta-spark_2.13:3.3.2` to `4.3.1`
 * Updated `io.grpc:grpc-netty:1.76.3` to `1.83.0`
 * Updated `org.alluxio:alluxio-core-client-hdfs:300` to `313`
-* Updated `org.apache.hadoop:hadoop-aws:3.4.3` to `3.5.0`
-* Updated `org.apache.hadoop:hadoop-azure-datalake:3.4.3` to `3.5.0`
-* Updated `org.apache.hadoop:hadoop-azure:3.4.3` to `3.5.0`
-* Updated `org.apache.hadoop:hadoop-common:3.4.3` to `3.5.0`
-* Updated `org.apache.hadoop:hadoop-hdfs-client:3.4.3` to `3.5.0`
-* Updated `org.apache.hadoop:hadoop-hdfs:3.4.3` to `3.5.0`
 * Updated `org.apache.ivy:ivy:2.5.3` to `2.6.0`
 * Updated `org.apache.logging.log4j:log4j-1.2-api:2.26.0` to `2.26.1`
 * Updated `org.apache.logging.log4j:log4j-api:2.26.0` to `2.26.1`
 * Updated `org.apache.logging.log4j:log4j-core:2.26.0` to `2.26.1`
 * Updated `org.apache.orc:orc-core:1.9.8` to `2.3.1`
 * Updated `org.apache.spark:spark-sql_2.13:3.5.8` to `4.2.0-preview5`
-* Updated `org.scala-lang:scala-library:2.13.18` to `3.8.4`
 * Updated `software.amazon.awssdk:s3-transfer-manager:2.46.7` to `2.49.3`
 * Updated `software.amazon.awssdk:s3:2.46.7` to `2.49.3`
 
@@ -155,4 +148,14 @@ io.netty/netty-codec-http - Unbounded queue growth via HTTP/1.1 pipelining leads
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:artifact-reference-checker-maven-plugin:0.4.4` to `1.0.1`
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.7` to `2.1.0`
 * Updated `com.exasol:project-keeper-maven-plugin:5.6.2` to `5.7.4`
+* Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
+* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.14` to `0.8.15`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356` to `5.7.0.6970`
+* Added `org.spdx:spdx-maven-plugin:1.0.4`
