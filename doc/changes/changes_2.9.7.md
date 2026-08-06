@@ -120,7 +120,6 @@ io.netty/netty-codec-http - Unbounded queue growth via HTTP/1.1 pipelining leads
 
 * Updated `at.yawk.lz4:lz4-java:1.11.0` to `1.11.1`
 * Updated `com.github.mwiede:jsch:2.28.2` to `2.28.5`
-* Updated `io.grpc:grpc-netty:1.76.3` to `1.83.0`
 * Updated `org.apache.ivy:ivy:2.5.3` to `2.6.0`
 * Updated `org.apache.logging.log4j:log4j-1.2-api:2.26.0` to `2.26.1`
 * Updated `org.apache.logging.log4j:log4j-api:2.26.0` to `2.26.1`
