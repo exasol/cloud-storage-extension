@@ -1,4 +1,4 @@
-# Cloud Storage Extension 2.9.7, released 2026-??-??
+# Cloud Storage Extension 2.9.7, released 2026-08-07
 
 Code name: Fixed vulnerabilities CVE-2026-59900, CVE-2026-59949, CVE-2026-10050, CVE-2026-26032, CVE-2026-55831, CVE-2026-55833, CVE-2026-56745, CVE-2026-56746, CVE-2026-59898, CVE-2026-59899
 
