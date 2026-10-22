@@ -27,7 +27,7 @@ class ParquetSourceTestTest extends AbstractSourceTest {
 "  optional int32 position_id;\n" +
 "  optional int32 article_id;\n" +
 "  optional int32 amount;\n" +
-"  optional double price;\n" +
+"  optional double price columnorder(TYPE_DEFINED_ORDER);\n" +
 "  optional int32 voucher_id;\n" +
 "  optional boolean canceled;\n" +
 "}\n" +

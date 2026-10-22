@@ -21,11 +21,9 @@
         <hadoop.version>3.4.3</hadoop.version>
         <log4j.version>2.26.1</log4j.version>
         <logback.version>1.6.5</logback.version>
-        <sonar.sources>src/main/,extension/src/</sonar.sources>
-        <sonar.exclusions>extension/src/*.test.ts</sonar.exclusions>
-        <sonar.tests>src/test/,extension/src</sonar.tests>
-        <sonar.test.inclusions>src/test/,*.test.ts</sonar.test.inclusions>
-        <sonar.javascript.lcov.reportPaths>extension/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
+        <sonar.sources>src/main/</sonar.sources>
+        <sonar.tests>src/test/</sonar.tests>
+        <sonar.test.inclusions>src/test/</sonar.test.inclusions>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -63,7 +61,7 @@
                 <!-- Upgrade transitive dependency of org.apache.hadoop:hadoop-common to fix CVE-2026-0636, CVE-2026-5588 & CVE-2026-5598 -->
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bc-jdk18on-bom</artifactId>
-                <version>1.86</version>
+                <version>1.86.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -71,7 +69,7 @@
                 <!-- Upgrade transitive dependency of org.apache.hadoop:hadoop-hdfs to fix CVE-2025-49128 & CVE-2025-52999 -->
                 <groupId>com.fasterxml.jackson</groupId>
                 <artifactId>jackson-bom</artifactId>
-                <version>2.22.1</version>
+                <version>2.22.4</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -79,7 +77,7 @@
                 <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2024-7254 -->
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-bom</artifactId>
-                <version>4.35.1</version>
+                <version>4.36.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -88,7 +86,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>2.22.3</version>
+                <version>2.22.4</version>
             </dependency>
             <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.1:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-91776 -->
             <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.1:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-19032 -->
@@ -108,7 +106,7 @@
             <dependency>
                 <groupId>io.grpc</groupId>
                 <artifactId>grpc-protobuf</artifactId>
-                <version>1.54.2</version>
+                <version>1.85.1</version>
             </dependency>
             <!-- Upgrading transitive dependency org.apache.httpcomponents.client5:httpclient5:jar:5.6.2:compile of software.amazon.awssdk:s3:jar:2.49.3:compile to fix CVE-2026-64607 -->
             <!-- Upgrading transitive dependency org.apache.httpcomponents.client5:httpclient5:jar:5.6.3:compile of software.amazon.awssdk:s3:jar:2.57.2:compile to fix CVE-2026-71290 -->
@@ -167,7 +165,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.20.0</version>
+            <version>3.21.0</version>
         </dependency>
         <dependency>
             <!-- Upgraded to fix CVE-2025-53864 -->
@@ -205,7 +203,7 @@
             <!-- Alluxio 300 calls io.grpc.internal.ReadableBuffer.readBytes(ByteBuffer), removed after gRPC 1.76.x. -->
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.85.1</version>
+            <version>1.76.3</version>
         </dependency>
         <dependency>
             <!-- Upgrade commons-beanutils to fix CVE-2025-48734 -->
@@ -374,7 +372,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.18</version>
+            <version>2.0.20</version>
         </dependency>
         <dependency>
             <!-- Replacement for deprecated com.jcraft:jsch from org.apache.hadoop:hadoop-common -->
@@ -593,7 +591,7 @@
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
-            <version>4.2.39</version>
+            <version>4.2.40</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
@@ -636,7 +634,7 @@
             <!-- Update transitive dependency of org.apache.spark:spark-core to fix CVE-2024-47561 -->
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
-            <version>1.12.1</version>
+            <version>1.12.2</version>
             <exclusions>
                 <!-- excluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -673,7 +671,7 @@
             <!-- Pinned to fix CVE-2023-52428 -->
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>10.9.1</version>
+            <version>10.10</version>
         </dependency>
         <dependency>
             <groupId>io.delta</groupId>
@@ -757,9 +755,21 @@
             </exclusions>
         </dependency>
         <dependency>
+            <!-- Keep the Parquet API classes aligned with parquet-hadoop 1.18.1. -->
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-common</artifactId>
+            <version>1.18.1</version>
+        </dependency>
+        <dependency>
+            <!-- Keep the Parquet schema and reader APIs aligned with parquet-hadoop. -->
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-column</artifactId>
+            <version>1.18.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>2.0.18</version>
+            <version>2.0.20</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -780,7 +790,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.23.0</version>
+            <version>5.24.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -798,19 +808,19 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>8.0.1</version>
+            <version>8.0.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>test-db-builder-java</artifactId>
-            <version>4.0.1</version>
+            <version>4.0.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>hamcrest-resultset-matcher</artifactId>
-            <version>1.7.2</version>
+            <version>1.7.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -825,18 +835,6 @@
             <artifactId>junit-jupiter</artifactId>
             <!-- Version 6 requires Java 17 -->
             <version>5.14.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.exasol</groupId>
-            <artifactId>maven-project-version-getter</artifactId>
-            <version>1.2.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.exasol</groupId>
-            <artifactId>extension-manager-integration-test-java</artifactId>
-            <version>0.5.20</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -926,96 +924,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.6.3</version>
-                <executions>
-                    <execution>
-                        <id>npm-ci</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>extension/</workingDirectory>
-                            <executable>npm</executable>
-                            <commandlineArgs>ci --ignore-scripts --no-fund</commandlineArgs>
-                            <useMavenLogger>false</useMavenLogger>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>build-extension</id>
-                        <phase>post-package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>extension/</workingDirectory>
-                            <executable>npm</executable>
-                            <commandlineArgs>run build</commandlineArgs>
-                            <useMavenLogger>false</useMavenLogger>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>unit-test-extension</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>extension/</workingDirectory>
-                            <executable>npm</executable>
-                            <commandlineArgs>test</commandlineArgs>
-                            <useMavenLogger>false</useMavenLogger>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>lint-extension</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>extension/</workingDirectory>
-                            <executable>npm</executable>
-                            <commandlineArgs>run lint</commandlineArgs>
-                            <useMavenLogger>false</useMavenLogger>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>extension/coverage</directory>
-                            <includes>
-                                <include>**</include>
-                            </includes>
-                        </fileset>
-                        <fileset>
-                            <directory>extension/dist</directory>
-                            <includes>
-                                <include>**</include>
-                            </includes>
-                        </fileset>
-                        <fileset>
-                            <directory>extension/node_modules</directory>
-                            <includes>
-                                <include>**</include>
-                            </includes>
-                        </fileset>
-                        <fileset>
-                            <directory>extension/src</directory>
-                            <includes>
-                                <include>extension-description.ts</include>
-                            </includes>
-                        </fileset>
-                    </filesets>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.ossindex.maven</groupId>

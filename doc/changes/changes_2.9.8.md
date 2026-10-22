@@ -780,26 +780,40 @@ snappy-java through 1.1.10.8 contains a buffer overflow vulnerability in Snappy.
 
 ## Dependency Updates
 
-### Cloud Storage Extension
-
-#### Compile Dependency Updates
+### Compile Dependency Updates
 
 * Updated `at.yawk.lz4:lz4-java:1.11.1` to `1.12.1`
 * Updated `com.github.mwiede:jsch:2.28.5` to `2.28.8`
 * Updated `com.google.guava:guava:33.6.0-jre` to `33.7.2-jre`
-* Updated `io.grpc:grpc-netty:1.76.3` to `1.85.1`
+* Updated `com.nimbusds:nimbus-jose-jwt:10.9.1` to `10.10`
+* Updated `io.dropwizard.metrics:metrics-core:4.2.39` to `4.2.40`
+* Updated `org.apache.avro:avro:1.12.1` to `1.12.2`
+* Updated `org.apache.commons:commons-lang3:3.20.0` to `3.21.0`
+* Added `org.apache.parquet:parquet-column:1.18.1`
+* Added `org.apache.parquet:parquet-common:1.18.1`
 * Updated `org.apache.zookeeper:zookeeper:3.9.5` to `3.9.6`
+* Updated `org.slf4j:jul-to-slf4j:2.0.18` to `2.0.20`
+* Updated `org.slf4j:slf4j-api:2.0.18` to `2.0.20`
 * Updated `org.xerial.snappy:snappy-java:1.1.10.8` to `1.1.10.12`
 * Updated `software.amazon.awssdk:s3-transfer-manager:2.49.3` to `2.57.2`
 * Updated `software.amazon.awssdk:s3:2.49.3` to `2.57.2`
 
-#### Runtime Dependency Updates
+### Runtime Dependency Updates
 
 * Updated `ch.qos.logback:logback-classic:1.6.0` to `1.6.5`
 * Updated `ch.qos.logback:logback-core:1.6.0` to `1.6.5`
 * Updated `software.amazon.awssdk:apache-client:2.49.3` to `2.57.2`
 
-#### Plugin Dependency Updates
+### Test Dependency Updates
+
+* Updated `com.exasol:exasol-testcontainers:8.0.1` to `8.0.2`
+* Removed `com.exasol:extension-manager-integration-test-java:0.5.20`
+* Updated `com.exasol:hamcrest-resultset-matcher:1.7.2` to `1.7.4`
+* Removed `com.exasol:maven-project-version-getter:1.2.2`
+* Updated `com.exasol:test-db-builder-java:4.0.1` to `4.0.3`
+* Updated `org.mockito:mockito-core:5.23.0` to `5.24.0`
+
+### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.1.0` to `2.1.2`
 * Updated `com.exasol:project-keeper-maven-plugin:5.7.4` to `5.8.0`
@@ -811,6 +825,7 @@ snappy-java through 1.1.10.8 contains a buffer overflow vulnerability in Snappy.
 * Updated `org.apache.maven.plugins:maven-jar-plugin:3.5.0` to `3.5.1`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
 * Updated `org.apache.maven.plugins:maven-toolchains-plugin:3.2.0` to `3.3.0`
+* Removed `org.codehaus.mojo:exec-maven-plugin:3.6.3`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.7.3` to `1.8.0`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.21.0` to `2.23.0`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`

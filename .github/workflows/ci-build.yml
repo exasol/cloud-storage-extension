@@ -17,7 +17,7 @@ on:
     
 jobs:
   matrix-build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     defaults:
       run: {
         shell: bash
@@ -33,12 +33,12 @@ jobs:
       fail-fast: false
       matrix:
         exasol_db_version: [
-          2026.1.0,
-          2025.1.10
+          2026.1.2,
+          2025.1.16
         ]
         
     env: {
-      DEFAULT_EXASOL_DB_VERSION: 2026.1.0
+      DEFAULT_EXASOL_DB_VERSION: 2026.1.2
     }
     steps:
       - name: Free Disk Space
@@ -81,16 +81,6 @@ jobs:
         id: enable-testcontainer-reuse,
         run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
       }
-      - name: Build extension
-        id: build-extension
-        run: |
-          # Packaged JAR is required for building the extension
-          mvn --batch-mode package -DossindexSkip=true -DskipTests
-          cd extension
-          npm ci --ignore-scripts
-          npm run build
-          npm run test
-          npm run lint
       - {
         name: Fix VM Crash in UDFs,
         id: fix-vm-crash,
