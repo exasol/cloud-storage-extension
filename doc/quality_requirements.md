@@ -37,7 +37,7 @@ Tests must use deterministic local fixtures where possible. Integration tests th
 
 JVM dependencies are managed in `pom.xml`, with selected versions centralized in Maven properties or dependency management when shared. Transitive dependency overrides must document the CVE, compatibility issue, or runtime reason that requires the override.
 
-The browser extension dependencies are managed by `extension/package.json` and its lock file. Dependency update automation must keep generated project metadata consistent with Project Keeper.
+Dependency update automation must keep generated project metadata consistent with Project Keeper.
 
 ## Static Analysis and Security Gates
 
@@ -47,7 +47,7 @@ Generated files such as `pk_generated_parent.pom` must be updated through Projec
 
 ## Testability and Coverage
 
-The full verification suite must include compilation, unit tests, integration tests, static checks, and extension build checks. For the Scala-to-Java migration in issue #393, production behavior must remain unchanged, all existing tests must stay green, and overall code coverage must remain above 80%.
+The full verification suite must include compilation, unit tests, integration tests, and static checks. For the Scala-to-Java migration in issue #393, production behavior must remain unchanged, all existing tests must stay green, and overall code coverage must remain above 80%.
 
 Manual verification is required only for behavior that cannot be exercised by the automated suite, such as release packaging or external cloud provider credentials.
 
