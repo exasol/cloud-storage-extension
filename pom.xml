@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>cloud-storage-extension</artifactId>
-    <version>2.9.7</version>
+    <version>2.9.8</version>
     <name>Cloud Storage Extension</name>
     <description>Exasol Cloud Storage Import And Export Extension</description>
     <url>https://github.com/exasol/cloud-storage-extension/</url>
     <parent>
         <artifactId>cloud-storage-extension-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.9.7</version>
+        <version>2.9.8</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
@@ -20,26 +20,26 @@
         <!-- Hadoop 3.5.0 requires Java 17 -->
         <hadoop.version>3.4.3</hadoop.version>
         <log4j.version>2.26.1</log4j.version>
-        <logback.version>1.6.0</logback.version>
-        <sonar.sources>src/main/,extension/src/</sonar.sources>
-        <sonar.exclusions>extension/src/*.test.ts</sonar.exclusions>
-        <sonar.tests>src/test/,extension/src</sonar.tests>
-        <sonar.test.inclusions>src/test/,*.test.ts</sonar.test.inclusions>
-        <sonar.javascript.lcov.reportPaths>extension/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
+        <logback.version>1.6.5</logback.version>
+        <sonar.sources>src/main/</sonar.sources>
+        <sonar.tests>src/test/</sonar.tests>
+        <sonar.test.inclusions>src/test/</sonar.test.inclusions>
     </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
-                <version>2.49.3</version>
+                <version>2.57.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Upgrading transitive dependency io.netty:netty-codec-http:jar:4.2.16.Final:compile of software.amazon.awssdk:s3:jar:2.49.3:compile to fix CVE-2026-59903 -->
+            <!-- Upgrading transitive dependency io.netty:netty-all:jar:4.2.17.Final:compile of org.apache.spark:spark-sql_2.13:jar:3.5.9:compile to fix CVE-2026-100665 -->
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-bom</artifactId>
-                <version>4.2.16.Final</version>
+                <version>4.2.19.Final</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -51,11 +51,17 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Upgrading transitive dependency org.bouncycastle:bcprov-jdk18on:jar:1.85:compile of org.apache.hadoop:hadoop-common:jar:3.4.3:compile to fix CVE-2026-97873 -->
+            <!-- Upgrading transitive dependency org.bouncycastle:bcprov-jdk18on:jar:1.85:compile of org.apache.hadoop:hadoop-common:jar:3.4.3:compile to fix CVE-2026-71891 -->
+            <!-- Upgrading transitive dependency org.bouncycastle:bcprov-jdk18on:jar:1.85:compile of org.apache.hadoop:hadoop-common:jar:3.4.3:compile to fix CVE-2026-71889 -->
+            <!-- Upgrading transitive dependency org.bouncycastle:bcprov-jdk18on:jar:1.85:compile of org.apache.hadoop:hadoop-common:jar:3.4.3:compile to fix CVE-2026-18040 -->
+            <!-- Upgrading transitive dependency org.bouncycastle:bcprov-jdk18on:jar:1.85:compile of org.apache.hadoop:hadoop-common:jar:3.4.3:compile to fix CVE-2026-18036 -->
+            <!-- Upgrading transitive dependency org.bouncycastle:bcprov-jdk18on:jar:1.85:compile of org.apache.hadoop:hadoop-common:jar:3.4.3:compile to fix CVE-2026-17508 -->
             <dependency>
                 <!-- Upgrade transitive dependency of org.apache.hadoop:hadoop-common to fix CVE-2026-0636, CVE-2026-5588 & CVE-2026-5598 -->
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bc-jdk18on-bom</artifactId>
-                <version>1.85</version>
+                <version>1.86.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -63,7 +69,7 @@
                 <!-- Upgrade transitive dependency of org.apache.hadoop:hadoop-hdfs to fix CVE-2025-49128 & CVE-2025-52999 -->
                 <groupId>com.fasterxml.jackson</groupId>
                 <artifactId>jackson-bom</artifactId>
-                <version>2.22.1</version>
+                <version>2.22.4</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -71,9 +77,82 @@
                 <!-- Explicitly upgrade transitive dependency of gcs-connector to fix CVE-2024-7254 -->
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-bom</artifactId>
-                <version>4.35.1</version>
+                <version>4.36.2</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-core:jar:2.22.1:compile of org.apache.hadoop:hadoop-hdfs:jar:3.4.3:compile to fix CVE-2026-89407 -->
+            <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-core:jar:2.22.1:compile of org.apache.hadoop:hadoop-hdfs:jar:3.4.3:compile to fix CVE-2026-89425 -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.22.4</version>
+            </dependency>
+            <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.1:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-91776 -->
+            <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.1:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-19032 -->
+            <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.1:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-68497 -->
+            <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.1:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-83557 -->
+            <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.1:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-91777 -->
+            <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.2:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-91777 -->
+            <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.2:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-91776 -->
+            <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.2:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-110879 -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.22.4</version>
+            </dependency>
+            <!-- Upgrading transitive dependency io.grpc:grpc-protobuf:jar:1.54.1:compile of org.alluxio:alluxio-core-client-hdfs:jar:300:compile to fix CVE-2023-32731 -->
+            <!-- Upgrading transitive dependency io.grpc:grpc-protobuf:jar:1.54.1:compile of org.alluxio:alluxio-core-client-hdfs:jar:300:compile to fix CVE-2023-32732 -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>1.85.1</version>
+            </dependency>
+            <!-- Upgrading transitive dependency org.apache.httpcomponents.client5:httpclient5:jar:5.6.2:compile of software.amazon.awssdk:s3:jar:2.49.3:compile to fix CVE-2026-64607 -->
+            <!-- Upgrading transitive dependency org.apache.httpcomponents.client5:httpclient5:jar:5.6.3:compile of software.amazon.awssdk:s3:jar:2.57.2:compile to fix CVE-2026-71290 -->
+            <dependency>
+                <groupId>org.apache.httpcomponents.client5</groupId>
+                <artifactId>httpclient5</artifactId>
+                <version>5.6.5</version>
+            </dependency>
+            <!-- Upgrading transitive dependency com.github.luben:zstd-jni:jar:1.5.5-4:compile of org.apache.spark:spark-sql_2.13:jar:3.5.9:compile to fix CVE-2026-89045 -->
+            <!-- Upgrading transitive dependency com.github.luben:zstd-jni:jar:1.5.5-4:compile of org.apache.spark:spark-sql_2.13:jar:3.5.9:compile to fix CVE-2026-87823 -->
+            <!-- Upgrading transitive dependency com.github.luben:zstd-jni:jar:1.5.5-4:compile of org.apache.spark:spark-sql_2.13:jar:3.5.9:compile to fix CVE-2026-87795 -->
+            <dependency>
+                <groupId>com.github.luben</groupId>
+                <artifactId>zstd-jni</artifactId>
+                <version>1.5.7-24</version>
+            </dependency>
+            <!-- Upgrading transitive dependency com.google.crypto.tink:tink:jar:1.9.0:compile of org.apache.spark:spark-sql_2.13:jar:3.5.9:compile to fix CVE-2026-15432 -->
+            <dependency>
+                <groupId>com.google.crypto.tink</groupId>
+                <artifactId>tink</artifactId>
+                <version>1.24.0</version>
+            </dependency>
+            <!-- Upgrading transitive dependency com.ning:compress-lzf:jar:1.1.2:compile of org.apache.spark:spark-sql_2.13:jar:3.5.9:compile to fix CVE-2026-109395 -->
+            <dependency>
+                <groupId>com.ning</groupId>
+                <artifactId>compress-lzf</artifactId>
+                <version>1.2.1</version>
+            </dependency>
+            <!-- Upgrading transitive dependency org.apache.kerby:kerb-core:jar:2.0.3:compile of org.apache.hadoop:hadoop-common:jar:3.4.3:compile to fix CVE-2026-57914 -->
+            <dependency>
+                <groupId>org.apache.kerby</groupId>
+                <artifactId>kerb-core</artifactId>
+                <version>2.1.2</version>
+            </dependency>
+            <!-- Upgrading transitive dependency org.apache.parquet:parquet-hadoop:jar:1.13.1:compile of org.apache.spark:spark-sql_2.13:jar:3.5.9:compile to fix CVE-2026-73334 -->
+            <dependency>
+                <groupId>org.apache.parquet</groupId>
+                <artifactId>parquet-hadoop</artifactId>
+                <version>1.18.1</version>
+            </dependency>
+            <!-- Upgrading transitive dependency org.jline:jline:jar:3.9.0:compile of org.alluxio:alluxio-core-client-hdfs:jar:300:compile to fix CVE-2026-77422 -->
+            <!-- Upgrading transitive dependency org.jline:jline:jar:3.9.0:compile of org.alluxio:alluxio-core-client-hdfs:jar:300:compile to fix CVE-2026-77420 -->
+            <dependency>
+                <groupId>org.jline</groupId>
+                <artifactId>jline</artifactId>
+                <version>3.30.17</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -86,7 +165,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.20.0</version>
+            <version>3.21.0</version>
         </dependency>
         <dependency>
             <!-- Upgraded to fix CVE-2025-53864 -->
@@ -109,7 +188,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.6.0-jre</version>
+            <version>33.7.2-jre</version>
         </dependency>
         <!-- awssdk-->
         <dependency>
@@ -141,7 +220,7 @@
         <dependency>
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
-            <version>1.1.10.8</version>
+            <version>1.1.10.12</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -293,13 +372,13 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.18</version>
+            <version>2.0.20</version>
         </dependency>
         <dependency>
             <!-- Replacement for deprecated com.jcraft:jsch from org.apache.hadoop:hadoop-common -->
             <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
-            <version>2.28.5</version>
+            <version>2.28.8</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -323,7 +402,7 @@
             <!-- override version 3.6.3 to fix vulnerability CVE-2023-42503, CVE-2024-23944 & CVE-2024-51504 -->
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
-            <version>3.9.5</version>
+            <version>3.9.6</version>
         </dependency>
         <dependency>
             <!-- Upgrade transitive dependency of org.apache.zookeeper:zookeeper to fix CVE-2023-6378 -->
@@ -512,7 +591,7 @@
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
-            <version>4.2.39</version>
+            <version>4.2.40</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud.bigdataoss</groupId>
@@ -555,7 +634,7 @@
             <!-- Update transitive dependency of org.apache.spark:spark-core to fix CVE-2024-47561 -->
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
-            <version>1.12.1</version>
+            <version>1.12.2</version>
             <exclusions>
                 <!-- excluded because of duplicate-finder-maven-plugin -->
                 <exclusion>
@@ -579,7 +658,7 @@
             <!-- Upgrade transitive dependency of org.apache.spark to fix CVE-2025-12183 -->
             <groupId>at.yawk.lz4</groupId>
             <artifactId>lz4-java</artifactId>
-            <version>1.11.1</version>
+            <version>1.12.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -592,7 +671,7 @@
             <!-- Pinned to fix CVE-2023-52428 -->
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>10.9.1</version>
+            <version>10.10</version>
         </dependency>
         <dependency>
             <groupId>io.delta</groupId>
@@ -676,9 +755,21 @@
             </exclusions>
         </dependency>
         <dependency>
+            <!-- Keep the Parquet API classes aligned with parquet-hadoop 1.18.1. -->
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-common</artifactId>
+            <version>1.18.1</version>
+        </dependency>
+        <dependency>
+            <!-- Keep the Parquet schema and reader APIs aligned with parquet-hadoop. -->
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-column</artifactId>
+            <version>1.18.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>2.0.18</version>
+            <version>2.0.20</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -699,7 +790,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.23.0</version>
+            <version>5.24.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -717,19 +808,19 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>8.0.1</version>
+            <version>8.0.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>test-db-builder-java</artifactId>
-            <version>4.0.1</version>
+            <version>4.0.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>hamcrest-resultset-matcher</artifactId>
-            <version>1.7.2</version>
+            <version>1.7.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -744,18 +835,6 @@
             <artifactId>junit-jupiter</artifactId>
             <!-- Version 6 requires Java 17 -->
             <version>5.14.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.exasol</groupId>
-            <artifactId>maven-project-version-getter</artifactId>
-            <version>1.2.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.exasol</groupId>
-            <artifactId>extension-manager-integration-test-java</artifactId>
-            <version>0.5.20</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -784,7 +863,7 @@
                 <version>3.6.3</version>
                 <configuration>
                     <charset>UTF-8</charset>
-                    <doclint/>
+                    <doclint />
                     <serialwarn>true</serialwarn>
                     <failOnError>true</failOnError>
                     <failOnWarnings>true</failOnWarnings>
@@ -831,13 +910,13 @@
                         <ignoredResourcePattern>properties.dtd</ignoredResourcePattern>
                         <ignoredResourcePattern>parquet.thrift</ignoredResourcePattern>
                     </ignoredResourcePatterns>
-                    <ignoredDependencies/>
+                    <ignoredDependencies />
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>5.7.4</version>
+                <version>5.8.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -847,103 +926,18 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.6.3</version>
-                <executions>
-                    <execution>
-                        <id>npm-ci</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>extension/</workingDirectory>
-                            <executable>npm</executable>
-                            <commandlineArgs>ci --ignore-scripts --no-fund</commandlineArgs>
-                            <useMavenLogger>false</useMavenLogger>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>build-extension</id>
-                        <phase>post-package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>extension/</workingDirectory>
-                            <executable>npm</executable>
-                            <commandlineArgs>run build</commandlineArgs>
-                            <useMavenLogger>false</useMavenLogger>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>unit-test-extension</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>extension/</workingDirectory>
-                            <executable>npm</executable>
-                            <commandlineArgs>test</commandlineArgs>
-                            <useMavenLogger>false</useMavenLogger>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>lint-extension</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>extension/</workingDirectory>
-                            <executable>npm</executable>
-                            <commandlineArgs>run lint</commandlineArgs>
-                            <useMavenLogger>false</useMavenLogger>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>extension/coverage</directory>
-                            <includes>
-                                <include>**</include>
-                            </includes>
-                        </fileset>
-                        <fileset>
-                            <directory>extension/dist</directory>
-                            <includes>
-                                <include>**</include>
-                            </includes>
-                        </fileset>
-                        <fileset>
-                            <directory>extension/node_modules</directory>
-                            <includes>
-                                <include>**</include>
-                            </includes>
-                        </fileset>
-                        <fileset>
-                            <directory>extension/src</directory>
-                            <includes>
-                                <include>extension-description.ts</include>
-                            </includes>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.sonatype.ossindex.maven</groupId>
                 <artifactId>ossindex-maven-plugin</artifactId>
                 <configuration>
+                    <!-- OSS Index exclusion for CVE-2026-10050 in org.eclipse.jetty:jetty-security; no CVE-free upgrade was found after trying no downloadable newer version -->
+                    <!-- OSS Index exclusion for CVE-2026-18659, CVE-2026-18662, CVE-2026-19864 in org.eclipse.jetty:jetty-security; no CVE-free upgrade was found after trying 9.4.58.v20250814 -->
                     <excludeVulnerabilityIds>
                         <!-- Hadoop dependency -->
                         <!--  org.eclipse.jetty:jetty-security:jar:9.4.57.v20241219:compile; https://guide.sonatype.com/component/maven/org.eclipse.jetty%3Ajetty-security/9.4.57.v20241219?utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1 -->
                         <exclude>CVE-2026-10050</exclude>
+                        <exclude>CVE-2026-18659</exclude>
+                        <exclude>CVE-2026-18662</exclude>
+                        <exclude>CVE-2026-19864</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>

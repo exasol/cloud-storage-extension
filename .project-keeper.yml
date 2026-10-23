@@ -4,19 +4,15 @@ sources:
     modules:
       - jar_artifact
       - integration_tests
-  - type: npm
-    path: extension/package.json
-    artifacts:
-      - dist/cloud-storage-extension.js
 version:
   fromSource: pom.xml
 linkReplacements:
 build:
-  runnerOs: ubuntu-22.04
+  runnerOs: ubuntu-latest
   freeDiskSpace: true
   exasolDbVersions:
-    - "2026.1.0"
-    - "2025.1.10"
+    - "2026.1.2"
+    - "2025.1.16"
   workflows:
     - name: ci-build.yml
       stepCustomizations:
@@ -24,42 +20,15 @@ build:
           job: matrix-build
           stepId: enable-testcontainer-reuse
           content:
-            name: Build extension
-            id: build-extension
-            run: |
-              # Packaged JAR is required for building the extension
-              mvn --batch-mode package -DossindexSkip=true -DskipTests
-              cd extension
-              npm ci --ignore-scripts
-              npm run build
-              npm run test
-              npm run lint
-        - action: INSERT_AFTER
-          job: matrix-build
-          stepId: build-extension
-          content:
             name: Fix VM Crash in UDFs
             id: fix-vm-crash
             run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
     - name: release.yml
       stepCustomizations:
-        - action: INSERT_AFTER
-          stepId: verify-release
-          content:
-            name: Build extension
-            id: build-extension
-            run: |
-              # Packaged JAR is required for building the extension
-              mvn --batch-mode package -DossindexSkip=true -DskipTests -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-              cd extension
-              npm ci --ignore-scripts
-              npm run build
-
         - action: REPLACE
           stepId: build
           content:
             name: Build project
             id: build
-            # Omit clean: we must not delete the extension built in the previous step.
             run: mvn --batch-mode -DskipTests -DossindexSkip=true verify -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn

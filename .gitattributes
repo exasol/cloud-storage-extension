@@ -9,5 +9,9 @@
 .settings/org.eclipse.jdt.ui.prefs                              linguist-generated=true
 dependencies.md                                                 linguist-generated=true
 doc/changes/changelog.md                                        linguist-generated=true
-extension/package-lock.json                                     linguist-generated=true
 pk_generated_parent.pom                                         linguist-generated=true
+*.bat text eol=crlf
+SECURITY.md linguist-generated=true
+/mvnw linguist-generated=true
+/mvnw.cmd linguist-generated=true
+/.mvn/wrapper/maven-wrapper.properties linguist-generated=true

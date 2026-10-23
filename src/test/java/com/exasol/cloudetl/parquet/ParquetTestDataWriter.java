@@ -6,11 +6,13 @@ import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.parquet.conf.ParquetConfiguration;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.GroupWriter;
 import org.apache.parquet.example.data.simple.SimpleGroup;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.api.WriteSupport;
+import org.apache.parquet.hadoop.util.HadoopOutputFile;
 import org.apache.parquet.io.api.Binary;
 import org.apache.parquet.io.api.RecordConsumer;
 import org.apache.parquet.schema.MessageType;
@@ -71,7 +73,13 @@ public class ParquetTestDataWriter {
         }
 
         @Override
+        @SuppressWarnings("deprecation")
         public WriteContext init(final Configuration configuration) {
+            return new WriteContext(this.schema, new HashMap<>());
+        }
+
+        @Override
+        public WriteContext init(final ParquetConfiguration configuration) {
             return new WriteContext(this.schema, new HashMap<>());
         }
 
@@ -84,13 +92,20 @@ public class ParquetTestDataWriter {
     private static final class BaseGroupWriterBuilder extends ParquetWriter.Builder<Group, BaseGroupWriterBuilder> {
         private final MessageType schema;
 
-        private BaseGroupWriterBuilder(final Path path, final MessageType schema) {
-            super(path);
+        private BaseGroupWriterBuilder(final Path path, final MessageType schema) throws IOException {
+            super();
+            withFile(HadoopOutputFile.fromPath(path, new Configuration()));
             this.schema = schema;
         }
 
         @Override
+        @SuppressWarnings("deprecation")
         protected WriteSupport<Group> getWriteSupport(final Configuration conf) {
+            return new BaseGroupWriteSupport(this.schema);
+        }
+
+        @Override
+        protected WriteSupport<Group> getWriteSupport(final ParquetConfiguration conf) {
             return new BaseGroupWriteSupport(this.schema);
         }
 

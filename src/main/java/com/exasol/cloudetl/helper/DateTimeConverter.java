@@ -2,10 +2,9 @@ package com.exasol.cloudetl.helper;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.TimeZone;
 
 /**
  * Helper functions to convert date time values.
@@ -97,9 +96,7 @@ public final class DateTimeConverter {
      * @return days since epoch
      */
     public static long daysSinceEpoch(final Date date) {
-        final long millisUtc = date.getTime();
-        final long millis = millisUtc + TimeZone.getTimeZone(ZoneId.systemDefault()).getOffset(millisUtc);
-        return (long) Math.floor((double) millis / MILLIS_PER_DAY);
+        return date.toLocalDate().toEpochDay();
     }
 
     /**
@@ -109,8 +106,6 @@ public final class DateTimeConverter {
      * @return date
      */
     public static Date daysToDate(final long days) {
-        final LocalDateTime date = UnixEpochDateTime.plusDays(days);
-        final long millis = date.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        return new Date(millis);
+        return Date.valueOf(LocalDate.ofEpochDay(days));
     }
 }
