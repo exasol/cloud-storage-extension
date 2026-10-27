@@ -30,30 +30,30 @@ public class ParquetTestDataWriter {
             throws IOException {
         try (ParquetWriter<Group> writer = getParquetWriter(path, schema, true)) {
             for (final T value : data) {
-                final SimpleGroup record = new SimpleGroup(schema);
+                final SimpleGroup parquetRecord = new SimpleGroup(schema);
                 if (value != null) {
-                    appendValue(value, record);
+                    appendValue(value, parquetRecord);
                 }
-                writer.write(record);
+                writer.write(parquetRecord);
             }
         }
     }
 
-    private void appendValue(final Object value, final SimpleGroup record) {
+    private void appendValue(final Object value, final SimpleGroup parquetRecord) {
         if (value instanceof Boolean) {
-            record.append("column", ((Boolean) value).booleanValue());
+            parquetRecord.append("column", ((Boolean) value).booleanValue());
         } else if (value instanceof Integer) {
-            record.append("column", ((Integer) value).intValue());
+            parquetRecord.append("column", ((Integer) value).intValue());
         } else if (value instanceof Long) {
-            record.append("column", ((Long) value).longValue());
+            parquetRecord.append("column", ((Long) value).longValue());
         } else if (value instanceof Float) {
-            record.append("column", ((Float) value).floatValue());
+            parquetRecord.append("column", ((Float) value).floatValue());
         } else if (value instanceof Double) {
-            record.append("column", ((Double) value).doubleValue());
+            parquetRecord.append("column", ((Double) value).doubleValue());
         } else if (value instanceof String) {
-            record.append("column", (String) value);
+            parquetRecord.append("column", (String) value);
         } else if (value instanceof Binary) {
-            record.append("column", (Binary) value);
+            parquetRecord.append("column", (Binary) value);
         } else {
             throw new IllegalArgumentException("Unknown Parquet value!");
         }
@@ -84,8 +84,8 @@ public class ParquetTestDataWriter {
         }
 
         @Override
-        public void write(final Group record) {
-            this.writer.write(record);
+        public void write(final Group parquetRecord) {
+            this.writer.write(parquetRecord);
         }
     }
 

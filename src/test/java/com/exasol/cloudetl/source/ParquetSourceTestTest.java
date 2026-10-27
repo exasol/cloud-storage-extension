@@ -56,10 +56,10 @@ class ParquetSourceTestTest extends AbstractSourceTest {
     }
 
     @Test
-    void streamThrowsIfItCannotCreateParquetReader() {
+    void getSourceThrowsIfItCannotCreateParquetReader() {
         final Path nonPath = new Path(this.resourceDir + "/notFile.parquet");
         final IllegalStateException thrown = assertThrows(IllegalStateException.class,
-                () -> getSource(nonPath).stream().size());
+                () -> getSource(nonPath));
         assertInstanceOf(java.io.FileNotFoundException.class, thrown.getCause());
         assertEquals("File " + nonPath + " does not exist", thrown.getCause().getMessage());
     }
