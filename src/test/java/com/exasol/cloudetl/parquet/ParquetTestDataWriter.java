@@ -6,11 +6,13 @@ import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.parquet.conf.ParquetConfiguration;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.GroupWriter;
 import org.apache.parquet.example.data.simple.SimpleGroup;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.api.WriteSupport;
+import org.apache.parquet.hadoop.util.HadoopOutputFile;
 import org.apache.parquet.io.api.Binary;
 import org.apache.parquet.io.api.RecordConsumer;
 import org.apache.parquet.schema.MessageType;
@@ -28,30 +30,30 @@ public class ParquetTestDataWriter {
             throws IOException {
         try (ParquetWriter<Group> writer = getParquetWriter(path, schema, true)) {
             for (final T value : data) {
-                final SimpleGroup record = new SimpleGroup(schema);
+                final SimpleGroup parquetRecord = new SimpleGroup(schema);
                 if (value != null) {
-                    appendValue(value, record);
+                    appendValue(value, parquetRecord);
                 }
-                writer.write(record);
+                writer.write(parquetRecord);
             }
         }
     }
 
-    private void appendValue(final Object value, final SimpleGroup record) {
+    private void appendValue(final Object value, final SimpleGroup parquetRecord) {
         if (value instanceof Boolean) {
-            record.append("column", ((Boolean) value).booleanValue());
+            parquetRecord.append("column", ((Boolean) value).booleanValue());
         } else if (value instanceof Integer) {
-            record.append("column", ((Integer) value).intValue());
+            parquetRecord.append("column", ((Integer) value).intValue());
         } else if (value instanceof Long) {
-            record.append("column", ((Long) value).longValue());
+            parquetRecord.append("column", ((Long) value).longValue());
         } else if (value instanceof Float) {
-            record.append("column", ((Float) value).floatValue());
+            parquetRecord.append("column", ((Float) value).floatValue());
         } else if (value instanceof Double) {
-            record.append("column", ((Double) value).doubleValue());
+            parquetRecord.append("column", ((Double) value).doubleValue());
         } else if (value instanceof String) {
-            record.append("column", (String) value);
+            parquetRecord.append("column", (String) value);
         } else if (value instanceof Binary) {
-            record.append("column", (Binary) value);
+            parquetRecord.append("column", (Binary) value);
         } else {
             throw new IllegalArgumentException("Unknown Parquet value!");
         }
@@ -71,26 +73,39 @@ public class ParquetTestDataWriter {
         }
 
         @Override
+        @SuppressWarnings("deprecation")
         public WriteContext init(final Configuration configuration) {
             return new WriteContext(this.schema, new HashMap<>());
         }
 
         @Override
-        public void write(final Group record) {
-            this.writer.write(record);
+        public WriteContext init(final ParquetConfiguration configuration) {
+            return new WriteContext(this.schema, new HashMap<>());
+        }
+
+        @Override
+        public void write(final Group parquetRecord) {
+            this.writer.write(parquetRecord);
         }
     }
 
     private static final class BaseGroupWriterBuilder extends ParquetWriter.Builder<Group, BaseGroupWriterBuilder> {
         private final MessageType schema;
 
-        private BaseGroupWriterBuilder(final Path path, final MessageType schema) {
-            super(path);
+        private BaseGroupWriterBuilder(final Path path, final MessageType schema) throws IOException {
+            super();
+            withFile(HadoopOutputFile.fromPath(path, new Configuration()));
             this.schema = schema;
         }
 
         @Override
+        @SuppressWarnings("deprecation")
         protected WriteSupport<Group> getWriteSupport(final Configuration conf) {
+            return new BaseGroupWriteSupport(this.schema);
+        }
+
+        @Override
+        protected WriteSupport<Group> getWriteSupport(final ParquetConfiguration conf) {
             return new BaseGroupWriteSupport(this.schema);
         }
 

@@ -4,6 +4,7 @@ import static com.exasol.matcher.ResultSetStructureMatcher.table;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.sql.*;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import org.hamcrest.Matcher;
@@ -162,8 +163,23 @@ class DataExporterIT extends BaseS3IntegrationTest {
 
         private Matcher<ResultSet> getMatcher(final TypeMatchMode typeMatchMode) {
             var matcher = table();
+            matcher.withUtcCalendar();
             for (final Object[] rows : this.tableValues) {
-                matcher = matcher.row(rows);
+                final Object[] expectedRow = rows.clone();
+                for (int index = 0; index < expectedRow.length; index++) {
+                    if (expectedRow[index] instanceof java.sql.Date) {
+                        final java.sql.Date date = (java.sql.Date) expectedRow[index];
+                        expectedRow[index] = new java.sql.Date(
+                                date.toLocalDate().atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli());
+                    } else if (expectedRow[index] instanceof Timestamp) {
+                        final Timestamp timestamp = (Timestamp) expectedRow[index];
+                        final Timestamp utcTimestamp = new Timestamp(
+                                timestamp.getTime() + TimeZone.getDefault().getOffset(timestamp.getTime()));
+                        utcTimestamp.setNanos(timestamp.getNanos());
+                        expectedRow[index] = utcTimestamp;
+                    }
+                }
+                matcher = matcher.row(expectedRow);
             }
             return matcher.matches(typeMatchMode);
         }

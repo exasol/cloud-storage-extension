@@ -17,6 +17,12 @@
             <unpack>true</unpack>
             <scope>runtime</scope>
             <outputDirectory>/</outputDirectory>
+            <unpackOptions>
+                <excludes>
+                    <exclude>module-info.class</exclude>
+                    <exclude>**/module-info.class</exclude>
+                </excludes>
+            </unpackOptions>
         </dependencySet>
     </dependencySets>
 </assembly>
