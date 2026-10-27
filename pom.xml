@@ -856,7 +856,7 @@
                 <version>3.6.3</version>
                 <configuration>
                     <charset>UTF-8</charset>
-                    <doclint />
+                    <doclint/>
                     <serialwarn>true</serialwarn>
                     <failOnError>true</failOnError>
                     <failOnWarnings>true</failOnWarnings>
@@ -903,13 +903,13 @@
                         <ignoredResourcePattern>properties.dtd</ignoredResourcePattern>
                         <ignoredResourcePattern>parquet.thrift</ignoredResourcePattern>
                     </ignoredResourcePatterns>
-                    <ignoredDependencies />
+                    <ignoredDependencies/>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>5.8.0</version>
+                <version>5.8.1</version>
                 <executions>
                     <execution>
                         <goals>

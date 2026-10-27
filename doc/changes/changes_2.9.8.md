@@ -802,7 +802,6 @@ snappy-java through 1.1.10.8 contains a buffer overflow vulnerability in Snappy.
 * Added `org.apache.parquet:parquet-column:1.18.1`
 * Added `org.apache.parquet:parquet-common:1.18.1`
 * Updated `org.apache.zookeeper:zookeeper:3.9.5` to `3.9.6`
-* Updated transitive `org.objenesis:objenesis:3.3` to `3.6`
 * Updated `org.slf4j:jul-to-slf4j:2.0.18` to `2.0.20`
 * Updated `org.slf4j:slf4j-api:2.0.18` to `2.0.20`
 * Updated `org.xerial.snappy:snappy-java:1.1.10.8` to `1.1.10.12`
@@ -827,7 +826,7 @@ snappy-java through 1.1.10.8 contains a buffer overflow vulnerability in Snappy.
 ### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.1.0` to `2.1.2`
-* Updated `com.exasol:project-keeper-maven-plugin:5.7.4` to `5.8.0`
+* Updated `com.exasol:project-keeper-maven-plugin:5.7.4` to `5.8.1`
 * Updated `io.github.git-commit-id:git-commit-id-maven-plugin:10.0.0` to `10.0.1`
 * Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.1` to `3.7.0`
 * Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
