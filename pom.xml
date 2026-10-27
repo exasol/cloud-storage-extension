@@ -21,9 +21,6 @@
         <hadoop.version>3.4.3</hadoop.version>
         <log4j.version>2.26.1</log4j.version>
         <logback.version>1.6.5</logback.version>
-        <sonar.sources>src/main/</sonar.sources>
-        <sonar.tests>src/test/</sonar.tests>
-        <sonar.test.inclusions>src/test/</sonar.test.inclusions>
     </properties>
     <dependencyManagement>
         <dependencies>
