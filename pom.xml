@@ -80,11 +80,6 @@
             </dependency>
             <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-core:jar:2.22.1:compile of org.apache.hadoop:hadoop-hdfs:jar:3.4.3:compile to fix CVE-2026-89407 -->
             <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-core:jar:2.22.1:compile of org.apache.hadoop:hadoop-hdfs:jar:3.4.3:compile to fix CVE-2026-89425 -->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>2.22.4</version>
-            </dependency>
             <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.1:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-91776 -->
             <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.1:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-19032 -->
             <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.1:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-68497 -->
@@ -94,9 +89,11 @@
             <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.2:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-91776 -->
             <!-- Upgrading transitive dependency com.fasterxml.jackson.core:jackson-databind:jar:2.22.2:compile of com.exasol:import-export-udf-common-scala_2.13:jar:2.0.0:compile to fix CVE-2026-110879 -->
             <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
                 <version>2.22.4</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <!-- Upgrading transitive dependency io.grpc:grpc-protobuf:jar:1.54.1:compile of org.alluxio:alluxio-core-client-hdfs:jar:300:compile to fix CVE-2023-32731 -->
             <!-- Upgrading transitive dependency io.grpc:grpc-protobuf:jar:1.54.1:compile of org.alluxio:alluxio-core-client-hdfs:jar:300:compile to fix CVE-2023-32732 -->
