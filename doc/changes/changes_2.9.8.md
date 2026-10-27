@@ -1,10 +1,10 @@
 # Cloud Storage Extension 2.9.8, released 2026-10-23
 
-Code name: Fixed vulnerabilities CVE-2026-104721, CVE-2026-19880, CVE-2026-68498, CVE-2026-110879, CVE-2026-87795, CVE-2026-87823, CVE-2026-89045, CVE-2026-86231, CVE-2026-15432, CVE-2026-102554, CVE-2026-109395, CVE-2026-100665, CVE-2026-89044, CVE-2026-93488, CVE-2026-93491, CVE-2026-93558, CVE-2026-93562, CVE-2026-93565, CVE-2026-93574, CVE-2026-93566, CVE-2026-93573, CVE-2026-100666, CVE-2026-89044, CVE-2026-93492, CVE-2026-93567, CVE-2026-93568, CVE-2026-93579, CVE-2026-100659, CVE-2026-100660, CVE-2026-100661, CVE-2026-100662, CVE-2026-100663, CVE-2026-100664, CVE-2026-89044, CVE-2026-93568, CVE-2026-62380, CVE-2026-62243, CVE-2026-71290, CVE-2026-57914, CVE-2026-73334, CVE-2026-59739, CVE-2026-59969, CVE-2026-79993, CVE-2026-84439, CVE-2026-84501, CVE-2026-17508, CVE-2026-18036, CVE-2026-18040, CVE-2026-71889, CVE-2026-71891, CVE-2026-97873, CVE-2026-18659, CVE-2026-18662, CVE-2026-19864, CVE-2026-77420, CVE-2026-77422, CVE-2026-108104, CVE-2026-108106, CVE-2026-90559, CVE-2026-93451, CVE-2026-93452
+Code name: Fixed vulnerabilities CVE-2026-104721, CVE-2026-19880, CVE-2026-68498, CVE-2026-110879, CVE-2026-87795, CVE-2026-87823, CVE-2026-89045, CVE-2026-86231, CVE-2026-15432, CVE-2026-102554, CVE-2026-109395, CVE-2026-100665, CVE-2026-89044, CVE-2026-93488, CVE-2026-93491, CVE-2026-93558, CVE-2026-93562, CVE-2026-93565, CVE-2026-93574, CVE-2026-93566, CVE-2026-93573, CVE-2026-100666, CVE-2026-89044, CVE-2026-93492, CVE-2026-93567, CVE-2026-93568, CVE-2026-93579, CVE-2026-100659, CVE-2026-100660, CVE-2026-100661, CVE-2026-100662, CVE-2026-100663, CVE-2026-100664, CVE-2026-89044, CVE-2026-93568, CVE-2026-62380, CVE-2026-62243, CVE-2026-71290, CVE-2026-57914, CVE-2026-73334, CVE-2026-59739, CVE-2026-59969, CVE-2026-79993, CVE-2026-84439, CVE-2026-84501, CVE-2026-17508, CVE-2026-18036, CVE-2026-18040, CVE-2026-71889, CVE-2026-71891, CVE-2026-97873, CVE-2026-18659, CVE-2026-18662, CVE-2026-19864, CVE-2026-77420, CVE-2026-77422, CVE-2026-108104, CVE-2026-108106, CVE-2026-90559, CVE-2026-93451, CVE-2026-93452, CVE-2026-116486
 
 ## Summary
 
-This release fixes the following 61 vulnerabilities:
+This release fixes the following 62 vulnerabilities:
 
 ### CVE-2026-104721 (CWE-22) in dependency `ch.qos.logback:logback-classic:jar:1.6.0:compile`
 
@@ -663,6 +663,15 @@ JLine is a Java library for handling console input. From 3.0.0 until 3.30.15 and
 * https://github.com/jline/jline3/releases/tag/4.3.1
 * https://github.com/jline/jline3/security/advisories/GHSA-r2xf-8xr9-62gw
 
+### CVE-2026-116486 (CWE-386) in dependency `org.objenesis:objenesis:jar:3.3:compile`
+
+Objenesis versions before 3.6 cache object instantiators by class name. Classes with the same name loaded by different class loaders can therefore share the wrong instantiator, allowing an object of an unexpected type to be returned. This is fixed in version 3.6.
+
+#### References
+
+* https://guide.sonatype.com/vulnerability/CVE-2026-116486?component-type=maven&component-name=org.objenesis%2Fobjenesis&utm_source=ossindex-client&utm_medium=integration&utm_content=1.8.1
+* https://github.com/easymock/objenesis/security/advisories/GHSA-743r-26gf-97ff
+
 ### CVE-2026-108104 (CWE-415) in dependency `org.xerial.snappy:snappy-java:jar:1.1.10.8:compile`
 
 Xerial snappy-java from 1.1.7.4 before 1.1.10.10 contains a double release vulnerability in SnappyFramedInputStream that returns pooled buffers twice when replacement allocation fails. Attackers can supply framed data with a large declared chunk length to trigger OutOfMemoryError, causing shared backing arrays that expose or overwrite other streams' decompressed data.
@@ -772,6 +781,7 @@ snappy-java through 1.1.10.8 contains a buffer overflow vulnerability in Snappy.
 * #530: Fixed vulnerability CVE-2026-19864 in dependency `org.eclipse.jetty:jetty-security:jar:9.4.57.v20241219:compile`
 * #487: Fixed vulnerability CVE-2026-77420 in dependency `org.jline:jline:jar:3.9.0:compile`
 * #488: Fixed vulnerability CVE-2026-77422 in dependency `org.jline:jline:jar:3.9.0:compile`
+* Fixed vulnerability CVE-2026-116486 in dependency `org.objenesis:objenesis:jar:3.3:compile`
 * #525: Fixed vulnerability CVE-2026-108104 in dependency `org.xerial.snappy:snappy-java:jar:1.1.10.8:compile`
 * #526: Fixed vulnerability CVE-2026-108106 in dependency `org.xerial.snappy:snappy-java:jar:1.1.10.8:compile`
 * #485: Fixed vulnerability CVE-2026-90559 in dependency `org.xerial.snappy:snappy-java:jar:1.1.10.8:compile`
@@ -792,6 +802,7 @@ snappy-java through 1.1.10.8 contains a buffer overflow vulnerability in Snappy.
 * Added `org.apache.parquet:parquet-column:1.18.1`
 * Added `org.apache.parquet:parquet-common:1.18.1`
 * Updated `org.apache.zookeeper:zookeeper:3.9.5` to `3.9.6`
+* Updated transitive `org.objenesis:objenesis:3.3` to `3.6`
 * Updated `org.slf4j:jul-to-slf4j:2.0.18` to `2.0.20`
 * Updated `org.slf4j:slf4j-api:2.0.18` to `2.0.20`
 * Updated `org.xerial.snappy:snappy-java:1.1.10.8` to `1.1.10.12`

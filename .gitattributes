@@ -15,3 +15,4 @@ SECURITY.md linguist-generated=true
 /mvnw linguist-generated=true
 /mvnw.cmd linguist-generated=true
 /.mvn/wrapper/maven-wrapper.properties linguist-generated=true
+src/assembly/all-dependencies.xml linguist-generated=true
