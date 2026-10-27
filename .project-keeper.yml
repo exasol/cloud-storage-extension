@@ -23,12 +23,3 @@ build:
             name: Fix VM Crash in UDFs
             id: fix-vm-crash
             run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-
-    - name: release.yml
-      stepCustomizations:
-        - action: REPLACE
-          stepId: build
-          content:
-            name: Build project
-            id: build
-            run: mvn --batch-mode -DskipTests -DossindexSkip=true verify -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn

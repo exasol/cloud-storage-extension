@@ -179,7 +179,7 @@ jobs:
       - {
         name: Build project,
         id: build,
-        run: mvn --batch-mode -DskipTests -DossindexSkip=true verify -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+        run: ./mvnw --batch-mode -DskipTests -DskipITs -DossindexSkip=true clean verify
       }
       - name: Publish to Central Repository
         id: deploy-maven-central
